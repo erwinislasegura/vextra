@@ -744,6 +744,7 @@ class InventarioControlador extends Controlador
                 'referencia' => trim((string) ($_POST['referencia'] ?? '')),
                 'observacion' => trim((string) ($_POST['observacion'] ?? '')),
                 'usuario_id' => (int) ($usuario['id'] ?? 0),
+                'token_publico' => bin2hex(random_bytes(32)),
             ], $detalles);
 
             flash('success', 'Orden de compra creada correctamente.');
@@ -868,6 +869,13 @@ class InventarioControlador extends Controlador
         }
 
         $empresa = (new Empresa())->buscar($empresaId) ?: [];
+        $tokenPublico = (string) ($orden['token_publico'] ?? '');
+        if ($tokenPublico === '') {
+            $tokenPublico = bin2hex(random_bytes(32));
+            (new Inventario())->actualizarTokenPublicoOrdenCompra($empresaId, $id, $tokenPublico);
+            $orden['token_publico'] = $tokenPublico;
+        }
+        $urlPublica = $this->construirUrlPublicaOrdenCompra($tokenPublico);
         $urlPdf = $this->construirUrlInterna('/app/inventario/ordenes-compra/pdf/' . $id);
         $variablesPlantilla = [
             '{{empresa_nombre}}' => (string) ($empresa['nombre_comercial'] ?? $empresa['razon_social'] ?? 'Tu empresa'),
@@ -878,6 +886,7 @@ class InventarioControlador extends Controlador
             '{{fecha_emision}}' => (string) ($orden['fecha_emision'] ?? date('Y-m-d')),
             '{{fecha_entrega}}' => (string) ($orden['fecha_entrega_estimada'] ?? ''),
             '{{total_orden}}' => '$' . number_format((float) ($orden['total'] ?? 0), 2, ',', '.'),
+            '{{url_publica}}' => $urlPublica,
             '{{url_pdf}}' => $urlPdf,
             '{{remitente_nombre}}' => (string) ($empresa['imap_remitente_nombre'] ?? $empresa['nombre_comercial'] ?? ''),
             '{{remitente_correo}}' => (string) ($empresa['imap_remitente_correo'] ?? $empresa['correo'] ?? ''),
@@ -888,9 +897,12 @@ class InventarioControlador extends Controlador
         $asunto = $asuntoPlantilla !== ''
             ? $this->renderizarPlantillaCorreo($asuntoPlantilla, $variablesPlantilla)
             : ('Orden de compra ' . ((string) ($orden['numero'] ?? ('#' . $id))));
+        if ($htmlPlantilla === '') {
+            $htmlPlantilla = $this->plantillaBaseCorreoOrdenCompra();
+        }
         $mensajeHtml = $htmlPlantilla !== ''
             ? $this->renderizarPlantillaCorreo($htmlPlantilla, $variablesPlantilla)
-            : '<p>Estimado proveedor,</p><p>Adjuntamos la orden de compra <strong>' . htmlspecialchars((string) ($orden['numero'] ?? ''), ENT_QUOTES, 'UTF-8') . '</strong>.</p><p>Puedes descargarla desde este enlace: <a href="' . htmlspecialchars($urlPdf, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($urlPdf, ENT_QUOTES, 'UTF-8') . '</a></p>';
+            : '';
 
         (new ServicioCorreo())->enviar(
             $destinatario,
@@ -900,7 +912,9 @@ class InventarioControlador extends Controlador
                 'empresa' => (string) ($empresa['nombre_comercial'] ?? $empresa['razon_social'] ?? ''),
                 'proveedor' => (string) ($orden['proveedor_nombre'] ?? ''),
                 'numero' => (string) ($orden['numero'] ?? ''),
+                'html' => $mensajeHtml,
                 'mensaje_html' => $mensajeHtml,
+                'link_publico' => $urlPublica,
                 'link_pdf' => $urlPdf,
             ]
         );
@@ -945,13 +959,25 @@ class InventarioControlador extends Controlador
     {
         $config = require __DIR__ . '/../../../configuracion/aplicacion.php';
         $base = rtrim((string) ($config['url'] ?? ''), '/');
+        if ($base !== '' && preg_match('/localhost|127\\.0\\.0\\.1/i', $base)) {
+            $base = 'https://vextra.cl';
+        }
         if ($base === '') {
             $esHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
             $host = (string) ($_SERVER['HTTP_HOST'] ?? 'localhost:8000');
+            if ($host === '' || preg_match('/localhost|127\\.0\\.0\\.1/i', $host)) {
+                $host = 'vextra.cl';
+                $esHttps = true;
+            }
             $base = ($esHttps ? 'https://' : 'http://') . $host;
         }
 
         return $base . url($ruta);
+    }
+
+    private function construirUrlPublicaOrdenCompra(string $tokenPublico): string
+    {
+        return $this->construirUrlInterna('/orden-compra/publica/' . $tokenPublico);
     }
 
     private function renderizarPlantillaCorreo(string $contenido, array $variables): string
@@ -961,6 +987,38 @@ class InventarioControlador extends Controlador
             $reemplazos[$clave] = htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
         }
         return strtr($contenido, $reemplazos);
+    }
+
+    private function plantillaBaseCorreoOrdenCompra(): string
+    {
+        return <<<'HTML'
+<div style="font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;padding:24px;color:#111827;">
+  <div style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+    <div style="background:#0f3d77;color:#ffffff;padding:20px 24px;">
+      <h2 style="margin:0;font-size:20px;">{{empresa_nombre}}</h2>
+      <p style="margin:6px 0 0;font-size:13px;opacity:.9;">Envío automático de orden de compra</p>
+    </div>
+    <div style="padding:24px;">
+      <p style="margin:0 0 14px;">Hola <strong>{{proveedor_nombre}}</strong>,</p>
+      <p style="margin:0 0 14px;line-height:1.5;">Adjuntamos la orden de compra <strong>{{numero_orden}}</strong> con fecha de emisión <strong>{{fecha_emision}}</strong> y entrega estimada <strong>{{fecha_entrega}}</strong>.</p>
+      <div style="border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;padding:14px;margin:0 0 16px;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr><td style="padding:4px 0;color:#6b7280;">Orden</td><td style="padding:4px 0;text-align:right;"><strong>{{numero_orden}}</strong></td></tr>
+          <tr><td style="padding:4px 0;color:#6b7280;">Estado</td><td style="padding:4px 0;text-align:right;">{{estado_orden}}</td></tr>
+          <tr><td style="padding:4px 0;color:#6b7280;">Total</td><td style="padding:4px 0;text-align:right;">{{total_orden}}</td></tr>
+        </table>
+      </div>
+      <p style="margin:0 0 20px;line-height:1.5;">Puedes revisar la orden en línea desde el siguiente botón:</p>
+      <p style="margin:0 0 18px;">
+        <a href="{{url_publica}}" style="display:inline-block;background:#0f3d77;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Ver orden de compra</a>
+      </p>
+      <p style="margin:0 0 8px;font-size:13px;color:#4b5563;">Descargar PDF de la orden:</p>
+      <p style="margin:0 0 20px;font-size:13px;"><a href="{{url_pdf}}" style="color:#0f3d77;">{{url_pdf}}</a></p>
+      <p style="margin:0;font-size:12px;color:#6b7280;">Este correo fue enviado a {{correo_destino}} por {{remitente_nombre}} ({{remitente_correo}}).</p>
+    </div>
+  </div>
+</div>
+HTML;
     }
 
     private function escapeExcelHtml(mixed $valor): string
