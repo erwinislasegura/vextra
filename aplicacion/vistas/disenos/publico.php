@@ -6,6 +6,7 @@
     $metaDescription = (string) ($meta_description ?? 'Vextra es un sistema de cotizaciones para empresas que ayuda a vender más con procesos comerciales ordenados, seguimiento de oportunidades y planes escalables.');
     $metaKeywords = (string) ($meta_keywords ?? 'sistema de cotizaciones, software de cotizaciones, cotizaciones para empresas, control de cotizaciones, planes de software comercial');
     $metaUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '/');
+    $logoUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . url('/img/logo/logo_vextra.png');
   ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,15 +20,28 @@
   <meta property="og:description" content="<?= e($metaDescription) ?>">
   <meta property="og:url" content="<?= e($metaUrl) ?>">
   <meta property="og:site_name" content="Vextra">
+  <meta property="og:image" content="<?= e($logoUrl) ?>">
+  <meta property="og:image:alt" content="Logo Vextra">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?= e($metaTitle) ?>">
   <meta name="twitter:description" content="<?= e($metaDescription) ?>">
+  <meta name="twitter:image" content="<?= e($logoUrl) ?>">
   <link rel="canonical" href="<?= e($metaUrl) ?>">
   <link rel="icon" type="image/png" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
+  <link rel="shortcut icon" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
   <link rel="apple-touch-icon" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="<?= e(url('/assets/css/app.css')) ?>" rel="stylesheet">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Vextra",
+      "url": "<?= e((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?>",
+      "logo": "<?= e($logoUrl) ?>"
+    }
+  </script>
 </head>
 <body class="bg-light public-page">
 <?php require __DIR__ . '/../parciales/navbar_publico.php'; ?>

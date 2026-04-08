@@ -222,28 +222,28 @@ class PublicoControlador extends Controlador
     {
         $seo = [
             'inicio' => [
-                'meta_title' => 'Inicio | Vextra - Sistema de cotizaciones para empresas',
-                'meta_description' => 'Vextra te ayuda a ordenar cotizaciones, clientes y ventas en una plataforma cloud para mejorar productividad y cierres comerciales.',
+                'meta_title' => 'Sistema de cotizaciones para empresas | Vextra',
+                'meta_description' => 'Optimiza cotizaciones, seguimiento comercial e inventario con Vextra: plataforma para vender más y trabajar con datos reales.',
                 'meta_keywords' => 'inicio vextra, sistema de cotizaciones, software comercial, gestión de ventas',
             ],
             'caracteristicas' => [
-                'meta_title' => 'Características | Vextra - Funcionalidades del sistema',
-                'meta_description' => 'Conoce las funcionalidades de Vextra para cotizar más rápido, gestionar clientes, productos y seguimiento comercial en un solo lugar.',
+                'meta_title' => 'Características del sistema de cotizaciones | Vextra',
+                'meta_description' => 'Descubre las funcionalidades de Vextra: cotizaciones, clientes, productos, seguimiento comercial, POS e inventario.',
                 'meta_keywords' => 'características vextra, funcionalidades software cotizaciones, gestión comercial',
             ],
             'planes' => [
-                'meta_title' => 'Planes y precios | Vextra',
-                'meta_description' => 'Revisa los planes y precios de Vextra, compara opciones mensuales y anuales y elige la mejor alternativa para tu empresa.',
+                'meta_title' => 'Planes y precios del sistema | Vextra',
+                'meta_description' => 'Compara planes y precios de Vextra, con modalidad mensual o anual, para implementar tu sistema de cotizaciones empresarial.',
                 'meta_keywords' => 'planes vextra, precios software cotizaciones, plan mensual, plan anual',
             ],
             'contacto' => [
                 'meta_title' => 'Contacto comercial | Vextra',
-                'meta_description' => 'Habla con el equipo comercial de Vextra para resolver dudas de planes, implementación y soporte para clientes actuales.',
+                'meta_description' => 'Contacta al equipo de Vextra para resolver dudas de implementación, planes, soporte y necesidades de tu operación comercial.',
                 'meta_keywords' => 'contacto vextra, asesoría comercial, soporte clientes',
             ],
             'faq' => [
-                'meta_title' => 'Preguntas frecuentes | Vextra',
-                'meta_description' => 'Resuelve dudas frecuentes sobre Vextra, su funcionamiento, implementación, cotizaciones y administración comercial.',
+                'meta_title' => 'Preguntas frecuentes (FAQ) | Vextra',
+                'meta_description' => 'Resuelve dudas frecuentes sobre el software de cotizaciones Vextra: funcionamiento, planes, implementación y uso diario.',
                 'meta_keywords' => 'faq vextra, preguntas frecuentes software cotizaciones',
             ],
             'contratar' => [

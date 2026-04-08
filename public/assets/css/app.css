@@ -76,8 +76,8 @@ form.form-enviando .btn{pointer-events:none}
 
 @media (max-width: 991.98px){
   .public-navbar .navbar-nav .btn{margin-top:.35rem}
-  .public-navbar [data-nav-collapse]{display:none}
-  .public-navbar [data-nav-collapse].show{display:block}
+  .public-navbar [data-nav-collapse]{display:none !important}
+  .public-navbar [data-nav-collapse].show{display:block !important}
 }
 
 @media (min-width: 992px){
