@@ -909,6 +909,7 @@ class InventarioControlador extends Controlador
                 'empresa' => (string) ($empresa['nombre_comercial'] ?? $empresa['razon_social'] ?? ''),
                 'proveedor' => (string) ($orden['proveedor_nombre'] ?? ''),
                 'numero' => (string) ($orden['numero'] ?? ''),
+                'html' => $mensajeHtml,
                 'mensaje_html' => $mensajeHtml,
                 'link_publico' => $urlPublica,
                 'link_pdf' => $urlPdf,

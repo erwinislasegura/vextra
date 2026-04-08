@@ -36,6 +36,9 @@ class ServicioCorreo
         }
 
         $html = (string) ($datos['html'] ?? '');
+        if ($html === '' && isset($datos['mensaje_html'])) {
+            $html = (string) $datos['mensaje_html'];
+        }
         if ($html === '') {
             $html = '<p>Notificación automática de Vextra.</p>';
         }
