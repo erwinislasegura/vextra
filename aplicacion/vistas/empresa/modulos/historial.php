@@ -1,0 +1,2 @@
+<?php require __DIR__ . '/_tabla_simple.php'; ?>
+<?php render_modulo_simple('Historial / actividad', '/app/historial', ['usuario_nombre','modulo','accion','detalle','fecha_creacion'], $registros, '<div class="col-md-3"><label class="form-label">Módulo</label><input name="modulo" class="form-control" required></div><div class="col-md-3"><label class="form-label">Acción</label><input name="accion" class="form-control" required></div><div class="col-md-6"><label class="form-label">Detalle</label><input name="detalle" class="form-control"></div>',$buscar); ?>

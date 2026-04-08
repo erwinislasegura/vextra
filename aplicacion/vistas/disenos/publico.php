@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vextra | Sistema de cotizaciones para empresas</title>
+  <meta name="description" content="Vextra es un sistema de cotizaciones para empresas que ayuda a vender más con procesos comerciales ordenados, seguimiento de oportunidades y planes escalables.">
+  <meta name="keywords" content="sistema de cotizaciones, software de cotizaciones, cotizaciones para empresas, control de cotizaciones, planes de software comercial">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#4632a8">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Vextra | Sistema de cotizaciones para empresas">
+  <meta property="og:description" content="Organiza cotizaciones, clientes y ventas en una plataforma profesional para equipos comerciales.">
+  <meta property="og:url" content="<?= e((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '/')) ?>">
+  <meta property="og:site_name" content="Vextra">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vextra | Sistema de cotizaciones para empresas">
+  <meta name="twitter:description" content="Software de cotizaciones enfocado en vender más y mantener control comercial.">
+  <link rel="canonical" href="<?= e((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '/')) ?>">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="<?= e(url('/assets/css/app.css')) ?>" rel="stylesheet">
+</head>
+<body class="bg-light public-page">
+<?php require __DIR__ . '/../parciales/navbar_publico.php'; ?>
+<main>
+  <?php if ($flash = obtener_flash()): ?>
+    <div class="container pt-3"><div class="alert alert-<?= e($flash['tipo']) ?>"><?= e($flash['mensaje']) ?></div></div>
+  <?php endif; ?>
+  <?php require $contenido; ?>
+</main>
+<?php require __DIR__ . '/../parciales/footer_publico.php'; ?>
+<?php
+$recaptchaActivo = recaptcha_habilitado_publico();
+$recaptchaSiteKey = recaptcha_site_key_publico();
+$usarRecaptcha = $recaptchaActivo && $recaptchaSiteKey !== '';
+?>
+<?php if ($usarRecaptcha): ?>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>"></script>
+<?php endif; ?>
+<script>
+  (() => {
+    const toggler = document.querySelector('[data-nav-toggle]');
+    if (!toggler) return;
+
+    const targetSelector = toggler.getAttribute('data-nav-toggle');
+    const collapse = targetSelector ? document.querySelector(targetSelector) : null;
+    if (!collapse) return;
+
+    const closeMenu = () => {
+      collapse.classList.remove('show');
+      toggler.setAttribute('aria-expanded', 'false');
+    };
+
+    toggler.addEventListener('click', () => {
+      const abierto = collapse.classList.toggle('show');
+      toggler.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    });
+
+    collapse.querySelectorAll('a').forEach((enlace) => {
+      enlace.addEventListener('click', closeMenu);
+    });
+  })();
+</script>
+<script>window.APP_BASE_PATH = "<?= e(base_path_url()) ?>";</script>
+<script defer src="<?= e(url('/assets/js/app.js')) ?>"></script>
+<?php if ($usarRecaptcha): ?>
+  <script>
+    (() => {
+      const siteKey = <?= json_encode($recaptchaSiteKey, JSON_UNESCAPED_SLASHES) ?>;
+      const forms = document.querySelectorAll('form[data-recaptcha-form="1"]');
+      if (!siteKey || !forms.length || typeof grecaptcha === 'undefined') {
+        return;
+      }
+
+      forms.forEach((form) => {
+        form.addEventListener('submit', (event) => {
+          if (form.dataset.recaptchaValidated === '1') {
+            return;
+          }
+
+          event.preventDefault();
+          const action = form.dataset.recaptchaAction || 'submit';
+
+          grecaptcha.ready(() => {
+            grecaptcha.execute(siteKey, { action }).then((token) => {
+              let input = form.querySelector('input[name="g-recaptcha-response"]');
+              if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'g-recaptcha-response';
+                form.appendChild(input);
+              }
+
+              input.value = token;
+              form.dataset.recaptchaValidated = '1';
+              form.submit();
+            });
+          });
+        });
+      });
+    })();
+  </script>
+<?php endif; ?>
+</body>
+</html>

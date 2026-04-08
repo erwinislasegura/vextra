@@ -1,0 +1,833 @@
+[07-Apr-2026 00:09:42 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:09:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:09:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:09:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:09:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:12:04 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:16:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:16:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:17:49 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:17:57 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:06 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:07 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:14 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:37 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:39 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:39 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:39 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:40 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:40 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:52 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:53 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:54 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:55 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:55 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:20:56 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:21:17 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:21:50 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:14 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:15 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:15 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:37 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:40 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:41 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:23:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:25:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:25:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(20): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:14 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:15 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:16 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:16 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:16 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:16 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:30:16 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:32:42 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:33 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:34 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:34 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:34 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:34 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:34 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:35 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:36 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:36 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:37 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:37 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:37 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:43 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:44 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:33:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:26 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:27 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:27 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:28 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:28 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:28 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:31 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:31 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:31 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:33 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:39 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:42 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:50 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:35:57 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:32 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:36 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:37 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:38 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:45 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:46 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:48 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:53 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:36:55 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:37:18 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:37:20 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:37:33 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:37:34 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:37:47 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:37:48 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[07-Apr-2026 00:40:05 America/Santiago] PHP Fatal error:  Uncaught Error: Class "Aplicacion\Nucleo\CargadorEntorno" not found in /home/vextra/public_html/aplicacion/nucleo/App.php:9
+Stack trace:
+#0 /home/vextra/public_html/public/index.php(43): Aplicacion\Nucleo\App::iniciar()
+#1 {main}
+  thrown in /home/vextra/public_html/aplicacion/nucleo/App.php on line 9
+[06-Apr-2026 23:40:11 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:29 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:46 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:47 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:47 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:48 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:51 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:40:58 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:01 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:02 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:02 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:02 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:03 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:03 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:04 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:04 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:06 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:06 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:07 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:07 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:08 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:08 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:08 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:09 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:11 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:12 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:14 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:17 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:17 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:17 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:18 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:19 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:20 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:20 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:21 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:21 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:22 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:23 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:24 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:24 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:25 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:25 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:26 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:26 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:27 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:27 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:28 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:28 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:29 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:29 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:30 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:30 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:30 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:31 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:31 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:32 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:32 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:33 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:33 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:34 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:34 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:35 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:35 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:36 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:36 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:37 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:37 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:38 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:38 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:41:39 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:42:21 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:42:21 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:42:29 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:42:30 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:43:38 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:44:48 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:44:49 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:44:49 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:44:49 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:14 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:17 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:17 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:17 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:23 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:24 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:24 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:24 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:45:39 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:12 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:12 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:13 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:14 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:14 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:15 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:46:16 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:47:37 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:48:06 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:48:42 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:49:07 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:49:24 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:49:41 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:49:53 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:50:07 America/Bogota] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:51:42 America/Bogota] [ERR-69d48d5e994628.84541544] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:09 America/Bogota] [ERR-69d48e2d571007.74628971] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:16 America/Bogota] [ERR-69d48e34866f89.93674323] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:17 America/Bogota] [ERR-69d48e358b7a11.55094446] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:17 America/Bogota] [ERR-69d48e35edd211.36784591] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:18 America/Bogota] [ERR-69d48e363ebf18.13865379] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:18 America/Bogota] [ERR-69d48e36773a36.38052647] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:18 America/Bogota] [ERR-69d48e36a82831.86982276] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:18 America/Bogota] [ERR-69d48e36e19898.80377106] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:19 America/Bogota] [ERR-69d48e371dc241.52326111] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:19 America/Bogota] [ERR-69d48e375c2210.27668401] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:19 America/Bogota] [ERR-69d48e37c5f410.79397880] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:20 America/Bogota] [ERR-69d48e380e8ec2.11987202] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:55:20 America/Bogota] [ERR-69d48e38484af9.27539508] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[06-Apr-2026 23:58:14 America/Bogota] [ERR-69d48ee63060a3.81613760] [CotizaPro][Uncaught] Class "Aplicacion\Controladores\Publico\PublicoControlador" not found @ /home/vextra/public_html/aplicacion/nucleo/Enrutador.php:36
+[07-Apr-2026 00:00:50 America/Bogota] [ERR-69d48f829bbd89.47134552] [CotizaPro][Uncaught] Class "Aplicacion\Controladores\Publico\PublicoControlador" not found @ /home/vextra/public_html/aplicacion/nucleo/Enrutador.php:36
+[07-Apr-2026 10:15:54 America/Bogota] [ERR-69d51faa453343.68478543] [CotizaPro][Uncaught] Class "Aplicacion\Nucleo\Enrutador" not found @ /home/vextra/public_html/aplicacion/nucleo/App.php:16
+[07-Apr-2026 10:15:56 America/Bogota] [ERR-69d51fac88b379.85269966] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:15:58 America/Bogota] [ERR-69d51fae2745e5.01428411] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:15:58 America/Bogota] [ERR-69d51faed9e7b7.49024575] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:15:59 America/Bogota] [ERR-69d51faf5ce9b2.87856730] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:15:59 America/Bogota] [ERR-69d51fafb755f7.13922413] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:15:59 America/Bogota] [ERR-69d51fafebe4f9.03881066] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:16:00 America/Bogota] [ERR-69d51fb059d808.46245476] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:16:00 America/Bogota] [ERR-69d51fb0b796b4.46247983] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 10:16:01 America/Bogota] [ERR-69d51fb1113ec4.71322466] [CotizaPro][Uncaught] syntax error, unexpected string content "a", expecting "]" @ /home/vextra/public_html/rutas/empresa.php:144
+[07-Apr-2026 14:15:09 America/Bogota] [ERR-69d557bd162ad4.38661927] [Vextra][Uncaught] Class "Aplicacion\Modelos\PlanFuncionalidad" not found @ /home/vextra/public_html/aplicacion/controladores/Publico/PublicoControlador.php:86
+[07-Apr-2026 15:37:46 America/Santiago] [ERR-69d55d0a7957b9.96792406] [Vextra][Uncaught] Class "Aplicacion\Nucleo\App" not found @ /home/vextra/public_html/public/index.php:127
+[07-Apr-2026 14:59:03 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'erwin.2785@gmail.com' for key 'usuarios.correo'
+[07-Apr-2026 15:01:30 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'erwin.27855@gmail.com' for key 'usuarios.correo'
+[07-Apr-2026 18:39:45 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'erwinislasegura@gmail.com' for key 'usuarios.correo'
+[07-Apr-2026 18:40:45 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'erwin.2785@gmail.com' for key 'usuarios.correo'
+[07-Apr-2026 18:42:25 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'eisla@gocreative.cl' for key 'usuarios.correo'
+[07-Apr-2026 21:15:52 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'soledadmellazuniga@gmail.com' for key 'usuarios.correo'
+[07-Apr-2026 21:19:02 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'solcyta_240789@hotmail.com' for key 'usuarios.correo'
+[07-Apr-2026 22:05:28 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'soledadmellazuniga@gmail.com' for key 'usuarios.correo'
+[07-Apr-2026 23:07:52 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'ctneuxkhbscegzgmyh@fxavaj.com' for key 'usuarios.correo'
+[07-Apr-2026 23:44:30 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'kulriwtwulngtpqwwo@enotj.com' for key 'usuarios.correo'
+[07-Apr-2026 23:44:38 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'kulriwtwulngtpqwwo@enotj.com' for key 'usuarios.correo'
+[08-Apr-2026 00:08:37 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'tvbwzzoxsniawxhknp@nesopf.com' for key 'usuarios.correo'
+[08-Apr-2026 00:27:04 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'soledadmellazuniga@gmail.com' for key 'usuarios.correo'
+[08-Apr-2026 01:17:52 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'soledadmellazuniga@gmail.com' for key 'usuarios.correo'
+[08-Apr-2026 01:18:13 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'soledadmellazuniga@gmail.com' for key 'usuarios.correo'
+[08-Apr-2026 01:18:24 America/Bogota] [registro_empresa] Error al crear empresa: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'soledadmellazuniga@gmail.com' for key 'usuarios.correo'
+[08-Apr-2026 01:55:08 America/Bogota] [registro_empresa] No se pudo revertir registro pendiente: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`vextra_erpcotiza`.`logs_administracion`, CONSTRAINT `fk_logs_admin_usuario_obj` FOREIGN KEY (`usuario_objetivo_id`) REFERENCES `usuarios` (`id`))
+[08-Apr-2026 01:55:25 America/Bogota] [registro_empresa] No se pudo revertir registro pendiente: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`vextra_erpcotiza`.`logs_administracion`, CONSTRAINT `fk_logs_admin_usuario_obj` FOREIGN KEY (`usuario_objetivo_id`) REFERENCES `usuarios` (`id`))
+[08-Apr-2026 01:55:33 America/Bogota] [registro_empresa] No se pudo revertir registro pendiente: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`vextra_erpcotiza`.`logs_administracion`, CONSTRAINT `fk_logs_admin_usuario_obj` FOREIGN KEY (`usuario_objetivo_id`) REFERENCES `usuarios` (`id`))
+[08-Apr-2026 01:55:49 America/Bogota] [registro_empresa] No se pudo revertir registro pendiente: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`vextra_erpcotiza`.`logs_administracion`, CONSTRAINT `fk_logs_admin_usuario_obj` FOREIGN KEY (`usuario_objetivo_id`) REFERENCES `usuarios` (`id`))
+[08-Apr-2026 01:59:58 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:01:42 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:01:48 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:01:49 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:03 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:03 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 03:02:04 America/Santiago] [ERR-69d5fd6c6f62c9.09699585] [Vextra][Uncaught] Class "Aplicacion\Nucleo\App" not found @ /home/vextra/public_html/public/index.php:127
+[08-Apr-2026 02:02:04 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:05 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:06 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:06 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:06 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:06 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:07 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:07 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:07 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:08 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:08 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:02:10 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:04:55 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:04:56 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:04:57 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:04:58 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:04:59 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:05:00 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 454
+[08-Apr-2026 02:05:01 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:02 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:03 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:04 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:05 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:06 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:06 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:07 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:08 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:08 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:08 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:08 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:08 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:09 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:09 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:09 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:09 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:09 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:10 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:10 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:13 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:14 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:05:19 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:07:43 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:09:16 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:09:17 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:09:18 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:09:19 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:09:20 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 464
+[08-Apr-2026 02:09:20 America/Bogota] [ERR-69d5ff20948db5.72697517] [Vextra][Uncaught] Class "Aplicacion\Controladores\Autenticacion\AutenticacionControlador" not found @ /home/vextra/public_html/aplicacion/nucleo/Enrutador.php:36
+[08-Apr-2026 02:09:21 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:22 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:23 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:23 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:24 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:24 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:29 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:29 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:30 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:09:30 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:23 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:24 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:24 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:25 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:25 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:25 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:26 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:26 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:26 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:10:26 America/Bogota] PHP Fatal error:  A function with return type must return a value in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 356
+[08-Apr-2026 02:13:45 America/Bogota] [ERR-69d6002942f0c0.84770094] [Vextra][Uncaught] Call to undefined method Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarRegistrosBloqueadosPorPagoNoAprobado() @ /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php:149
+[08-Apr-2026 02:19:18 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 435
+[08-Apr-2026 02:24:45 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 435
+[08-Apr-2026 02:24:49 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:24:51 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:24:58 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:25:00 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:25:01 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:25:02 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:25:06 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:28:56 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:28:57 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:28:58 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::liberarEmpresaSiPagoNoAprobado() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 446
+[08-Apr-2026 02:28:58 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:28:59 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:28:59 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:28:59 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:00 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:08 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:09 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:09 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:09 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:09 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:10 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:10 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:29:10 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:31 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:32 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:32 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:33 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:34 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:34 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:35 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:35 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 453
+[08-Apr-2026 02:34:35 America/Bogota] [ERR-69d6050bae2951.88569095] [Vextra][Uncaught] Class "Aplicacion\Controladores\Autenticacion\AutenticacionControlador" not found @ /home/vextra/public_html/aplicacion/nucleo/Enrutador.php:36
+[08-Apr-2026 02:34:35 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:36 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:36 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:37 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:37 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:37 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:37 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:38 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:38 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:38 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:39 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:39 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:39 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:39 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:40 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:40 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:40 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:40 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:41 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:34:41 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:35:01 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:08 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:09 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:09 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:10 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:10 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 03:37:11 America/Santiago] [ERR-69d605a7106370.44012401] [Vextra][Uncaught] Class "Aplicacion\Nucleo\App" not found @ /home/vextra/public_html/public/index.php:127
+[08-Apr-2026 02:37:11 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:12 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409
+[08-Apr-2026 02:37:12 America/Bogota] PHP Fatal error:  Cannot redeclare Aplicacion\Controladores\Autenticacion\AutenticacionControlador::buscarEmpresaIdPorRut() in /home/vextra/public_html/aplicacion/controladores/Autenticacion/AutenticacionControlador.php on line 409

@@ -1,0 +1,3 @@
+<h1 class="h4 mb-3">Ver registro - <?= e($titulo) ?></h1>
+<div class="card"><div class="card-body"><dl class="row mb-0"><?php foreach($registro as $k => $v): if (in_array($k, ['id','empresa_id'], true)) { continue; } ?><dt class="col-sm-3"><?= e(ucwords(str_replace('_',' ',$k))) ?></dt><dd class="col-sm-9"><?= e((string)$v) ?></dd><?php endforeach; ?></dl></div></div>
+<div class="mt-3"><a class="btn btn-outline-secondary btn-sm" href="<?= e(url('/app/' . $modulo)) ?>">Volver</a> <a class="btn btn-primary btn-sm" href="<?= e(url('/app/' . $modulo . '/editar/' . $registro['id'])) ?>">Editar</a></div>

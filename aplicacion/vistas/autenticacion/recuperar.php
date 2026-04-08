@@ -1,0 +1,1 @@
+<div class="container py-5" style="max-width:520px"><h1 class="h4">Recuperar contraseña</h1><p class="small text-secondary">Enviaremos instrucciones a tu correo.</p><form class="card card-body"><?= csrf_campo() ?><input class="form-control" placeholder="Correo"><button type="button" class="btn btn-primary btn-sm mt-2">Enviar instrucciones</button></form></div>
