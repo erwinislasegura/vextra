@@ -7,6 +7,7 @@ use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Cotizacion;
 use Aplicacion\Modelos\Empresa;
 use Aplicacion\Modelos\GestionComercial;
+use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PlanFuncionalidad;
 use Aplicacion\Servicios\ServicioCorreo;
 
@@ -213,6 +214,32 @@ class PublicoControlador extends Controlador
         $this->redirigir('/cotizacion/publica/' . $token);
     }
 
+    public function verOrdenCompraPublica(string $token): void
+    {
+        $orden = (new Inventario())->obtenerOrdenCompraPorTokenPublico($token);
+        if (!$orden) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $this->vistaPublica('publico/orden_compra_publica', compact('orden', 'token'), 'orden_compra_publica');
+    }
+
+    public function imprimirOrdenCompraPublica(string $token): void
+    {
+        $orden = (new Inventario())->obtenerOrdenCompraPorTokenPublico($token);
+        if (!$orden) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $empresa = (new Empresa())->buscar((int) ($orden['empresa_id'] ?? 0));
+        $esVistaPublica = true;
+        $this->vista('empresa/inventario/orden_compra_imprimir', compact('orden', 'empresa', 'esVistaPublica', 'token'), 'impresion');
+    }
+
     private function vistaPublica(string $vista, array $data, string $pagina): void
     {
         $this->vista($vista, array_merge($this->obtenerSeoPorPagina($pagina), $data), 'publico');
@@ -255,6 +282,11 @@ class PublicoControlador extends Controlador
                 'meta_title' => 'Cotización en línea | Vextra',
                 'meta_description' => 'Revisa el detalle de tu cotización en línea, incluyendo productos, condiciones comerciales y estado de aprobación.',
                 'meta_keywords' => 'cotización online, seguimiento cotización, aprobación cliente',
+            ],
+            'orden_compra_publica' => [
+                'meta_title' => 'Orden de compra en línea | Vextra',
+                'meta_description' => 'Revisa el detalle de una orden de compra en línea y descarga su versión PDF.',
+                'meta_keywords' => 'orden de compra online, proveedor, documento compra',
             ],
         ];
 
