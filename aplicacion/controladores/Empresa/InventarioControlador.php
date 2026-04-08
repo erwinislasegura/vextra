@@ -744,6 +744,7 @@ class InventarioControlador extends Controlador
                 'referencia' => trim((string) ($_POST['referencia'] ?? '')),
                 'observacion' => trim((string) ($_POST['observacion'] ?? '')),
                 'usuario_id' => (int) ($usuario['id'] ?? 0),
+                'token_publico' => bin2hex(random_bytes(32)),
             ], $detalles);
 
             flash('success', 'Orden de compra creada correctamente.');
@@ -868,6 +869,13 @@ class InventarioControlador extends Controlador
         }
 
         $empresa = (new Empresa())->buscar($empresaId) ?: [];
+        $tokenPublico = (string) ($orden['token_publico'] ?? '');
+        if ($tokenPublico === '') {
+            $tokenPublico = bin2hex(random_bytes(32));
+            (new Inventario())->actualizarTokenPublicoOrdenCompra($empresaId, $id, $tokenPublico);
+            $orden['token_publico'] = $tokenPublico;
+        }
+        $urlPublica = $this->construirUrlPublicaOrdenCompra($tokenPublico);
         $urlPdf = $this->construirUrlInterna('/app/inventario/ordenes-compra/pdf/' . $id);
         $variablesPlantilla = [
             '{{empresa_nombre}}' => (string) ($empresa['nombre_comercial'] ?? $empresa['razon_social'] ?? 'Tu empresa'),
@@ -878,6 +886,7 @@ class InventarioControlador extends Controlador
             '{{fecha_emision}}' => (string) ($orden['fecha_emision'] ?? date('Y-m-d')),
             '{{fecha_entrega}}' => (string) ($orden['fecha_entrega_estimada'] ?? ''),
             '{{total_orden}}' => '$' . number_format((float) ($orden['total'] ?? 0), 2, ',', '.'),
+            '{{url_publica}}' => $urlPublica,
             '{{url_pdf}}' => $urlPdf,
             '{{remitente_nombre}}' => (string) ($empresa['imap_remitente_nombre'] ?? $empresa['nombre_comercial'] ?? ''),
             '{{remitente_correo}}' => (string) ($empresa['imap_remitente_correo'] ?? $empresa['correo'] ?? ''),
@@ -890,7 +899,7 @@ class InventarioControlador extends Controlador
             : ('Orden de compra ' . ((string) ($orden['numero'] ?? ('#' . $id))));
         $mensajeHtml = $htmlPlantilla !== ''
             ? $this->renderizarPlantillaCorreo($htmlPlantilla, $variablesPlantilla)
-            : '<p>Estimado proveedor,</p><p>Adjuntamos la orden de compra <strong>' . htmlspecialchars((string) ($orden['numero'] ?? ''), ENT_QUOTES, 'UTF-8') . '</strong>.</p><p>Puedes descargarla desde este enlace: <a href="' . htmlspecialchars($urlPdf, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($urlPdf, ENT_QUOTES, 'UTF-8') . '</a></p>';
+            : '<p>Estimado proveedor,</p><p>Compartimos la orden de compra <strong>' . htmlspecialchars((string) ($orden['numero'] ?? ''), ENT_QUOTES, 'UTF-8') . '</strong>.</p><p>Vista pública: <a href="' . htmlspecialchars($urlPublica, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($urlPublica, ENT_QUOTES, 'UTF-8') . '</a></p><p>Descargar PDF: <a href="' . htmlspecialchars($urlPdf, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($urlPdf, ENT_QUOTES, 'UTF-8') . '</a></p>';
 
         (new ServicioCorreo())->enviar(
             $destinatario,
@@ -900,7 +909,9 @@ class InventarioControlador extends Controlador
                 'empresa' => (string) ($empresa['nombre_comercial'] ?? $empresa['razon_social'] ?? ''),
                 'proveedor' => (string) ($orden['proveedor_nombre'] ?? ''),
                 'numero' => (string) ($orden['numero'] ?? ''),
+                'html' => $mensajeHtml,
                 'mensaje_html' => $mensajeHtml,
+                'link_publico' => $urlPublica,
                 'link_pdf' => $urlPdf,
             ]
         );
@@ -952,6 +963,11 @@ class InventarioControlador extends Controlador
         }
 
         return $base . url($ruta);
+    }
+
+    private function construirUrlPublicaOrdenCompra(string $tokenPublico): string
+    {
+        return $this->construirUrlInterna('/orden-compra/publica/' . $tokenPublico);
     }
 
     private function renderizarPlantillaCorreo(string $contenido, array $variables): string
