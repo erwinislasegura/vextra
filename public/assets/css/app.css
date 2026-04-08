@@ -140,6 +140,7 @@ form.form-enviando .btn{pointer-events:none}
 
 .brand-logo-public{display:block !important;height:78px !important;width:auto !important;max-width:315px !important;object-fit:contain}
 .public-navbar .navbar-brand{color:var(--vextra-azul-profundo)}
+.public-navbar .container{justify-content:center}
 .public-page .btn-primary{background:linear-gradient(135deg,var(--vextra-morado),var(--vextra-azul));border-color:var(--vextra-morado)}
 .public-page .btn-primary:hover,.public-page .btn-primary:focus{background:linear-gradient(135deg,var(--vextra-indigo),var(--vextra-azul));border-color:var(--vextra-indigo)}
 .public-page .btn-outline-primary{color:var(--vextra-azul-profundo);border-color:var(--vextra-azul)}
