@@ -75,9 +75,29 @@ form.form-enviando .btn{pointer-events:none}
 .public-page section[id]{scroll-margin-top:90px}
 
 @media (max-width: 991.98px){
+  .public-navbar .container{display:flex;align-items:center;flex-wrap:wrap}
+  .public-navbar .navbar-brand{margin-right:auto}
+  .public-navbar .navbar-toggler{
+    margin-left:auto;
+    border:1px solid #d6dff0;
+    border-radius:.55rem;
+    padding:.3rem .45rem;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(28,43,64,.08);
+  }
+  .public-navbar .navbar-toggler:focus{
+    box-shadow:0 0 0 .2rem rgba(70,50,168,.2);
+  }
+  .public-navbar .navbar-toggler-icon{
+    width:1.2rem;
+    height:1.2rem;
+    background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2870,50,168,0.95%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.25' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
   .public-navbar .navbar-nav .btn{margin-top:.35rem}
+  .public-navbar [data-nav-collapse]{width:100%}
   .public-navbar [data-nav-collapse]{display:none !important}
   .public-navbar [data-nav-collapse].show{display:block !important}
+  .brand-logo-public{height:54px !important;max-width:220px !important}
 }
 
 @media (min-width: 992px){
@@ -94,10 +114,10 @@ form.form-enviando .btn{pointer-events:none}
   .public-page .btn-sm{font-size:.84rem;padding:.45rem .72rem}
   .public-page .grecaptcha-badge{
     visibility:visible !important;
-    opacity:.96;
-    right:8px !important;
-    bottom:86px !important;
-    transform:scale(.82);
+    opacity:.98;
+    right:-186px !important;
+    bottom:82px !important;
+    transform:scale(.78);
     transform-origin:bottom right;
     z-index:1025 !important;
     overflow:visible !important;
