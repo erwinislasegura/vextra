@@ -189,8 +189,8 @@ class DocumentosControlador extends Controlador
         $impuesto = '$' . number_format((float) ($cotizacion['impuesto'] ?? 0), 2, ',', '.');
         $descuento = '$' . number_format((float) ($cotizacion['descuento'] ?? 0), 2, ',', '.');
         $fechaVencimiento = (string) ($cotizacion['fecha_vencimiento'] ?? date('Y-m-d'));
-        $urlPublica = url('/cotizacion/publica/' . (string) ($cotizacion['token_publico'] ?? '{token}'));
-        $urlPdf = url('/app/cotizaciones/pdf/' . (int) ($cotizacion['id'] ?? 0));
+        $urlPublica = $this->construirUrlAbsoluta('/cotizacion/publica/' . (string) ($cotizacion['token_publico'] ?? '{token}'));
+        $urlPdf = $this->construirUrlAbsoluta('/app/cotizaciones/pdf/' . (int) ($cotizacion['id'] ?? 0));
 
         return [
             '{{empresa_nombre}}' => $empresaNombre,
@@ -243,8 +243,8 @@ class DocumentosControlador extends Controlador
         $estado = (string) ($orden['estado'] ?? 'borrador');
         $total = '$' . number_format((float) ($orden['total'] ?? 0), 2, ',', '.');
         $tokenPublico = (string) ($orden['token_publico'] ?? '{token}');
-        $urlPublica = url('/orden-compra/publica/' . $tokenPublico);
-        $urlPdf = url('/app/inventario/ordenes-compra/pdf/' . (int) ($orden['id'] ?? 0));
+        $urlPublica = $this->construirUrlAbsoluta('/orden-compra/publica/' . $tokenPublico);
+        $urlPdf = $this->construirUrlAbsoluta('/app/inventario/ordenes-compra/pdf/' . (int) ($orden['id'] ?? 0));
 
         return [
             '{{empresa_nombre}}' => $empresaNombre,
@@ -329,5 +329,16 @@ HTML;
   </div>
 </div>
 HTML;
+    }
+
+    private function construirUrlAbsoluta(string $ruta): string
+    {
+        $config = require __DIR__ . '/../../../configuracion/aplicacion.php';
+        $base = rtrim((string) ($config['url'] ?? ''), '/');
+        if ($base === '' || preg_match('/localhost|127\\.0\\.0\\.1/i', $base)) {
+            $base = 'https://vextra.cl';
+        }
+
+        return $base . url($ruta);
     }
 }
