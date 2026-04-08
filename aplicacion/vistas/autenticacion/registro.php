@@ -45,14 +45,20 @@
             </div>
             <div class="col-md-3">
               <label class="form-label" for="pais">País</label>
-              <input id="pais" class="form-control" name="pais" value="<?= e((string) ($datosFormulario['pais'] ?? 'Colombia')) ?>" maxlength="120">
+              <input id="pais" class="form-control" name="pais" value="Chile" maxlength="120" readonly>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="plan_id">Plan <span class="text-danger">*</span></label>
               <select id="plan_id" class="form-select" name="plan_id" required>
                 <option value="">Selecciona un plan</option>
                 <?php foreach ($planes as $plan): ?>
-                  <option value="<?= (int) $plan['id'] ?>" <?= ((int) ($planPreseleccionado ?? 0) === (int) $plan['id']) ? 'selected' : '' ?>>
+                  <option
+                    value="<?= (int) $plan['id'] ?>"
+                    data-nombre="<?= e((string) $plan['nombre']) ?>"
+                    data-precio-mensual="<?= e(number_format((float) $plan['precio_mensual'], 0, ',', '.')) ?>"
+                    data-precio-anual="<?= e(number_format((float) $plan['precio_anual'], 0, ',', '.')) ?>"
+                    <?= ((int) ($planPreseleccionado ?? 0) === (int) $plan['id']) ? 'selected' : '' ?>
+                  >
                     <?= e($plan['nombre']) ?>
                   </option>
                 <?php endforeach; ?>
@@ -130,11 +136,38 @@
 (() => {
   const input = document.getElementById('password');
   const boton = document.getElementById('toggle_password');
-  if (!input || !boton) return;
-  boton.addEventListener('click', () => {
-    const visible = input.type === 'text';
-    input.type = visible ? 'password' : 'text';
-    boton.textContent = visible ? 'Mostrar' : 'Ocultar';
-  });
+  if (input && boton) {
+    boton.addEventListener('click', () => {
+      const visible = input.type === 'text';
+      input.type = visible ? 'password' : 'text';
+      boton.textContent = visible ? 'Mostrar' : 'Ocultar';
+    });
+  }
+
+  const selectTipoCobro = document.getElementById('tipo_cobro');
+  const selectPlan = document.getElementById('plan_id');
+
+  const actualizarEtiquetasPlanes = () => {
+    if (!selectTipoCobro || !selectPlan) {
+      return;
+    }
+    const modalidad = selectTipoCobro.value === 'anual' ? 'anual' : 'mensual';
+    Array.from(selectPlan.options).forEach((option) => {
+      const nombre = option.getAttribute('data-nombre');
+      if (!nombre) {
+        return;
+      }
+      const precioMensual = option.getAttribute('data-precio-mensual') || '0';
+      const precioAnual = option.getAttribute('data-precio-anual') || precioMensual;
+      const precio = modalidad === 'anual' ? precioAnual : precioMensual;
+      const sufijo = modalidad === 'anual' ? 'año' : 'mes';
+      option.textContent = `${nombre} - $${precio} CLP / ${sufijo}`;
+    });
+  };
+
+  if (selectTipoCobro) {
+    selectTipoCobro.addEventListener('change', actualizarEtiquetasPlanes);
+  }
+  actualizarEtiquetasPlanes();
 })();
 </script>
