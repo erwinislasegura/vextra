@@ -29,7 +29,8 @@ class ServicioPlan
 
         $regla = $this->obtenerRegla((int) $plan['plan_id'], $codigoFuncionalidad);
         if (!$regla || !$regla['activo']) {
-            throw new \RuntimeException('Tu plan no incluye esta funcionalidad.');
+            $funcionalidad = trim(str_replace('_', ' ', $codigoFuncionalidad));
+            throw new \RuntimeException('Tu plan no incluye esta funcionalidad: ' . $funcionalidad . '.');
         }
 
         if (!$regla['es_ilimitado'] && (int) $regla['valor_numerico'] <= $actual) {
