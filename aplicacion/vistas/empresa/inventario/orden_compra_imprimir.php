@@ -43,7 +43,11 @@ foreach (($orden['detalles'] ?? []) as $item) {
 
 <div class="toolbar no-print">
   <button class="btn btn-dark btn-sm" type="button" onclick="window.print()">Imprimir / Guardar PDF</button>
-  <a class="btn btn-outline-secondary btn-sm" href="<?= e(url('/app/inventario/ordenes-compra/editar/' . (int) $orden['id'])) ?>">Volver</a>
+  <?php if (!empty($esVistaPublica)): ?>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= e(url('/orden-compra/publica/' . ($token ?? ''))) ?>">Volver</a>
+  <?php else: ?>
+    <a class="btn btn-outline-secondary btn-sm" href="<?= e(url('/app/inventario/ordenes-compra/editar/' . (int) $orden['id'])) ?>">Volver</a>
+  <?php endif; ?>
 </div>
 
 <div class="hoja">
