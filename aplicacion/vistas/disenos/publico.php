@@ -17,6 +17,8 @@
   <meta name="twitter:title" content="Vextra | Sistema de cotizaciones para empresas">
   <meta name="twitter:description" content="Software de cotizaciones enfocado en vender más y mantener control comercial.">
   <link rel="canonical" href="<?= e((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '/')) ?>">
+  <link rel="icon" type="image/png" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
+  <link rel="apple-touch-icon" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="<?= e(url('/assets/css/app.css')) ?>" rel="stylesheet">

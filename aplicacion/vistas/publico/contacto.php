@@ -43,6 +43,32 @@
                                 <label class="form-label small mb-1">Correo</label>
                                 <input class="form-control" type="email" name="correo" placeholder="tu@empresa.com" required>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Teléfono / WhatsApp</label>
+                                <input class="form-control" name="telefono" placeholder="+56 9 1234 5678">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Empresa</label>
+                                <input class="form-control" name="empresa" placeholder="Nombre de tu empresa">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Tipo de contacto</label>
+                                <select class="form-select" name="tipo_contacto" required>
+                                    <option value="prospecto">Posible cliente</option>
+                                    <option value="cliente_actual">Cliente actual</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small mb-1">Motivo de la consulta</label>
+                                <select class="form-select" name="motivo_consulta" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="demo">Solicitar demo</option>
+                                    <option value="planes">Consulta de planes y precios</option>
+                                    <option value="implementacion">Consulta de implementación</option>
+                                    <option value="soporte_cliente_actual">Soporte para cliente actual</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
                             <div class="col-12">
                                 <label class="form-label small mb-1">Mensaje</label>
                                 <textarea class="form-control" name="mensaje" rows="5" placeholder="Cuéntanos cuántas cotizaciones manejan al mes y qué desean mejorar" required></textarea>
