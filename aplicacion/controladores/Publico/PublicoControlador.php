@@ -52,18 +52,43 @@ class PublicoControlador extends Controlador
 
         $nombre = trim($_POST['nombre'] ?? '');
         $correo = filter_var($_POST['correo'] ?? '', FILTER_VALIDATE_EMAIL);
+        $telefono = trim((string) ($_POST['telefono'] ?? ''));
+        $empresa = trim((string) ($_POST['empresa'] ?? ''));
+        $tipoContacto = (string) ($_POST['tipo_contacto'] ?? 'prospecto');
+        if (!in_array($tipoContacto, ['prospecto', 'cliente_actual'], true)) {
+            $tipoContacto = 'prospecto';
+        }
+        $motivoConsulta = trim((string) ($_POST['motivo_consulta'] ?? ''));
         $mensaje = trim($_POST['mensaje'] ?? '');
 
-        if ($nombre === '' || !$correo || $mensaje === '') {
+        if ($nombre === '' || !$correo || $mensaje === '' || $motivoConsulta === '') {
             flash('danger', 'Completa todos los campos del formulario de contacto.');
             $this->redirigir('/contacto');
         }
 
+        $html = '<h2>Nuevo lead desde landing</h2>'
+            . '<p><strong>Nombre:</strong> ' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p><strong>Correo:</strong> ' . htmlspecialchars((string) $correo, ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p><strong>Teléfono:</strong> ' . htmlspecialchars($telefono !== '' ? $telefono : 'No informado', ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p><strong>Empresa:</strong> ' . htmlspecialchars($empresa !== '' ? $empresa : 'No informada', ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p><strong>Tipo de contacto:</strong> ' . htmlspecialchars($tipoContacto === 'cliente_actual' ? 'Cliente actual' : 'Posible cliente', ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p><strong>Motivo de consulta:</strong> ' . htmlspecialchars($motivoConsulta, ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p><strong>Mensaje:</strong><br>' . nl2br(htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8')) . '</p>';
+
         (new ServicioCorreo())->enviar(
-            'ventas@cotizapro.local',
+            'contacto@vextra.cl',
             'Nuevo lead desde landing',
             'landing_contacto',
-            ['nombre' => $nombre, 'correo' => $correo, 'mensaje' => $mensaje]
+            [
+                'nombre' => $nombre,
+                'correo' => $correo,
+                'telefono' => $telefono,
+                'empresa' => $empresa,
+                'tipo_contacto' => $tipoContacto,
+                'motivo_consulta' => $motivoConsulta,
+                'mensaje' => $mensaje,
+                'html' => $html,
+            ]
         );
 
         flash('success', 'Gracias por escribirnos. Te contactaremos pronto.');
