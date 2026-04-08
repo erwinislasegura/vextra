@@ -86,7 +86,16 @@ form.form-enviando .btn{pointer-events:none}
   .public-page .container{padding-left:1rem;padding-right:1rem}
   .public-page .small{font-size:.82rem}
   .public-page .btn-sm{font-size:.84rem;padding:.45rem .72rem}
-  .public-page .grecaptcha-badge{display:none !important}
+  .public-page .grecaptcha-badge{
+    visibility:visible !important;
+    opacity:.96;
+    right:8px !important;
+    bottom:86px !important;
+    transform:scale(.82);
+    transform-origin:bottom right;
+    z-index:1025 !important;
+    overflow:visible !important;
+  }
 }
 .public-page .chart-card{background:#f8fafc;border:1px solid #dce5ef;border-radius:.65rem;padding:.85rem}
 .public-page .chart-row{display:grid;gap:.35rem;margin-bottom:.75rem}
@@ -105,6 +114,7 @@ form.form-enviando .btn{pointer-events:none}
 
 .brand-logo-public{display:block !important;height:78px !important;width:auto !important;max-width:315px !important;object-fit:contain}
 .public-navbar .navbar-brand{color:var(--vextra-azul-profundo)}
+.public-navbar .container{justify-content:center}
 .public-page .btn-primary{background:linear-gradient(135deg,var(--vextra-morado),var(--vextra-azul));border-color:var(--vextra-morado)}
 .public-page .btn-primary:hover,.public-page .btn-primary:focus{background:linear-gradient(135deg,var(--vextra-indigo),var(--vextra-azul));border-color:var(--vextra-indigo)}
 .public-page .btn-outline-primary{color:var(--vextra-azul-profundo);border-color:var(--vextra-azul)}
