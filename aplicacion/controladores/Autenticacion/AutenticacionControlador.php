@@ -18,7 +18,11 @@ class AutenticacionControlador extends Controlador
 {
     public function mostrarLogin(): void
     {
-        $this->vista('autenticacion/login', [], 'publico');
+        $this->vista('autenticacion/login', [
+            'meta_title' => 'Iniciar sesión | Vextra',
+            'meta_description' => 'Accede a Vextra para gestionar cotizaciones, clientes, inventario y seguimiento comercial en tu empresa.',
+            'meta_keywords' => 'iniciar sesión vextra, acceso plataforma comercial, software cotizaciones login',
+        ], 'publico');
     }
 
     public function iniciarSesion(): void
@@ -86,6 +90,9 @@ class AutenticacionControlador extends Controlador
             'planPreseleccionado' => $planPreseleccionado,
             'tipoCobroPreseleccionado' => $tipoCobroPreseleccionado,
             'datosFormulario' => $datosFormulario,
+            'meta_title' => 'Registro de empresa | Vextra',
+            'meta_description' => 'Crea tu cuenta empresarial en Vextra y elige un plan mensual o anual para ordenar tus cotizaciones y ventas.',
+            'meta_keywords' => 'registro vextra, crear cuenta empresarial, planes de cotizaciones',
         ], 'publico');
     }
 
