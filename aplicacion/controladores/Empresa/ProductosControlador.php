@@ -30,7 +30,13 @@ class ProductosControlador extends Controlador
         validar_csrf();
         $empresaId = empresa_actual_id();
         $modelo = new Producto();
-        (new ServicioPlan())->validarLimite($empresaId, 'maximo_productos', $modelo->contar($empresaId), 'Has alcanzado el máximo de productos permitido por tu plan.');
+        try {
+            (new ServicioPlan())->validarLimite($empresaId, 'maximo_productos', $modelo->contar($empresaId), 'Has alcanzado el máximo de productos permitido por tu plan.');
+        } catch (\RuntimeException $e) {
+            flash('danger', $e->getMessage());
+            $this->redirigir($this->obtenerRutaRetorno('/app/productos'));
+            return;
+        }
 
         $modelo->crear([
             'empresa_id' => $empresaId,
