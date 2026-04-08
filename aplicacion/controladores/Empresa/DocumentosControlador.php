@@ -189,8 +189,8 @@ class DocumentosControlador extends Controlador
         $impuesto = '$' . number_format((float) ($cotizacion['impuesto'] ?? 0), 2, ',', '.');
         $descuento = '$' . number_format((float) ($cotizacion['descuento'] ?? 0), 2, ',', '.');
         $fechaVencimiento = (string) ($cotizacion['fecha_vencimiento'] ?? date('Y-m-d'));
-        $urlPublica = url('/cotizacion/publica/' . (string) ($cotizacion['token_publico'] ?? '{token}'));
-        $urlPdf = url('/app/cotizaciones/pdf/' . (int) ($cotizacion['id'] ?? 0));
+        $urlPublica = $this->construirUrlAbsoluta('/cotizacion/publica/' . (string) ($cotizacion['token_publico'] ?? '{token}'));
+        $urlPdf = $this->construirUrlAbsoluta('/app/cotizaciones/pdf/' . (int) ($cotizacion['id'] ?? 0));
 
         return [
             '{{empresa_nombre}}' => $empresaNombre,
@@ -242,7 +242,9 @@ class DocumentosControlador extends Controlador
         $fechaEntrega = (string) ($orden['fecha_entrega_estimada'] ?? date('Y-m-d'));
         $estado = (string) ($orden['estado'] ?? 'borrador');
         $total = '$' . number_format((float) ($orden['total'] ?? 0), 2, ',', '.');
-        $urlPdf = url('/app/inventario/ordenes-compra/pdf/' . (int) ($orden['id'] ?? 0));
+        $tokenPublico = (string) ($orden['token_publico'] ?? '{token}');
+        $urlPublica = $this->construirUrlAbsoluta('/orden-compra/publica/' . $tokenPublico);
+        $urlPdf = $this->construirUrlAbsoluta('/app/inventario/ordenes-compra/pdf/' . (int) ($orden['id'] ?? 0));
 
         return [
             '{{empresa_nombre}}' => $empresaNombre,
@@ -253,6 +255,7 @@ class DocumentosControlador extends Controlador
             '{{fecha_emision}}' => $fechaEmision,
             '{{fecha_entrega}}' => $fechaEntrega,
             '{{total_orden}}' => $total,
+            '{{url_publica}}' => $urlPublica,
             '{{url_pdf}}' => $urlPdf,
             '{{remitente_nombre}}' => $remitenteNombre,
             '{{remitente_correo}}' => $remitenteCorreo,
@@ -315,6 +318,10 @@ HTML;
           <tr><td style="padding:4px 0;color:#6b7280;">Total</td><td style="padding:4px 0;text-align:right;">{{total_orden}}</td></tr>
         </table>
       </div>
+      <p style="margin:0 0 20px;line-height:1.5;">Puedes revisar la orden en línea desde el siguiente botón:</p>
+      <p style="margin:0 0 18px;">
+        <a href="{{url_publica}}" style="display:inline-block;background:#0f3d77;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Ver orden de compra</a>
+      </p>
       <p style="margin:0 0 8px;font-size:13px;color:#4b5563;">Descargar PDF de la orden:</p>
       <p style="margin:0 0 20px;font-size:13px;"><a href="{{url_pdf}}" style="color:#0f3d77;">{{url_pdf}}</a></p>
       <p style="margin:0;font-size:12px;color:#6b7280;">Este correo fue enviado a {{correo_destino}} por {{remitente_nombre}} ({{remitente_correo}}).</p>
@@ -322,5 +329,16 @@ HTML;
   </div>
 </div>
 HTML;
+    }
+
+    private function construirUrlAbsoluta(string $ruta): string
+    {
+        $config = require __DIR__ . '/../../../configuracion/aplicacion.php';
+        $base = rtrim((string) ($config['url'] ?? ''), '/');
+        if ($base === '' || preg_match('/localhost|127\\.0\\.0\\.1/i', $base)) {
+            $base = 'https://vextra.cl';
+        }
+
+        return $base . url($ruta);
     }
 }
