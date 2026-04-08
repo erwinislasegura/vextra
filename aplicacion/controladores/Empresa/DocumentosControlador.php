@@ -215,6 +215,10 @@ class DocumentosControlador extends Controlador
     {
         $reemplazosSeguros = [];
         foreach ($variables as $clave => $valor) {
+            if ($clave === '{{detalle_orden}}') {
+                $reemplazosSeguros[$clave] = (string) $valor;
+                continue;
+            }
             $reemplazosSeguros[$clave] = htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
         }
 
@@ -255,6 +259,7 @@ class DocumentosControlador extends Controlador
             '{{fecha_emision}}' => $fechaEmision,
             '{{fecha_entrega}}' => $fechaEntrega,
             '{{total_orden}}' => $total,
+            '{{detalle_orden}}' => $this->construirDetalleOrdenCorreo($orden),
             '{{url_publica}}' => $urlPublica,
             '{{url_pdf}}' => $urlPdf,
             '{{remitente_nombre}}' => $remitenteNombre,
@@ -318,6 +323,10 @@ HTML;
           <tr><td style="padding:4px 0;color:#6b7280;">Total</td><td style="padding:4px 0;text-align:right;">{{total_orden}}</td></tr>
         </table>
       </div>
+      <div style="margin:0 0 16px;">
+        <div style="font-size:13px;margin-bottom:8px;color:#111827;"><strong>Detalle de productos</strong></div>
+        {{detalle_orden}}
+      </div>
       <p style="margin:0 0 20px;line-height:1.5;">Puedes revisar la orden en línea desde el siguiente botón:</p>
       <p style="margin:0 0 18px;">
         <a href="{{url_publica}}" style="display:inline-block;background:#0f3d77;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Ver orden de compra</a>
@@ -340,5 +349,32 @@ HTML;
         }
 
         return $base . url($ruta);
+    }
+
+    private function construirDetalleOrdenCorreo(?array $orden): string
+    {
+        $filas = '';
+        foreach (($orden['detalles'] ?? []) as $item) {
+            $filas .= '<tr>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;">' . htmlspecialchars((string) ($item['codigo'] ?? ''), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;">' . htmlspecialchars((string) ($item['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;text-align:right;">' . number_format((float) ($item['cantidad'] ?? 0), 2, ',', '.') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;text-align:right;">$' . number_format((float) ($item['costo_unitario'] ?? 0), 2, ',', '.') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;text-align:right;">$' . number_format((float) ($item['subtotal'] ?? 0), 2, ',', '.') . '</td>'
+                . '</tr>';
+        }
+
+        if ($filas === '') {
+            $filas = '<tr><td colspan="5" style="padding:10px;border:1px solid #e5e7eb;text-align:center;color:#6b7280;">Sin detalle de productos.</td></tr>';
+        }
+
+        return '<table style="width:100%;border-collapse:collapse;font-size:12px;background:#ffffff;">'
+            . '<thead><tr>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:left;">Código</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:left;">Descripción</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:right;">Cant.</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:right;">Costo</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:right;">Subtotal</th>'
+            . '</tr></thead><tbody>' . $filas . '</tbody></table>';
     }
 }
