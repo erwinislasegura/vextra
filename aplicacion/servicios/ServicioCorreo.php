@@ -36,13 +36,20 @@ class ServicioCorreo
         }
 
         $html = (string) ($datos['html'] ?? '');
+        if ($html === '' && isset($datos['mensaje_html'])) {
+            $html = (string) $datos['mensaje_html'];
+        }
         if ($html === '') {
             $html = '<p>Notificación automática de Vextra.</p>';
+        }
+        if (!preg_match('/<\\s*html[\\s>]/i', $html)) {
+            $html = '<!doctype html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;">' . $html . '</body></html>';
         }
 
         $headers = [
             'MIME-Version: 1.0',
-            'Content-type: text/html; charset=UTF-8',
+            'Content-Type: text/html; charset=UTF-8',
+            'Content-Transfer-Encoding: 8bit',
             'From: ' . $remitenteNombre . ' <' . $remitenteCorreo . '>',
             'Reply-To: ' . $remitenteCorreo,
         ];
