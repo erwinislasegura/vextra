@@ -60,7 +60,7 @@ class PublicoControlador extends Controlador
         }
 
         (new ServicioCorreo())->enviar(
-            'ventas@cotizapro.local',
+            'contacto@vextra.cl',
             'Nuevo lead desde landing',
             'landing_contacto',
             ['nombre' => $nombre, 'correo' => $correo, 'mensaje' => $mensaje]
