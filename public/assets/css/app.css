@@ -86,7 +86,16 @@ form.form-enviando .btn{pointer-events:none}
   .public-page .container{padding-left:1rem;padding-right:1rem}
   .public-page .small{font-size:.82rem}
   .public-page .btn-sm{font-size:.84rem;padding:.45rem .72rem}
-  .public-page .grecaptcha-badge{display:none !important}
+  .public-page .grecaptcha-badge{
+    visibility:visible !important;
+    opacity:.96;
+    right:8px !important;
+    bottom:86px !important;
+    transform:scale(.82);
+    transform-origin:bottom right;
+    z-index:1025 !important;
+    overflow:visible !important;
+  }
 }
 .public-page .chart-card{background:#f8fafc;border:1px solid #dce5ef;border-radius:.65rem;padding:.85rem}
 .public-page .chart-row{display:grid;gap:.35rem;margin-bottom:.75rem}
