@@ -14,6 +14,8 @@ $enrutador->agregar('GET', '/contratar/{plan}', [PublicoControlador::class, 'con
 $enrutador->agregar('GET', '/cotizacion/publica/{token}', [PublicoControlador::class, 'verCotizacionPublica']);
 $enrutador->agregar('GET', '/cotizacion/publica/{token}/imprimir', [PublicoControlador::class, 'imprimirCotizacionPublica']);
 $enrutador->agregar('POST', '/cotizacion/publica/{token}/decision', [PublicoControlador::class, 'registrarDecisionCotizacion']);
+$enrutador->agregar('GET', '/orden-compra/publica/{token}', [PublicoControlador::class, 'verOrdenCompraPublica']);
+$enrutador->agregar('GET', '/orden-compra/publica/{token}/imprimir', [PublicoControlador::class, 'imprimirOrdenCompraPublica']);
 
 $enrutador->agregar('POST', '/flow/webhook/payment-confirmation', [FlowWebhookControlador::class, 'confirmacionPago']);
 $enrutador->agregar('POST', '/flow/webhook/subscription', [FlowWebhookControlador::class, 'callbackSuscripcion']);

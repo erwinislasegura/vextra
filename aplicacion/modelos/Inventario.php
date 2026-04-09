@@ -394,7 +394,7 @@ class Inventario extends Modelo
     {
         $this->db->beginTransaction();
         try {
-            $stmtCab = $this->db->prepare('INSERT INTO ordenes_compra (empresa_id,proveedor_id,numero,fecha_emision,fecha_entrega_estimada,estado,referencia,observacion,usuario_id,fecha_creacion) VALUES (:empresa_id,:proveedor_id,:numero,:fecha_emision,:fecha_entrega_estimada,:estado,:referencia,:observacion,:usuario_id,NOW())');
+            $stmtCab = $this->db->prepare('INSERT INTO ordenes_compra (empresa_id,proveedor_id,numero,fecha_emision,fecha_entrega_estimada,estado,referencia,observacion,usuario_id,token_publico,fecha_creacion) VALUES (:empresa_id,:proveedor_id,:numero,:fecha_emision,:fecha_entrega_estimada,:estado,:referencia,:observacion,:usuario_id,:token_publico,NOW())');
             $stmtCab->execute($cabecera);
             $ordenId = (int) $this->db->lastInsertId();
 
@@ -480,6 +480,39 @@ class Inventario extends Modelo
             }
             throw $e;
         }
+    }
+
+    public function actualizarTokenPublicoOrdenCompra(int $empresaId, int $id, string $token): void
+    {
+        $stmt = $this->db->prepare('UPDATE ordenes_compra SET token_publico=:token_publico, fecha_actualizacion=NOW() WHERE empresa_id=:empresa_id AND id=:id');
+        $stmt->execute([
+            'token_publico' => $token,
+            'empresa_id' => $empresaId,
+            'id' => $id,
+        ]);
+    }
+
+    public function obtenerOrdenCompraPorTokenPublico(string $token): ?array
+    {
+        $stmt = $this->db->prepare('SELECT o.*, p.nombre AS proveedor_nombre, p.correo AS proveedor_correo, u.nombre AS usuario_nombre
+            FROM ordenes_compra o
+            LEFT JOIN proveedores_inventario p ON p.id = o.proveedor_id
+            LEFT JOIN usuarios u ON u.id = o.usuario_id
+            WHERE o.token_publico = :token_publico LIMIT 1');
+        $stmt->execute(['token_publico' => $token]);
+        $orden = $stmt->fetch();
+        if (!$orden) {
+            return null;
+        }
+
+        $stmtDet = $this->db->prepare('SELECT d.*, pr.codigo, pr.nombre
+            FROM ordenes_compra_detalle d
+            INNER JOIN productos pr ON pr.id = d.producto_id
+            WHERE d.orden_compra_id=:orden_compra_id ORDER BY d.id ASC');
+        $stmtDet->execute(['orden_compra_id' => (int) $orden['id']]);
+        $orden['detalles'] = $stmtDet->fetchAll();
+
+        return $orden;
     }
 
     public function actualizarEstadoOrdenCompra(int $empresaId, int $ordenCompraId): void
