@@ -68,9 +68,15 @@ class ClientesControlador extends Controlador
             'notas' => trim($_POST['notas'] ?? ''),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
-        $listaPrecioIds = plan_tiene_funcionalidad_empresa_actual('clientes_gestion_listas_precios')
-            ? array_map('intval', (array) ($_POST['lista_precio_ids'] ?? []))
-            : [];
+        $listaPrecioIds = [];
+        if (plan_tiene_funcionalidad_empresa_actual('clientes_gestion_listas_precios')) {
+            $listaPrecioIds = array_map('intval', (array) ($_POST['lista_precio_ids'] ?? []));
+            $listaPrecioSimple = (int) ($_POST['lista_precio_id'] ?? 0);
+            if ($listaPrecioSimple > 0) {
+                $listaPrecioIds[] = $listaPrecioSimple;
+            }
+            $listaPrecioIds = array_values(array_unique(array_filter($listaPrecioIds, static fn ($id) => (int) $id > 0)));
+        }
         (new GestionComercial())->asignarListasPrecioCliente($empresaId, $clienteId, $listaPrecioIds);
 
         flash('success', 'Cliente creado correctamente.');
@@ -194,9 +200,15 @@ class ClientesControlador extends Controlador
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
 
-        $listaPrecioIds = plan_tiene_funcionalidad_empresa_actual('clientes_gestion_listas_precios')
-            ? array_map('intval', (array) ($_POST['lista_precio_ids'] ?? []))
-            : [];
+        $listaPrecioIds = [];
+        if (plan_tiene_funcionalidad_empresa_actual('clientes_gestion_listas_precios')) {
+            $listaPrecioIds = array_map('intval', (array) ($_POST['lista_precio_ids'] ?? []));
+            $listaPrecioSimple = (int) ($_POST['lista_precio_id'] ?? 0);
+            if ($listaPrecioSimple > 0) {
+                $listaPrecioIds[] = $listaPrecioSimple;
+            }
+            $listaPrecioIds = array_values(array_unique(array_filter($listaPrecioIds, static fn ($id) => (int) $id > 0)));
+        }
         (new GestionComercial())->asignarListasPrecioCliente(empresa_actual_id(), $id, $listaPrecioIds);
 
         flash('success', 'Cliente actualizado correctamente.');
