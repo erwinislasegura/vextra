@@ -189,8 +189,8 @@ class DocumentosControlador extends Controlador
         $impuesto = '$' . number_format((float) ($cotizacion['impuesto'] ?? 0), 2, ',', '.');
         $descuento = '$' . number_format((float) ($cotizacion['descuento'] ?? 0), 2, ',', '.');
         $fechaVencimiento = (string) ($cotizacion['fecha_vencimiento'] ?? date('Y-m-d'));
-        $urlPublica = url('/cotizacion/publica/' . (string) ($cotizacion['token_publico'] ?? '{token}'));
-        $urlPdf = url('/app/cotizaciones/pdf/' . (int) ($cotizacion['id'] ?? 0));
+        $urlPublica = $this->construirUrlAbsoluta('/cotizacion/publica/' . (string) ($cotizacion['token_publico'] ?? '{token}'));
+        $urlPdf = $this->construirUrlAbsoluta('/app/cotizaciones/pdf/' . (int) ($cotizacion['id'] ?? 0));
 
         return [
             '{{empresa_nombre}}' => $empresaNombre,
@@ -215,6 +215,10 @@ class DocumentosControlador extends Controlador
     {
         $reemplazosSeguros = [];
         foreach ($variables as $clave => $valor) {
+            if ($clave === '{{detalle_orden}}') {
+                $reemplazosSeguros[$clave] = (string) $valor;
+                continue;
+            }
             $reemplazosSeguros[$clave] = htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
         }
 
@@ -242,7 +246,9 @@ class DocumentosControlador extends Controlador
         $fechaEntrega = (string) ($orden['fecha_entrega_estimada'] ?? date('Y-m-d'));
         $estado = (string) ($orden['estado'] ?? 'borrador');
         $total = '$' . number_format((float) ($orden['total'] ?? 0), 2, ',', '.');
-        $urlPdf = url('/app/inventario/ordenes-compra/pdf/' . (int) ($orden['id'] ?? 0));
+        $tokenPublico = (string) ($orden['token_publico'] ?? '{token}');
+        $urlPublica = $this->construirUrlAbsoluta('/orden-compra/publica/' . $tokenPublico);
+        $urlPdf = $this->construirUrlAbsoluta('/app/inventario/ordenes-compra/pdf/' . (int) ($orden['id'] ?? 0));
 
         return [
             '{{empresa_nombre}}' => $empresaNombre,
@@ -253,6 +259,8 @@ class DocumentosControlador extends Controlador
             '{{fecha_emision}}' => $fechaEmision,
             '{{fecha_entrega}}' => $fechaEntrega,
             '{{total_orden}}' => $total,
+            '{{detalle_orden}}' => $this->construirDetalleOrdenCorreo($orden),
+            '{{url_publica}}' => $urlPublica,
             '{{url_pdf}}' => $urlPdf,
             '{{remitente_nombre}}' => $remitenteNombre,
             '{{remitente_correo}}' => $remitenteCorreo,
@@ -315,6 +323,14 @@ HTML;
           <tr><td style="padding:4px 0;color:#6b7280;">Total</td><td style="padding:4px 0;text-align:right;">{{total_orden}}</td></tr>
         </table>
       </div>
+      <div style="margin:0 0 16px;">
+        <div style="font-size:13px;margin-bottom:8px;color:#111827;"><strong>Detalle de productos</strong></div>
+        {{detalle_orden}}
+      </div>
+      <p style="margin:0 0 20px;line-height:1.5;">Puedes revisar la orden en línea desde el siguiente botón:</p>
+      <p style="margin:0 0 18px;">
+        <a href="{{url_publica}}" style="display:inline-block;background:#0f3d77;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;">Ver orden de compra</a>
+      </p>
       <p style="margin:0 0 8px;font-size:13px;color:#4b5563;">Descargar PDF de la orden:</p>
       <p style="margin:0 0 20px;font-size:13px;"><a href="{{url_pdf}}" style="color:#0f3d77;">{{url_pdf}}</a></p>
       <p style="margin:0;font-size:12px;color:#6b7280;">Este correo fue enviado a {{correo_destino}} por {{remitente_nombre}} ({{remitente_correo}}).</p>
@@ -322,5 +338,43 @@ HTML;
   </div>
 </div>
 HTML;
+    }
+
+    private function construirUrlAbsoluta(string $ruta): string
+    {
+        $config = require __DIR__ . '/../../../configuracion/aplicacion.php';
+        $base = rtrim((string) ($config['url'] ?? ''), '/');
+        if ($base === '' || preg_match('/localhost|127\\.0\\.0\\.1/i', $base)) {
+            $base = 'https://vextra.cl';
+        }
+
+        return $base . url($ruta);
+    }
+
+    private function construirDetalleOrdenCorreo(?array $orden): string
+    {
+        $filas = '';
+        foreach (($orden['detalles'] ?? []) as $item) {
+            $filas .= '<tr>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;">' . htmlspecialchars((string) ($item['codigo'] ?? ''), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;">' . htmlspecialchars((string) ($item['nombre'] ?? ''), ENT_QUOTES, 'UTF-8') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;text-align:right;">' . number_format((float) ($item['cantidad'] ?? 0), 2, ',', '.') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;text-align:right;">$' . number_format((float) ($item['costo_unitario'] ?? 0), 2, ',', '.') . '</td>'
+                . '<td style="padding:8px;border:1px solid #e5e7eb;text-align:right;">$' . number_format((float) ($item['subtotal'] ?? 0), 2, ',', '.') . '</td>'
+                . '</tr>';
+        }
+
+        if ($filas === '') {
+            $filas = '<tr><td colspan="5" style="padding:10px;border:1px solid #e5e7eb;text-align:center;color:#6b7280;">Sin detalle de productos.</td></tr>';
+        }
+
+        return '<table style="width:100%;border-collapse:collapse;font-size:12px;background:#ffffff;">'
+            . '<thead><tr>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:left;">Código</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:left;">Descripción</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:right;">Cant.</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:right;">Costo</th>'
+            . '<th style="padding:8px;border:1px solid #e5e7eb;background:#f9fafb;text-align:right;">Subtotal</th>'
+            . '</tr></thead><tbody>' . $filas . '</tbody></table>';
     }
 }
