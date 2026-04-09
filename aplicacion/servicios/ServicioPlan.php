@@ -33,8 +33,7 @@ class ServicioPlan
         }
 
         if (!$regla['activo']) {
-            $funcionalidad = trim(str_replace('_', ' ', $codigoFuncionalidad));
-            throw new \RuntimeException('Tu plan no incluye esta funcionalidad: ' . $funcionalidad . '.');
+            return;
         }
 
         if (!$regla['es_ilimitado'] && (int) $regla['valor_numerico'] <= $actual) {
