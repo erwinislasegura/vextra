@@ -28,7 +28,11 @@ class ServicioPlan
         }
 
         $regla = $this->obtenerRegla((int) $plan['plan_id'], $codigoFuncionalidad);
-        if (!$regla || !$regla['activo']) {
+        if (!$regla) {
+            return;
+        }
+
+        if (!$regla['activo']) {
             $funcionalidad = trim(str_replace('_', ' ', $codigoFuncionalidad));
             throw new \RuntimeException('Tu plan no incluye esta funcionalidad: ' . $funcionalidad . '.');
         }
