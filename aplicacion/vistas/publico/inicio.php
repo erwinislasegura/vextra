@@ -428,38 +428,6 @@ $faqSchema = [
 
 <script>
 (() => {
-    const toggles = Array.from(document.querySelectorAll('[data-bs-toggle="collapse"]'));
-    toggles.forEach((toggle) => {
-        toggle.addEventListener('click', () => {
-            const selector = toggle.getAttribute('data-bs-target') || toggle.getAttribute('href');
-            if (!selector) return;
-            const panel = document.querySelector(selector);
-            if (!panel) return;
-
-            const parentSelector = panel.getAttribute('data-bs-parent');
-            const willOpen = !panel.classList.contains('show');
-
-            if (parentSelector) {
-                const parent = document.querySelector(parentSelector);
-                if (parent) {
-                    parent.querySelectorAll('.accordion-collapse.show').forEach((abierto) => {
-                        if (abierto === panel) return;
-                        abierto.classList.remove('show');
-                        const opener = parent.querySelector('[data-bs-target="#' + abierto.id + '"]');
-                        if (opener) {
-                            opener.classList.add('collapsed');
-                            opener.setAttribute('aria-expanded', 'false');
-                        }
-                    });
-                }
-            }
-
-            panel.classList.toggle('show', willOpen);
-            toggle.classList.toggle('collapsed', !willOpen);
-            toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-        });
-    });
-
     const slider = document.querySelector('[data-slider]');
     if (slider) {
         const slides = Array.from(slider.querySelectorAll('[data-slide]'));
