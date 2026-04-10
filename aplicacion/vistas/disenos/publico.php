@@ -16,6 +16,7 @@
     $metaKeywords = (string) ($meta_keywords ?? 'sistema de cotizaciones, software de cotizaciones, cotizaciones para empresas, control de cotizaciones, planes de software comercial');
     $metaUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '/');
     $logoUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . url('/img/logo/logo_vextra.png');
+    $faviconUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . url('/img/logo/icono.png');
   ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -29,16 +30,19 @@
   <meta property="og:description" content="<?= e($metaDescription) ?>">
   <meta property="og:url" content="<?= e($metaUrl) ?>">
   <meta property="og:site_name" content="Vextra">
+  <meta property="og:locale" content="es_CL">
   <meta property="og:image" content="<?= e($logoUrl) ?>">
+  <meta property="og:image:secure_url" content="<?= e($logoUrl) ?>">
   <meta property="og:image:alt" content="Logo Vextra">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?= e($metaTitle) ?>">
   <meta name="twitter:description" content="<?= e($metaDescription) ?>">
   <meta name="twitter:image" content="<?= e($logoUrl) ?>">
   <link rel="canonical" href="<?= e($metaUrl) ?>">
-  <link rel="icon" type="image/png" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
-  <link rel="shortcut icon" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
-  <link rel="apple-touch-icon" href="<?= e(url('/img/logo/logo_vextra.png')) ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?= e($faviconUrl) ?>">
+  <link rel="icon" type="image/png" sizes="192x192" href="<?= e($faviconUrl) ?>">
+  <link rel="shortcut icon" href="<?= e($faviconUrl) ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= e($faviconUrl) ?>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="<?= e(url('/assets/css/app.css')) ?>" rel="stylesheet">
