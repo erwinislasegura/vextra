@@ -224,6 +224,24 @@ if ($listaPrecioCotizacionId > 0) {
     </div>
 </div>
 
+<div class="modal fade" id="modalConfirmarEnvioCotizacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar envío</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="mensaje-confirmar-envio-cotizacion">
+                ¿Deseas enviar esta cotización al cliente seleccionado?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="form-enviar-cotizacion" class="btn btn-warning btn-sm" id="btn-confirmar-envio-cotizacion">Sí, enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <template id="fila-item-template">
     <tr>
         <td>
@@ -332,6 +350,14 @@ if ($listaPrecioCotizacionId > 0) {
     const btnVerMovimientos = document.getElementById('btn-ver-movimientos');
     const movimientosProductoTitulo = document.getElementById('movimientos_producto_titulo');
     const movimientosProductoBody = document.getElementById('movimientos_producto_body');
+    const formEnviarCotizacion = document.getElementById('form-enviar-cotizacion');
+    const btnEnviarCliente = document.getElementById('btn-enviar-cliente');
+    const btnConfirmarEnvioCotizacion = document.getElementById('btn-confirmar-envio-cotizacion');
+    const modalConfirmarEnvioCotizacionEl = document.getElementById('modalConfirmarEnvioCotizacion');
+    const mensajeConfirmarEnvioCotizacion = document.getElementById('mensaje-confirmar-envio-cotizacion');
+    const modalConfirmarEnvioCotizacion = (window.bootstrap && modalConfirmarEnvioCotizacionEl)
+        ? new bootstrap.Modal(modalConfirmarEnvioCotizacionEl)
+        : null;
     const etiquetasTipoMovimiento = {
         recepcion_proveedor: 'Recepción de proveedor',
         ajuste_entrada: 'Ajuste de entrada',
@@ -345,6 +371,41 @@ if ($listaPrecioCotizacionId > 0) {
             return etiquetasTipoMovimiento[clave];
         }
         return clave.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    }
+
+    if (btnEnviarCliente) {
+        btnEnviarCliente.addEventListener('click', function () {
+            const clienteSeleccionado = String(selectCliente?.value || '').trim();
+            if (clienteSeleccionado === '') {
+                if (mensajeConfirmarEnvioCotizacion) {
+                    mensajeConfirmarEnvioCotizacion.textContent = 'No se puede enviar la cotización porque no hay un cliente seleccionado.';
+                }
+                if (btnConfirmarEnvioCotizacion) { btnConfirmarEnvioCotizacion.classList.add('d-none'); }
+                if (modalConfirmarEnvioCotizacion) {
+                    modalConfirmarEnvioCotizacion.show();
+                } else {
+                    alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+                }
+                return;
+            }
+
+            if (mensajeConfirmarEnvioCotizacion) {
+                mensajeConfirmarEnvioCotizacion.textContent = '¿Deseas enviar esta cotización al cliente seleccionado?';
+            }
+            if (btnConfirmarEnvioCotizacion) { btnConfirmarEnvioCotizacion.classList.remove('d-none'); }
+            if (modalConfirmarEnvioCotizacion) {
+                modalConfirmarEnvioCotizacion.show();
+                return;
+            }
+            if (formEnviarCotizacion && confirm('¿Deseas enviar esta cotización al cliente seleccionado?')) {
+                formEnviarCotizacion.submit();
+            }
+        });
+    }
+    if (btnConfirmarEnvioCotizacion && formEnviarCotizacion) {
+        btnConfirmarEnvioCotizacion.addEventListener('click', function () {
+            formEnviarCotizacion.submit();
+        });
     }
 
     function fmt(v) { return '$' + (Math.round((v + Number.EPSILON) * 100) / 100).toFixed(2); }

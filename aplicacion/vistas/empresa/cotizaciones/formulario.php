@@ -187,6 +187,24 @@ $puedeGuardar = $hayClientes && $hayProductos;
     </div>
 </form>
 
+<div class="modal fade" id="modalConfirmarEnvioCotizacionCrear" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar envío</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="mensaje-confirmar-envio-cotizacion-crear">
+                ¿Deseas enviar esta cotización al cliente seleccionado?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm" id="btn-confirmar-envio-cotizacion-crear">Sí, enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <template id="fila-item-template">
     <tr>
         <td>
@@ -361,6 +379,13 @@ function confirmarEnvioCotizacionCrear() {
     const btnVerMovimientos = document.getElementById('btn-ver-movimientos');
     const movimientosProductoTitulo = document.getElementById('movimientos_producto_titulo');
     const movimientosProductoBody = document.getElementById('movimientos_producto_body');
+    const btnEnviarClienteCrear = document.getElementById('btn-enviar-cliente-crear');
+    const btnConfirmarEnvioCotizacionCrear = document.getElementById('btn-confirmar-envio-cotizacion-crear');
+    const modalConfirmarEnvioCotizacionCrearEl = document.getElementById('modalConfirmarEnvioCotizacionCrear');
+    const mensajeConfirmarEnvioCotizacionCrear = document.getElementById('mensaje-confirmar-envio-cotizacion-crear');
+    const modalConfirmarEnvioCotizacionCrear = (window.bootstrap && modalConfirmarEnvioCotizacionCrearEl)
+        ? new bootstrap.Modal(modalConfirmarEnvioCotizacionCrearEl)
+        : null;
     const etiquetasTipoMovimiento = {
         recepcion_proveedor: 'Recepción de proveedor',
         ajuste_entrada: 'Ajuste de entrada',
@@ -374,6 +399,39 @@ function confirmarEnvioCotizacionCrear() {
             return etiquetasTipoMovimiento[clave];
         }
         return clave.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    }
+
+    if (btnEnviarClienteCrear) {
+        btnEnviarClienteCrear.addEventListener('click', function () {
+            const clienteSeleccionado = String(selectCliente?.value || '').trim();
+            if (clienteSeleccionado === '') {
+                if (mensajeConfirmarEnvioCotizacionCrear) {
+                    mensajeConfirmarEnvioCotizacionCrear.textContent = 'No se puede enviar la cotización porque no hay un cliente seleccionado.';
+                }
+                if (btnConfirmarEnvioCotizacionCrear) { btnConfirmarEnvioCotizacionCrear.classList.add('d-none'); }
+                if (modalConfirmarEnvioCotizacionCrear) {
+                    modalConfirmarEnvioCotizacionCrear.show();
+                } else {
+                    alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+                }
+                return;
+            }
+
+            if (mensajeConfirmarEnvioCotizacionCrear) {
+                mensajeConfirmarEnvioCotizacionCrear.textContent = 'Debes guardar la cotización antes de enviarla al cliente.';
+            }
+            if (btnConfirmarEnvioCotizacionCrear) { btnConfirmarEnvioCotizacionCrear.classList.remove('d-none'); }
+            if (modalConfirmarEnvioCotizacionCrear) {
+                modalConfirmarEnvioCotizacionCrear.show();
+                return;
+            }
+            alert('Debes guardar la cotización antes de enviarla al cliente.');
+        });
+    }
+    if (btnConfirmarEnvioCotizacionCrear) {
+        btnConfirmarEnvioCotizacionCrear.addEventListener('click', function () {
+            alert('Primero guarda la cotización y luego usa "Enviar al cliente" desde la edición.');
+        });
     }
 
     if (btnCopiarLink && inputLinkAprobacion) {
