@@ -316,12 +316,12 @@ foreach (($resumen['cotizaciones_ultimos_meses'] ?? []) as $fila) {
         <div class="card-header">Productos/Servicios más cotizados</div>
         <div class="table-responsive">
           <table class="table table-sm table-hover mb-0">
-            <thead><tr><th>Descripción</th><th class="text-end">Cantidad</th></tr></thead>
+            <thead><tr><th>Producto/Servicio</th><th class="text-end">Cantidad</th></tr></thead>
             <tbody>
             <?php if (!empty($resumen['productos_top'])): ?>
               <?php foreach ($resumen['productos_top'] as $item): ?>
                 <tr>
-                  <td><?= e($item['descripcion']) ?></td>
+                  <td><?= e($item['nombre']) ?></td>
                   <td class="text-end fw-semibold"><?= (int) $item['total'] ?></td>
                 </tr>
               <?php endforeach; ?>
