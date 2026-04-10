@@ -42,7 +42,7 @@ $capturasBaseUrl = url('/img/Captura Sistema/');
                     <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary">Solicitar demo</a>
                 </div>
             </div>
-            <div class="col-lg-5">
+            <aside class="col-lg-5">
                 <div class="card card-soft h-100">
                     <div class="card-body">
                         <h2 class="h5">¿Qué ganas al centralizar tu operación?</h2>
@@ -54,7 +54,7 @@ $capturasBaseUrl = url('/img/Captura Sistema/');
                         </ul>
                     </div>
                 </div>
-            </div>
+            </aside>
         </div>
     </div>
 </section>
@@ -153,6 +153,32 @@ $capturasBaseUrl = url('/img/Captura Sistema/');
                         </div>
                     </article>
                 </div>
+                <p class="small text-secondary mt-3 mb-0">
+                    Revisa más detalle en <a href="<?= e(url('/caracteristicas')) ?>">Características</a>, compara alternativas en <a href="<?= e(url('/planes')) ?>">Planes</a>, resuelve dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">Preguntas frecuentes</a> o contacta al equipo en <a href="<?= e(url('/contacto')) ?>">Contacto</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom" id="faq">
+    <div class="container">
+        <h2 class="h3 mb-2">Preguntas frecuentes sobre cotización, POS e inventario</h2>
+        <p class="text-secondary">Respuestas claras para evaluar un sistema de cotizaciones, software de cotización online y sistema de ventas con inventario para empresas en Chile.</p>
+        <div class="accordion" id="acordeonFaqSeo">
+            <?php foreach ($faqSeo as $index => $faq): ?>
+                <article class="accordion-item">
+                    <h3 class="accordion-header" id="faqHeading<?= $index ?>">
+                        <button class="accordion-button <?= $index > 0 ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse<?= $index ?>" aria-expanded="<?= $index === 0 ? 'true' : 'false' ?>" aria-controls="faqCollapse<?= $index ?>">
+                            <?= e($faq['pregunta']) ?>
+                        </button>
+                    </h3>
+                    <div id="faqCollapse<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="faqHeading<?= $index ?>" data-bs-parent="#acordeonFaqSeo">
+                        <div class="accordion-body small">
+                            <?= e($faq['respuesta']) ?>
+                        </div>
+                    </div>
+                </article>
             <?php endforeach; ?>
         </div>
     </div>
