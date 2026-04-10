@@ -63,17 +63,12 @@ $capturaConFallback = static function (array $archivos) use ($capturaUrl): strin
     </div>
 </section>
 
-<div class="modal fade" id="modalCapturaCaracteristicas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content border-0">
-            <div class="modal-header">
-                <h2 class="h6 mb-0" data-captura-modal-title>Vista de módulo</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body p-2 p-lg-3">
-                <img src="" alt="" class="img-fluid w-100 rounded" data-captura-modal-image>
-            </div>
-        </div>
+<div class="captura-preview" id="previewCapturaCaracteristicas" hidden>
+    <div class="captura-preview__backdrop" data-preview-close></div>
+    <div class="captura-preview__dialog" role="dialog" aria-modal="true" aria-label="Vista previa de captura">
+        <button type="button" class="captura-preview__close" data-preview-close aria-label="Cerrar vista previa">×</button>
+        <h2 class="h6 mb-2" data-captura-modal-title>Vista de módulo</h2>
+        <img src="" alt="" class="img-fluid w-100 rounded" data-captura-modal-image>
     </div>
 </div>
 
@@ -113,22 +108,31 @@ $capturaConFallback = static function (array $archivos) use ($capturaUrl): strin
 
 <script>
 (() => {
-    const modalEl = document.getElementById('modalCapturaCaracteristicas');
+    const modalEl = document.getElementById('previewCapturaCaracteristicas');
     const modalImg = modalEl?.querySelector('[data-captura-modal-image]');
     const modalTitle = modalEl?.querySelector('[data-captura-modal-title]');
-    const modal = (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) ? bootstrap.Modal.getOrCreateInstance(modalEl) : null;
+    const cerrarModal = () => {
+        if (!modalEl) return;
+        modalEl.hidden = true;
+        document.body.classList.remove('preview-open');
+    };
 
     document.querySelectorAll('.js-captura-ampliable').forEach((enlace) => {
         enlace.addEventListener('click', (evento) => {
-            if (!modal || !modalImg || !modalTitle) return;
+            if (!modalEl || !modalImg || !modalTitle) return;
             evento.preventDefault();
             const src = enlace.getAttribute('href') || '';
             const title = enlace.getAttribute('data-captura-title') || 'Vista de módulo';
             modalImg.src = src;
             modalImg.alt = title;
             modalTitle.textContent = title;
-            modal.show();
+            modalEl.hidden = false;
+            document.body.classList.add('preview-open');
         });
+    });
+    modalEl?.querySelectorAll('[data-preview-close]').forEach((cerrar) => cerrar.addEventListener('click', cerrarModal));
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') cerrarModal();
     });
 
     const comparativo = document.getElementById('graficoComparativoCaracteristicas');

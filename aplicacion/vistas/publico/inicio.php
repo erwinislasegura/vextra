@@ -88,48 +88,33 @@ $cotizacionesCapturas = [
             <h2 class="h4 mb-2">Cotizaciones que cierran ventas: mira el flujo completo en acción</h2>
             <p class="text-secondary mb-0">Las siguientes vistas muestran cómo trabajar de punta a punta: crear, editar, enviar y hacer seguimiento hasta el cierre.</p>
         </div>
-        <div id="cotizacionesCarousel" class="carousel slide landing-carousel js-cotizaciones-carousel" data-bs-ride="carousel" data-bs-interval="3200" data-bs-pause="false">
-            <div class="carousel-indicators">
-                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
-                    <button type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide-to="<?= $index ?>" class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" aria-label="Slide <?= $index + 1 ?>"></button>
-                <?php endforeach; ?>
-            </div>
-            <div class="carousel-inner">
-                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
-                    <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <a href="<?= e($capturaUrl($captura['archivo'])) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="<?= e($captura['titulo']) ?>">
-                            <img src="<?= e($capturaUrl($captura['archivo'])) ?>" class="d-block w-100" alt="<?= e($captura['titulo']) ?>" loading="lazy">
-                        </a>
-                        <div class="landing-carousel-caption">
-                            <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
-                            <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
-                        </div>
+        <div class="landing-slider" data-slider data-slider-interval="3200">
+            <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
+                    <img src="<?= e($capturaUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                    <div class="landing-carousel-caption">
+                        <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
+                        <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
                     </div>
+                </article>
+            <?php endforeach; ?>
+            <button class="landing-slider-control prev" type="button" data-slide-nav="prev" aria-label="Imagen anterior">‹</button>
+            <button class="landing-slider-control next" type="button" data-slide-nav="next" aria-label="Imagen siguiente">›</button>
+            <div class="landing-slider-dots" role="tablist" aria-label="Navegación de cotizaciones">
+                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                    <button type="button" class="<?= $index === 0 ? 'is-active' : '' ?>" data-slide-dot="<?= $index ?>" aria-label="Ver captura <?= $index + 1 ?>"></button>
                 <?php endforeach; ?>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Siguiente</span>
-            </button>
         </div>
     </div>
 </section>
 
-<div class="modal fade" id="modalCapturaLanding" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content border-0">
-            <div class="modal-header">
-                <h2 class="h6 mb-0" data-captura-modal-title>Vista de módulo</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body p-2 p-lg-3">
-                <img src="" alt="" class="img-fluid w-100 rounded" data-captura-modal-image>
-            </div>
-        </div>
+<div class="captura-preview" id="previewCapturaLanding" hidden>
+    <div class="captura-preview__backdrop" data-preview-close></div>
+    <div class="captura-preview__dialog" role="dialog" aria-modal="true" aria-label="Vista previa de captura">
+        <button type="button" class="captura-preview__close" data-preview-close aria-label="Cerrar vista previa">×</button>
+        <h2 class="h6 mb-2" data-captura-modal-title>Vista de módulo</h2>
+        <img src="" alt="" class="img-fluid w-100 rounded" data-captura-modal-image>
     </div>
 </div>
 
@@ -182,34 +167,68 @@ $cotizacionesCapturas = [
 
 <script>
 (() => {
-    const carouselEl = document.querySelector('.js-cotizaciones-carousel');
-    if (carouselEl && typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
-        const instance = bootstrap.Carousel.getOrCreateInstance(carouselEl, {
-            interval: 3200,
-            ride: 'carousel',
-            pause: false,
-            touch: true,
-            wrap: true
+    const slider = document.querySelector('[data-slider]');
+    if (slider) {
+        const slides = Array.from(slider.querySelectorAll('[data-slide]'));
+        const dots = Array.from(slider.querySelectorAll('[data-slide-dot]'));
+        const interval = Number(slider.getAttribute('data-slider-interval') || 3200);
+        let actual = 0;
+        let timer = null;
+
+        const pintar = (indice) => {
+            actual = (indice + slides.length) % slides.length;
+            slides.forEach((slide, i) => slide.classList.toggle('is-active', i === actual));
+            dots.forEach((dot, i) => dot.classList.toggle('is-active', i === actual));
+        };
+        const iniciar = () => {
+            if (slides.length < 2) return;
+            timer = window.setInterval(() => pintar(actual + 1), interval);
+        };
+        const reiniciar = () => {
+            if (timer) window.clearInterval(timer);
+            iniciar();
+        };
+
+        slider.querySelector('[data-slide-nav=\"prev\"]')?.addEventListener('click', () => { pintar(actual - 1); reiniciar(); });
+        slider.querySelector('[data-slide-nav=\"next\"]')?.addEventListener('click', () => { pintar(actual + 1); reiniciar(); });
+        dots.forEach((dot) => {
+            dot.addEventListener('click', () => {
+                pintar(Number(dot.getAttribute('data-slide-dot') || 0));
+                reiniciar();
+            });
         });
-        instance.cycle();
+        slider.addEventListener('mouseenter', () => timer && window.clearInterval(timer));
+        slider.addEventListener('mouseleave', reiniciar);
+
+        pintar(0);
+        iniciar();
     }
 
-    const modalEl = document.getElementById('modalCapturaLanding');
+    const modalEl = document.getElementById('previewCapturaLanding');
     const modalImg = modalEl?.querySelector('[data-captura-modal-image]');
     const modalTitle = modalEl?.querySelector('[data-captura-modal-title]');
-    const modal = (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) ? bootstrap.Modal.getOrCreateInstance(modalEl) : null;
+    const cerrarModal = () => {
+        if (!modalEl) return;
+        modalEl.hidden = true;
+        document.body.classList.remove('preview-open');
+    };
 
     document.querySelectorAll('.js-captura-ampliable').forEach((enlace) => {
         enlace.addEventListener('click', (evento) => {
-            if (!modal || !modalImg || !modalTitle) return;
+            if (!modalEl || !modalImg || !modalTitle) return;
             evento.preventDefault();
             const src = enlace.getAttribute('href') || '';
             const title = enlace.getAttribute('data-captura-title') || 'Vista de módulo';
             modalImg.src = src;
             modalImg.alt = title;
             modalTitle.textContent = title;
-            modal.show();
+            modalEl.hidden = false;
+            document.body.classList.add('preview-open');
         });
+    });
+    modalEl?.querySelectorAll('[data-preview-close]').forEach((cerrar) => cerrar.addEventListener('click', cerrarModal));
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') cerrarModal();
     });
 
     const botones = document.querySelectorAll('[data-home-billing]');
