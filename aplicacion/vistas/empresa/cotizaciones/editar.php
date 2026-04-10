@@ -330,6 +330,14 @@ if ($listaPrecioCotizacionId > 0) {
     const btnVerMovimientos = document.getElementById('btn-ver-movimientos');
     const movimientosProductoTitulo = document.getElementById('movimientos_producto_titulo');
     const movimientosProductoBody = document.getElementById('movimientos_producto_body');
+    const formEnviarCotizacion = document.getElementById('form-enviar-cotizacion');
+    const btnEnviarCliente = document.getElementById('btn-enviar-cliente');
+    const btnConfirmarEnvioCotizacion = document.getElementById('btn-confirmar-envio-cotizacion');
+    const modalConfirmarEnvioCotizacionEl = document.getElementById('modalConfirmarEnvioCotizacion');
+    const mensajeConfirmarEnvioCotizacion = document.getElementById('mensaje-confirmar-envio-cotizacion');
+    const modalConfirmarEnvioCotizacion = (window.bootstrap && modalConfirmarEnvioCotizacionEl)
+        ? new bootstrap.Modal(modalConfirmarEnvioCotizacionEl)
+        : null;
     const etiquetasTipoMovimiento = {
         recepcion_proveedor: 'Recepción de proveedor',
         ajuste_entrada: 'Ajuste de entrada',
@@ -343,6 +351,41 @@ if ($listaPrecioCotizacionId > 0) {
             return etiquetasTipoMovimiento[clave];
         }
         return clave.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    }
+
+    if (btnEnviarCliente) {
+        btnEnviarCliente.addEventListener('click', function () {
+            const clienteSeleccionado = String(selectCliente?.value || '').trim();
+            if (clienteSeleccionado === '') {
+                if (mensajeConfirmarEnvioCotizacion) {
+                    mensajeConfirmarEnvioCotizacion.textContent = 'No se puede enviar la cotización porque no hay un cliente seleccionado.';
+                }
+                if (btnConfirmarEnvioCotizacion) { btnConfirmarEnvioCotizacion.classList.add('d-none'); }
+                if (modalConfirmarEnvioCotizacion) {
+                    modalConfirmarEnvioCotizacion.show();
+                } else {
+                    alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+                }
+                return;
+            }
+
+            if (mensajeConfirmarEnvioCotizacion) {
+                mensajeConfirmarEnvioCotizacion.textContent = '¿Deseas enviar esta cotización al cliente seleccionado?';
+            }
+            if (btnConfirmarEnvioCotizacion) { btnConfirmarEnvioCotizacion.classList.remove('d-none'); }
+            if (modalConfirmarEnvioCotizacion) {
+                modalConfirmarEnvioCotizacion.show();
+                return;
+            }
+            if (formEnviarCotizacion && confirm('¿Deseas enviar esta cotización al cliente seleccionado?')) {
+                formEnviarCotizacion.submit();
+            }
+        });
+    }
+    if (btnConfirmarEnvioCotizacion && formEnviarCotizacion) {
+        btnConfirmarEnvioCotizacion.addEventListener('click', function () {
+            formEnviarCotizacion.submit();
+        });
     }
 
     function fmt(v) { return '$' + (Math.round((v + Number.EPSILON) * 100) / 100).toFixed(2); }
