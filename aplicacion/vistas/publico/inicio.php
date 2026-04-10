@@ -114,7 +114,7 @@ foreach ($faqSeo as $item) {
                     <a href="#planes" class="btn btn-outline-primary">Contratar plan</a>
                     <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary">Solicitar demo</a>
                 </div>
-                <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
+            <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
             </div>
             <aside class="col-lg-5">
                 <div class="card card-soft h-100">
@@ -280,6 +280,7 @@ foreach ($faqSeo as $item) {
                         </div>
                     </article>
                 </div>
+            <?php endforeach; ?>
                 <p class="small text-secondary mt-3 mb-0">
                     Revisa más detalle en <a href="<?= e(url('/caracteristicas')) ?>">Características</a>, compara alternativas en <a href="<?= e(url('/planes')) ?>">Planes</a>, resuelve dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">Preguntas frecuentes</a> o contacta al equipo en <a href="<?= e(url('/contacto')) ?>">Contacto</a>.
                 </p>
