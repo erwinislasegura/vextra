@@ -71,10 +71,10 @@ $cotizacionesCapturas = [
             </div>
             <div class="col-12 col-lg-6">
                 <div class="row g-3">
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Panel de inicio del sistema" loading="lazy"><figcaption>Dashboard ejecutivo</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Módulo de punto de venta" loading="lazy"><figcaption>POS conectado</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Módulo de inventario" loading="lazy"><figcaption>Inventario en tiempo real</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Módulo de clientes" loading="lazy"><figcaption>Clientes y contactos</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Panel de inicio del sistema" loading="lazy"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="POS conectado"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Módulo de punto de venta" loading="lazy"></a><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Inventario en tiempo real"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Módulo de inventario" loading="lazy"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Clientes y contactos"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Módulo de clientes" loading="lazy"></a><figcaption>Clientes y contactos</figcaption></figure></div>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@ $cotizacionesCapturas = [
             <h2 class="h4 mb-2">Cotizaciones que cierran ventas: mira el flujo completo en acción</h2>
             <p class="text-secondary mb-0">Las siguientes vistas muestran cómo trabajar de punta a punta: crear, editar, enviar y hacer seguimiento hasta el cierre.</p>
         </div>
-        <div id="cotizacionesCarousel" class="carousel slide landing-carousel" data-bs-ride="carousel" data-bs-interval="3200" data-bs-pause="false">
+        <div id="cotizacionesCarousel" class="carousel slide landing-carousel js-cotizaciones-carousel" data-bs-ride="carousel" data-bs-interval="3200" data-bs-pause="false">
             <div class="carousel-indicators">
                 <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                     <button type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide-to="<?= $index ?>" class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" aria-label="Slide <?= $index + 1 ?>"></button>
@@ -97,7 +97,9 @@ $cotizacionesCapturas = [
             <div class="carousel-inner">
                 <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= e($capturaUrl($captura['archivo'])) ?>" class="d-block w-100" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                        <a href="<?= e($capturaUrl($captura['archivo'])) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="<?= e($captura['titulo']) ?>">
+                            <img src="<?= e($capturaUrl($captura['archivo'])) ?>" class="d-block w-100" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                        </a>
                         <div class="landing-carousel-caption">
                             <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
                             <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
@@ -116,6 +118,20 @@ $cotizacionesCapturas = [
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="modalCapturaLanding" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0">
+            <div class="modal-header">
+                <h2 class="h6 mb-0" data-captura-modal-title>Vista de módulo</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-2 p-lg-3">
+                <img src="" alt="" class="img-fluid w-100 rounded" data-captura-modal-image>
+            </div>
+        </div>
+    </div>
+</div>
 
 <section id="planes" class="py-5 bg-white border-bottom">
     <div class="container">
@@ -166,6 +182,36 @@ $cotizacionesCapturas = [
 
 <script>
 (() => {
+    const carouselEl = document.querySelector('.js-cotizaciones-carousel');
+    if (carouselEl && typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
+        const instance = bootstrap.Carousel.getOrCreateInstance(carouselEl, {
+            interval: 3200,
+            ride: 'carousel',
+            pause: false,
+            touch: true,
+            wrap: true
+        });
+        instance.cycle();
+    }
+
+    const modalEl = document.getElementById('modalCapturaLanding');
+    const modalImg = modalEl?.querySelector('[data-captura-modal-image]');
+    const modalTitle = modalEl?.querySelector('[data-captura-modal-title]');
+    const modal = (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) ? bootstrap.Modal.getOrCreateInstance(modalEl) : null;
+
+    document.querySelectorAll('.js-captura-ampliable').forEach((enlace) => {
+        enlace.addEventListener('click', (evento) => {
+            if (!modal || !modalImg || !modalTitle) return;
+            evento.preventDefault();
+            const src = enlace.getAttribute('href') || '';
+            const title = enlace.getAttribute('data-captura-title') || 'Vista de módulo';
+            modalImg.src = src;
+            modalImg.alt = title;
+            modalTitle.textContent = title;
+            modal.show();
+        });
+    });
+
     const botones = document.querySelectorAll('[data-home-billing]');
     const precios = document.querySelectorAll('[data-home-precio]');
     const links = document.querySelectorAll('[data-home-link]');
