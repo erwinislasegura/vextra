@@ -709,21 +709,10 @@ HTML;
         }
         $base = preg_replace('#/public$#i', '', $base) ?? $base;
         $rutaNormalizada = url($ruta);
-        if (preg_match('#/app$#i', $base) && str_starts_with($rutaNormalizada, '/app/')) {
+        if (preg_match('#/app$#i', $base) && strpos($rutaNormalizada, '/app/') === 0) {
             $rutaNormalizada = substr($rutaNormalizada, 4);
         }
         return rtrim($base, '/') . '/' . ltrim($rutaNormalizada, '/');
-    }
-
-    private function construirUrlDominio(string $ruta): string
-    {
-        $config = require __DIR__ . '/../../../configuracion/aplicacion.php';
-        $base = rtrim((string) ($config['url'] ?? ''), '/');
-        if ($base === '' || preg_match('/localhost|127\\.0\\.0\\.1/i', $base)) {
-            $base = 'https://vextra.cl';
-        }
-        $base = preg_replace('#/(public|app)$#i', '', $base) ?? $base;
-        return rtrim($base, '/') . '/' . ltrim($ruta, '/');
     }
 
     private function construirUrlDominio(string $ruta): string
