@@ -188,14 +188,41 @@ if ($listaPrecioCotizacionId > 0) {
           <a class="btn btn-outline-dark btn-sm" href="<?= e(url('/app/cotizaciones/pdf/' . $cotizacion['id'])) ?>">Descargar PDF</a>
         <?php endif; ?>
         <?php if (plan_tiene_funcionalidad_empresa_actual('cotizacion_correo') && plan_tiene_funcionalidad_empresa_actual('cotizacion_pdf')): ?>
-        <form method="POST" action="<?= e(url('/app/cotizaciones/enviar/' . $cotizacion['id'])) ?>" class="d-inline">
-            <?= csrf_campo() ?>
-            <button class="btn btn-warning btn-sm" type="submit">Enviar al cliente</button>
-        </form>
+            <button
+                class="btn btn-warning btn-sm"
+                type="button"
+                id="btn-enviar-cliente"
+                data-bs-toggle="modal"
+                data-bs-target="#modalConfirmarEnvioCotizacion"
+                <?= $puedeGuardar ? '' : ' disabled' ?>
+            >Enviar al cliente</button>
         <?php endif; ?>
         <a href="<?= e(url('/app/cotizaciones')) ?>" class="btn btn-outline-secondary btn-sm">Cancelar</a>
     </div>
 </form>
+<?php if (plan_tiene_funcionalidad_empresa_actual('cotizacion_correo') && plan_tiene_funcionalidad_empresa_actual('cotizacion_pdf')): ?>
+    <form method="POST" action="<?= e(url('/app/cotizaciones/enviar/' . $cotizacion['id'])) ?>" id="form-enviar-cotizacion" class="d-none">
+        <?= csrf_campo() ?>
+    </form>
+<?php endif; ?>
+
+<div class="modal fade" id="modalConfirmarEnvioCotizacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar envío</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="mensaje-confirmar-envio-cotizacion">
+                ¿Deseas enviar esta cotización al cliente seleccionado?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="form-enviar-cotizacion" class="btn btn-warning btn-sm" id="btn-confirmar-envio-cotizacion">Sí, enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <template id="fila-item-template">
     <tr>
