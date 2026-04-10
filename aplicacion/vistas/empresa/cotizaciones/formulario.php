@@ -181,7 +181,7 @@ $puedeGuardar = $hayClientes && $hayProductos;
     <div>
         <button class="btn btn-primary btn-sm" name="accion" value="guardar"<?= $puedeGuardar ? '' : ' disabled' ?>>Guardar sin salir</button>
         <button class="btn btn-success btn-sm" name="accion" value="guardar_salir"<?= $puedeGuardar ? '' : ' disabled' ?>>Guardar y salir</button>
-        <button class="btn btn-outline-success btn-sm" type="button" id="btn-enviar-cliente-crear">Enviar al cliente</button>
+        <button class="btn btn-outline-success btn-sm" type="button" id="btn-enviar-cliente-crear" onclick="return confirmarEnvioCotizacionCrear();">Enviar al cliente</button>
         <button class="btn btn-outline-dark btn-sm" type="button" onclick="alert('Guarda la cotización para descargar el PDF.')">Descargar PDF</button>
         <a href="<?= e(url('/app/cotizaciones')) ?>" class="btn btn-outline-secondary btn-sm">Cancelar</a>
     </div>
@@ -352,6 +352,16 @@ $puedeGuardar = $hayClientes && $hayProductos;
 </div>
 
 <script>
+function confirmarEnvioCotizacionCrear() {
+    const selectCliente = document.getElementById('cliente_id');
+    if (!selectCliente || String(selectCliente.value || '').trim() === '') {
+        alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+        return false;
+    }
+    alert('Debes guardar la cotización primero. Luego podrás enviarla al cliente desde "Editar cotización".');
+    return false;
+}
+
 (function () {
     const cuerpo = document.getElementById('cuerpo-items');
     const template = document.getElementById('fila-item-template');

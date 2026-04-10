@@ -190,7 +190,14 @@ if ($listaPrecioCotizacionId > 0) {
         <?php if (plan_tiene_funcionalidad_empresa_actual('cotizacion_correo') && plan_tiene_funcionalidad_empresa_actual('cotizacion_pdf')): ?>
         <form method="POST" action="<?= e(url('/app/cotizaciones/enviar/' . $cotizacion['id'])) ?>" class="d-inline" id="form-enviar-cotizacion">
             <?= csrf_campo() ?>
-            <button class="btn btn-warning btn-sm" type="button" id="btn-enviar-cliente">Enviar al cliente</button>
+            <button
+                class="btn btn-warning btn-sm"
+                type="button"
+                id="btn-enviar-cliente"
+                data-bs-toggle="modal"
+                data-bs-target="#modalConfirmarEnvioCotizacion"
+                <?= $puedeGuardar ? '' : ' disabled' ?>
+            >Enviar al cliente</button>
         </form>
         <?php endif; ?>
         <a href="<?= e(url('/app/cotizaciones')) ?>" class="btn btn-outline-secondary btn-sm">Cancelar</a>
@@ -209,7 +216,7 @@ if ($listaPrecioCotizacionId > 0) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-warning btn-sm" id="btn-confirmar-envio-cotizacion">Sí, enviar</button>
+                <button type="submit" form="form-enviar-cotizacion" class="btn btn-warning btn-sm" id="btn-confirmar-envio-cotizacion">Sí, enviar</button>
             </div>
         </div>
     </div>
