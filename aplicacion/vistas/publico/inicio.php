@@ -1,6 +1,8 @@
 <?php
 $capturasBase = '/img/Captura Sistema';
-$capturaUrl = static fn(string $archivo): string => url($capturasBase . '/' . rawurlencode($archivo));
+$capturaUrl = static function (string $archivo): string {
+    return url($capturasBase . '/' . rawurlencode($archivo));
+};
 $cotizacionesCapturas = [
     [
         'archivo' => 'Cotizaciones 1.png',
@@ -183,12 +185,42 @@ $faqSchema = [
         <div class="row g-4">
             <article class="col-lg-6">
                 <h2 class="h3">Beneficios comerciales que impactan resultados</h2>
-                <h3 class="h5 mt-3">1) Ahorro de tiempo en cotizar y vender</h3>
-                <p>Un sistema de cotizaciones bien implementado evita rehacer propuestas, reduce búsquedas de información y acorta el ciclo comercial. En vez de perder minutos validando stock o precios en planillas, el equipo responde con datos actualizados y documentos listos para enviar.</p>
-                <h3 class="h5">2) Aumento de ventas con seguimiento ordenado</h3>
-                <p>La mayoría de las oportunidades no se pierde por falta de demanda, sino por falta de seguimiento. Con pipeline comercial, tareas y trazabilidad por cliente, tu equipo prioriza mejor y convierte más.</p>
-                <h3 class="h5">3) Control de stock para proteger márgenes</h3>
-                <p>Vender sin inventario actualizado genera costos ocultos: devoluciones, compras urgentes y mala experiencia de cliente. Al conectar POS e inventario, cada movimiento queda registrado y puedes planificar reposición a tiempo.</p>
+                <p class="text-secondary mb-3">Una vista rápida de impacto real para que tu equipo comercial y operativo trabaje con más velocidad y menos fricción.</p>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="card h-100 border-0 bg-light-subtle">
+                            <div class="card-body d-flex gap-3 align-items-start">
+                                <span class="fs-4 text-primary" aria-hidden="true"><i class="bi bi-lightning-charge-fill"></i></span>
+                                <div>
+                                    <h3 class="h5 mb-1">Ahorro de tiempo en cotizar y vender</h3>
+                                    <p class="mb-0 small">Evita rehacer propuestas y reduce búsquedas manuales. Tu equipo responde con precios y stock actualizados en minutos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card h-100 border-0 bg-light-subtle">
+                            <div class="card-body d-flex gap-3 align-items-start">
+                                <span class="fs-4 text-success" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                                <div>
+                                    <h3 class="h5 mb-1">Aumento de ventas con seguimiento ordenado</h3>
+                                    <p class="mb-0 small">Con pipeline y trazabilidad por cliente, se priorizan oportunidades con mejor cierre y se evita perder negocios por falta de seguimiento.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card h-100 border-0 bg-light-subtle">
+                            <div class="card-body d-flex gap-3 align-items-start">
+                                <span class="fs-4 text-warning" aria-hidden="true"><i class="bi bi-box-seam-fill"></i></span>
+                                <div>
+                                    <h3 class="h5 mb-1">Control de stock para proteger márgenes</h3>
+                                    <p class="mb-0 small">Cada venta impacta inventario en tiempo real, reduciendo sobreventa, compras urgentes y pérdidas por descoordinación operativa.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </article>
             <article class="col-lg-6">
                 <h2 class="h3">Características clave para gestión comercial moderna</h2>
@@ -248,6 +280,32 @@ $faqSchema = [
                         </div>
                     </article>
                 </div>
+                <p class="small text-secondary mt-3 mb-0">
+                    Revisa más detalle en <a href="<?= e(url('/caracteristicas')) ?>">Características</a>, compara alternativas en <a href="<?= e(url('/planes')) ?>">Planes</a>, resuelve dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">Preguntas frecuentes</a> o contacta al equipo en <a href="<?= e(url('/contacto')) ?>">Contacto</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom" id="faq">
+    <div class="container">
+        <h2 class="h3 mb-2">Preguntas frecuentes sobre cotización, POS e inventario</h2>
+        <p class="text-secondary">Respuestas claras para evaluar un sistema de cotizaciones, software de cotización online y sistema de ventas con inventario para empresas en Chile.</p>
+        <div class="accordion" id="acordeonFaqSeo">
+            <?php foreach ($faqSeo as $index => $faq): ?>
+                <article class="accordion-item">
+                    <h3 class="accordion-header" id="faqHeading<?= $index ?>">
+                        <button class="accordion-button <?= $index > 0 ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse<?= $index ?>" aria-expanded="<?= $index === 0 ? 'true' : 'false' ?>" aria-controls="faqCollapse<?= $index ?>">
+                            <?= e($faq['pregunta']) ?>
+                        </button>
+                    </h3>
+                    <div id="faqCollapse<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="faqHeading<?= $index ?>" data-bs-parent="#acordeonFaqSeo">
+                        <div class="accordion-body small">
+                            <?= e($faq['respuesta']) ?>
+                        </div>
+                    </div>
+                </article>
             <?php endforeach; ?>
         </div>
     </div>
