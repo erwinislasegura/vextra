@@ -1,8 +1,10 @@
 <?php
 $capturasBase = '/img/Captura Sistema';
-$capturaUrl = static fn(string $archivo): string => url($capturasBase . '/' . rawurlencode($archivo));
+$capturaUrl = function ($archivo) use ($capturasBase) {
+    return url($capturasBase . '/' . rawurlencode($archivo));
+};
 $capturasRutaFs = dirname(__DIR__, 3) . '/img/Captura Sistema/';
-$capturaConFallback = static function (array $archivos) use ($capturaUrl): string {
+$capturaConFallback = function ($archivos) use ($capturaUrl) {
     $raiz = dirname(__DIR__, 3) . '/img/Captura Sistema/';
     foreach ($archivos as $archivo) {
         if (is_file($raiz . $archivo)) {
@@ -11,7 +13,7 @@ $capturaConFallback = static function (array $archivos) use ($capturaUrl): strin
     }
     return $capturaUrl($archivos[0] ?? '');
 };
-$capturaConFallbackInline = static function (array $archivos) use ($capturaConFallback, $capturasRutaFs): string {
+$capturaConFallbackInline = function ($archivos) use ($capturaConFallback, $capturasRutaFs) {
     foreach ($archivos as $archivo) {
         $ruta = $capturasRutaFs . $archivo;
         if (!is_file($ruta)) {
