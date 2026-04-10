@@ -310,9 +310,9 @@ class PublicoControlador extends Controlador
     {
         $seo = [
             'inicio' => [
-                'meta_title' => 'Sistema de cotizaciones para empresas | Vextra',
-                'meta_description' => 'Optimiza cotizaciones, seguimiento comercial e inventario con Vextra: plataforma para vender más y trabajar con datos reales.',
-                'meta_keywords' => 'inicio vextra, sistema de cotizaciones, software comercial, gestión de ventas',
+                'meta_title' => 'Sistema de cotizaciones, punto de venta e inventario en Chile | Vextra',
+                'meta_description' => 'Vextra es un software de cotización online para empresas en Chile: sistema de cotizaciones, sistema punto de venta y sistema de inventario para vender más con control real.',
+                'meta_keywords' => 'sistema de cotizaciones, software de cotización online, sistema punto de venta, sistema de inventario, software para empresas chile, sistema de ventas con inventario',
             ],
             'caracteristicas' => [
                 'meta_title' => 'Características del sistema de cotizaciones | Vextra',
