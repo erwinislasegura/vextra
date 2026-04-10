@@ -299,7 +299,7 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
             <h2 class="h4 mb-2">Cómo se usa en la práctica</h2>
             <p class="text-secondary mb-0">Una vista rápida del flujo real para pasar de cotizar con desorden a vender con continuidad comercial.</p>
         </div>
-        <div class="landing-timeline" aria-label="Línea de tiempo de uso práctico de Vextra">
+        <div class="landing-timeline landing-timeline--5" aria-label="Línea de tiempo de uso práctico de Vextra">
             <article class="landing-timeline__item">
                 <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
                 <div class="landing-timeline__card">
