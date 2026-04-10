@@ -1,6 +1,7 @@
 <?php
 $capturasBase = '/img/Captura Sistema';
 $capturaUrl = static fn(string $archivo): string => url($capturasBase . '/' . rawurlencode($archivo));
+$capturasRutaFs = dirname(__DIR__, 3) . '/img/Captura Sistema/';
 $capturaConFallback = static function (array $archivos) use ($capturaUrl): string {
     $raiz = dirname(__DIR__, 3) . '/img/Captura Sistema/';
     foreach ($archivos as $archivo) {
@@ -9,6 +10,21 @@ $capturaConFallback = static function (array $archivos) use ($capturaUrl): strin
         }
     }
     return $capturaUrl($archivos[0] ?? '');
+};
+$capturaConFallbackInline = static function (array $archivos) use ($capturaConFallback, $capturasRutaFs): string {
+    foreach ($archivos as $archivo) {
+        $ruta = $capturasRutaFs . $archivo;
+        if (!is_file($ruta)) {
+            continue;
+        }
+
+        $contenido = @file_get_contents($ruta);
+        if ($contenido !== false) {
+            return 'data:image/png;base64,' . base64_encode($contenido);
+        }
+    }
+
+    return $capturaConFallback($archivos);
 };
 ?>
 
@@ -58,7 +74,7 @@ $capturaConFallback = static function (array $archivos) use ($capturaUrl): strin
             <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Proveedores.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Proveedores"><img src="<?= e($capturaUrl('Proveedores.png')) ?>" alt="Módulo de proveedores" loading="lazy"></a><figcaption>Proveedores</figcaption></figure></div>
             <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Ajustes de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Ajustes de inventario"><img src="<?= e($capturaUrl('Ajustes de inventario.png')) ?>" alt="Ajustes de inventario" loading="lazy"></a><figcaption>Ajustes de inventario</figcaption></figure></div>
             <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Vendedores.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de vendedores"><img src="<?= e($capturaUrl('Vendedores.png')) ?>" alt="Módulo de vendedores" loading="lazy"></a><figcaption>Gestión de vendedores</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Configuración de correos de stock.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Alertas de stock"><img src="<?= e($capturaUrl('Configuración de correos de stock.png')) ?>" alt="Configuración de alertas de stock por correo" loading="lazy"></a><figcaption>Alertas de stock</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaConFallbackInline(['Configuración de correos de stock.png', 'Configuración correos stock.png'])) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Alertas de stock"><img src="<?= e($capturaConFallbackInline(['Configuración de correos de stock.png', 'Configuración correos stock.png'])) ?>" alt="Configuración de alertas de stock por correo" loading="lazy"></a><figcaption>Alertas de stock</figcaption></figure></div>
         </div>
     </div>
 </section>
