@@ -188,14 +188,39 @@ if ($listaPrecioCotizacionId > 0) {
           <a class="btn btn-outline-dark btn-sm" href="<?= e(url('/app/cotizaciones/pdf/' . $cotizacion['id'])) ?>">Descargar PDF</a>
         <?php endif; ?>
         <?php if (plan_tiene_funcionalidad_empresa_actual('cotizacion_correo') && plan_tiene_funcionalidad_empresa_actual('cotizacion_pdf')): ?>
-        <form method="POST" action="<?= e(url('/app/cotizaciones/enviar/' . $cotizacion['id'])) ?>" class="d-inline">
+        <form method="POST" action="<?= e(url('/app/cotizaciones/enviar/' . $cotizacion['id'])) ?>" class="d-inline" id="form-enviar-cotizacion">
             <?= csrf_campo() ?>
-            <button class="btn btn-warning btn-sm" type="submit">Enviar al cliente</button>
+            <button
+                class="btn btn-warning btn-sm"
+                type="button"
+                id="btn-enviar-cliente"
+                data-bs-toggle="modal"
+                data-bs-target="#modalConfirmarEnvioCotizacion"
+                <?= $puedeGuardar ? '' : ' disabled' ?>
+            >Enviar al cliente</button>
         </form>
         <?php endif; ?>
         <a href="<?= e(url('/app/cotizaciones')) ?>" class="btn btn-outline-secondary btn-sm">Cancelar</a>
     </div>
 </form>
+
+<div class="modal fade" id="modalConfirmarEnvioCotizacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar envío</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="mensaje-confirmar-envio-cotizacion">
+                ¿Deseas enviar esta cotización al cliente seleccionado?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="form-enviar-cotizacion" class="btn btn-warning btn-sm" id="btn-confirmar-envio-cotizacion">Sí, enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <template id="fila-item-template">
     <tr>
@@ -305,6 +330,14 @@ if ($listaPrecioCotizacionId > 0) {
     const btnVerMovimientos = document.getElementById('btn-ver-movimientos');
     const movimientosProductoTitulo = document.getElementById('movimientos_producto_titulo');
     const movimientosProductoBody = document.getElementById('movimientos_producto_body');
+    const formEnviarCotizacion = document.getElementById('form-enviar-cotizacion');
+    const btnEnviarCliente = document.getElementById('btn-enviar-cliente');
+    const btnConfirmarEnvioCotizacion = document.getElementById('btn-confirmar-envio-cotizacion');
+    const modalConfirmarEnvioCotizacionEl = document.getElementById('modalConfirmarEnvioCotizacion');
+    const mensajeConfirmarEnvioCotizacion = document.getElementById('mensaje-confirmar-envio-cotizacion');
+    const modalConfirmarEnvioCotizacion = (window.bootstrap && modalConfirmarEnvioCotizacionEl)
+        ? new bootstrap.Modal(modalConfirmarEnvioCotizacionEl)
+        : null;
     const etiquetasTipoMovimiento = {
         recepcion_proveedor: 'Recepción de proveedor',
         ajuste_entrada: 'Ajuste de entrada',
@@ -318,6 +351,41 @@ if ($listaPrecioCotizacionId > 0) {
             return etiquetasTipoMovimiento[clave];
         }
         return clave.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    }
+
+    if (btnEnviarCliente) {
+        btnEnviarCliente.addEventListener('click', function () {
+            const clienteSeleccionado = String(selectCliente?.value || '').trim();
+            if (clienteSeleccionado === '') {
+                if (mensajeConfirmarEnvioCotizacion) {
+                    mensajeConfirmarEnvioCotizacion.textContent = 'No se puede enviar la cotización porque no hay un cliente seleccionado.';
+                }
+                if (btnConfirmarEnvioCotizacion) { btnConfirmarEnvioCotizacion.classList.add('d-none'); }
+                if (modalConfirmarEnvioCotizacion) {
+                    modalConfirmarEnvioCotizacion.show();
+                } else {
+                    alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+                }
+                return;
+            }
+
+            if (mensajeConfirmarEnvioCotizacion) {
+                mensajeConfirmarEnvioCotizacion.textContent = '¿Deseas enviar esta cotización al cliente seleccionado?';
+            }
+            if (btnConfirmarEnvioCotizacion) { btnConfirmarEnvioCotizacion.classList.remove('d-none'); }
+            if (modalConfirmarEnvioCotizacion) {
+                modalConfirmarEnvioCotizacion.show();
+                return;
+            }
+            if (formEnviarCotizacion && confirm('¿Deseas enviar esta cotización al cliente seleccionado?')) {
+                formEnviarCotizacion.submit();
+            }
+        });
+    }
+    if (btnConfirmarEnvioCotizacion && formEnviarCotizacion) {
+        btnConfirmarEnvioCotizacion.addEventListener('click', function () {
+            formEnviarCotizacion.submit();
+        });
     }
 
     function fmt(v) { return '$' + (Math.round((v + Number.EPSILON) * 100) / 100).toFixed(2); }
