@@ -13,6 +13,14 @@ use Aplicacion\Servicios\ServicioCorreo;
 
 class PublicoControlador extends Controlador
 {
+    private const LANDING_SITEMAP = [
+        ['path' => '/', 'changefreq' => 'weekly', 'priority' => '1.0', 'view' => 'inicio.php'],
+        ['path' => '/caracteristicas', 'changefreq' => 'weekly', 'priority' => '0.9', 'view' => 'caracteristicas.php'],
+        ['path' => '/planes', 'changefreq' => 'weekly', 'priority' => '0.9', 'view' => 'planes.php'],
+        ['path' => '/contacto', 'changefreq' => 'monthly', 'priority' => '0.8', 'view' => 'contacto.php'],
+        ['path' => '/preguntas-frecuentes', 'changefreq' => 'monthly', 'priority' => '0.7', 'view' => 'preguntas_frecuentes.php'],
+    ];
+
     public function inicio(): void
     {
         $planes = (new Plan())->listar(true);
@@ -40,6 +48,42 @@ class PublicoControlador extends Controlador
     public function preguntasFrecuentes(): void
     {
         $this->vistaPublica('publico/preguntas_frecuentes', [], 'faq');
+    }
+
+    public function sitemapXml(): void
+    {
+        header('Content-Type: application/xml; charset=UTF-8');
+
+        $baseUrl = $this->obtenerUrlBaseSitio();
+        $xml = new \XMLWriter();
+        $xml->openMemory();
+        $xml->startDocument('1.0', 'UTF-8');
+        $xml->startElement('urlset');
+        $xml->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+
+        foreach (self::LANDING_SITEMAP as $pagina) {
+            $xml->startElement('url');
+            $xml->writeElement('loc', $baseUrl . url($pagina['path']));
+            $xml->writeElement('lastmod', $this->resolverUltimaActualizacionPagina($pagina['view']));
+            $xml->writeElement('changefreq', $pagina['changefreq']);
+            $xml->writeElement('priority', $pagina['priority']);
+            $xml->endElement();
+        }
+
+        $xml->endElement();
+        $xml->endDocument();
+
+        echo $xml->outputMemory();
+    }
+
+    public function robotsTxt(): void
+    {
+        header('Content-Type: text/plain; charset=UTF-8');
+
+        $baseUrl = $this->obtenerUrlBaseSitio();
+        echo "User-agent: *\n";
+        echo "Allow: /\n";
+        echo "Sitemap: " . $baseUrl . url('/sitemap.xml') . "\n";
     }
 
     public function enviarContacto(): void
@@ -243,6 +287,23 @@ class PublicoControlador extends Controlador
     private function vistaPublica(string $vista, array $data, string $pagina): void
     {
         $this->vista($vista, array_merge($this->obtenerSeoPorPagina($pagina), $data), 'publico');
+    }
+
+    private function resolverUltimaActualizacionPagina(string $archivoVista): string
+    {
+        $rutaVista = __DIR__ . '/../../vistas/publico/' . $archivoVista;
+        $timestamp = file_exists($rutaVista) ? (int) filemtime($rutaVista) : time();
+
+        return gmdate('Y-m-d', $timestamp > 0 ? $timestamp : time());
+    }
+
+    private function obtenerUrlBaseSitio(): string
+    {
+        $esHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        $esHttps = $esHttps || ((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? 'localhost');
+
+        return ($esHttps ? 'https' : 'http') . '://' . $host;
     }
 
     private function obtenerSeoPorPagina(string $pagina): array
