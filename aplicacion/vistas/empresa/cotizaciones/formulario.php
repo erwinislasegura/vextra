@@ -181,11 +181,29 @@ $puedeGuardar = $hayClientes && $hayProductos;
     <div>
         <button class="btn btn-primary btn-sm" name="accion" value="guardar"<?= $puedeGuardar ? '' : ' disabled' ?>>Guardar sin salir</button>
         <button class="btn btn-success btn-sm" name="accion" value="guardar_salir"<?= $puedeGuardar ? '' : ' disabled' ?>>Guardar y salir</button>
-        <button class="btn btn-outline-success btn-sm" type="button" onclick="window.location.href='mailto:?subject=' + encodeURIComponent('Cotización <?= e($siguienteNumero) ?>')">Enviar por correo</button>
+        <button class="btn btn-outline-success btn-sm" type="button" id="btn-enviar-cliente-crear" onclick="return confirmarEnvioCotizacionCrear();">Enviar al cliente</button>
         <button class="btn btn-outline-dark btn-sm" type="button" onclick="alert('Guarda la cotización para descargar el PDF.')">Descargar PDF</button>
         <a href="<?= e(url('/app/cotizaciones')) ?>" class="btn btn-outline-secondary btn-sm">Cancelar</a>
     </div>
 </form>
+
+<div class="modal fade" id="modalConfirmarEnvioCotizacionCrear" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar envío</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="mensaje-confirmar-envio-cotizacion-crear">
+                ¿Deseas enviar esta cotización al cliente seleccionado?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success btn-sm" id="btn-confirmar-envio-cotizacion-crear">Sí, enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <template id="fila-item-template">
     <tr>
@@ -334,6 +352,16 @@ $puedeGuardar = $hayClientes && $hayProductos;
 </div>
 
 <script>
+function confirmarEnvioCotizacionCrear() {
+    const selectCliente = document.getElementById('cliente_id');
+    if (!selectCliente || String(selectCliente.value || '').trim() === '') {
+        alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+        return false;
+    }
+    alert('Debes guardar la cotización primero. Luego podrás enviarla al cliente desde "Editar cotización".');
+    return false;
+}
+
 (function () {
     const cuerpo = document.getElementById('cuerpo-items');
     const template = document.getElementById('fila-item-template');
@@ -351,6 +379,13 @@ $puedeGuardar = $hayClientes && $hayProductos;
     const btnVerMovimientos = document.getElementById('btn-ver-movimientos');
     const movimientosProductoTitulo = document.getElementById('movimientos_producto_titulo');
     const movimientosProductoBody = document.getElementById('movimientos_producto_body');
+    const btnEnviarClienteCrear = document.getElementById('btn-enviar-cliente-crear');
+    const btnConfirmarEnvioCotizacionCrear = document.getElementById('btn-confirmar-envio-cotizacion-crear');
+    const modalConfirmarEnvioCotizacionCrearEl = document.getElementById('modalConfirmarEnvioCotizacionCrear');
+    const mensajeConfirmarEnvioCotizacionCrear = document.getElementById('mensaje-confirmar-envio-cotizacion-crear');
+    const modalConfirmarEnvioCotizacionCrear = (window.bootstrap && modalConfirmarEnvioCotizacionCrearEl)
+        ? new bootstrap.Modal(modalConfirmarEnvioCotizacionCrearEl)
+        : null;
     const etiquetasTipoMovimiento = {
         recepcion_proveedor: 'Recepción de proveedor',
         ajuste_entrada: 'Ajuste de entrada',
@@ -364,6 +399,39 @@ $puedeGuardar = $hayClientes && $hayProductos;
             return etiquetasTipoMovimiento[clave];
         }
         return clave.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    }
+
+    if (btnEnviarClienteCrear) {
+        btnEnviarClienteCrear.addEventListener('click', function () {
+            const clienteSeleccionado = String(selectCliente?.value || '').trim();
+            if (clienteSeleccionado === '') {
+                if (mensajeConfirmarEnvioCotizacionCrear) {
+                    mensajeConfirmarEnvioCotizacionCrear.textContent = 'No se puede enviar la cotización porque no hay un cliente seleccionado.';
+                }
+                if (btnConfirmarEnvioCotizacionCrear) { btnConfirmarEnvioCotizacionCrear.classList.add('d-none'); }
+                if (modalConfirmarEnvioCotizacionCrear) {
+                    modalConfirmarEnvioCotizacionCrear.show();
+                } else {
+                    alert('No se puede enviar la cotización porque no hay un cliente seleccionado.');
+                }
+                return;
+            }
+
+            if (mensajeConfirmarEnvioCotizacionCrear) {
+                mensajeConfirmarEnvioCotizacionCrear.textContent = 'Debes guardar la cotización antes de enviarla al cliente.';
+            }
+            if (btnConfirmarEnvioCotizacionCrear) { btnConfirmarEnvioCotizacionCrear.classList.remove('d-none'); }
+            if (modalConfirmarEnvioCotizacionCrear) {
+                modalConfirmarEnvioCotizacionCrear.show();
+                return;
+            }
+            alert('Debes guardar la cotización antes de enviarla al cliente.');
+        });
+    }
+    if (btnConfirmarEnvioCotizacionCrear) {
+        btnConfirmarEnvioCotizacionCrear.addEventListener('click', function () {
+            alert('Primero guarda la cotización y luego usa "Enviar al cliente" desde la edición.');
+        });
     }
 
     if (btnCopiarLink && inputLinkAprobacion) {
