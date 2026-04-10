@@ -295,16 +295,54 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
 
 <section class="py-5">
     <div class="container">
-        <h2 class="h4 mb-3">Cómo se usa en la práctica</h2>
-        <div class="row g-3 small">
-            <div class="col-md-2"><div class="card h-100"><div class="card-body"><strong>1.</strong> Registras clientes</div></div></div>
-            <div class="col-md-2"><div class="card h-100"><div class="card-body"><strong>2.</strong> Agregas productos</div></div></div>
-            <div class="col-md-2"><div class="card h-100"><div class="card-body"><strong>3.</strong> Creas cotizaciones</div></div></div>
-            <div class="col-md-3"><div class="card h-100"><div class="card-body"><strong>4.</strong> Haces seguimiento</div></div></div>
-            <div class="col-md-3"><div class="card h-100"><div class="card-body"><strong>5.</strong> Cierras ventas</div></div></div>
+        <div class="text-center mb-4">
+            <h2 class="h4 mb-2">Cómo se usa en la práctica</h2>
+            <p class="text-secondary mb-0">Una vista rápida del flujo real para pasar de cotizar con desorden a vender con continuidad comercial.</p>
         </div>
-        <p class="text-secondary mt-3 mb-4">En la práctica, esto te permite trabajar con orden y sin depender de archivos sueltos, mejorando la continuidad del proceso comercial en toda tu empresa.</p>
-        <div class="d-flex flex-wrap gap-2">
+        <div class="landing-timeline landing-timeline--5" aria-label="Línea de tiempo de uso práctico de Vextra">
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 1</span>
+                    <h3 class="h6 mb-1">Registras clientes</h3>
+                    <p class="small mb-0 text-secondary">Centralizas tus contactos y dejas atrás la información dispersa en planillas.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-box-seam"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 2</span>
+                    <h3 class="h6 mb-1">Agregas productos</h3>
+                    <p class="small mb-0 text-secondary">Configuras catálogo y precios para cotizar con consistencia comercial.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 3</span>
+                    <h3 class="h6 mb-1">Creas cotizaciones</h3>
+                    <p class="small mb-0 text-secondary">Generas propuestas profesionales y listas para enviar en minutos.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-activity"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 4</span>
+                    <h3 class="h6 mb-1">Haces seguimiento</h3>
+                    <p class="small mb-0 text-secondary">Controlas estados y avances para no perder oportunidades de cierre.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-check2-circle"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 5</span>
+                    <h3 class="h6 mb-1">Cierras ventas</h3>
+                    <p class="small mb-0 text-secondary">Conectas cotización, POS e inventario para cerrar con más orden y rentabilidad.</p>
+                </div>
+            </article>
+        </div>
+        <p class="text-secondary mt-4 mb-4 text-center">Este flujo te ayuda a trabajar con orden, mejorar experiencia de cliente y aumentar conversiones sin complejidad operativa.</p>
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
             <a href="<?= e(url('/planes')) ?>" class="btn btn-primary btn-sm">Ver planes</a>
             <a href="<?= e(url('/planes')) ?>" class="btn btn-outline-primary btn-sm">Contratar</a>
             <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary btn-sm">Contactar</a>

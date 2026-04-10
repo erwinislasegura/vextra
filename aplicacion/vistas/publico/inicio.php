@@ -1,6 +1,6 @@
 <?php
 $capturasBase = '/img/Captura Sistema';
-$capturaUrl = static function (string $archivo): string {
+$capturaUrl = static function (string $archivo) use ($capturasBase): string {
     return url($capturasBase . '/' . rawurlencode($archivo));
 };
 $cotizacionesCapturas = [
@@ -285,14 +285,49 @@ $faqSchema = [
     </div>
 </section>
 
-<section class="py-5 border-bottom">
+<section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
-        <h2 class="h3 mb-3">Casos de uso por tipo de empresa</h2>
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Distribuidoras</h3><p class="small mb-0">Cotizan por volumen, controlan stock por rotación y despachan con mejor promesa comercial.</p></div></div></div>
-            <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Retail especializado</h3><p class="small mb-0">Unifican POS, catálogo y reposición para vender más sin romper experiencia de cliente.</p></div></div></div>
-            <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Servicios técnicos</h3><p class="small mb-0">Generan presupuestos con trazabilidad y convierten propuestas en órdenes de trabajo y venta.</p></div></div></div>
-            <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Pymes en expansión</h3><p class="small mb-0">Ordenan su administración comercial con datos en tiempo real y menos dependencia de Excel.</p></div></div></div>
+        <div class="text-center mb-4">
+            <h2 class="h3 mb-2">Casos de uso por tipo de empresa</h2>
+            <p class="text-secondary mb-1">Cada negocio tiene desafíos distintos. Esta línea de tiempo muestra cómo Vextra acompaña tu crecimiento con foco en resultados reales.</p>
+            <p class="small text-secondary mb-0">Elige el plan que mejor calce con tu etapa y transforma tu operación comercial en una experiencia profesional para tus clientes.</p>
+        </div>
+        <div class="landing-timeline" aria-label="Línea de tiempo de casos de uso empresariales">
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-truck"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 1</span>
+                    <h3 class="h6 mb-1">Distribuidoras</h3>
+                    <p class="small mb-0">Cotizan por volumen, controlan stock por rotación y despachan con mejor promesa comercial.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-shop-window"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 2</span>
+                    <h3 class="h6 mb-1">Retail especializado</h3>
+                    <p class="small mb-0">Unifican POS, catálogo y reposición para vender más sin romper experiencia de cliente.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-tools"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 3</span>
+                    <h3 class="h6 mb-1">Servicios técnicos</h3>
+                    <p class="small mb-0">Generan presupuestos con trazabilidad y convierten propuestas en órdenes de trabajo y venta.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Paso 4</span>
+                    <h3 class="h6 mb-1">Pymes en expansión</h3>
+                    <p class="small mb-0">Ordenan su administración comercial con datos en tiempo real y menos dependencia de Excel.</p>
+                </div>
+            </article>
+        </div>
+        <div class="text-center mt-4">
+            <a href="#planes" class="btn btn-primary btn-sm">Ver plan recomendado para mi empresa</a>
         </div>
     </div>
 </section>
