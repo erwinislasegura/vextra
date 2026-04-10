@@ -1,6 +1,6 @@
 <?php
 $capturasBase = '/img/Captura Sistema';
-$capturaUrl = static function (string $archivo): string {
+$capturaUrl = static function (string $archivo) use ($capturasBase): string {
     return url($capturasBase . '/' . rawurlencode($archivo));
 };
 $cotizacionesCapturas = [
