@@ -1,3 +1,34 @@
+<?php
+$capturasBase = url('/img/Captura%20Sistema');
+$cotizacionesCapturas = [
+    [
+        'archivo' => 'Cotizaciones%201.png',
+        'titulo' => 'Listado de cotizaciones con estado comercial',
+        'descripcion' => 'Visualiza en segundos qué propuestas están pendientes, aprobadas o en seguimiento para priorizar acciones del equipo de ventas.'
+    ],
+    [
+        'archivo' => 'Cotizaciones%202.png',
+        'titulo' => 'Edición detallada de propuestas',
+        'descripcion' => 'Modifica ítems, descuentos y condiciones sin rehacer documentos, manteniendo consistencia comercial y trazabilidad.'
+    ],
+    [
+        'archivo' => 'Cotizaciones%203.png',
+        'titulo' => 'Documentos listos para enviar al cliente',
+        'descripcion' => 'Genera cotizaciones claras y profesionales para acelerar la respuesta y mejorar la percepción de marca.'
+    ],
+    [
+        'archivo' => 'Cotizaciones%204.png',
+        'titulo' => 'Seguimiento de oportunidades',
+        'descripcion' => 'Controla avances por etapa comercial para evitar oportunidades frías y aumentar la tasa de cierre.'
+    ],
+    [
+        'archivo' => 'Cotizaciones%205.png',
+        'titulo' => 'Control avanzado para cierres',
+        'descripcion' => 'Integra seguimiento, aprobaciones y contexto del cliente para tomar decisiones de cierre con mejor información.'
+    ],
+];
+?>
+
 <section class="hero py-5 bg-white border-bottom">
     <div class="container">
         <div class="row align-items-center g-4">
@@ -25,6 +56,62 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom bg-light-subtle">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-12 col-lg-6">
+                <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Vista real del sistema</span>
+                <h2 class="h4 mb-2">Una plataforma que se ve tan profesional como tu operación</h2>
+                <p class="text-secondary mb-0">Estas pantallas reflejan cómo Vextra conecta gestión comercial, inventario y ventas en una experiencia ordenada, limpia y enfocada en productividad.</p>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Dashboard%20-%20Inicio.png') ?>" alt="Panel de inicio del sistema" loading="lazy"><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Punto%20de%20venta.png') ?>" alt="Módulo de punto de venta" loading="lazy"><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Movimientos%20de%20inventario.png') ?>" alt="Módulo de inventario" loading="lazy"><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Clientes.png') ?>" alt="Módulo de clientes" loading="lazy"><figcaption>Clientes y contactos</figcaption></figure></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge bg-info-subtle text-info-emphasis mb-2">Módulo de cotizaciones</span>
+            <h2 class="h4 mb-2">Carrusel de cotizaciones: flujo real de uso</h2>
+            <p class="text-secondary mb-0">Las siguientes vistas muestran cómo trabajar de punta a punta: crear, editar, enviar y hacer seguimiento hasta el cierre.</p>
+        </div>
+        <div id="cotizacionesCarousel" class="carousel slide landing-carousel" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                    <button type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide-to="<?= $index ?>" class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" aria-label="Slide <?= $index + 1 ?>"></button>
+                <?php endforeach; ?>
+            </div>
+            <div class="carousel-inner">
+                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                    <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                        <img src="<?= e($capturasBase . '/' . $captura['archivo']) ?>" class="d-block w-100" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                        <div class="landing-carousel-caption">
+                            <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
+                            <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
         </div>
     </div>
 </section>
