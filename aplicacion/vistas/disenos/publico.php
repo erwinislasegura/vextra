@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="es">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X41LED0NXW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-X41LED0NXW');
+  </script>
   <?php
     $metaTitle = (string) ($meta_title ?? 'Vextra | Sistema de cotizaciones para empresas');
     $metaDescription = (string) ($meta_description ?? 'Vextra es un sistema de cotizaciones para empresas que ayuda a vender más con procesos comerciales ordenados, seguimiento de oportunidades y planes escalables.');
