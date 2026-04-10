@@ -1,6 +1,6 @@
 <?php
 $capturasBase = '/img/Captura Sistema';
-$capturaUrl = static function ($archivo) {
+$capturaUrl = function ($archivo) {
     return url($capturasBase . '/' . rawurlencode($archivo));
 };
 $cotizacionesCapturas = [
@@ -77,7 +77,7 @@ $faqSeo = [
 $faqSchema = [
     '@context' => 'https://schema.org',
     '@type' => 'FAQPage',
-    'mainEntity' => array_map(static function ($item) {
+    'mainEntity' => array_map(function ($item) {
         return [
             '@type' => 'Question',
             'name' => $item['pregunta'],
