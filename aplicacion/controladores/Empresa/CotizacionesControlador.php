@@ -695,7 +695,7 @@ HTML;
 
     private function construirUrlPublica(string $tokenPublico): string
     {
-        return $this->construirUrlInterna('/cotizacion/publica/' . $tokenPublico);
+        return $this->construirUrlDominio('/cotizacion/publica/' . $tokenPublico);
     }
 
     private function construirUrlInterna(string $ruta): string
@@ -708,6 +708,17 @@ HTML;
             $base = ($esHttps ? 'https://' : 'http://') . $host;
         }
         return $base . url($ruta);
+    }
+
+    private function construirUrlDominio(string $ruta): string
+    {
+        $config = require __DIR__ . '/../../../configuracion/aplicacion.php';
+        $base = rtrim((string) ($config['url'] ?? ''), '/');
+        if ($base === '' || preg_match('/localhost|127\\.0\\.0\\.1/i', $base)) {
+            $base = 'https://vextra.cl';
+        }
+        $base = preg_replace('#/(public|app)$#i', '', $base) ?? $base;
+        return rtrim($base, '/') . '/' . ltrim($ruta, '/');
     }
 
     private function generarPdfCotizacion(array $cotizacion, array $empresa): string
