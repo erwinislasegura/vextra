@@ -289,7 +289,8 @@ $faqSchema = [
     <div class="container">
         <div class="text-center mb-4">
             <h2 class="h3 mb-2">Casos de uso por tipo de empresa</h2>
-            <p class="text-secondary mb-0">Una línea de tiempo realista de cómo cada rubro ordena su operación con Vextra.</p>
+            <p class="text-secondary mb-1">Cada negocio tiene desafíos distintos. Esta línea de tiempo muestra cómo Vextra acompaña tu crecimiento con foco en resultados reales.</p>
+            <p class="small text-secondary mb-0">Elige el plan que mejor calce con tu etapa y transforma tu operación comercial en una experiencia profesional para tus clientes.</p>
         </div>
         <div class="landing-timeline" aria-label="Línea de tiempo de casos de uso empresariales">
             <article class="landing-timeline__item">
@@ -324,6 +325,9 @@ $faqSchema = [
                     <p class="small mb-0">Ordenan su administración comercial con datos en tiempo real y menos dependencia de Excel.</p>
                 </div>
             </article>
+        </div>
+        <div class="text-center mt-4">
+            <a href="#planes" class="btn btn-primary btn-sm">Ver plan recomendado para mi empresa</a>
         </div>
     </div>
 </section>
