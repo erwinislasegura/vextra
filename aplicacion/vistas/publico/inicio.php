@@ -1,3 +1,35 @@
+<?php
+$capturasBase = '/img/Captura Sistema';
+$capturaUrl = static fn(string $archivo): string => url($capturasBase . '/' . rawurlencode($archivo));
+$cotizacionesCapturas = [
+    [
+        'archivo' => 'Cotizaciones 1.png',
+        'titulo' => 'Listado de cotizaciones con estado comercial',
+        'descripcion' => 'Visualiza en segundos qué propuestas están pendientes, aprobadas o en seguimiento para priorizar acciones del equipo de ventas.'
+    ],
+    [
+        'archivo' => 'Cotizaciones 2.png',
+        'titulo' => 'Edición detallada de propuestas',
+        'descripcion' => 'Modifica ítems, descuentos y condiciones sin rehacer documentos, manteniendo consistencia comercial y trazabilidad.'
+    ],
+    [
+        'archivo' => 'Cotizaciones 3.png',
+        'titulo' => 'Documentos listos para enviar al cliente',
+        'descripcion' => 'Genera cotizaciones claras y profesionales para acelerar la respuesta y mejorar la percepción de marca.'
+    ],
+    [
+        'archivo' => 'Cotizaciones 4.png',
+        'titulo' => 'Seguimiento de oportunidades',
+        'descripcion' => 'Controla avances por etapa comercial para evitar oportunidades frías y aumentar la tasa de cierre.'
+    ],
+    [
+        'archivo' => 'Cotizaciones 5.png',
+        'titulo' => 'Control avanzado para cierres',
+        'descripcion' => 'Integra seguimiento, aprobaciones y contexto del cliente para tomar decisiones de cierre con mejor información.'
+    ],
+];
+?>
+
 <section class="hero py-5 bg-white border-bottom">
     <div class="container">
         <div class="row align-items-center g-4">
@@ -28,6 +60,63 @@
         </div>
     </div>
 </section>
+
+<section class="py-5 border-bottom bg-light-subtle">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-12 col-lg-6">
+                <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Vista real del sistema</span>
+                <h2 class="h4 mb-2">Una plataforma que se ve tan profesional como tu operación</h2>
+                <p class="text-secondary mb-0">Estas pantallas reflejan cómo Vextra conecta gestión comercial, inventario y ventas en una experiencia ordenada, limpia y enfocada en productividad.</p>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Panel de inicio del sistema" loading="lazy"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="POS conectado"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Módulo de punto de venta" loading="lazy"></a><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Inventario en tiempo real"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Módulo de inventario" loading="lazy"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Clientes y contactos"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Módulo de clientes" loading="lazy"></a><figcaption>Clientes y contactos</figcaption></figure></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge bg-info-subtle text-info-emphasis mb-2">Módulo de cotizaciones</span>
+            <h2 class="h4 mb-2">Cotizaciones que cierran ventas: mira el flujo completo en acción</h2>
+            <p class="text-secondary mb-0">Las siguientes vistas muestran cómo trabajar de punta a punta: crear, editar, enviar y hacer seguimiento hasta el cierre.</p>
+        </div>
+        <div class="landing-slider" data-slider data-slider-interval="3200">
+            <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
+                    <img src="<?= e($capturaUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                    <div class="landing-carousel-caption">
+                        <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
+                        <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            <button class="landing-slider-control prev" type="button" data-slide-nav="prev" aria-label="Imagen anterior">‹</button>
+            <button class="landing-slider-control next" type="button" data-slide-nav="next" aria-label="Imagen siguiente">›</button>
+            <div class="landing-slider-dots" role="tablist" aria-label="Navegación de cotizaciones">
+                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                    <button type="button" class="<?= $index === 0 ? 'is-active' : '' ?>" data-slide-dot="<?= $index ?>" aria-label="Ver captura <?= $index + 1 ?>"></button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="captura-preview" id="previewCapturaLanding" hidden>
+    <div class="captura-preview__backdrop" data-preview-close></div>
+    <div class="captura-preview__dialog" role="dialog" aria-modal="true" aria-label="Vista previa de captura">
+        <button type="button" class="captura-preview__close" data-preview-close aria-label="Cerrar vista previa">×</button>
+        <h2 class="h6 mb-2" data-captura-modal-title>Vista de módulo</h2>
+        <img src="" alt="" class="img-fluid w-100 rounded" data-captura-modal-image>
+    </div>
+</div>
 
 <section id="planes" class="py-5 bg-white border-bottom">
     <div class="container">
@@ -78,6 +167,70 @@
 
 <script>
 (() => {
+    const slider = document.querySelector('[data-slider]');
+    if (slider) {
+        const slides = Array.from(slider.querySelectorAll('[data-slide]'));
+        const dots = Array.from(slider.querySelectorAll('[data-slide-dot]'));
+        const interval = Number(slider.getAttribute('data-slider-interval') || 3200);
+        let actual = 0;
+        let timer = null;
+
+        const pintar = (indice) => {
+            actual = (indice + slides.length) % slides.length;
+            slides.forEach((slide, i) => slide.classList.toggle('is-active', i === actual));
+            dots.forEach((dot, i) => dot.classList.toggle('is-active', i === actual));
+        };
+        const iniciar = () => {
+            if (slides.length < 2) return;
+            timer = window.setInterval(() => pintar(actual + 1), interval);
+        };
+        const reiniciar = () => {
+            if (timer) window.clearInterval(timer);
+            iniciar();
+        };
+
+        slider.querySelector('[data-slide-nav=\"prev\"]')?.addEventListener('click', () => { pintar(actual - 1); reiniciar(); });
+        slider.querySelector('[data-slide-nav=\"next\"]')?.addEventListener('click', () => { pintar(actual + 1); reiniciar(); });
+        dots.forEach((dot) => {
+            dot.addEventListener('click', () => {
+                pintar(Number(dot.getAttribute('data-slide-dot') || 0));
+                reiniciar();
+            });
+        });
+        slider.addEventListener('mouseenter', () => timer && window.clearInterval(timer));
+        slider.addEventListener('mouseleave', reiniciar);
+
+        pintar(0);
+        iniciar();
+    }
+
+    const modalEl = document.getElementById('previewCapturaLanding');
+    const modalImg = modalEl?.querySelector('[data-captura-modal-image]');
+    const modalTitle = modalEl?.querySelector('[data-captura-modal-title]');
+    const cerrarModal = () => {
+        if (!modalEl) return;
+        modalEl.hidden = true;
+        document.body.classList.remove('preview-open');
+    };
+
+    document.querySelectorAll('.js-captura-ampliable').forEach((enlace) => {
+        enlace.addEventListener('click', (evento) => {
+            if (!modalEl || !modalImg || !modalTitle) return;
+            evento.preventDefault();
+            const src = enlace.getAttribute('href') || '';
+            const title = enlace.getAttribute('data-captura-title') || 'Vista de módulo';
+            modalImg.src = src;
+            modalImg.alt = title;
+            modalTitle.textContent = title;
+            modalEl.hidden = false;
+            document.body.classList.add('preview-open');
+        });
+    });
+    modalEl?.querySelectorAll('[data-preview-close]').forEach((cerrar) => cerrar.addEventListener('click', cerrarModal));
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') cerrarModal();
+    });
+
     const botones = document.querySelectorAll('[data-home-billing]');
     const precios = document.querySelectorAll('[data-home-precio]');
     const links = document.querySelectorAll('[data-home-link]');

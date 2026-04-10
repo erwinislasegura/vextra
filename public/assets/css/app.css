@@ -147,6 +147,29 @@ form.form-enviando .btn{pointer-events:none}
 .public-page .btn-outline-primary:hover,.public-page .btn-outline-primary:focus{background:var(--vextra-azul);border-color:var(--vextra-azul);color:#fff}
 .public-page a:not(.btn){color:var(--vextra-morado)}
 .public-page .card-soft{background:linear-gradient(180deg,#f6f4ff 0,#f0ecff 100%);border-color:#d9ddf6}
+.public-page .landing-shot-card{position:relative;border:1px solid #dbe4f2;border-radius:.7rem;overflow:hidden;background:#fff;box-shadow:0 6px 18px rgba(35,54,79,.08)}
+.public-page .landing-shot-link{display:block;cursor:zoom-in}
+.public-page .landing-shot-card img{display:block;width:100%;height:200px;object-fit:cover;object-position:top}
+.public-page .landing-shot-card figcaption{padding:.55rem .65rem;font-size:.76rem;font-weight:600;color:#31465d;background:#f8fbff;border-top:1px solid #e7eef8}
+.public-page .landing-carousel{border-radius:.8rem;overflow:hidden;border:1px solid #dbe4f2;background:#fff;box-shadow:0 10px 28px rgba(24,40,66,.12)}
+.public-page .landing-carousel .carousel-item img{height:420px;object-fit:cover;object-position:top}
+.public-page .landing-carousel-caption{position:absolute;left:1rem;right:1rem;bottom:1rem;padding:.75rem .85rem;border-radius:.6rem;background:rgba(10,19,35,.74);color:#fff}
+.public-page .landing-carousel .carousel-indicators [data-bs-target]{width:9px;height:9px;border-radius:50%}
+.public-page .landing-slider{position:relative;border-radius:.8rem;overflow:hidden;border:1px solid #dbe4f2;background:#fff;box-shadow:0 10px 28px rgba(24,40,66,.12)}
+.public-page .landing-slide{display:none;position:relative}
+.public-page .landing-slide.is-active{display:block}
+.public-page .landing-slide img{width:100%;height:420px;object-fit:cover;object-position:top;display:block}
+.public-page .landing-slider-control{position:absolute;top:50%;transform:translateY(-50%);width:2.2rem;height:2.2rem;border:none;border-radius:999px;background:rgba(19,32,52,.7);color:#fff;font-size:1.3rem;line-height:1;z-index:3}
+.public-page .landing-slider-control.prev{left:.8rem}
+.public-page .landing-slider-control.next{right:.8rem}
+.public-page .landing-slider-dots{position:absolute;left:50%;transform:translateX(-50%);bottom:.5rem;display:flex;gap:.4rem;z-index:4}
+.public-page .landing-slider-dots button{width:.55rem;height:.55rem;border:none;border-radius:50%;background:rgba(255,255,255,.6)}
+.public-page .landing-slider-dots button.is-active{background:#fff}
+.captura-preview{position:fixed;inset:0;z-index:1080}
+.captura-preview__backdrop{position:absolute;inset:0;background:rgba(8,14,25,.68)}
+.captura-preview__dialog{position:relative;max-width:min(1100px,94vw);margin:3.5vh auto;background:#fff;border-radius:.8rem;padding:1rem;max-height:93vh;overflow:auto}
+.captura-preview__close{position:absolute;top:.35rem;right:.55rem;border:none;background:transparent;font-size:1.6rem;line-height:1}
+body.preview-open{overflow:hidden}
 
 /* Panel de control cliente (estilo ejecutivo) */
 .panel-cliente .card-dashboard{border:1px solid #dbe5ef;box-shadow:0 6px 14px rgba(18,42,66,.06)}
@@ -166,6 +189,12 @@ form.form-enviando .btn{pointer-events:none}
 @media (max-width: 767.98px){
   .panel-cliente .chart-area{height:260px}
   .metric-card{padding-left:3.2rem}
+  .public-page .landing-shot-card img{height:160px}
+  .public-page .landing-carousel .carousel-item img{height:250px}
+  .public-page .landing-slide img{height:250px}
+  .public-page .landing-carousel-caption{position:static;border-radius:0;background:#1b2840}
+  .public-page .landing-slider-control{width:2rem;height:2rem}
+  .captura-preview__dialog{margin:2vh auto;padding:.8rem}
 }
 
 /* Panel administrador global */
