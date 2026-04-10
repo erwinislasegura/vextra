@@ -1,4 +1,7 @@
-<?php $capturasBase = url('/img/Captura%20Sistema'); ?>
+<?php
+$capturasBase = '/img/Captura Sistema';
+$capturaUrl = static fn(string $archivo): string => url($capturasBase . '/' . rawurlencode($archivo));
+?>
 
 <section class="py-5 bg-white border-bottom">
     <div class="container">
@@ -39,14 +42,14 @@
             </div>
         </div>
         <div class="row g-3">
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Servicios%20%3A%20Productos.png') ?>" alt="Módulo de productos" loading="lazy"><figcaption>Catálogo de productos</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Carga%20masiva%20de%20productos.png') ?>" alt="Carga masiva de productos" loading="lazy"><figcaption>Carga masiva</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Ordenes%20de%20compra.png') ?>" alt="Órdenes de compra" loading="lazy"><figcaption>Órdenes de compra</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Recepciones%20de%20inventario.png') ?>" alt="Recepciones de inventario" loading="lazy"><figcaption>Recepciones de inventario</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Proveedores.png') ?>" alt="Módulo de proveedores" loading="lazy"><figcaption>Proveedores</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Ajustes%20de%20inventario.png') ?>" alt="Ajustes de inventario" loading="lazy"><figcaption>Ajustes de inventario</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Vendedores.png') ?>" alt="Módulo de vendedores" loading="lazy"><figcaption>Gestión de vendedores</figcaption></figure></div>
-            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Configuraci%C3%B3n%20de%20correos%20de%20stock.png') ?>" alt="Configuración de alertas de stock por correo" loading="lazy"><figcaption>Alertas de stock</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Servicios : Productos.png')) ?>" alt="Módulo de productos" loading="lazy"><figcaption>Catálogo de productos</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Carga masiva de productos.png')) ?>" alt="Carga masiva de productos" loading="lazy"><figcaption>Carga masiva</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Ordenes de compra.png')) ?>" alt="Órdenes de compra" loading="lazy"><figcaption>Órdenes de compra</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Recepciones de inventario.png')) ?>" alt="Recepciones de inventario" loading="lazy"><figcaption>Recepciones de inventario</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Proveedores.png')) ?>" alt="Módulo de proveedores" loading="lazy"><figcaption>Proveedores</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Ajustes de inventario.png')) ?>" alt="Ajustes de inventario" loading="lazy"><figcaption>Ajustes de inventario</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Vendedores.png')) ?>" alt="Módulo de vendedores" loading="lazy"><figcaption>Gestión de vendedores</figcaption></figure></div>
+            <div class="col-12 col-md-6 col-lg-3"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Configuración de correos de stock.png')) ?>" alt="Configuración de alertas de stock por correo" loading="lazy"><figcaption>Alertas de stock</figcaption></figure></div>
         </div>
     </div>
 </section>

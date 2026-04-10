@@ -1,28 +1,29 @@
 <?php
-$capturasBase = url('/img/Captura%20Sistema');
+$capturasBase = '/img/Captura Sistema';
+$capturaUrl = static fn(string $archivo): string => url($capturasBase . '/' . rawurlencode($archivo));
 $cotizacionesCapturas = [
     [
-        'archivo' => 'Cotizaciones%201.png',
+        'archivo' => 'Cotizaciones 1.png',
         'titulo' => 'Listado de cotizaciones con estado comercial',
         'descripcion' => 'Visualiza en segundos qué propuestas están pendientes, aprobadas o en seguimiento para priorizar acciones del equipo de ventas.'
     ],
     [
-        'archivo' => 'Cotizaciones%202.png',
+        'archivo' => 'Cotizaciones 2.png',
         'titulo' => 'Edición detallada de propuestas',
         'descripcion' => 'Modifica ítems, descuentos y condiciones sin rehacer documentos, manteniendo consistencia comercial y trazabilidad.'
     ],
     [
-        'archivo' => 'Cotizaciones%203.png',
+        'archivo' => 'Cotizaciones 3.png',
         'titulo' => 'Documentos listos para enviar al cliente',
         'descripcion' => 'Genera cotizaciones claras y profesionales para acelerar la respuesta y mejorar la percepción de marca.'
     ],
     [
-        'archivo' => 'Cotizaciones%204.png',
+        'archivo' => 'Cotizaciones 4.png',
         'titulo' => 'Seguimiento de oportunidades',
         'descripcion' => 'Controla avances por etapa comercial para evitar oportunidades frías y aumentar la tasa de cierre.'
     ],
     [
-        'archivo' => 'Cotizaciones%205.png',
+        'archivo' => 'Cotizaciones 5.png',
         'titulo' => 'Control avanzado para cierres',
         'descripcion' => 'Integra seguimiento, aprobaciones y contexto del cliente para tomar decisiones de cierre con mejor información.'
     ],
@@ -70,10 +71,10 @@ $cotizacionesCapturas = [
             </div>
             <div class="col-12 col-lg-6">
                 <div class="row g-3">
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Dashboard%20-%20Inicio.png') ?>" alt="Panel de inicio del sistema" loading="lazy"><figcaption>Dashboard ejecutivo</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Punto%20de%20venta.png') ?>" alt="Módulo de punto de venta" loading="lazy"><figcaption>POS conectado</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Movimientos%20de%20inventario.png') ?>" alt="Módulo de inventario" loading="lazy"><figcaption>Inventario en tiempo real</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturasBase . '/Clientes.png') ?>" alt="Módulo de clientes" loading="lazy"><figcaption>Clientes y contactos</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Panel de inicio del sistema" loading="lazy"><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Módulo de punto de venta" loading="lazy"><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Módulo de inventario" loading="lazy"><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Módulo de clientes" loading="lazy"><figcaption>Clientes y contactos</figcaption></figure></div>
                 </div>
             </div>
         </div>
@@ -84,10 +85,10 @@ $cotizacionesCapturas = [
     <div class="container">
         <div class="text-center mb-4">
             <span class="badge bg-info-subtle text-info-emphasis mb-2">Módulo de cotizaciones</span>
-            <h2 class="h4 mb-2">Carrusel de cotizaciones: flujo real de uso</h2>
+            <h2 class="h4 mb-2">Cotizaciones que cierran ventas: mira el flujo completo en acción</h2>
             <p class="text-secondary mb-0">Las siguientes vistas muestran cómo trabajar de punta a punta: crear, editar, enviar y hacer seguimiento hasta el cierre.</p>
         </div>
-        <div id="cotizacionesCarousel" class="carousel slide landing-carousel" data-bs-ride="carousel">
+        <div id="cotizacionesCarousel" class="carousel slide landing-carousel" data-bs-ride="carousel" data-bs-interval="3200" data-bs-pause="false">
             <div class="carousel-indicators">
                 <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                     <button type="button" data-bs-target="#cotizacionesCarousel" data-bs-slide-to="<?= $index ?>" class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" aria-label="Slide <?= $index + 1 ?>"></button>
@@ -96,7 +97,7 @@ $cotizacionesCapturas = [
             <div class="carousel-inner">
                 <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <img src="<?= e($capturasBase . '/' . $captura['archivo']) ?>" class="d-block w-100" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                        <img src="<?= e($capturaUrl($captura['archivo'])) ?>" class="d-block w-100" alt="<?= e($captura['titulo']) ?>" loading="lazy">
                         <div class="landing-carousel-caption">
                             <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
                             <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
