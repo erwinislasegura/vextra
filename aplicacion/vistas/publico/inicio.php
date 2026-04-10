@@ -278,63 +278,50 @@ $faqSchema = [
 
 <section class="py-5 border-bottom bg-white">
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 align-items-start">
             <div class="col-lg-6">
-                <h2 class="h3 mb-3">Por qué este sistema de ventas con inventario mejora la rentabilidad</h2>
-                <p>En muchas empresas, las ventas crecen más rápido que los procesos internos. Al inicio eso parece positivo, pero pronto aparecen síntomas de desorden: cotizaciones con precios distintos para el mismo producto, compromisos comerciales sin confirmar disponibilidad, compras urgentes por falta de planificación y cierre mensual con datos inconsistentes. Ese escenario consume tiempo directivo y afecta la rentabilidad silenciosamente.</p>
-                <p>Vextra ataca ese problema desde la operación diaria. El vendedor cotiza con condiciones claras, administración valida márgenes y el equipo de inventario ve la realidad del stock sin esperar reportes manuales. Esta coordinación reduce pérdidas por error humano y mejora la respuesta al cliente, dos variables críticas para competir en mercados exigentes de Chile.</p>
-                <p class="mb-0">Cuando un sistema permite cotizar, vender y controlar inventario en una sola plataforma, la empresa no solo se ordena: también gana velocidad estratégica. Puede analizar rotación, definir campañas comerciales con datos y decidir con confianza qué líneas potenciar.</p>
+                <h2 class="h3 mb-3">Resumen ejecutivo para evaluar la solución</h2>
+                <p class="mb-2">Si hoy tu empresa cotiza en una herramienta, vende en otra y controla stock en planillas, lo normal es perder tiempo, cometer errores y tener menos visibilidad comercial.</p>
+                <p class="mb-0">Con Vextra puedes integrar cotizaciones, punto de venta e inventario en un flujo único. Si quieres el detalle completo por módulo, lo encontrarás en las secciones especializadas del sitio.</p>
             </div>
             <div class="col-lg-6">
-                <h3 class="h4 mb-3">Comparativa práctica: operación fragmentada vs operación integrada</h3>
-                <ul class="small ps-3 d-grid gap-2">
-                    <li><strong>Respuesta comercial:</strong> sin integración, cada presupuesto requiere validar datos en varios lugares; con Vextra, la información fluye en un mismo entorno y la respuesta se acelera.</li>
-                    <li><strong>Control de stock:</strong> en procesos manuales, el inventario suele desactualizarse; con POS conectado, cada venta descuenta automáticamente y evita sobrepromesas.</li>
-                    <li><strong>Gestión administrativa:</strong> las planillas generan retrabajo y riesgo de duplicidad; con flujos centralizados, el equipo trabaja con una sola fuente de verdad.</li>
-                    <li><strong>Seguimiento comercial:</strong> cuando no hay trazabilidad, las oportunidades se enfrían; con pipeline y estados, el equipo prioriza mejor y aumenta cierres.</li>
-                    <li><strong>Escalabilidad:</strong> crecer con procesos informales suele romper la operación; crecer con sistema permite sumar vendedores, productos y sucursales manteniendo orden.</li>
-                </ul>
-                <p class="small mb-0">Si estás evaluando alternativas, te recomendamos revisar también la página de <a href="<?= e(url('/planes')) ?>">planes</a>, conocer el detalle de <a href="<?= e(url('/caracteristicas')) ?>">características</a> y resolver dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">FAQ</a> para elegir el plan adecuado según tu etapa comercial.</p>
+                <div class="accordion" id="acordeonResumenInicio">
+                    <article class="accordion-item">
+                        <h3 class="accordion-header" id="resumenHeading1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resumenCollapse1" aria-expanded="false" aria-controls="resumenCollapse1">
+                                Ver detalle: impacto en rentabilidad y control
+                            </button>
+                        </h3>
+                        <div id="resumenCollapse1" class="accordion-collapse collapse" aria-labelledby="resumenHeading1" data-bs-parent="#acordeonResumenInicio">
+                            <div class="accordion-body small">
+                                Ordena el trabajo comercial, mejora tiempos de respuesta y evita sobreventa gracias a una operación conectada entre cotización, POS e inventario.
+                            </div>
+                        </div>
+                    </article>
+                    <article class="accordion-item">
+                        <h3 class="accordion-header" id="resumenHeading2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resumenCollapse2" aria-expanded="false" aria-controls="resumenCollapse2">
+                                Ver detalle: pasos de implementación
+                            </button>
+                        </h3>
+                        <div id="resumenCollapse2" class="accordion-collapse collapse" aria-labelledby="resumenHeading2" data-bs-parent="#acordeonResumenInicio">
+                            <div class="accordion-body small">
+                                La implementación se realiza por etapas: diagnóstico de proceso, configuración de flujo comercial e integración operativa para comenzar rápido y con orden.
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <p class="small text-secondary mt-3 mb-0">
+                    Revisa más detalle en <a href="<?= e(url('/caracteristicas')) ?>">Características</a>, compara alternativas en <a href="<?= e(url('/planes')) ?>">Planes</a>, resuelve dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">Preguntas frecuentes</a> o contacta al equipo en <a href="<?= e(url('/contacto')) ?>">Contacto</a>.
+                </p>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 border-bottom">
+<section class="py-5 border-bottom" id="faq">
     <div class="container">
-        <h2 class="h3 mb-3">Guía de implementación para pasar de cotizaciones aisladas a gestión comercial integrada</h2>
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <h3 class="h5">Etapa 1: Diagnóstico comercial y operativo</h3>
-                <p class="small">El primer paso no es tecnológico, es estratégico. Se mapean los procesos actuales de cotizar, aprobar, vender y reponer para detectar cuellos de botella. En esta etapa se revisa cómo se calculan precios, cómo se gestiona el seguimiento de oportunidades y qué tan confiable es el stock reportado. El objetivo es definir una línea base clara para medir mejoras en tiempo de respuesta, tasa de cierre y exactitud de inventario.</p>
-            </div>
-            <div class="col-lg-4">
-                <h3 class="h5">Etapa 2: Estandarización del flujo comercial</h3>
-                <p class="small">Luego se ordenan reglas comerciales: estructura de cotizaciones, política de descuentos, etapas de seguimiento y responsables por cada tramo del pipeline. Este orden permite que el sistema de cotizaciones no dependa de “cómo trabaja cada vendedor”, sino de un proceso común que la empresa puede escalar. En paralelo, se definen indicadores que guiarán decisiones semanales: oportunidades activas, cotizaciones aprobadas, tiempo promedio de respuesta y efectividad por vendedor.</p>
-            </div>
-            <div class="col-lg-4">
-                <h3 class="h5">Etapa 3: Integración de POS e inventario</h3>
-                <p class="small">Con el flujo comercial definido, se activa la operación integrada de punto de venta e inventario. Cada venta actualiza stock y cada movimiento queda trazado, lo que reduce pérdidas por descoordinación. Este paso entrega beneficios inmediatos: menos sobreventa, mejor reposición y mayor confianza en los datos para compra y planificación. A mediano plazo, la empresa puede proyectar demanda con más precisión y proteger margen operativo.</p>
-            </div>
-        </div>
-        <div class="row g-4 mt-1">
-            <div class="col-lg-6">
-                <h3 class="h5">Qué cambia en la práctica durante los primeros 90 días</h3>
-                <p>Durante el primer mes suele verse una baja importante en tareas manuales repetitivas, porque el equipo deja de copiar información entre planillas, correos y sistemas aislados. En el segundo mes, mejora el control del pipeline comercial: hay más seguimiento efectivo y menos oportunidades “perdidas por olvido”. En el tercer mes, los indicadores de inventario empiezan a estabilizarse, con menos quiebres y decisiones de compra más acertadas.</p>
-                <p class="mb-0">Este proceso convierte al software en una herramienta de gestión real, no solo en una pantalla para registrar datos. La diferencia clave es que cada módulo aporta a un objetivo de negocio: vender más con menos fricción y sostener crecimiento con orden.</p>
-            </div>
-            <div class="col-lg-6">
-                <h3 class="h5">Resultado esperado para empresas chilenas orientadas a crecimiento</h3>
-                <p>Una empresa que implementa un sistema de ventas con inventario no busca únicamente digitalizarse; busca mejorar su capacidad de ejecución comercial. Eso significa responder más rápido al cliente, comprometer plazos realistas, monitorear márgenes por línea de producto y tener visibilidad para decidir con anticipación. En mercados competitivos, esa capacidad de ejecución marca la diferencia entre crecer con rentabilidad o crecer con desorden.</p>
-                <p class="mb-0">Por eso Vextra se enfoca en unir cotización, POS e inventario bajo una lógica de negocio: cada área trabaja con información coherente, cada decisión tiene respaldo de datos y cada acción comercial suma al resultado global de la empresa.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom" id="faq-seo">
-    <div class="container">
-        <h2 class="h3 mb-2">Preguntas frecuentes SEO sobre cotización, POS e inventario</h2>
+        <h2 class="h3 mb-2">Preguntas frecuentes sobre cotización, POS e inventario</h2>
         <p class="text-secondary">Respuestas claras para evaluar un sistema de cotizaciones, software de cotización online y sistema de ventas con inventario para empresas en Chile.</p>
         <div class="accordion" id="acordeonFaqSeo">
             <?php foreach ($faqSeo as $index => $faq): ?>
