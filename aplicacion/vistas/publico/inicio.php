@@ -248,6 +248,32 @@ $faqSchema = [
                         </div>
                     </article>
                 </div>
+                <p class="small text-secondary mt-3 mb-0">
+                    Revisa más detalle en <a href="<?= e(url('/caracteristicas')) ?>">Características</a>, compara alternativas en <a href="<?= e(url('/planes')) ?>">Planes</a>, resuelve dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">Preguntas frecuentes</a> o contacta al equipo en <a href="<?= e(url('/contacto')) ?>">Contacto</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom" id="faq">
+    <div class="container">
+        <h2 class="h3 mb-2">Preguntas frecuentes sobre cotización, POS e inventario</h2>
+        <p class="text-secondary">Respuestas claras para evaluar un sistema de cotizaciones, software de cotización online y sistema de ventas con inventario para empresas en Chile.</p>
+        <div class="accordion" id="acordeonFaqSeo">
+            <?php foreach ($faqSeo as $index => $faq): ?>
+                <article class="accordion-item">
+                    <h3 class="accordion-header" id="faqHeading<?= $index ?>">
+                        <button class="accordion-button <?= $index > 0 ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse<?= $index ?>" aria-expanded="<?= $index === 0 ? 'true' : 'false' ?>" aria-controls="faqCollapse<?= $index ?>">
+                            <?= e($faq['pregunta']) ?>
+                        </button>
+                    </h3>
+                    <div id="faqCollapse<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="faqHeading<?= $index ?>" data-bs-parent="#acordeonFaqSeo">
+                        <div class="accordion-body small">
+                            <?= e($faq['respuesta']) ?>
+                        </div>
+                    </div>
+                </article>
             <?php endforeach; ?>
         </div>
     </div>
@@ -261,17 +287,6 @@ $faqSchema = [
             <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Retail especializado</h3><p class="small mb-0">Unifican POS, catálogo y reposición para vender más sin romper experiencia de cliente.</p></div></div></div>
             <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Servicios técnicos</h3><p class="small mb-0">Generan presupuestos con trazabilidad y convierten propuestas en órdenes de trabajo y venta.</p></div></div></div>
             <div class="col-md-6 col-lg-3"><div class="card h-100"><div class="card-body"><h3 class="h6">Pymes en expansión</h3><p class="small mb-0">Ordenan su administración comercial con datos en tiempo real y menos dependencia de Excel.</p></div></div></div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom bg-light-subtle">
-    <div class="container">
-        <h2 class="h3 mb-3">Testimonios de impacto comercial</h2>
-        <div class="row g-3">
-            <div class="col-lg-4"><blockquote class="card h-100"><div class="card-body"><p class="mb-2">“Antes cotizábamos en una planilla y perdíamos seguimiento. Hoy cerramos más negocios porque cada vendedor sabe qué hacer y cuándo hacer seguimiento.”</p><footer class="small text-secondary">Gerencia Comercial, Pyme B2B en Santiago</footer></div></blockquote></div>
-            <div class="col-lg-4"><blockquote class="card h-100"><div class="card-body"><p class="mb-2">“El cambio más fuerte fue inventario: bajamos ventas con quiebre de stock y mejoramos la reposición semanal.”</p><footer class="small text-secondary">Jefatura Operaciones, Empresa de distribución</footer></div></blockquote></div>
-            <div class="col-lg-4"><blockquote class="card h-100"><div class="card-body"><p class="mb-2">“Implementamos POS e inventario en conjunto y la administración ganó orden. Ahora tenemos claridad de márgenes por producto.”</p><footer class="small text-secondary">Administración, Comercio minorista</footer></div></blockquote></div>
         </div>
     </div>
 </section>
