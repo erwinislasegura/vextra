@@ -9,6 +9,7 @@ $enrutador->agregar('GET', '/caracteristicas', [PublicoControlador::class, 'cara
 $enrutador->agregar('GET', '/planes', [PublicoControlador::class, 'planes']);
 $enrutador->agregar('GET', '/contacto', [PublicoControlador::class, 'contacto']);
 $enrutador->agregar('GET', '/preguntas-frecuentes', [PublicoControlador::class, 'preguntasFrecuentes']);
+$enrutador->agregar('GET', '/imagen-opt/{clave}', [PublicoControlador::class, 'imagenOptimizada']);
 $enrutador->agregar('GET', '/sitemap.xml', [PublicoControlador::class, 'sitemapXml']);
 $enrutador->agregar('GET', '/robots.txt', [PublicoControlador::class, 'robotsTxt']);
 $enrutador->agregar('POST', '/contacto', [PublicoControlador::class, 'enviarContacto']);
