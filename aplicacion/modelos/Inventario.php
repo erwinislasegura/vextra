@@ -154,7 +154,15 @@ class Inventario extends Modelo
             $this->db->commit();
 
             if (!empty($cabecera['orden_compra_id'])) {
-                $this->actualizarEstadoOrdenCompra((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id']);
+                $stmtEstadoOrden = $this->db->prepare('SELECT estado FROM ordenes_compra WHERE empresa_id=:empresa_id AND id=:id LIMIT 1');
+                $stmtEstadoOrden->execute([
+                    'empresa_id' => (int) $cabecera['empresa_id'],
+                    'id' => (int) $cabecera['orden_compra_id'],
+                ]);
+                $estadoOrden = (string) ($stmtEstadoOrden->fetchColumn() ?: '');
+                if (!in_array($estadoOrden, ['aprobada', 'rechazada', 'anulada'], true)) {
+                    $this->actualizarEstadoOrdenCompra((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id']);
+                }
             }
             return $recepcionId;
         } catch (Throwable $e) {
@@ -326,7 +334,7 @@ class Inventario extends Modelo
                 ->execute(['empresa_id' => $empresaId, 'id' => $recepcionId]);
 
             if (!empty($recepcion['orden_compra_id'])) {
-                $this->actualizarEstadoOrdenCompra($empresaId, (int) $recepcion['orden_compra_id']);
+                $this->actualizarEstadoOrdenCompraManual($empresaId, (int) $recepcion['orden_compra_id'], 'aprobada');
             }
 
             $this->db->commit();
