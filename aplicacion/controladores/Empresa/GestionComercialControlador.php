@@ -886,7 +886,14 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/' . $modulo);
         }
         $titulo = $mapeo[$modulo]['titulo'];
-        $this->vista('empresa/modulos/ver', compact('registro', 'titulo', 'modulo'), 'empresa');
+        $cotizacionAprobacion = null;
+        if ($modulo === 'aprobaciones') {
+            $cotizacionId = (int) ($registro['cotizacion_id'] ?? 0);
+            if ($cotizacionId > 0) {
+                $cotizacionAprobacion = (new Cotizacion())->obtenerFirmaCliente(empresa_actual_id(), $cotizacionId);
+            }
+        }
+        $this->vista('empresa/modulos/ver', compact('registro', 'titulo', 'modulo', 'cotizacionAprobacion'), 'empresa');
     }
 
     public function editarRegistro(string $modulo, int $id): void
