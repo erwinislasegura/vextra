@@ -40,7 +40,7 @@ class Cotizacion extends Modelo
     {
         $this->db->beginTransaction();
         try {
-            $sql = 'INSERT INTO cotizaciones (empresa_id, cliente_id, usuario_id, numero, consecutivo, estado, subtotal, descuento_tipo, descuento_valor, descuento, impuesto, total, observaciones, terminos_condiciones, lista_precio_id, token_publico, fecha_emision, fecha_vencimiento, fecha_creacion) VALUES (:empresa_id,:cliente_id,:usuario_id,:numero,:consecutivo,:estado,:subtotal,:descuento_tipo,:descuento_valor,:descuento,:impuesto,:total,:observaciones,:terminos_condiciones,:lista_precio_id,:token_publico,:fecha_emision,:fecha_vencimiento,NOW())';
+            $sql = 'INSERT INTO cotizaciones (empresa_id, cliente_id, usuario_id, numero, consecutivo, estado, subtotal, descuento_tipo, descuento_valor, descuento, impuesto, total, observaciones, terminos_condiciones, lista_precio_id, orden_compra_origen_id, token_publico, fecha_emision, fecha_vencimiento, fecha_creacion) VALUES (:empresa_id,:cliente_id,:usuario_id,:numero,:consecutivo,:estado,:subtotal,:descuento_tipo,:descuento_valor,:descuento,:impuesto,:total,:observaciones,:terminos_condiciones,:lista_precio_id,:orden_compra_origen_id,:token_publico,:fecha_emision,:fecha_vencimiento,NOW())';
             $this->db->prepare($sql)->execute($cotizacion);
             $cotizacionId = (int) $this->db->lastInsertId();
 
@@ -180,7 +180,7 @@ class Cotizacion extends Modelo
     {
         $this->db->beginTransaction();
         try {
-            $sql = 'UPDATE cotizaciones SET cliente_id=:cliente_id, estado=:estado, subtotal=:subtotal, descuento_tipo=:descuento_tipo, descuento_valor=:descuento_valor, descuento=:descuento, impuesto=:impuesto, total=:total, observaciones=:observaciones, terminos_condiciones=:terminos_condiciones, lista_precio_id=:lista_precio_id, fecha_emision=:fecha_emision, fecha_vencimiento=:fecha_vencimiento, fecha_actualizacion=NOW() WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL';
+            $sql = 'UPDATE cotizaciones SET cliente_id=:cliente_id, estado=:estado, subtotal=:subtotal, descuento_tipo=:descuento_tipo, descuento_valor=:descuento_valor, descuento=:descuento, impuesto=:impuesto, total=:total, observaciones=:observaciones, terminos_condiciones=:terminos_condiciones, lista_precio_id=:lista_precio_id, orden_compra_origen_id=:orden_compra_origen_id, fecha_emision=:fecha_emision, fecha_vencimiento=:fecha_vencimiento, fecha_actualizacion=NOW() WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL';
             $cotizacion['empresa_id'] = $empresaId;
             $cotizacion['id'] = $id;
             $this->db->prepare($sql)->execute($cotizacion);
