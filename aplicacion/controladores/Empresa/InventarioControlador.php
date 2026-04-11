@@ -59,8 +59,25 @@ class InventarioControlador extends Controlador
         $proveedores = $inventario->listarProveedores($empresaId);
         $productos = $inventario->listarProductos($empresaId);
         $ordenCompraSeleccionada = $ordenCompraId > 0 ? $inventario->obtenerOrdenCompra($empresaId, $ordenCompraId) : null;
+        if ($ordenCompraSeleccionada && (string) ($ordenCompraSeleccionada['estado'] ?? '') !== 'aprobada') {
+            $ordenCompraSeleccionada = null;
+        }
+        $ordenesCompraAprobadas = $inventario->listarOrdenesCompra($empresaId, ['estado' => 'aprobada']);
+        $ordenesCompraAprobadas = array_map(static function (array $orden) use ($inventario, $empresaId): array {
+            $ordenCompleta = $inventario->obtenerOrdenCompra($empresaId, (int) ($orden['id'] ?? 0)) ?? [];
+            return [
+                'id' => (int) ($orden['id'] ?? 0),
+                'numero' => (string) ($orden['numero'] ?? ''),
+                'proveedor_id' => (int) ($orden['proveedor_id'] ?? 0),
+                'proveedor_nombre' => (string) ($orden['proveedor_nombre'] ?? ''),
+                'fecha_emision' => (string) ($orden['fecha_emision'] ?? ''),
+                'referencia' => (string) ($orden['referencia'] ?? ''),
+                'observacion' => (string) ($orden['observacion'] ?? ''),
+                'detalles' => $ordenCompleta['detalles'] ?? [],
+            ];
+        }, $ordenesCompraAprobadas);
 
-        $this->vista('empresa/inventario/recepciones', compact('recepciones', 'proveedores', 'productos', 'ordenCompraSeleccionada', 'filtrosRecepciones'), 'empresa');
+        $this->vista('empresa/inventario/recepciones', compact('recepciones', 'proveedores', 'productos', 'ordenCompraSeleccionada', 'ordenesCompraAprobadas', 'filtrosRecepciones'), 'empresa');
     }
 
     public function exportarRecepcionesExcel(): void
@@ -144,6 +161,18 @@ class InventarioControlador extends Controlador
 
         $tiposPermitidos = ['guia_despacho', 'factura'];
         $tipoDocumento = in_array($_POST['tipo_documento'] ?? '', $tiposPermitidos, true) ? $_POST['tipo_documento'] : 'guia_despacho';
+        $ordenCompraId = (int) ($_POST['orden_compra_id'] ?? 0);
+        $ordenCompra = null;
+        if ($ordenCompraId > 0) {
+            $ordenCompra = $inventario->obtenerOrdenCompra($empresaId, $ordenCompraId);
+            if (!$ordenCompra || (string) ($ordenCompra['estado'] ?? '') !== 'aprobada') {
+                flash('danger', 'Solo puedes usar órdenes de compra aprobadas para cargar datos de recepción.');
+                $this->redirigir('/app/inventario/recepciones');
+            }
+            if ($proveedorId <= 0) {
+                $proveedorId = (int) ($ordenCompra['proveedor_id'] ?? 0);
+            }
+        }
 
         $productoIds = $_POST['producto_id'] ?? [];
         $cantidades = $_POST['cantidad'] ?? [];
@@ -165,6 +194,25 @@ class InventarioControlador extends Controlador
         }
 
         if ($detalles === []) {
+            if ($ordenCompra && !empty($ordenCompra['detalles'])) {
+                foreach ((array) $ordenCompra['detalles'] as $detalleOrden) {
+                    $pid = (int) ($detalleOrden['producto_id'] ?? 0);
+                    $cantidad = (float) ($detalleOrden['cantidad'] ?? 0);
+                    $costo = (float) ($detalleOrden['costo_unitario'] ?? 0);
+                    if ($pid <= 0 || $cantidad <= 0) {
+                        continue;
+                    }
+                    $detalles[] = [
+                        'producto_id' => $pid,
+                        'cantidad' => $cantidad,
+                        'costo_unitario' => $costo,
+                        'subtotal' => $costo > 0 ? ($cantidad * $costo) : 0,
+                    ];
+                }
+            }
+        }
+
+        if ($detalles === []) {
             flash('danger', 'Agrega al menos un producto con cantidad válida para registrar la recepción.');
             $this->redirigir('/app/inventario/recepciones');
         }
@@ -173,7 +221,7 @@ class InventarioControlador extends Controlador
             $recepcionId = $inventario->crearRecepcion([
                 'empresa_id' => $empresaId,
                 'proveedor_id' => $proveedorId > 0 ? $proveedorId : null,
-                'orden_compra_id' => (int) ($_POST['orden_compra_id'] ?? 0) ?: null,
+                'orden_compra_id' => $ordenCompraId > 0 ? $ordenCompraId : null,
                 'tipo_documento' => $tipoDocumento,
                 'numero_documento' => trim((string) ($_POST['numero_documento'] ?? '')),
                 'fecha_documento' => trim((string) ($_POST['fecha_documento'] ?? date('Y-m-d'))),
@@ -249,6 +297,28 @@ class InventarioControlador extends Controlador
             flash('danger', 'No fue posible actualizar la recepción: ' . $e->getMessage());
             $this->redirigir('/app/inventario/recepciones/editar/' . $id);
         }
+    }
+
+    public function eliminarRecepcion(int $id): void
+    {
+        $this->validarPermiso('inventario_crear_recepciones');
+        validar_csrf();
+        $empresaId = (int) empresa_actual_id();
+        $inventario = new Inventario();
+        $recepcion = $inventario->obtenerRecepcion($empresaId, $id);
+        if (!$recepcion) {
+            flash('danger', 'Recepción no encontrada.');
+            $this->redirigir('/app/inventario/recepciones');
+        }
+
+        try {
+            $inventario->eliminarRecepcionCompleta($empresaId, $id);
+            flash('success', 'Recepción eliminada correctamente junto a su detalle.');
+        } catch (Throwable $e) {
+            flash('danger', 'No fue posible eliminar la recepción: ' . $e->getMessage());
+        }
+
+        $this->redirigir('/app/inventario/recepciones');
     }
 
     public function imprimirRecepcion(int $id): void
@@ -671,6 +741,7 @@ class InventarioControlador extends Controlador
         echo '<th>Fecha emisión</th>';
         echo '<th>Fecha entrega estimada</th>';
         echo '<th>Estado</th>';
+        echo '<th>N° recepción</th>';
         echo '<th>Usuario</th>';
         echo '<th>Referencia</th>';
         echo '<th>Observación</th>';
@@ -682,7 +753,8 @@ class InventarioControlador extends Controlador
             echo '<td>' . $this->escapeExcelHtml($orden['proveedor_nombre'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['fecha_emision'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['fecha_entrega_estimada'] ?? '') . '</td>';
-            echo '<td>' . $this->escapeExcelHtml($orden['estado'] ?? '') . '</td>';
+            echo '<td>' . $this->escapeExcelHtml($orden['estado_mostrado'] ?? ($orden['estado'] ?? '')) . '</td>';
+            echo '<td style="' . ExcelExpoFormato::CELDA_TEXTO_EXCEL . '">' . $this->escapeExcelHtml($orden['numero_recepcion'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['usuario_nombre'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['referencia'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['observacion'] ?? '') . '</td>';
@@ -696,7 +768,7 @@ class InventarioControlador extends Controlador
     private function obtenerFiltrosOrdenesCompra(): array
     {
         $estado = trim(mb_strtolower((string) ($_GET['estado'] ?? '')));
-        $permitidos = ['emitida', 'parcial', 'recepcionada', 'cancelada'];
+        $permitidos = ['emitida', 'parcial', 'recibida', 'aprobada', 'rechazada', 'anulada', 'recepcionada', 'cancelada'];
         if (!in_array($estado, $permitidos, true)) {
             $estado = '';
         }
@@ -705,6 +777,34 @@ class InventarioControlador extends Controlador
             'q' => trim((string) ($_GET['q'] ?? '')),
             'estado' => $estado,
         ];
+    }
+
+    public function cambiarEstadoOrdenCompra(int $id): void
+    {
+        $this->validarPermiso('inventario_crear_recepciones');
+        validar_csrf();
+        $empresaId = (int) empresa_actual_id();
+        $estado = trim(mb_strtolower((string) ($_POST['estado'] ?? '')));
+        if (!in_array($estado, ['aprobada', 'rechazada'], true)) {
+            flash('danger', 'Estado de orden no permitido.');
+            $this->redirigir('/app/inventario/ordenes-compra');
+        }
+
+        $inventario = new Inventario();
+        $orden = $inventario->obtenerOrdenCompra($empresaId, $id);
+        if (!$orden) {
+            flash('danger', 'Orden de compra no encontrada.');
+            $this->redirigir('/app/inventario/ordenes-compra');
+        }
+
+        try {
+            $inventario->actualizarEstadoOrdenCompraManual($empresaId, $id, $estado);
+            flash('success', 'Orden de compra ' . ($estado === 'aprobada' ? 'aprobada' : 'rechazada') . ' correctamente.');
+        } catch (Throwable $e) {
+            flash('danger', 'No fue posible actualizar el estado: ' . $e->getMessage());
+        }
+
+        $this->redirigir('/app/inventario/ordenes-compra');
     }
 
     public function guardarOrdenCompra(): void

@@ -28,6 +28,7 @@ SOURCE base_datos/actualizaciones/actualizacion_inventario_alertas_stock.sql;
 SOURCE base_datos/actualizaciones/actualizacion_productos_campos_inventario.sql;
 SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_inventario.sql;
 SOURCE base_datos/actualizaciones/actualizacion_recepciones_fecha_actualizacion.sql;
+SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_recepcionada.sql;
 SOURCE base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql;
 
 -- Usuarios de acceso estandarizados.

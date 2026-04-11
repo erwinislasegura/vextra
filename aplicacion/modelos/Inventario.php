@@ -154,7 +154,7 @@ class Inventario extends Modelo
             $this->db->commit();
 
             if (!empty($cabecera['orden_compra_id'])) {
-                $this->actualizarEstadoOrdenCompra((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id']);
+                $this->actualizarEstadoOrdenCompraManual((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id'], 'recepcionada');
             }
             return $recepcionId;
         } catch (Throwable $e) {
@@ -287,6 +287,61 @@ class Inventario extends Modelo
         ]);
     }
 
+    public function eliminarRecepcionCompleta(int $empresaId, int $recepcionId): void
+    {
+        $this->db->beginTransaction();
+        try {
+            $stmtRecepcion = $this->db->prepare('SELECT id, orden_compra_id FROM recepciones_inventario WHERE empresa_id=:empresa_id AND id=:id LIMIT 1');
+            $stmtRecepcion->execute(['empresa_id' => $empresaId, 'id' => $recepcionId]);
+            $recepcion = $stmtRecepcion->fetch();
+            if (!$recepcion) {
+                $this->db->rollBack();
+                return;
+            }
+
+            $stmtDetalles = $this->db->prepare('SELECT producto_id, cantidad FROM recepciones_inventario_detalle WHERE recepcion_id=:recepcion_id');
+            $stmtDetalles->execute(['recepcion_id' => $recepcionId]);
+            $detalles = $stmtDetalles->fetchAll();
+
+            $stmtStock = $this->db->prepare('UPDATE productos SET stock_actual = stock_actual - :cantidad, fecha_actualizacion=NOW() WHERE empresa_id=:empresa_id AND id=:producto_id');
+            foreach ($detalles as $detalle) {
+                $cantidad = max(0, (float) ($detalle['cantidad'] ?? 0));
+                $productoId = (int) ($detalle['producto_id'] ?? 0);
+                if ($productoId <= 0 || $cantidad <= 0) {
+                    continue;
+                }
+                $stmtStock->execute([
+                    'cantidad' => $cantidad,
+                    'empresa_id' => $empresaId,
+                    'producto_id' => $productoId,
+                ]);
+            }
+
+            $this->db->prepare('DELETE FROM movimientos_inventario WHERE empresa_id=:empresa_id AND modulo_origen="recepciones_inventario" AND referencia_id=:referencia_id')
+                ->execute(['empresa_id' => $empresaId, 'referencia_id' => $recepcionId]);
+
+            $this->db->prepare('DELETE FROM recepciones_inventario_detalle WHERE recepcion_id=:recepcion_id')
+                ->execute(['recepcion_id' => $recepcionId]);
+            $this->db->prepare('DELETE FROM recepciones_inventario WHERE empresa_id=:empresa_id AND id=:id')
+                ->execute(['empresa_id' => $empresaId, 'id' => $recepcionId]);
+
+            if (!empty($recepcion['orden_compra_id'])) {
+                $ordenCompraId = (int) $recepcion['orden_compra_id'];
+                $stmtConteo = $this->db->prepare('SELECT COUNT(*) FROM recepciones_inventario WHERE empresa_id=:empresa_id AND orden_compra_id=:orden_compra_id');
+                $stmtConteo->execute(['empresa_id' => $empresaId, 'orden_compra_id' => $ordenCompraId]);
+                $totalRecepciones = (int) $stmtConteo->fetchColumn();
+                $this->actualizarEstadoOrdenCompraManual($empresaId, $ordenCompraId, $totalRecepciones > 0 ? 'recepcionada' : 'aprobada');
+            }
+
+            $this->db->commit();
+        } catch (Throwable $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw $e;
+        }
+    }
+
     public function listarAjustes(int $empresaId, array $filtros = []): array
     {
         $sql = 'SELECT a.*, pr.codigo, pr.nombre AS producto_nombre, u.nombre AS usuario_nombre
@@ -357,7 +412,13 @@ class Inventario extends Modelo
 
     public function listarOrdenesCompra(int $empresaId, array $filtros = []): array
     {
-        $sql = 'SELECT o.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre
+        $sql = 'SELECT o.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre,
+            (SELECT r.numero_documento FROM recepciones_inventario r WHERE r.empresa_id = o.empresa_id AND r.orden_compra_id = o.id ORDER BY r.id DESC LIMIT 1) AS numero_recepcion,
+            CASE
+              WHEN EXISTS (SELECT 1 FROM recepciones_inventario r2 WHERE r2.empresa_id = o.empresa_id AND r2.orden_compra_id = o.id)
+              THEN "recepcionada"
+              ELSE o.estado
+            END AS estado_mostrado
             FROM ordenes_compra o
             LEFT JOIN proveedores_inventario p ON p.id = o.proveedor_id
             LEFT JOIN usuarios u ON u.id = o.usuario_id
@@ -372,8 +433,14 @@ class Inventario extends Modelo
 
         $estado = (string) ($filtros['estado'] ?? '');
         if ($estado !== '') {
-            $sql .= ' AND o.estado = :estado';
-            $params['estado'] = $estado;
+            if ($estado === 'recepcionada') {
+                $sql .= ' AND EXISTS (SELECT 1 FROM recepciones_inventario r3 WHERE r3.empresa_id = o.empresa_id AND r3.orden_compra_id = o.id)';
+            } elseif ($estado === 'aprobada') {
+                $sql .= ' AND o.estado = "aprobada" AND NOT EXISTS (SELECT 1 FROM recepciones_inventario r3 WHERE r3.empresa_id = o.empresa_id AND r3.orden_compra_id = o.id)';
+            } else {
+                $sql .= ' AND o.estado = :estado';
+                $params['estado'] = $estado;
+            }
         }
 
         $sql .= ' ORDER BY o.id DESC LIMIT 300';
@@ -517,10 +584,6 @@ class Inventario extends Modelo
 
     public function actualizarEstadoOrdenCompra(int $empresaId, int $ordenCompraId): void
     {
-        $stmtTot = $this->db->prepare('SELECT COALESCE(SUM(cantidad),0) AS solicitado FROM ordenes_compra_detalle WHERE orden_compra_id = :orden_compra_id');
-        $stmtTot->execute(['orden_compra_id' => $ordenCompraId]);
-        $solicitado = (float) ($stmtTot->fetch()['solicitado'] ?? 0);
-
         $stmtRec = $this->db->prepare('SELECT COALESCE(SUM(rd.cantidad),0) AS recibido
             FROM recepciones_inventario r
             INNER JOIN recepciones_inventario_detalle rd ON rd.recepcion_id = r.id
@@ -529,13 +592,26 @@ class Inventario extends Modelo
         $recibido = (float) ($stmtRec->fetch()['recibido'] ?? 0);
 
         $estado = 'emitida';
-        if ($recibido > 0 && $recibido < $solicitado) {
-            $estado = 'parcial';
-        } elseif ($solicitado > 0 && $recibido >= $solicitado) {
-            $estado = 'recibida';
+        if ($recibido > 0) {
+            $estado = 'recepcionada';
         }
 
         $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id')
             ->execute(['estado' => $estado, 'empresa_id' => $empresaId, 'id' => $ordenCompraId]);
+    }
+
+    public function actualizarEstadoOrdenCompraManual(int $empresaId, int $ordenCompraId, string $estado): void
+    {
+        $estadoNormalizado = mb_strtolower(trim($estado));
+        if (!in_array($estadoNormalizado, ['aprobada', 'rechazada', 'recepcionada'], true)) {
+            throw new \InvalidArgumentException('Estado de orden de compra no permitido.');
+        }
+
+        $stmt = $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id');
+        $stmt->execute([
+            'estado' => $estadoNormalizado,
+            'empresa_id' => $empresaId,
+            'id' => $ordenCompraId,
+        ]);
     }
 }
