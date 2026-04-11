@@ -142,12 +142,13 @@ $estadosCotizacion = ['borrador', 'enviada', 'aprobada', 'rechazada', 'vencida',
                     <th>Aprobador</th>
                     <th>Motivo</th>
                     <th>Observaciones</th>
+                    <th>Firma cliente</th>
                     <th class="text-end">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($registros)): ?>
-                    <tr><td colspan="11" class="text-center text-muted py-4">No hay aprobaciones para mostrar.</td></tr>
+                    <tr><td colspan="12" class="text-center text-muted py-4">No hay aprobaciones para mostrar.</td></tr>
                 <?php else: ?>
                     <?php foreach ($registros as $fila): ?>
                         <tr>
@@ -161,6 +162,18 @@ $estadosCotizacion = ['borrador', 'enviada', 'aprobada', 'rechazada', 'vencida',
                             <td><?= e((string) ($fila['aprobador'] ?? '')) ?></td>
                             <td><?= e((string) ($fila['motivo'] ?? '')) ?></td>
                             <td class="small"><?= e((string) ($fila['observaciones'] ?? '')) ?></td>
+                            <td>
+                                <?php if (!empty($fila['cotizacion_firma_cliente'])): ?>
+                                    <div class="small text-muted mb-1"><?= e((string) ($fila['cotizacion_nombre_firmante'] ?? 'Cliente')) ?></div>
+                                    <img
+                                        src="<?= e((string) $fila['cotizacion_firma_cliente']) ?>"
+                                        alt="Firma cliente"
+                                        style="max-width: 180px; width: 100%; border: 1px solid #dee2e6; border-radius: .35rem; background: #fff;"
+                                    >
+                                <?php else: ?>
+                                    <span class="text-muted small">Sin firma registrada</span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-end">
                                 <div class="dropdown">
                                     <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button>
