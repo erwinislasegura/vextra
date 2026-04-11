@@ -14,9 +14,16 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
     || $coincideRuta('/app/categorias', $rutaActual)
     || $coincideRuta('/app/listas-precios', $rutaActual);
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
+$logoEmpresa = logo_empresa_actual();
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
-  <h6 class="sidebar-app__titulo text-uppercase mb-3">Mi Empresa</h6>
+  <div class="mb-3">
+    <?php if ($logoEmpresa): ?>
+      <img src="<?= e(url($logoEmpresa)) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa">
+    <?php else: ?>
+      <h6 class="sidebar-app__titulo text-uppercase mb-0">Mi Empresa</h6>
+    <?php endif; ?>
+  </div>
   <nav class="nav flex-column small gap-2">
     <a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/panel', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/panel')) ?>">
       <i class="bi bi-house-door mt-1"></i>
