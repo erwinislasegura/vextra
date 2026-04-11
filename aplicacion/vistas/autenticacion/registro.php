@@ -4,6 +4,9 @@
       <div class="card shadow-sm border-0">
         <div class="card-body p-4 p-lg-5">
           <h1 class="h3 mb-2">Crear cuenta empresarial</h1>
+          <div class="mb-2">
+            <span class="badge text-bg-success">15 días gratis!!</span>
+          </div>
           <p class="text-secondary mb-4">
             Registra tu empresa en menos de 2 minutos. Te enviaremos acceso inmediato para iniciar la gestión comercial.
           </p>
@@ -94,7 +97,7 @@
 
             <div class="col-12">
               <div class="alert alert-info mb-2">
-                Al completar tu registro se iniciará el <strong>pago del plan en Flow Ecommerce</strong>. La cuenta se activará automáticamente cuando el pago sea aprobado.
+                Al completar tu registro tendrás <strong>15 días gratis!!</strong>. Primero registrarás tu medio de pago en Flow y el primer cobro se realizará al terminar la prueba.
               </div>
               <div class="d-flex flex-wrap align-items-center gap-2 small text-secondary">
                 <span class="fw-semibold text-dark">Medios de pago Flow:</span>
@@ -118,13 +121,13 @@
                   required
                 >
                 <label class="form-check-label" for="acepta_terminos">
-                  Acepto los términos y condiciones del servicio y autorizo el proceso de cobro del plan mediante Flow.
+                  Acepto los términos y condiciones del servicio y autorizo el registro del medio de pago y el cobro automático al finalizar los 15 días gratis.
                 </label>
               </div>
             </div>
 
             <div class="col-12 d-grid d-md-flex justify-content-md-end pt-2">
-              <button type="submit" class="btn btn-primary px-4">Crear empresa y continuar a pago</button>
+              <button type="submit" class="btn btn-primary px-4">Crear empresa y activar prueba gratis</button>
             </div>
           </form>
         </div>
