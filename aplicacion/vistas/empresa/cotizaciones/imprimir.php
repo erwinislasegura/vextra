@@ -19,6 +19,7 @@ foreach (($cotizacion['items'] ?? []) as $it) {
     $descuentoListaMonto += (float) ($it['descuento_monto'] ?? 0);
 }
 $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
+$logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' . urlencode((string) $empresa['logo'])) : null;
 ?>
 <style>
   * { box-sizing: border-box; }
@@ -28,8 +29,8 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
     background: #eef2f7;
     font-family: Arial, Helvetica, sans-serif;
     color: #1f2937;
-    font-size: 14px;
-    line-height: 1.35;
+    font-size: 12.5px;
+    line-height: 1.25;
   }
   .toolbar {
     max-width: 980px;
@@ -42,53 +43,63 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
     max-width: 980px;
     margin: 0 auto;
     background: #fff;
-    padding: 28px;
+    padding: 20px;
     box-shadow: 0 8px 30px rgba(0,0,0,.08);
     border-radius: 8px;
   }
   .encabezado {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 16px;
     border-bottom: 2px solid #1f4e79;
-    padding-bottom: 12px;
-    margin-bottom: 14px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
   }
   .empresa, .doc { width: 50%; }
+  .empresa-logo { max-width: 180px; max-height: 70px; object-fit: contain; display: block; margin-bottom: 8px; }
   .empresa h1 {
     margin: 0 0 6px;
     color: #1f4e79;
-    font-size: 25px;
+    font-size: 22px;
   }
-  .empresa p, .doc p { margin: 2px 0; font-size: 13px; }
+  .empresa p { margin: 1px 0; font-size: 12px; }
   .doc { text-align: right; }
-  .doc h2 {
-    margin: 0 0 6px;
-    font-size: 28px;
-    color: #1f4e79;
-    letter-spacing: 1px;
+  .doc-inline {
+    margin-top: 14px;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    display: inline-flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 11px;
+    color: #111827;
+    min-width: 230px;
   }
+  .doc-inline .doc-titulo { color: #1f4e79; }
+  .doc-inline .doc-meta { color: #111827; }
   .lista-precio {
-    margin: 0 0 14px;
+    margin: 0 0 10px;
     background: #f8fafc;
     border: 1px solid #dbe2ea;
     border-left: 4px solid #1f4e79;
-    padding: 8px 10px;
-    font-size: 13px;
+    padding: 6px 8px;
+    font-size: 11.5px;
   }
   .tarjeta-lista {
-    margin: 0 0 14px;
+    margin: 0 0 10px;
     background: #ecfdf3;
     border: 1px solid #b7efcf;
     border-left: 4px solid #2f9e62;
-    padding: 10px 12px;
-    font-size: 13px;
+    padding: 8px 10px;
+    font-size: 11.5px;
     color: #1f5137;
   }
-  .bloque { margin-bottom: 14px; }
+  .bloque { margin-bottom: 10px; }
   .bloque h3 {
     margin: 0 0 8px;
-    font-size: 15px;
+    font-size: 13px;
     color: #1f4e79;
     border-bottom: 1px solid #d8dee8;
     padding-bottom: 5px;
@@ -98,21 +109,21 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px 20px;
   }
-  .dato { font-size: 13px; }
+  .dato { font-size: 11.5px; }
   .dato strong { color: #111827; }
   table { width: 100%; border-collapse: collapse; }
   .tabla-items th {
     background: #1f4e79;
     color: #fff;
     font-weight: 600;
-    font-size: 12px;
-    padding: 7px 6px;
+    font-size: 10.5px;
+    padding: 5px 5px;
     text-align: left;
   }
   .tabla-items td {
     border: 1px solid #dbe2ea;
-    padding: 6px;
-    font-size: 12px;
+    padding: 5px;
+    font-size: 10.5px;
     vertical-align: top;
   }
   .text-center { text-align: center; }
@@ -120,45 +131,45 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
   .totales {
     width: 320px;
     margin-left: auto;
-    margin-top: 10px;
+    margin-top: 6px;
   }
   .totales td {
     border: 1px solid #dbe2ea;
-    padding: 7px 10px;
-    font-size: 13px;
+    padding: 5px 8px;
+    font-size: 11px;
   }
   .totales .label { background: #f8fafc; font-weight: 700; }
   .totales .final td {
     background: #1f4e79;
     color: #fff;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 12px;
   }
   .nota {
     background: #f8fafc;
     border-left: 4px solid #1f4e79;
-    padding: 10px 12px;
-    font-size: 13px;
+    padding: 8px 10px;
+    font-size: 11px;
   }
   ul {
     margin: 6px 0 0 16px;
     padding: 0;
-    font-size: 13px;
+    font-size: 11px;
     line-height: 1.45;
   }
   .firmas {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px;
-    margin-top: 24px;
+    margin-top: 14px;
   }
-  .firma { text-align: center; padding-top: 26px; font-size: 13px; }
+  .firma { text-align: center; padding-top: 18px; font-size: 11px; }
   .linea { border-top: 1px solid #4b5563; margin-bottom: 6px; }
   .pie {
-    margin-top: 14px;
+    margin-top: 8px;
     border-top: 1px solid #dbe2ea;
     padding-top: 8px;
-    font-size: 11px;
+    font-size: 10px;
     color: #6b7280;
     text-align: center;
   }
@@ -178,7 +189,7 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
       width: 100%;
       max-width: none;
       margin: 0;
-      padding: 20px;
+      padding: 14px;
       box-shadow: none;
       border-radius: 0;
       background: #ffffff;
@@ -193,6 +204,7 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
     .firmas { grid-template-columns: 1fr; display: grid; }
     .empresa, .doc { width: 100%; }
     .doc { text-align: left; }
+    .doc-inline { align-items: flex-start; min-width: 0; display: flex; }
     .totales { width: 100%; }
   }
 </style>
@@ -209,6 +221,9 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
 <div class="hoja">
   <div class="encabezado">
     <div class="empresa">
+      <?php if ($logoEmpresaSrc): ?>
+        <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo empresa" class="empresa-logo">
+      <?php endif; ?>
       <h1><?= e($empresaNombre) ?></h1>
       <p><strong>RUT:</strong> <?= e($empresa['identificador_fiscal'] ?? '') ?></p>
       <p><?= e(trim((string) (($empresa['direccion'] ?? '') . ', ' . ($empresa['ciudad'] ?? '')))) ?></p>
@@ -217,10 +232,12 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
       <p><strong>Web:</strong> <?= e($empresa['sitio_web'] ?? '') ?></p>
     </div>
     <div class="doc">
-      <h2>COTIZACIÓN</h2>
-      <p><strong>N°:</strong> <?= e($cotizacion['numero'] ?? '') ?></p>
-      <p><strong>Fecha:</strong> <?= e($fechaEmision) ?></p>
-      <p><strong>Validez:</strong> <?= e($fechaVencimiento) ?></p>
+      <div class="doc-inline">
+        <span class="doc-titulo"><strong>COTIZACIÓN</strong></span>
+        <span class="doc-meta"><strong>N°:</strong> <?= e($cotizacion['numero'] ?? '') ?></span>
+        <span class="doc-meta"><strong>Fecha:</strong> <?= e($fechaEmision) ?></span>
+        <span class="doc-meta"><strong>Validez:</strong> <?= e($fechaVencimiento) ?></span>
+      </div>
     </div>
   </div>
 

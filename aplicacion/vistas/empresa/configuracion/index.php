@@ -83,7 +83,7 @@
       <div class="card-body">
         <?php if (!empty($empresa['logo'])): ?>
           <div class="mb-3">
-            <img src="<?= e(url($empresa['logo'])) ?>" alt="Logo de empresa" style="max-width: 220px; max-height: 120px;" class="img-thumbnail">
+            <img src="<?= e(url('/app/logo-empresa')) ?>?v=<?= e((string) ($empresa['fecha_actualizacion'] ?? time())) ?>" alt="Logo de empresa" style="max-width: 220px; max-height: 120px;" class="img-thumbnail">
           </div>
         <?php endif; ?>
         <label class="form-label">Subir nuevo logo</label>

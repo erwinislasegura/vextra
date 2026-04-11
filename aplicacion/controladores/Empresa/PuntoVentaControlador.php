@@ -5,6 +5,7 @@ namespace Aplicacion\Controladores\Empresa;
 use Aplicacion\Nucleo\Controlador;
 use Aplicacion\Modelos\PuntoVenta;
 use Aplicacion\Modelos\GestionComercial;
+use Aplicacion\Modelos\Empresa;
 use Aplicacion\Servicios\ExcelExpoFormato;
 use Aplicacion\Servicios\ServicioAlertaStock;
 
@@ -224,7 +225,8 @@ class PuntoVentaControlador extends Controlador
             exit('Venta no encontrada.');
         }
         $configuracion = $pos->obtenerConfiguracion($empresaId);
-        $this->vista('empresa/pos/imprimir_venta', compact('venta', 'configuracion'), 'impresion');
+        $empresa = (new Empresa())->buscar($empresaId);
+        $this->vista('empresa/pos/imprimir_venta', compact('venta', 'configuracion', 'empresa'), 'impresion');
     }
 
     public function cierreCaja(): void
