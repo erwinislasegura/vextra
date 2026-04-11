@@ -154,7 +154,15 @@ class Inventario extends Modelo
             $this->db->commit();
 
             if (!empty($cabecera['orden_compra_id'])) {
-                $this->actualizarEstadoOrdenCompra((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id']);
+                $stmtEstadoOrden = $this->db->prepare('SELECT estado FROM ordenes_compra WHERE empresa_id=:empresa_id AND id=:id LIMIT 1');
+                $stmtEstadoOrden->execute([
+                    'empresa_id' => (int) $cabecera['empresa_id'],
+                    'id' => (int) $cabecera['orden_compra_id'],
+                ]);
+                $estadoOrden = (string) ($stmtEstadoOrden->fetchColumn() ?: '');
+                if (!in_array($estadoOrden, ['aprobada', 'rechazada', 'anulada'], true)) {
+                    $this->actualizarEstadoOrdenCompra((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id']);
+                }
             }
             return $recepcionId;
         } catch (Throwable $e) {
@@ -285,6 +293,57 @@ class Inventario extends Modelo
             'empresa_id' => $empresaId,
             'id' => $id,
         ]);
+    }
+
+    public function eliminarRecepcionCompleta(int $empresaId, int $recepcionId): void
+    {
+        $this->db->beginTransaction();
+        try {
+            $stmtRecepcion = $this->db->prepare('SELECT id, orden_compra_id FROM recepciones_inventario WHERE empresa_id=:empresa_id AND id=:id LIMIT 1');
+            $stmtRecepcion->execute(['empresa_id' => $empresaId, 'id' => $recepcionId]);
+            $recepcion = $stmtRecepcion->fetch();
+            if (!$recepcion) {
+                $this->db->rollBack();
+                return;
+            }
+
+            $stmtDetalles = $this->db->prepare('SELECT producto_id, cantidad FROM recepciones_inventario_detalle WHERE recepcion_id=:recepcion_id');
+            $stmtDetalles->execute(['recepcion_id' => $recepcionId]);
+            $detalles = $stmtDetalles->fetchAll();
+
+            $stmtStock = $this->db->prepare('UPDATE productos SET stock_actual = stock_actual - :cantidad, fecha_actualizacion=NOW() WHERE empresa_id=:empresa_id AND id=:producto_id');
+            foreach ($detalles as $detalle) {
+                $cantidad = max(0, (float) ($detalle['cantidad'] ?? 0));
+                $productoId = (int) ($detalle['producto_id'] ?? 0);
+                if ($productoId <= 0 || $cantidad <= 0) {
+                    continue;
+                }
+                $stmtStock->execute([
+                    'cantidad' => $cantidad,
+                    'empresa_id' => $empresaId,
+                    'producto_id' => $productoId,
+                ]);
+            }
+
+            $this->db->prepare('DELETE FROM movimientos_inventario WHERE empresa_id=:empresa_id AND modulo_origen="recepciones_inventario" AND referencia_id=:referencia_id')
+                ->execute(['empresa_id' => $empresaId, 'referencia_id' => $recepcionId]);
+
+            $this->db->prepare('DELETE FROM recepciones_inventario_detalle WHERE recepcion_id=:recepcion_id')
+                ->execute(['recepcion_id' => $recepcionId]);
+            $this->db->prepare('DELETE FROM recepciones_inventario WHERE empresa_id=:empresa_id AND id=:id')
+                ->execute(['empresa_id' => $empresaId, 'id' => $recepcionId]);
+
+            if (!empty($recepcion['orden_compra_id'])) {
+                $this->actualizarEstadoOrdenCompraManual($empresaId, (int) $recepcion['orden_compra_id'], 'aprobada');
+            }
+
+            $this->db->commit();
+        } catch (Throwable $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw $e;
+        }
     }
 
     public function listarAjustes(int $empresaId, array $filtros = []): array
@@ -537,5 +596,20 @@ class Inventario extends Modelo
 
         $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id')
             ->execute(['estado' => $estado, 'empresa_id' => $empresaId, 'id' => $ordenCompraId]);
+    }
+
+    public function actualizarEstadoOrdenCompraManual(int $empresaId, int $ordenCompraId, string $estado): void
+    {
+        $estadoNormalizado = mb_strtolower(trim($estado));
+        if (!in_array($estadoNormalizado, ['aprobada', 'rechazada'], true)) {
+            throw new \InvalidArgumentException('Estado de orden de compra no permitido.');
+        }
+
+        $stmt = $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id');
+        $stmt->execute([
+            'estado' => $estadoNormalizado,
+            'empresa_id' => $empresaId,
+            'id' => $ordenCompraId,
+        ]);
     }
 }

@@ -25,7 +25,7 @@ $etiquetasDocumento = [
 
 <form method="POST" action="<?= e(url('/app/inventario/recepciones')) ?>" class="d-grid gap-3" id="form-recepcion">
   <?= csrf_campo() ?>
-  <input type="hidden" name="orden_compra_id" value="<?= (int) ($ordenCompraSeleccionada['id'] ?? 0) ?>">
+  <input type="hidden" name="orden_compra_id" id="orden_compra_id" value="<?= (int) ($ordenCompraSeleccionada['id'] ?? 0) ?>">
   <?php if ($ordenCompraSeleccionada): ?>
     <div class="alert alert-warning mb-0">
       Recepción asociada a orden de compra <strong><?= e($ordenCompraSeleccionada['numero'] ?? '') ?></strong>.
@@ -53,6 +53,21 @@ $etiquetasDocumento = [
       <div class="col-md-3"><label class="small">Fecha documento</label><input type="date" name="fecha_documento" class="form-control" value="<?= e(date('Y-m-d')) ?>" required></div>
       <div class="col-md-4"><label class="small">Referencia interna</label><input name="referencia_interna" class="form-control" placeholder="OC / Folio interno"></div>
       <div class="col-md-8"><label class="small">Observación</label><input name="observacion" class="form-control" placeholder="Observaciones de recepción"></div>
+      <div class="col-12">
+        <label class="small d-block">Datos de proveedor y productos desde orden de compra aprobada</label>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="switch-oc-aprobada" <?= $ordenCompraSeleccionada ? 'checked' : '' ?>>
+          <label class="form-check-label" for="switch-oc-aprobada">Usar orden de compra aprobada</label>
+        </div>
+        <select id="selector-oc-aprobada" class="form-select mt-2 <?= $ordenCompraSeleccionada ? '' : 'd-none' ?>">
+          <option value="">Seleccionar orden aprobada...</option>
+          <?php foreach (($ordenesCompraAprobadas ?? []) as $ordenAprobada): ?>
+            <option value="<?= (int) ($ordenAprobada['id'] ?? 0) ?>" <?= (int) ($ordenCompraSeleccionada['id'] ?? 0) === (int) ($ordenAprobada['id'] ?? 0) ? 'selected' : '' ?>>
+              <?= e((string) ($ordenAprobada['numero'] ?? '')) ?> · <?= e((string) ($ordenAprobada['proveedor_nombre'] ?? 'Sin proveedor')) ?> · <?= e((string) ($ordenAprobada['fecha_emision'] ?? '')) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
       <div class="col-12 border-top pt-2">
         <div class="small fw-semibold mb-2">Proveedor rápido (si no seleccionas uno existente)</div>
@@ -140,7 +155,7 @@ $etiquetasDocumento = [
         <tr><th>Fecha</th><th>Proveedor</th><th>Documento</th><th>Número</th><th>Usuario</th><th class="text-end">Acción</th></tr>
       </thead>
       <tbody>
-<?php if(empty($recepciones)): ?><tr><td colspan="6" class="text-center text-muted py-3">Sin recepciones registradas.</td></tr><?php else: foreach($recepciones as $r): ?><tr><td><?= e($r['fecha_creacion']) ?></td><td><?= e($r['proveedor_nombre'] ?? 'Sin proveedor') ?></td><td><?= e($etiquetasDocumento[$r['tipo_documento'] ?? ''] ?? ($r['tipo_documento'] ?? '-')) ?></td><td><?= e($r['numero_documento']) ?></td><td><?= e($r['usuario_nombre'] ?? '-') ?></td><td class="text-end"><div class="dropdown dropup"><button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="<?= e(url('/app/inventario/recepciones/ver/' . $r['id'])) ?>">Ver</a></li><li><a class="dropdown-item" href="<?= e(url('/app/inventario/recepciones/editar/' . $r['id'])) ?>">Editar</a></li><li><a class="dropdown-item" href="<?= e(url('/app/inventario/recepciones/pdf/' . $r['id'])) ?>">PDF</a></li></ul></div></td></tr><?php endforeach; endif; ?>
+<?php if(empty($recepciones)): ?><tr><td colspan="6" class="text-center text-muted py-3">Sin recepciones registradas.</td></tr><?php else: foreach($recepciones as $r): ?><tr><td><?= e($r['fecha_creacion']) ?></td><td><?= e($r['proveedor_nombre'] ?? 'Sin proveedor') ?></td><td><?= e($etiquetasDocumento[$r['tipo_documento'] ?? ''] ?? ($r['tipo_documento'] ?? '-')) ?></td><td><?= e($r['numero_documento']) ?></td><td><?= e($r['usuario_nombre'] ?? '-') ?></td><td class="text-end"><div class="dropdown dropup"><button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="<?= e(url('/app/inventario/recepciones/ver/' . $r['id'])) ?>">Ver</a></li><li><a class="dropdown-item" href="<?= e(url('/app/inventario/recepciones/editar/' . $r['id'])) ?>">Editar</a></li><li><a class="dropdown-item" href="<?= e(url('/app/inventario/recepciones/pdf/' . $r['id'])) ?>">PDF</a></li><li><hr class="dropdown-divider"></li><li><form method="POST" action="<?= e(url('/app/inventario/recepciones/eliminar/' . $r['id'])) ?>" onsubmit="return confirm('¿Eliminar completamente esta recepción y su detalle?')"><?= csrf_campo() ?><button type="submit" class="dropdown-item text-danger">Eliminar</button></form></li></ul></div></td></tr><?php endforeach; endif; ?>
       </tbody>
     </table>
   </div>
@@ -171,12 +186,19 @@ $etiquetasDocumento = [
 
 <script>
 (function(){
-  const detalleOrden = <?= json_encode($ordenCompraSeleccionada['detalles'] ?? [], JSON_UNESCAPED_UNICODE) ?>;
+  const ordenesCompraAprobadas = <?= json_encode($ordenesCompraAprobadas ?? [], JSON_UNESCAPED_UNICODE) ?>;
   const cuerpo = document.getElementById('cuerpo-detalle');
   const template = document.getElementById('fila-detalle-template');
   const btn = document.getElementById('btn-agregar-linea');
   const resumenLineas = document.getElementById('resumen-lineas');
   const resumenTotal = document.getElementById('resumen-total');
+  const switchOcAprobada = document.getElementById('switch-oc-aprobada');
+  const selectorOcAprobada = document.getElementById('selector-oc-aprobada');
+  const inputOrdenCompraId = document.getElementById('orden_compra_id');
+  const proveedorSelect = document.getElementById('proveedor_id');
+  const inputNumeroDocumento = document.querySelector('[name="numero_documento"]');
+  const inputReferencia = document.querySelector('[name="referencia_interna"]');
+  const inputObservacion = document.querySelector('[name="observacion"]');
 
   const money = (n) => '$' + Number(n || 0).toLocaleString('es-CL', {minimumFractionDigits:2, maximumFractionDigits:2});
 
@@ -212,9 +234,50 @@ $etiquetasDocumento = [
     recalcular();
   }
 
+  function cargarOrdenAprobadaSeleccionada() {
+    const ordenId = parseInt(selectorOcAprobada?.value || '0', 10);
+    if (!ordenId) {
+      if (inputOrdenCompraId) { inputOrdenCompraId.value = ''; }
+      return;
+    }
+    const orden = ordenesCompraAprobadas.find((item) => parseInt(item.id || 0, 10) === ordenId);
+    if (!orden) { return; }
+    if (inputOrdenCompraId) { inputOrdenCompraId.value = String(ordenId); }
+    if (proveedorSelect) { proveedorSelect.value = String(parseInt(orden.proveedor_id || 0, 10)); }
+    if (inputNumeroDocumento && String(inputNumeroDocumento.value || '').trim() === '') {
+      inputNumeroDocumento.value = String(orden.numero || '');
+    }
+    if (inputReferencia) { inputReferencia.value = String(orden.referencia || ''); }
+    if (inputObservacion) { inputObservacion.value = String(orden.observacion || ''); }
+
+    const detalles = Array.isArray(orden.detalles) ? orden.detalles : [];
+    if (detalles.length > 0) {
+      cuerpo.innerHTML = '';
+      detalles.forEach((detalle) => agregarFila(detalle));
+    }
+  }
+
   btn.addEventListener('click', () => agregarFila());
-  if (Array.isArray(detalleOrden) && detalleOrden.length > 0) {
-    detalleOrden.forEach((d) => agregarFila(d));
+
+  switchOcAprobada?.addEventListener('change', () => {
+    if (!selectorOcAprobada) { return; }
+    selectorOcAprobada.classList.toggle('d-none', !switchOcAprobada.checked);
+    if (!switchOcAprobada.checked) {
+      selectorOcAprobada.value = '';
+      if (inputOrdenCompraId) { inputOrdenCompraId.value = ''; }
+    }
+  });
+  selectorOcAprobada?.addEventListener('change', cargarOrdenAprobadaSeleccionada);
+
+  const ordenInicial = parseInt(inputOrdenCompraId?.value || '0', 10);
+  if (ordenInicial > 0) {
+    const orden = ordenesCompraAprobadas.find((item) => parseInt(item.id || 0, 10) === ordenInicial);
+    if (orden) {
+      cuerpo.innerHTML = '';
+      (Array.isArray(orden.detalles) ? orden.detalles : []).forEach((d) => agregarFila(d));
+    } else {
+      agregarFila();
+    }
   } else {
     agregarFila();
   }

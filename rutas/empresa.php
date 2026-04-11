@@ -135,6 +135,7 @@ $enrutador->agregar('GET', '/app/inventario/recepciones', [InventarioControlador
 $enrutador->agregar('POST', '/app/inventario/recepciones', [InventarioControlador::class, 'guardarRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/editar/{id}', [InventarioControlador::class, 'editarRecepcion'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/inventario/recepciones/editar/{id}', [InventarioControlador::class, 'actualizarRecepcion'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/inventario/recepciones/eliminar/{id}', [InventarioControlador::class, 'eliminarRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/ver/{id}', [InventarioControlador::class, 'verRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/imprimir/{id}', [InventarioControlador::class, 'imprimirRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/pdf/{id}', [InventarioControlador::class, 'descargarRecepcionPdf'], $mwEmpresa);
@@ -145,6 +146,7 @@ $enrutador->agregar('POST', '/app/inventario/ordenes-compra', [InventarioControl
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/editar/{id}', [InventarioControlador::class, 'editarOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/inventario/ordenes-compra/editar/{id}', [InventarioControlador::class, 'actualizarOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/ver/{id}', [InventarioControlador::class, 'verOrdenCompra'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/inventario/ordenes-compra/estado/{id}', [InventarioControlador::class, 'cambiarEstadoOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/imprimir/{id}', [InventarioControlador::class, 'imprimirOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/pdf/{id}', [InventarioControlador::class, 'descargarOrdenCompraPdf'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/inventario/ordenes-compra/enviar/{id}', [InventarioControlador::class, 'enviarOrdenCompra'], $mwEmpresa);
