@@ -332,6 +332,14 @@ if ($listaPrecioCotizacionId > 0) {
 
 <script>
 (function () {
+    const bloqueOcAprobada = document.getElementById('switch_oc_aprobada')?.closest('.col-md-6');
+    if (bloqueOcAprobada) {
+        bloqueOcAprobada.remove();
+    }
+    const selectorOcAprobada = document.getElementById('orden_compra_aprobada_id');
+    if (selectorOcAprobada) {
+        selectorOcAprobada.remove();
+    }
     const cuerpo = document.getElementById('cuerpo-items');
     const template = document.getElementById('fila-item-template');
     const btnAgregar = document.getElementById('btn-agregar-linea');
