@@ -39,8 +39,20 @@
   <td><div class="fw-semibold"><?= e($e['nombre_comercial']) ?></div><div class="small text-muted"><?= e($e['correo']) ?></div></td>
   <td><?= e($e['plan_nombre'] ?? 'Sin plan') ?></td>
   <td>
+    <?php
+      $diasRestantesPlan = isset($e['dias_restantes_plan']) && $e['dias_restantes_plan'] !== null
+        ? (int) $e['dias_restantes_plan']
+        : null;
+      $esPeriodoPrueba = ($e['suscripcion_estado'] ?? '') === 'pendiente'
+        && $diasRestantesPlan !== null
+        && $diasRestantesPlan >= 0;
+    ?>
     <?php if (!isset($e['dias_restantes_plan']) || $e['dias_restantes_plan'] === null): ?>
       <span class="text-muted">Sin vigencia</span>
+    <?php elseif ($esPeriodoPrueba): ?>
+      <span class="badge text-bg-info">
+        Periodo de prueba: <?= $diasRestantesPlan ?> día(s)
+      </span>
     <?php elseif ((int) $e['dias_restantes_plan'] < 0): ?>
       <span class="badge text-bg-danger">Vencido hace <?= abs((int) $e['dias_restantes_plan']) ?> día(s)</span>
     <?php else: ?>

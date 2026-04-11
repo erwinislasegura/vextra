@@ -21,6 +21,26 @@ foreach (($resumen['cotizaciones_ultimos_meses'] ?? []) as $fila) {
 ?>
 
 <section class="panel-cliente">
+  <?php
+    $diasRestantesPlan = isset($resumen['dias_restantes_plan']) && $resumen['dias_restantes_plan'] !== null ? (int) $resumen['dias_restantes_plan'] : null;
+    $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $diasRestantesPlan !== null && $diasRestantesPlan >= 0;
+  ?>
+  <?php if ($esPeriodoPrueba): ?>
+    <div class="alert alert-info border-0 shadow-sm d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-3" role="alert">
+      <div>
+        <div class="fw-bold mb-1">🎁 Periodo de prueba activado</div>
+        <div class="mb-1">Te quedan <strong><?= $diasRestantesPlan ?> día(s)</strong> para disfrutar Vextra con acceso completo.</div>
+        <div class="small text-secondary">Activa tu plan hoy y evita interrupciones para tu equipo comercial.</div>
+      </div>
+      <form method="POST" action="<?= e(url('/app/panel/iniciar-pago-trial')) ?>" class="d-grid">
+        <?= csrf_campo() ?>
+        <button type="submit" class="btn btn-primary btn-sm px-3">
+          Paga acá y mantén tu operación sin pausas
+        </button>
+      </form>
+    </div>
+  <?php endif; ?>
+
   <?php if (isset($resumen['dias_restantes_plan']) && $resumen['dias_restantes_plan'] !== null && (int) $resumen['dias_restantes_plan'] <= 0): ?>
     <div class="alert alert-warning d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2" role="alert">
       <div>

@@ -217,7 +217,7 @@ class AutenticacionControlador extends Controlador
             $this->redirigir('/registro');
         }
 
-        flash('success', 'Empresa creada con éxito. Se activó tu prueba gratis de 15 días. El pago ecommerce se solicitará al finalizar la prueba.');
+        flash('success', '¡Bienvenido a Vextra! Tu empresa se creó correctamente y ya tienes 15 días de prueba gratis. Te avisaremos antes de que finalice tu prueba.');
         $this->redirigir('/iniciar-sesion');
     }
 

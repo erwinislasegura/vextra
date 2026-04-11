@@ -22,7 +22,7 @@
               <a id="flow-btn-login" href="<?= e(url('/iniciar-sesion')) ?>" class="btn btn-primary px-4">
                 Iniciar sesión
               </a>
-              <a href="<?= e(url('/planes')) ?>" class="btn btn-outline-secondary px-4">
+              <a id="flow-btn-secundario" href="<?= e(url('/planes')) ?>" class="btn btn-outline-secondary px-4">
                 Ver planes
               </a>
             </div>
@@ -47,6 +47,16 @@
     const mensaje = document.getElementById('flow-retorno-mensaje');
     const icono = document.getElementById('flow-retorno-icono');
     const btnLogin = document.getElementById('flow-btn-login');
+    const btnSecundario = document.getElementById('flow-btn-secundario');
+
+    if (origen === 'trial_pago') {
+      btnLogin.textContent = 'Volver al panel';
+      btnLogin.href = <?= json_encode(url('/app/panel'), JSON_UNESCAPED_SLASHES) ?>;
+      if (btnSecundario) {
+        btnSecundario.textContent = 'Ir a ayuda';
+        btnSecundario.href = <?= json_encode(url('/contacto'), JSON_UNESCAPED_SLASHES) ?>;
+      }
+    }
 
     const render = (data) => {
       if (data?.estado && data.estado !== 'aprobado') {
