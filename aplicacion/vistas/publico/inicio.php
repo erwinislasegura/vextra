@@ -3,6 +3,21 @@ $capturasBase = '/img/Captura Sistema';
 $capturaUrl = static function (string $archivo) use ($capturasBase): string {
     return url($capturasBase . '/' . rawurlencode($archivo));
 };
+$capturasOptimizadas = [
+    'Dashboard - Inicio.png' => url('/imagen-opt/dashboard_inicio?w=1000&h=630&q=76'),
+    'Punto de venta.png' => url('/imagen-opt/punto_venta?w=1000&h=630&q=76'),
+    'Movimientos de inventario.png' => url('/imagen-opt/movimientos_inventario?w=1000&h=630&q=76'),
+    'Clientes.png' => url('/imagen-opt/clientes?w=1000&h=630&q=76'),
+    'Cotizaciones 1.png' => url('/imagen-opt/cotizaciones_1?w=1280&h=800&q=76'),
+    'Cotizaciones 2.png' => url('/imagen-opt/cotizaciones_2?w=1280&h=800&q=76'),
+    'Cotizaciones 3.png' => url('/imagen-opt/cotizaciones_3?w=1280&h=800&q=76'),
+    'Cotizaciones 4.png' => url('/imagen-opt/cotizaciones_4?w=1280&h=800&q=76'),
+    'Cotizaciones 5.png' => url('/imagen-opt/cotizaciones_5?w=1280&h=800&q=76'),
+];
+$capturaLandingUrl = static function (string $archivo) use ($capturasOptimizadas, $capturaUrl): string {
+    return $capturasOptimizadas[$archivo] ?? $capturaUrl($archivo);
+};
+
 $cotizacionesCapturas = [
     [
         'archivo' => 'Cotizaciones 1.png',
@@ -143,10 +158,10 @@ $faqSchema = [
             </div>
             <div class="col-12 col-lg-6">
                 <div class="row g-3">
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" loading="lazy"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy"></a><figcaption>POS conectado</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy"></a><figcaption>Gestión de clientes</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" decoding="async" fetchpriority="high" width="1000" height="630"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaLandingUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Gestión de clientes</figcaption></figure></div>
                 </div>
             </div>
         </div>
@@ -162,7 +177,7 @@ $faqSchema = [
         <div class="landing-slider" data-slider data-slider-interval="3200">
             <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                 <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
-                    <img src="<?= e($capturaUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                    <img src="<?= e($capturaLandingUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy" decoding="async" width="1280" height="800">
                     <div class="landing-carousel-caption">
                         <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
                         <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
@@ -190,7 +205,7 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-primary" aria-hidden="true"><i class="bi bi-lightning-charge-fill"></i></span>
+                                <span class="fs-4 text-primary" aria-hidden="true">⚡</span>
                                 <div>
                                     <h3 class="h5 mb-1">Ahorro de tiempo en cotizar y vender</h3>
                                     <p class="mb-0 small">Evita rehacer propuestas y reduce búsquedas manuales. Tu equipo responde con precios y stock actualizados en minutos.</p>
@@ -201,7 +216,7 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-success" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                                <span class="fs-4 text-success" aria-hidden="true">📈</span>
                                 <div>
                                     <h3 class="h5 mb-1">Aumento de ventas con seguimiento ordenado</h3>
                                     <p class="mb-0 small">Con pipeline y trazabilidad por cliente, se priorizan oportunidades con mejor cierre y se evita perder negocios por falta de seguimiento.</p>
@@ -212,7 +227,7 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-warning" aria-hidden="true"><i class="bi bi-box-seam-fill"></i></span>
+                                <span class="fs-4 text-warning" aria-hidden="true">📦</span>
                                 <div>
                                     <h3 class="h5 mb-1">Control de stock para proteger márgenes</h3>
                                     <p class="mb-0 small">Cada venta impacta inventario en tiempo real, reduciendo sobreventa, compras urgentes y pérdidas por descoordinación operativa.</p>
@@ -294,7 +309,7 @@ $faqSchema = [
         </div>
         <div class="landing-timeline" aria-label="Línea de tiempo de casos de uso empresariales">
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-truck"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">🚚</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 1</span>
                     <h3 class="h6 mb-1">Distribuidoras</h3>
@@ -302,7 +317,7 @@ $faqSchema = [
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-shop-window"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">🏬</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 2</span>
                     <h3 class="h6 mb-1">Retail especializado</h3>
@@ -310,7 +325,7 @@ $faqSchema = [
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-tools"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">🛠️</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 3</span>
                     <h3 class="h6 mb-1">Servicios técnicos</h3>
@@ -318,7 +333,7 @@ $faqSchema = [
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">📈</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 4</span>
                     <h3 class="h6 mb-1">Pymes en expansión</h3>
@@ -433,20 +448,31 @@ $faqSchema = [
         const slides = Array.from(slider.querySelectorAll('[data-slide]'));
         const dots = Array.from(slider.querySelectorAll('[data-slide-dot]'));
         const interval = Number(slider.getAttribute('data-slider-interval') || 3200);
+        const prefiereReducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const esPantallaTactil = window.matchMedia('(pointer: coarse)').matches;
+        const autoplayPermitido = !prefiereReducirMovimiento && !esPantallaTactil;
         let actual = 0;
         let timer = null;
 
         const pintar = (indice) => {
             actual = (indice + slides.length) % slides.length;
-            slides.forEach((slide, i) => slide.classList.toggle('is-active', i === actual));
-            dots.forEach((dot, i) => dot.classList.toggle('is-active', i === actual));
+            window.requestAnimationFrame(() => {
+                slides.forEach((slide, i) => slide.classList.toggle('is-active', i === actual));
+                dots.forEach((dot, i) => dot.classList.toggle('is-active', i === actual));
+            });
+        };
+        const detener = () => {
+            if (!timer) return;
+            window.clearInterval(timer);
+            timer = null;
         };
         const iniciar = () => {
-            if (slides.length < 2) return;
+            if (!autoplayPermitido || slides.length < 2 || document.hidden) return;
+            detener();
             timer = window.setInterval(() => pintar(actual + 1), interval);
         };
         const reiniciar = () => {
-            if (timer) window.clearInterval(timer);
+            detener();
             iniciar();
         };
 
@@ -458,8 +484,15 @@ $faqSchema = [
                 reiniciar();
             });
         });
-        slider.addEventListener('mouseenter', () => timer && window.clearInterval(timer));
+        slider.addEventListener('mouseenter', detener);
         slider.addEventListener('mouseleave', reiniciar);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                detener();
+                return;
+            }
+            iniciar();
+        });
         pintar(0);
         iniciar();
     }
@@ -508,7 +541,7 @@ $faqSchema = [
             const valorAnual = precio.getAttribute('data-precio-anual') || valorMensual;
             const valor = tipo === 'anual' ? valorAnual : valorMensual;
             const etiqueta = tipo === 'anual' ? 'anual' : 'mensual';
-            precio.innerHTML = '$' + valor + ' <small class="fs-6">/ ' + etiqueta + '</small>';
+            precio.textContent = '$' + valor + ' / ' + etiqueta;
         });
 
         links.forEach((link) => {

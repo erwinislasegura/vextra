@@ -1,3 +1,5 @@
+<?php $requiereRecaptcha = true; ?>
+
 <section class="py-5 bg-white border-bottom">
     <div class="container">
         <div class="row g-4 align-items-center">
