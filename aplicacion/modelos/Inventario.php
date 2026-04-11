@@ -601,10 +601,6 @@ class Inventario extends Modelo
 
     public function actualizarEstadoOrdenCompra(int $empresaId, int $ordenCompraId): void
     {
-        $stmtTot = $this->db->prepare('SELECT COALESCE(SUM(cantidad),0) AS solicitado FROM ordenes_compra_detalle WHERE orden_compra_id = :orden_compra_id');
-        $stmtTot->execute(['orden_compra_id' => $ordenCompraId]);
-        $solicitado = (float) ($stmtTot->fetch()['solicitado'] ?? 0);
-
         $stmtRec = $this->db->prepare('SELECT COALESCE(SUM(rd.cantidad),0) AS recibido
             FROM recepciones_inventario r
             INNER JOIN recepciones_inventario_detalle rd ON rd.recepcion_id = r.id
@@ -613,10 +609,8 @@ class Inventario extends Modelo
         $recibido = (float) ($stmtRec->fetch()['recibido'] ?? 0);
 
         $estado = 'emitida';
-        if ($recibido > 0 && $recibido < $solicitado) {
-            $estado = 'parcial';
-        } elseif ($solicitado > 0 && $recibido >= $solicitado) {
-            $estado = 'recibida';
+        if ($recibido > 0) {
+            $estado = 'recepcionada';
         }
 
         $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id')
