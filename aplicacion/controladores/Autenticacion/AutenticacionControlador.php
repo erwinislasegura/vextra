@@ -8,9 +8,6 @@ use Aplicacion\Modelos\Usuario;
 use Aplicacion\Modelos\Empresa;
 use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Suscripcion;
-use Aplicacion\Servicios\FlowApiService;
-use Aplicacion\Servicios\FlowClientesService;
-use Aplicacion\Servicios\FlowPlanesService;
 use Throwable;
 
 class AutenticacionControlador extends Controlador
@@ -220,36 +217,7 @@ class AutenticacionControlador extends Controlador
             $this->redirigir('/registro');
         }
 
-        try {
-            $diasPruebaRegistro = 15;
-            (new FlowPlanesService())->crearOActualizarPlan($planId, $tipoCobro, $diasPruebaRegistro);
-            $urlRetornoRegistro = FlowApiService::construirUrlPublica('/flow/retorno/registro?origen=registro');
-            $respuestaRegistro = (new FlowClientesService())->iniciarRegistroMedioPago((int) $empresaId, $urlRetornoRegistro);
-            if (isset($respuestaRegistro['url'], $respuestaRegistro['token'])) {
-                $_SESSION['flow_registro_pendiente'] = [
-                    'empresa_id' => (int) $empresaId,
-                    'plan_id' => (int) $planId,
-                    'tipo_cobro' => (string) $tipoCobro,
-                    'suscripcion_id' => (int) $suscripcionId,
-                    'flow_token' => (string) $respuestaRegistro['token'],
-                    'correo_admin' => (string) $correoAdmin,
-                    'nombre_admin' => (string) $nombreAdmin,
-                    'password_admin' => (string) $password,
-                    'dias_prueba' => $diasPruebaRegistro,
-                    'fecha' => date('c'),
-                ];
-                $this->redirigir($respuestaRegistro['url'] . '?token=' . $respuestaRegistro['token']);
-            }
-
-            throw new \RuntimeException('Flow no devolvió URL/token para iniciar el registro del medio de pago.');
-        } catch (Throwable $e) {
-            $this->revertirRegistroPendiente($empresaId, $suscripcionId, (string) $correoAdmin);
-            $this->guardarDatosRegistroTemporal($_POST);
-            flash('danger', 'No fue posible iniciar el registro del medio de pago en Flow, por lo que el registro fue cancelado para que puedas intentarlo nuevamente con los mismos datos. Detalle: ' . $e->getMessage());
-            $this->redirigir('/registro?plan=' . $planId . '&frecuencia=' . $tipoCobro);
-        }
-
-        flash('success', 'Empresa creada con éxito. Tu cuenta administrativa ya está activa para iniciar sesión.');
+        flash('success', 'Empresa creada con éxito. Se activó tu prueba gratis de 15 días. El pago ecommerce se solicitará al finalizar la prueba.');
         $this->redirigir('/iniciar-sesion');
     }
 

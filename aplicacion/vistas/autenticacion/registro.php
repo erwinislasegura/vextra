@@ -98,7 +98,7 @@
 
             <div class="col-12">
               <div class="alert alert-info mb-2">
-                Al completar tu registro tendrás <strong>15 días de prueba gratis!!</strong> No se te cobrará hoy: primero registrarás tu medio de pago en Flow y el primer cobro se realizará al terminar la prueba.
+                Al completar tu registro tendrás <strong>15 días de prueba gratis!!</strong> No se te cobrará hoy ni se pedirá pago inmediato. El pago ecommerce se solicitará al finalizar la prueba.
               </div>
               <div class="d-flex flex-wrap align-items-center gap-2 small text-secondary">
                 <span class="fw-semibold text-dark">Medios de pago Flow:</span>
@@ -122,7 +122,7 @@
                   required
                 >
                 <label class="form-check-label" for="acepta_terminos">
-                  Acepto los términos y condiciones del servicio y autorizo el registro del medio de pago y el cobro automático al finalizar los 15 días gratis.
+                  Acepto los términos y condiciones del servicio y entiendo que el cobro ecommerce se solicitará al finalizar los 15 días gratis.
                 </label>
               </div>
             </div>
