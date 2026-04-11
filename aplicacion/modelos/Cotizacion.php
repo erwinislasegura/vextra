@@ -97,6 +97,17 @@ class Cotizacion extends Modelo
         return $cotizacion;
     }
 
+
+    public function obtenerFirmaCliente(int $empresaId, int $id): ?array
+    {
+        $stmt = $this->db->prepare('SELECT id, numero, firma_cliente, nombre_firmante_cliente, fecha_aprobacion_cliente
+            FROM cotizaciones
+            WHERE empresa_id = :empresa_id AND id = :id AND fecha_eliminacion IS NULL
+            LIMIT 1');
+        $stmt->execute(['empresa_id' => $empresaId, 'id' => $id]);
+        return $stmt->fetch() ?: null;
+    }
+
     public function actualizarTokenPublico(int $empresaId, int $id, string $token): void
     {
         $stmt = $this->db->prepare('UPDATE cotizaciones SET token_publico=:token_publico, fecha_actualizacion=NOW() WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL');

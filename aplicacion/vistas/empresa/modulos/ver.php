@@ -15,6 +15,9 @@
             <div class="small text-uppercase fw-semibold text-muted mb-2">Firma cliente de la cotización</div>
             <?php if (!empty($cotizacionAprobacion['firma_cliente'])): ?>
                 <div class="mb-2"><strong>Firmante:</strong> <?= e((string) ($cotizacionAprobacion['nombre_firmante_cliente'] ?? 'Cliente')) ?></div>
+                <?php if (!empty($cotizacionAprobacion['numero'])): ?>
+                    <div class="small text-muted mb-2">Cotización: <?= e((string) $cotizacionAprobacion['numero']) ?></div>
+                <?php endif; ?>
                 <img
                     src="<?= e((string) $cotizacionAprobacion['firma_cliente']) ?>"
                     alt="Firma del cliente"
