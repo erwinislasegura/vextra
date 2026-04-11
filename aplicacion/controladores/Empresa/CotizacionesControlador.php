@@ -88,9 +88,10 @@ class CotizacionesControlador extends Controlador
         foreach ($clientes as $cliente) {
             $listasPreciosPorCliente[(int) $cliente['id']] = $gestion->obtenerListasPrecioCliente($empresaId, (int) $cliente['id']);
         }
+        $ordenesCompraAprobadas = $this->obtenerOrdenesCompraAprobadasParaCotizacion($empresaId, null);
         $siguienteNumero = (new Cotizacion())->siguienteNumero($empresaId);
         $tokenPrevisualizacion = bin2hex(random_bytes(32));
-        $this->vista('empresa/cotizaciones/formulario', compact('clientes', 'productos', 'siguienteNumero', 'listasPrecios', 'listasPreciosPorCliente', 'tokenPrevisualizacion'), 'empresa');
+        $this->vista('empresa/cotizaciones/formulario', compact('clientes', 'productos', 'siguienteNumero', 'listasPrecios', 'listasPreciosPorCliente', 'tokenPrevisualizacion', 'ordenesCompraAprobadas'), 'empresa');
     }
 
     public function guardar(): void
@@ -192,6 +193,11 @@ class CotizacionesControlador extends Controlador
         if (!preg_match('/^[a-f0-9]{64}$/', $tokenPublico)) {
             $tokenPublico = bin2hex(random_bytes(32));
         }
+        $ordenCompraOrigenId = $this->resolverOrdenCompraOrigenId(
+            $empresaId,
+            (int) ($_POST['orden_compra_origen_id'] ?? 0),
+            null
+        );
 
         $cotizacionId = $modelo->crearConItems([
             'empresa_id' => $empresaId,
@@ -209,6 +215,7 @@ class CotizacionesControlador extends Controlador
             'observaciones' => trim($_POST['observaciones'] ?? ''),
             'terminos_condiciones' => trim($_POST['terminos_condiciones'] ?? ''),
             'lista_precio_id' => $listaPrecioId,
+            'orden_compra_origen_id' => $ordenCompraOrigenId,
             'token_publico' => $tokenPublico,
             'fecha_emision' => $_POST['fecha_emision'] ?? date('Y-m-d'),
             'fecha_vencimiento' => $_POST['fecha_vencimiento'] ?? date('Y-m-d', strtotime('+15 days')),
@@ -332,7 +339,8 @@ class CotizacionesControlador extends Controlador
             date('Y-m-d'),
             (int) ($cotizacion['lista_precio_id'] ?? 0) ?: null
         );
-        $this->vista('empresa/cotizaciones/editar', compact('cotizacion', 'clientes', 'productos', 'listasPrecios', 'listaPrecioSeleccionada', 'listasPreciosPorCliente', 'linkAprobacionCliente'), 'empresa');
+        $ordenesCompraAprobadas = $this->obtenerOrdenesCompraAprobadasParaCotizacion($empresaId, $id);
+        $this->vista('empresa/cotizaciones/editar', compact('cotizacion', 'clientes', 'productos', 'listasPrecios', 'listaPrecioSeleccionada', 'listasPreciosPorCliente', 'linkAprobacionCliente', 'ordenesCompraAprobadas'), 'empresa');
     }
 
     public function enviar(int $id): void
@@ -537,8 +545,14 @@ class CotizacionesControlador extends Controlador
             ? ($subtotal + $impuesto) * (min($descuentoValor, 100) / 100)
             : min($descuentoValor, $subtotal + $impuesto);
         $total = max(0, ($subtotal + $impuesto) - $descuento);
+        $empresaId = empresa_actual_id();
+        $ordenCompraOrigenId = $this->resolverOrdenCompraOrigenId(
+            $empresaId,
+            (int) ($_POST['orden_compra_origen_id'] ?? 0),
+            $id
+        );
 
-        (new Cotizacion())->actualizarConItems(empresa_actual_id(), $id, [
+        (new Cotizacion())->actualizarConItems($empresaId, $id, [
             'cliente_id' => (int) $_POST['cliente_id'],
             'estado' => $_POST['estado'] ?? 'borrador',
             'subtotal' => $subtotal,
@@ -550,6 +564,7 @@ class CotizacionesControlador extends Controlador
             'observaciones' => trim($_POST['observaciones'] ?? ''),
             'terminos_condiciones' => trim($_POST['terminos_condiciones'] ?? ''),
             'lista_precio_id' => $listaPrecioId,
+            'orden_compra_origen_id' => $ordenCompraOrigenId,
             'fecha_emision' => $_POST['fecha_emision'] ?? date('Y-m-d'),
             'fecha_vencimiento' => $_POST['fecha_vencimiento'] ?? date('Y-m-d'),
         ], $items);
@@ -607,6 +622,45 @@ class CotizacionesControlador extends Controlador
             $this->redirigir($rutaMantener);
         }
         $this->redirigir($rutaSalir);
+    }
+
+    private function obtenerOrdenesCompraAprobadasParaCotizacion(int $empresaId, ?int $cotizacionIdActual): array
+    {
+        $inventario = new Inventario();
+        $ordenes = $inventario->listarOrdenesCompraAprobadasDisponiblesParaCotizacion($empresaId, $cotizacionIdActual);
+
+        return array_map(static function (array $orden) use ($inventario, $empresaId): array {
+            $ordenId = (int) ($orden['id'] ?? 0);
+            $detalles = $ordenId > 0 ? ($inventario->obtenerOrdenCompra($empresaId, $ordenId)['detalles'] ?? []) : [];
+            return [
+                'id' => $ordenId,
+                'numero' => (string) ($orden['numero'] ?? ''),
+                'proveedor_nombre' => (string) ($orden['proveedor_nombre'] ?? ''),
+                'fecha_emision' => (string) ($orden['fecha_emision'] ?? ''),
+                'referencia' => (string) ($orden['referencia'] ?? ''),
+                'observacion' => (string) ($orden['observacion'] ?? ''),
+                'detalles' => $detalles,
+            ];
+        }, $ordenes);
+    }
+
+    private function resolverOrdenCompraOrigenId(int $empresaId, int $ordenCompraId, ?int $cotizacionIdActual): ?int
+    {
+        if ($ordenCompraId <= 0) {
+            return null;
+        }
+
+        $disponibles = $this->obtenerOrdenesCompraAprobadasParaCotizacion($empresaId, $cotizacionIdActual);
+        foreach ($disponibles as $ordenDisponible) {
+            if ((int) ($ordenDisponible['id'] ?? 0) === $ordenCompraId) {
+                return $ordenCompraId;
+            }
+        }
+
+        flash('danger', 'La orden de compra seleccionada no está disponible para esta cotización.');
+        $ruta = $cotizacionIdActual === null ? '/app/cotizaciones/crear' : '/app/cotizaciones/editar/' . $cotizacionIdActual;
+        $this->redirigir($ruta);
+        return null;
     }
 
     private function filtrarCotizaciones(array $cotizaciones, string $buscar, string $estado, ?int $clienteId, string $fechaDesde, string $fechaHasta): array

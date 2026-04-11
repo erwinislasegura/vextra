@@ -382,6 +382,34 @@ class Inventario extends Modelo
         return $stmt->fetchAll();
     }
 
+    public function listarOrdenesCompraAprobadasDisponiblesParaCotizacion(int $empresaId, ?int $cotizacionIdActual = null): array
+    {
+        $sql = 'SELECT o.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre
+            FROM ordenes_compra o
+            LEFT JOIN proveedores_inventario p ON p.id = o.proveedor_id
+            LEFT JOIN usuarios u ON u.id = o.usuario_id
+            WHERE o.empresa_id = :empresa_id
+              AND o.estado = "aprobada"
+              AND NOT EXISTS (
+                SELECT 1
+                FROM cotizaciones c
+                WHERE c.empresa_id = o.empresa_id
+                  AND c.orden_compra_origen_id = o.id
+                  AND c.fecha_eliminacion IS NULL
+                  AND c.estado NOT IN ("rechazada", "anulada")';
+
+        $params = ['empresa_id' => $empresaId];
+        if ($cotizacionIdActual !== null && $cotizacionIdActual > 0) {
+            $sql .= ' AND c.id <> :cotizacion_id_actual';
+            $params['cotizacion_id_actual'] = $cotizacionIdActual;
+        }
+        $sql .= ') ORDER BY o.id DESC LIMIT 300';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
     public function siguienteNumeroOrdenCompra(int $empresaId): string
     {
         $stmt = $this->db->prepare('SELECT COUNT(*) AS total FROM ordenes_compra WHERE empresa_id = :empresa_id');
@@ -537,5 +565,20 @@ class Inventario extends Modelo
 
         $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id')
             ->execute(['estado' => $estado, 'empresa_id' => $empresaId, 'id' => $ordenCompraId]);
+    }
+
+    public function actualizarEstadoOrdenCompraManual(int $empresaId, int $ordenCompraId, string $estado): void
+    {
+        $estadoNormalizado = mb_strtolower(trim($estado));
+        if (!in_array($estadoNormalizado, ['aprobada', 'rechazada'], true)) {
+            throw new \InvalidArgumentException('Estado de orden de compra no permitido.');
+        }
+
+        $stmt = $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id');
+        $stmt->execute([
+            'estado' => $estadoNormalizado,
+            'empresa_id' => $empresaId,
+            'id' => $ordenCompraId,
+        ]);
     }
 }

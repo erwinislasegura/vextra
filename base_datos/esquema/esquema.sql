@@ -257,6 +257,7 @@ CREATE TABLE cotizaciones (
   observaciones TEXT NULL,
   terminos_condiciones TEXT NULL,
   lista_precio_id BIGINT UNSIGNED NULL,
+  orden_compra_origen_id BIGINT UNSIGNED NULL,
   token_publico CHAR(64) NULL,
   firma_cliente MEDIUMTEXT NULL,
   nombre_firmante_cliente VARCHAR(180) NULL,
@@ -269,6 +270,7 @@ CREATE TABLE cotizaciones (
   UNIQUE KEY uq_cot_num_empresa (empresa_id, numero),
   UNIQUE KEY uq_cot_token_publico (token_publico),
   INDEX idx_cotizaciones_empresa (empresa_id),
+  INDEX idx_cotizaciones_orden_origen (empresa_id, orden_compra_origen_id),
   CONSTRAINT fk_cotizaciones_empresa FOREIGN KEY (empresa_id) REFERENCES empresas(id),
   CONSTRAINT fk_cotizaciones_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id),
   CONSTRAINT fk_cotizaciones_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
