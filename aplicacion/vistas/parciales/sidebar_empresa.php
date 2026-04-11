@@ -14,9 +14,28 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
     || $coincideRuta('/app/categorias', $rutaActual)
     || $coincideRuta('/app/listas-precios', $rutaActual);
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
+$logoEmpresa = logo_empresa_actual();
+$logoEmpresaSrc = null;
+
+if ($logoEmpresa) {
+    if (preg_match('/^https?:\/\//i', $logoEmpresa) === 1) {
+        $logoEmpresaSrc = $logoEmpresa;
+    } elseif (str_starts_with($logoEmpresa, '/uploads/')) {
+        $logoEmpresaSrc = $logoEmpresa;
+    } else {
+        $logoEmpresaSrc = url($logoEmpresa);
+    }
+}
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
-  <h6 class="sidebar-app__titulo text-uppercase mb-3">Mi Empresa</h6>
+  <div class="mb-3">
+    <?php if ($logoEmpresaSrc): ?>
+      <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <h6 class="sidebar-app__titulo text-uppercase mb-0" style="display:none;">Mi Empresa</h6>
+    <?php else: ?>
+      <h6 class="sidebar-app__titulo text-uppercase mb-0">Mi Empresa</h6>
+    <?php endif; ?>
+  </div>
   <nav class="nav flex-column small gap-2">
     <a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/panel', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/panel')) ?>">
       <i class="bi bi-house-door mt-1"></i>
