@@ -17,6 +17,7 @@ use Aplicacion\Controladores\Admin\AdministradoresEmpresasControlador;
 $mwEmpresa = [AutenticadoMiddleware::class, EmpresaMiddleware::class];
 
 $enrutador->agregar('GET', '/app/panel', [GestionComercialControlador::class, 'inicio'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/panel/iniciar-pago-trial', [GestionComercialControlador::class, 'iniciarPagoPlanTrial'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/volver-admin', [AdministradoresEmpresasControlador::class, 'volverPanelAdmin'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/clientes', [ClientesControlador::class, 'index'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/clientes/exportar/excel', [ClientesControlador::class, 'exportarExcel'], $mwEmpresa);

@@ -6,8 +6,12 @@ use Aplicacion\Nucleo\Controlador;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Cliente;
 use Aplicacion\Modelos\Cotizacion;
+use Aplicacion\Modelos\Plan;
+use Aplicacion\Modelos\Suscripcion;
 use Aplicacion\Modelos\Usuario;
+use Aplicacion\Servicios\FlowApiService;
 use Aplicacion\Servicios\ExcelExpoFormato;
+use Aplicacion\Servicios\FlowPagosService;
 use Aplicacion\Servicios\ServicioPreciosLista;
 
 class GestionComercialControlador extends Controlador
@@ -23,8 +27,67 @@ class GestionComercialControlador extends Controlador
     {
         $empresaId = empresa_actual_id();
         $resumen = $this->modelo->estadisticasInicio($empresaId);
+        $planEmpresa = (new Plan())->obtenerPlanActivoEmpresa($empresaId);
+        $resumen = array_merge($resumen, [
+            'plan_actual' => $planEmpresa['plan_id'] ?? null,
+            'estado_suscripcion' => $planEmpresa['estado'] ?? null,
+            'fecha_vencimiento' => $planEmpresa['fecha_vencimiento'] ?? null,
+            'dias_restantes_plan' => isset($planEmpresa['fecha_vencimiento']) ? (int) floor((strtotime((string) $planEmpresa['fecha_vencimiento']) - strtotime(date('Y-m-d'))) / 86400) : null,
+        ]);
         $cotizaciones = (new Cotizacion())->listar($empresaId);
         $this->vista('empresa/panel', compact('resumen', 'cotizaciones'), 'empresa');
+    }
+
+    public function iniciarPagoPlanTrial(): void
+    {
+        validar_csrf();
+
+        $empresaId = empresa_actual_id();
+        $suscripcion = (new Suscripcion())->obtenerUltimaPorEmpresa($empresaId);
+        if (!$suscripcion) {
+            flash('danger', 'No encontramos una suscripción activa para iniciar el pago del plan.');
+            $this->redirigir('/app/panel');
+        }
+
+        $planId = (int) ($suscripcion['plan_id'] ?? 0);
+        if ($planId <= 0) {
+            flash('danger', 'No fue posible identificar el plan asociado a tu cuenta.');
+            $this->redirigir('/app/panel');
+        }
+
+        $observaciones = mb_strtolower((string) ($suscripcion['observaciones'] ?? ''));
+        $tipoCobro = str_contains($observaciones, '(anual)') ? 'anual' : 'mensual';
+
+        try {
+            $urlRetornoPago = FlowApiService::construirUrlPublica('/retorno/pago?origen=trial_pago');
+            $urlWebhookPago = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
+            $respuestaPago = (new FlowPagosService())->crearPagoUnico(
+                (int) $empresaId,
+                $planId,
+                $tipoCobro,
+                'Activación del plan al finalizar periodo de prueba',
+                $urlRetornoPago,
+                $urlWebhookPago,
+                (int) ($suscripcion['id'] ?? 0)
+            );
+
+            if (isset($respuestaPago['url'], $respuestaPago['token'])) {
+                $_SESSION['flow_pago_trial_pendiente'] = [
+                    'empresa_id' => (int) $empresaId,
+                    'suscripcion_id' => (int) ($suscripcion['id'] ?? 0),
+                    'flow_token' => (string) $respuestaPago['token'],
+                    'plan_id' => $planId,
+                    'tipo_cobro' => $tipoCobro,
+                    'fecha' => date('c'),
+                ];
+                $this->redirigir($respuestaPago['url'] . '?token=' . $respuestaPago['token']);
+            }
+
+            throw new \RuntimeException('Flow no devolvió URL/token para iniciar el pago.');
+        } catch (\Throwable $e) {
+            flash('danger', 'No fue posible iniciar el pago ahora. Intenta nuevamente en unos minutos. Detalle: ' . $e->getMessage());
+            $this->redirigir('/app/panel');
+        }
     }
 
     public function contactos(): void

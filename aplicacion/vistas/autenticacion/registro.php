@@ -4,6 +4,10 @@
       <div class="card shadow-sm border-0">
         <div class="card-body p-4 p-lg-5">
           <h1 class="h3 mb-2">Crear cuenta empresarial</h1>
+          <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
+            <span class="badge text-bg-success fs-6 px-3 py-2">🎁 15 días de prueba gratis!!</span>
+            <span class="small fw-semibold text-success">Crea tu cuenta hoy y paga recién al finalizar la prueba.</span>
+          </div>
           <p class="text-secondary mb-4">
             Registra tu empresa en menos de 2 minutos. Te enviaremos acceso inmediato para iniciar la gestión comercial.
           </p>
@@ -94,7 +98,7 @@
 
             <div class="col-12">
               <div class="alert alert-info mb-2">
-                Al completar tu registro se iniciará el <strong>pago del plan en Flow Ecommerce</strong>. La cuenta se activará automáticamente cuando el pago sea aprobado.
+                Al completar tu registro tendrás <strong>15 días de prueba gratis!!</strong> No se te cobrará hoy ni se pedirá pago inmediato. El pago ecommerce se solicitará al finalizar la prueba.
               </div>
               <div class="d-flex flex-wrap align-items-center gap-2 small text-secondary">
                 <span class="fw-semibold text-dark">Medios de pago Flow:</span>
@@ -118,13 +122,13 @@
                   required
                 >
                 <label class="form-check-label" for="acepta_terminos">
-                  Acepto los términos y condiciones del servicio y autorizo el proceso de cobro del plan mediante Flow.
+                  Acepto los términos y condiciones del servicio y entiendo que el cobro ecommerce se solicitará al finalizar los 15 días gratis.
                 </label>
               </div>
             </div>
 
             <div class="col-12 d-grid d-md-flex justify-content-md-end pt-2">
-              <button type="submit" class="btn btn-primary px-4">Crear empresa y continuar a pago</button>
+              <button type="submit" class="btn btn-primary px-4">Crear empresa y activar 15 días gratis</button>
             </div>
           </form>
         </div>

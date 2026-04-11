@@ -6,6 +6,7 @@ use Aplicacion\Nucleo\Controlador;
 use Aplicacion\Nucleo\BaseDatos;
 use Aplicacion\Modelos\FlowPago;
 use Aplicacion\Modelos\Plan;
+use Aplicacion\Modelos\Suscripcion;
 use Aplicacion\Servicios\ServicioCorreo;
 use Aplicacion\Servicios\FlowClientesService;
 use Aplicacion\Servicios\FlowPagosService;
@@ -40,7 +41,7 @@ class FlowWebhookControlador extends Controlador
         $payloadRetorno = $this->obtenerPayloadRetornoFlow();
         $origen = (string) ($payloadRetorno['origen'] ?? $_GET['origen'] ?? $_POST['origen'] ?? '');
 
-        if ($origen === 'registro') {
+        if (in_array($origen, ['registro', 'trial_pago'], true)) {
             $this->vista('publico/retorno_pago_flow', [
                 'token' => (string) ($payloadRetorno['token'] ?? $_GET['token'] ?? $_POST['token'] ?? ''),
                 'suscripcion_id' => (int) ($payloadRetorno['suscripcion_id'] ?? $_GET['suscripcion_id'] ?? $_POST['suscripcion_id'] ?? 0),
@@ -168,12 +169,14 @@ class FlowWebhookControlador extends Controlador
     private function procesarEstadoRetornoRegistro(): array
     {
         $payloadRetorno = $this->obtenerPayloadRetornoFlow();
+        $origen = (string) ($payloadRetorno['origen'] ?? $_GET['origen'] ?? $_POST['origen'] ?? 'registro');
         $token = (string) ($payloadRetorno['token'] ?? $_GET['token'] ?? $_POST['token'] ?? '');
         $suscripcionId = (int) ($payloadRetorno['suscripcion_id'] ?? $_GET['suscripcion_id'] ?? $_POST['suscripcion_id'] ?? 0);
         $flowPago = null;
+        $sessionKeyPendiente = $origen === 'trial_pago' ? 'flow_pago_trial_pendiente' : 'flow_pago_registro_pendiente';
 
         if ($token === '') {
-            $pendiente = $_SESSION['flow_pago_registro_pendiente'] ?? null;
+            $pendiente = $_SESSION[$sessionKeyPendiente] ?? null;
             if (is_array($pendiente)) {
                 $token = (string) ($pendiente['flow_token'] ?? '');
                 if ($suscripcionId <= 0) {
@@ -210,30 +213,38 @@ class FlowWebhookControlador extends Controlador
         }
 
         if ($estadoPago === 'aprobado') {
-            $pendiente = $_SESSION['flow_pago_registro_pendiente'] ?? null;
-            $this->enviarCorreoPagoConfirmadoRegistro($flowPago, is_array($pendiente) ? $pendiente : null);
-            unset($_SESSION['flow_pago_registro_pendiente']);
+            $pendiente = $_SESSION[$sessionKeyPendiente] ?? null;
+            if ($origen === 'trial_pago') {
+                $this->activarSuscripcionTrasPagoTrial($flowPago, is_array($pendiente) ? $pendiente : null);
+            } else {
+                $this->enviarCorreoPagoConfirmadoRegistro($flowPago, is_array($pendiente) ? $pendiente : null);
+            }
+            unset($_SESSION[$sessionKeyPendiente]);
             return [
                 'estado' => 'aprobado',
                 'tipo' => 'success',
-                'titulo' => '¡Pago confirmado!',
-                'mensaje' => 'Tu cuenta quedó activa y ya puedes iniciar sesión en Vextra.',
-                'login_url' => url('/iniciar-sesion'),
+                'titulo' => $origen === 'trial_pago' ? '¡Pago confirmado con éxito!' : '¡Pago confirmado!',
+                'mensaje' => $origen === 'trial_pago'
+                    ? 'Tu plan quedó activo. Gracias por continuar con Vextra.'
+                    : 'Tu cuenta quedó activa y ya puedes iniciar sesión en Vextra.',
+                'login_url' => $origen === 'trial_pago' ? url('/app/panel') : url('/iniciar-sesion'),
             ];
         }
 
         if ($estadoPago === 'rechazado' || $estadoPago === 'anulado') {
-            $pendiente = $_SESSION['flow_pago_registro_pendiente'] ?? null;
-            if (is_array($pendiente)) {
+            $pendiente = $_SESSION[$sessionKeyPendiente] ?? null;
+            if ($origen !== 'trial_pago' && is_array($pendiente)) {
                 $this->eliminarRegistroNoAprobado($pendiente);
             }
-            unset($_SESSION['flow_pago_registro_pendiente']);
+            unset($_SESSION[$sessionKeyPendiente]);
             return [
                 'estado' => $estadoPago,
                 'tipo' => 'danger',
                 'titulo' => 'Pago no aprobado',
-                'mensaje' => 'Flow informó que el pago no fue aprobado. Tu registro fue liberado para que puedas volver a intentarlo con los mismos datos.',
-                'login_url' => url('/iniciar-sesion'),
+                'mensaje' => $origen === 'trial_pago'
+                    ? 'Flow informó que el pago no fue aprobado. Puedes intentarlo nuevamente desde tu panel.'
+                    : 'Flow informó que el pago no fue aprobado. Tu registro fue liberado para que puedas volver a intentarlo con los mismos datos.',
+                'login_url' => $origen === 'trial_pago' ? url('/app/panel') : url('/iniciar-sesion'),
             ];
         }
 
@@ -241,9 +252,35 @@ class FlowWebhookControlador extends Controlador
             'estado' => 'pendiente',
             'tipo' => 'warning',
             'titulo' => 'Estamos confirmando tu pago',
-            'mensaje' => 'Tu pago se registró correctamente. En cuanto Flow confirme, te avisaremos por correo.',
-            'login_url' => url('/iniciar-sesion'),
+            'mensaje' => $origen === 'trial_pago'
+                ? 'Tu pago se está procesando. En unos segundos podrás volver al panel y revisar el estado.'
+                : 'Tu pago se registró correctamente. En cuanto Flow confirme, te avisaremos por correo.',
+            'login_url' => $origen === 'trial_pago' ? url('/app/panel') : url('/iniciar-sesion'),
         ];
+    }
+
+    private function activarSuscripcionTrasPagoTrial(?array $flowPago, ?array $pendiente): void
+    {
+        $suscripcionId = (int) ($pendiente['suscripcion_id'] ?? ($flowPago['suscripcion_id'] ?? 0));
+        if ($suscripcionId <= 0) {
+            return;
+        }
+
+        $suscripcion = (new Suscripcion())->buscar($suscripcionId);
+        if (!$suscripcion) {
+            return;
+        }
+
+        $tipoCobro = (string) ($pendiente['tipo_cobro'] ?? ($flowPago['tipo_pago'] ?? 'mensual'));
+        $diasRenovacion = $tipoCobro === 'anual' ? 365 : 30;
+        (new Suscripcion())->actualizar($suscripcionId, [
+            'empresa_id' => (int) ($suscripcion['empresa_id'] ?? 0),
+            'plan_id' => (int) ($suscripcion['plan_id'] ?? 0),
+            'estado' => 'activa',
+            'fecha_inicio' => date('Y-m-d'),
+            'fecha_vencimiento' => date('Y-m-d', strtotime('+' . $diasRenovacion . ' days')),
+            'observaciones' => 'Plan activado por pago confirmado desde panel de empresa.',
+        ]);
     }
 
     private function enviarCorreoPagoConfirmadoRegistro(?array $flowPago, ?array $pendiente): void
