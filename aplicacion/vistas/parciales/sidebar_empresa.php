@@ -42,13 +42,13 @@ if ($logoEmpresa) {
             $rutaLegacy = $raizProyecto . '/aplicacion/public' . $logoNormalizado;
 
             if (is_file($rutaRaiz)) {
-                $logoEmpresaSrc = $logoNormalizado;
+                $logoEmpresaSrc = url($logoNormalizado);
             } elseif (is_file($rutaPublica)) {
                 $logoEmpresaSrc = url('/public' . $logoNormalizado);
             } elseif (is_file($rutaLegacy)) {
                 $logoEmpresaSrc = url('/aplicacion/public' . $logoNormalizado);
             } else {
-                $logoEmpresaSrc = $logoNormalizado;
+                $logoEmpresaSrc = url($logoNormalizado);
             }
         } else {
             $logoEmpresaSrc = url($logoNormalizado);

@@ -198,16 +198,47 @@ class ConfiguracionControlador extends Controlador
             $this->redirigir('/app/configuracion');
         }
 
-        $directorio = dirname(__DIR__, 4) . '/uploads/logos';
-        if (!is_dir($directorio)) {
-            mkdir($directorio, 0775, true);
+        $nombreFinal = 'logo_empresa_' . empresa_actual_id() . '_' . date('YmdHis') . '.' . $extension;
+        $raizProyecto = dirname(__DIR__, 4);
+        $directorios = [
+            $raizProyecto . '/uploads/logos',
+            $raizProyecto . '/public/uploads/logos',
+        ];
+
+        foreach ($directorios as $directorio) {
+            if (!is_dir($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
         }
 
-        $nombreFinal = 'logo_empresa_' . empresa_actual_id() . '_' . date('YmdHis') . '.' . $extension;
-        $rutaFinal = $directorio . '/' . $nombreFinal;
+        $directorioPrincipal = null;
+        foreach ($directorios as $directorio) {
+            if (is_dir($directorio) && is_writable($directorio)) {
+                $directorioPrincipal = $directorio;
+                break;
+            }
+        }
+
+        if ($directorioPrincipal === null) {
+            flash('danger', 'No hay permisos para guardar el logo en el servidor.');
+            $this->redirigir('/app/configuracion');
+        }
+
+        $rutaFinal = $directorioPrincipal . '/' . $nombreFinal;
         if (!move_uploaded_file($tmp, $rutaFinal)) {
             flash('danger', 'No se pudo guardar el archivo del logo.');
             $this->redirigir('/app/configuracion');
+        }
+
+        foreach ($directorios as $directorioReplica) {
+            $rutaReplica = $directorioReplica . '/' . $nombreFinal;
+            if ($rutaReplica === $rutaFinal) {
+                continue;
+            }
+
+            if (is_dir($directorioReplica) && is_writable($directorioReplica)) {
+                @copy($rutaFinal, $rutaReplica);
+            }
         }
 
         return '/uploads/logos/' . $nombreFinal;
