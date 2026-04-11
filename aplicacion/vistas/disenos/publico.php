@@ -1,14 +1,27 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X41LED0NXW"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    window.gtag = gtag;
 
-    gtag('config', 'G-X41LED0NXW');
+    const cargarAnalytics = () => {
+      if (window.__analyticsLoaded) return;
+      window.__analyticsLoaded = true;
+      const script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-X41LED0NXW';
+      script.async = true;
+      document.head.appendChild(script);
+      gtag('js', new Date());
+      gtag('config', 'G-X41LED0NXW');
+    };
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(cargarAnalytics, { timeout: 2000 });
+    } else {
+      window.addEventListener('load', cargarAnalytics, { once: true });
+    }
   </script>
   <?php
     $metaTitle = (string) ($meta_title ?? 'Vextra | Sistema de cotizaciones para empresas');
@@ -46,6 +59,10 @@
   <link rel="shortcut icon" href="<?= e($faviconUrl) ?>">
   <link rel="apple-touch-icon" sizes="180x180" href="<?= e($faviconUrl) ?>">
   <link rel="manifest" href="<?= e($baseUrl . url('/site.webmanifest')) ?>">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://www.google.com">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="<?= e(url('/assets/css/app.css')) ?>" rel="stylesheet">
@@ -71,7 +88,7 @@
 <?php
 $recaptchaActivo = recaptcha_habilitado_publico();
 $recaptchaSiteKey = recaptcha_site_key_publico();
-$usarRecaptcha = $recaptchaActivo && $recaptchaSiteKey !== '';
+$usarRecaptcha = $recaptchaActivo && $recaptchaSiteKey !== '' && !empty($requiereRecaptcha);
 ?>
 <?php if ($usarRecaptcha): ?>
   <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>"></script>
