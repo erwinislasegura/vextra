@@ -188,6 +188,27 @@ function nombre_empresa_actual(): ?string
     return $nombre;
 }
 
+function logo_empresa_actual(): ?string
+{
+    static $logo = null;
+    static $resuelto = false;
+
+    if ($resuelto) {
+        return $logo;
+    }
+
+    $resuelto = true;
+    $empresaId = empresa_actual_id();
+    if (!$empresaId) {
+        return null;
+    }
+
+    $empresa = (new Empresa())->buscar($empresaId);
+    $logo = trim((string) ($empresa['logo'] ?? ''));
+
+    return $logo !== '' ? $logo : null;
+}
+
 function obtener_configuracion_recaptcha(): array
 {
     static $cache = null;
