@@ -887,7 +887,8 @@ class GestionComercialControlador extends Controlador
         }
         $titulo = $mapeo[$modulo]['titulo'];
         $cotizacionAprobacion = null;
-        if ($modulo === 'aprobaciones') {
+        $esVistaAprobaciones = $modulo === 'aprobaciones' || mb_strtolower((string) $titulo) === 'aprobaciones';
+        if ($esVistaAprobaciones || isset($registro['cotizacion_id'])) {
             $cotizacionId = (int) ($registro['cotizacion_id'] ?? 0);
             if ($cotizacionId > 0) {
                 $cotizacionAprobacion = (new Cotizacion())->obtenerFirmaCliente(empresa_actual_id(), $cotizacionId);

@@ -1,3 +1,32 @@
+<?php
+$camposMonedaExactos = [
+    'monto',
+    'total',
+    'subtotal',
+    'impuesto',
+    'descuento',
+    'descuento_monto',
+    'precio',
+    'precio_unitario',
+];
+
+$esCampoMoneda = static function (string $campo) use ($camposMonedaExactos): bool {
+    if (in_array($campo, $camposMonedaExactos, true)) {
+        return true;
+    }
+
+    return str_contains($campo, '_monto') || str_contains($campo, '_total') || str_contains($campo, 'precio_');
+};
+
+$formatearPesosClp = static function ($valor): string {
+    if ($valor === null || $valor === '') {
+        return '—';
+    }
+
+    return '$' . number_format((float) $valor, 0, ',', '.');
+};
+?>
+
 <h1 class="h4 mb-3">Ver registro - <?= e($titulo) ?></h1>
 
 <div class="card">
@@ -6,11 +35,17 @@
             <?php foreach ($registro as $k => $v): ?>
                 <?php if (in_array($k, ['id', 'empresa_id'], true)) { continue; } ?>
                 <dt class="col-sm-3"><?= e(ucwords(str_replace('_', ' ', $k))) ?></dt>
-                <dd class="col-sm-9"><?= e((string) $v) ?></dd>
+                <dd class="col-sm-9">
+                    <?php if ($esCampoMoneda((string) $k) && is_numeric($v)): ?>
+                        <?= e($formatearPesosClp($v)) ?>
+                    <?php else: ?>
+                        <?= e((string) $v) ?>
+                    <?php endif; ?>
+                </dd>
             <?php endforeach; ?>
         </dl>
 
-        <?php if (($modulo ?? '') === 'aprobaciones'): ?>
+        <?php if (isset($registro['cotizacion_id']) || !empty($cotizacionAprobacion)): ?>
             <hr>
             <div class="small text-uppercase fw-semibold text-muted mb-2">Firma cliente de la cotización</div>
             <?php if (!empty($cotizacionAprobacion['firma_cliente'])): ?>
