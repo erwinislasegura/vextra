@@ -3,6 +3,21 @@ $capturasBase = '/img/Captura Sistema';
 $capturaUrl = static function (string $archivo) use ($capturasBase): string {
     return url($capturasBase . '/' . rawurlencode($archivo));
 };
+$capturasOptimizadas = [
+    'Dashboard - Inicio.png' => url('/imagen_opt.php?k=dashboard_inicio&w=1000&h=630&q=76'),
+    'Punto de venta.png' => url('/imagen_opt.php?k=punto_venta&w=1000&h=630&q=76'),
+    'Movimientos de inventario.png' => url('/imagen_opt.php?k=movimientos_inventario&w=1000&h=630&q=76'),
+    'Clientes.png' => url('/imagen_opt.php?k=clientes&w=1000&h=630&q=76'),
+    'Cotizaciones 1.png' => url('/imagen_opt.php?k=cotizaciones_1&w=1280&h=800&q=76'),
+    'Cotizaciones 2.png' => url('/imagen_opt.php?k=cotizaciones_2&w=1280&h=800&q=76'),
+    'Cotizaciones 3.png' => url('/imagen_opt.php?k=cotizaciones_3&w=1280&h=800&q=76'),
+    'Cotizaciones 4.png' => url('/imagen_opt.php?k=cotizaciones_4&w=1280&h=800&q=76'),
+    'Cotizaciones 5.png' => url('/imagen_opt.php?k=cotizaciones_5&w=1280&h=800&q=76'),
+];
+$capturaLandingUrl = static function (string $archivo) use ($capturasOptimizadas, $capturaUrl): string {
+    return $capturasOptimizadas[$archivo] ?? $capturaUrl($archivo);
+};
+
 $cotizacionesCapturas = [
     [
         'archivo' => 'Cotizaciones 1.png',
@@ -143,10 +158,10 @@ $faqSchema = [
             </div>
             <div class="col-12 col-lg-6">
                 <div class="row g-3">
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" decoding="async" fetchpriority="high"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy" decoding="async"></a><figcaption>POS conectado</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy" decoding="async"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy" decoding="async"></a><figcaption>Gestión de clientes</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" decoding="async" fetchpriority="high" width="1000" height="630"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaLandingUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Gestión de clientes</figcaption></figure></div>
                 </div>
             </div>
         </div>
@@ -162,7 +177,7 @@ $faqSchema = [
         <div class="landing-slider" data-slider data-slider-interval="3200">
             <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                 <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
-                    <img src="<?= e($capturaUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy" decoding="async">
+                    <img src="<?= e($capturaLandingUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy" decoding="async" width="1280" height="800">
                     <div class="landing-carousel-caption">
                         <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
                         <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
