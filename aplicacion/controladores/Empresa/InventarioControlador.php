@@ -741,6 +741,7 @@ class InventarioControlador extends Controlador
         echo '<th>Fecha emisión</th>';
         echo '<th>Fecha entrega estimada</th>';
         echo '<th>Estado</th>';
+        echo '<th>N° recepción</th>';
         echo '<th>Usuario</th>';
         echo '<th>Referencia</th>';
         echo '<th>Observación</th>';
@@ -753,6 +754,7 @@ class InventarioControlador extends Controlador
             echo '<td>' . $this->escapeExcelHtml($orden['fecha_emision'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['fecha_entrega_estimada'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['estado'] ?? '') . '</td>';
+            echo '<td style="' . ExcelExpoFormato::CELDA_TEXTO_EXCEL . '">' . $this->escapeExcelHtml($orden['numero_recepcion'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['usuario_nombre'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['referencia'] ?? '') . '</td>';
             echo '<td>' . $this->escapeExcelHtml($orden['observacion'] ?? '') . '</td>';

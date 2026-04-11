@@ -154,15 +154,7 @@ class Inventario extends Modelo
             $this->db->commit();
 
             if (!empty($cabecera['orden_compra_id'])) {
-                $stmtEstadoOrden = $this->db->prepare('SELECT estado FROM ordenes_compra WHERE empresa_id=:empresa_id AND id=:id LIMIT 1');
-                $stmtEstadoOrden->execute([
-                    'empresa_id' => (int) $cabecera['empresa_id'],
-                    'id' => (int) $cabecera['orden_compra_id'],
-                ]);
-                $estadoOrden = (string) ($stmtEstadoOrden->fetchColumn() ?: '');
-                if (!in_array($estadoOrden, ['aprobada', 'rechazada', 'anulada'], true)) {
-                    $this->actualizarEstadoOrdenCompra((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id']);
-                }
+                $this->actualizarEstadoOrdenCompraManual((int) $cabecera['empresa_id'], (int) $cabecera['orden_compra_id'], 'recepcionada');
             }
             return $recepcionId;
         } catch (Throwable $e) {
@@ -334,7 +326,11 @@ class Inventario extends Modelo
                 ->execute(['empresa_id' => $empresaId, 'id' => $recepcionId]);
 
             if (!empty($recepcion['orden_compra_id'])) {
-                $this->actualizarEstadoOrdenCompraManual($empresaId, (int) $recepcion['orden_compra_id'], 'aprobada');
+                $ordenCompraId = (int) $recepcion['orden_compra_id'];
+                $stmtConteo = $this->db->prepare('SELECT COUNT(*) FROM recepciones_inventario WHERE empresa_id=:empresa_id AND orden_compra_id=:orden_compra_id');
+                $stmtConteo->execute(['empresa_id' => $empresaId, 'orden_compra_id' => $ordenCompraId]);
+                $totalRecepciones = (int) $stmtConteo->fetchColumn();
+                $this->actualizarEstadoOrdenCompraManual($empresaId, $ordenCompraId, $totalRecepciones > 0 ? 'recepcionada' : 'aprobada');
             }
 
             $this->db->commit();
@@ -416,7 +412,8 @@ class Inventario extends Modelo
 
     public function listarOrdenesCompra(int $empresaId, array $filtros = []): array
     {
-        $sql = 'SELECT o.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre
+        $sql = 'SELECT o.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre,
+            (SELECT r.numero_documento FROM recepciones_inventario r WHERE r.empresa_id = o.empresa_id AND r.orden_compra_id = o.id ORDER BY r.id DESC LIMIT 1) AS numero_recepcion
             FROM ordenes_compra o
             LEFT JOIN proveedores_inventario p ON p.id = o.proveedor_id
             LEFT JOIN usuarios u ON u.id = o.usuario_id
@@ -629,7 +626,7 @@ class Inventario extends Modelo
     public function actualizarEstadoOrdenCompraManual(int $empresaId, int $ordenCompraId, string $estado): void
     {
         $estadoNormalizado = mb_strtolower(trim($estado));
-        if (!in_array($estadoNormalizado, ['aprobada', 'rechazada'], true)) {
+        if (!in_array($estadoNormalizado, ['aprobada', 'rechazada', 'recepcionada'], true)) {
             throw new \InvalidArgumentException('Estado de orden de compra no permitido.');
         }
 
