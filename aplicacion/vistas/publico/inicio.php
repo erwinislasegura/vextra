@@ -4,15 +4,15 @@ $capturaUrl = static function (string $archivo) use ($capturasBase): string {
     return url($capturasBase . '/' . rawurlencode($archivo));
 };
 $capturasOptimizadas = [
-    'Dashboard - Inicio.png' => url('/imagen_opt.php?k=dashboard_inicio&w=1000&h=630&q=76'),
-    'Punto de venta.png' => url('/imagen_opt.php?k=punto_venta&w=1000&h=630&q=76'),
-    'Movimientos de inventario.png' => url('/imagen_opt.php?k=movimientos_inventario&w=1000&h=630&q=76'),
-    'Clientes.png' => url('/imagen_opt.php?k=clientes&w=1000&h=630&q=76'),
-    'Cotizaciones 1.png' => url('/imagen_opt.php?k=cotizaciones_1&w=1280&h=800&q=76'),
-    'Cotizaciones 2.png' => url('/imagen_opt.php?k=cotizaciones_2&w=1280&h=800&q=76'),
-    'Cotizaciones 3.png' => url('/imagen_opt.php?k=cotizaciones_3&w=1280&h=800&q=76'),
-    'Cotizaciones 4.png' => url('/imagen_opt.php?k=cotizaciones_4&w=1280&h=800&q=76'),
-    'Cotizaciones 5.png' => url('/imagen_opt.php?k=cotizaciones_5&w=1280&h=800&q=76'),
+    'Dashboard - Inicio.png' => url('/imagen-opt/dashboard_inicio?w=1000&h=630&q=76'),
+    'Punto de venta.png' => url('/imagen-opt/punto_venta?w=1000&h=630&q=76'),
+    'Movimientos de inventario.png' => url('/imagen-opt/movimientos_inventario?w=1000&h=630&q=76'),
+    'Clientes.png' => url('/imagen-opt/clientes?w=1000&h=630&q=76'),
+    'Cotizaciones 1.png' => url('/imagen-opt/cotizaciones_1?w=1280&h=800&q=76'),
+    'Cotizaciones 2.png' => url('/imagen-opt/cotizaciones_2?w=1280&h=800&q=76'),
+    'Cotizaciones 3.png' => url('/imagen-opt/cotizaciones_3?w=1280&h=800&q=76'),
+    'Cotizaciones 4.png' => url('/imagen-opt/cotizaciones_4?w=1280&h=800&q=76'),
+    'Cotizaciones 5.png' => url('/imagen-opt/cotizaciones_5?w=1280&h=800&q=76'),
 ];
 $capturaLandingUrl = static function (string $archivo) use ($capturasOptimizadas, $capturaUrl): string {
     return $capturasOptimizadas[$archivo] ?? $capturaUrl($archivo);
