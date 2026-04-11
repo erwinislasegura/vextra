@@ -7,6 +7,7 @@ $total = 0.0;
 foreach (($orden['detalles'] ?? []) as $item) {
     $total += (float) ($item['subtotal'] ?? 0);
 }
+$logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' . urlencode((string) $empresa['logo'])) : null;
 ?>
 <style>
   * { box-sizing: border-box; }
@@ -15,6 +16,7 @@ foreach (($orden['detalles'] ?? []) as $item) {
   .hoja { max-width:980px; margin:0 auto; background:#fff; padding:28px; box-shadow:0 8px 30px rgba(0,0,0,.08); border-radius:8px; }
   .encabezado { display:flex; justify-content:space-between; gap:20px; border-bottom:2px solid #1f4e79; padding-bottom:12px; margin-bottom:14px; }
   .empresa,.doc { width:50%; }
+  .empresa-logo { max-width:180px; max-height:70px; object-fit:contain; display:block; margin-bottom:8px; }
   .empresa h1 { margin:0 0 6px; color:#1f4e79; font-size:25px; }
   .empresa p,.doc p { margin:2px 0; font-size:13px; }
   .doc { text-align:right; }
@@ -53,6 +55,9 @@ foreach (($orden['detalles'] ?? []) as $item) {
 <div class="hoja">
   <div class="encabezado">
     <div class="empresa">
+      <?php if ($logoEmpresaSrc): ?>
+        <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo empresa" class="empresa-logo">
+      <?php endif; ?>
       <h1><?= e($empresaNombre) ?></h1>
       <p><strong>RUT:</strong> <?= e($empresa['identificador_fiscal'] ?? '') ?></p>
       <p><?= e(trim((string) (($empresa['direccion'] ?? '') . ', ' . ($empresa['ciudad'] ?? '')))) ?></p>
