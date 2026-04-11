@@ -135,6 +135,7 @@ $enrutador->agregar('GET', '/app/inventario/recepciones', [InventarioControlador
 $enrutador->agregar('POST', '/app/inventario/recepciones', [InventarioControlador::class, 'guardarRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/editar/{id}', [InventarioControlador::class, 'editarRecepcion'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/inventario/recepciones/editar/{id}', [InventarioControlador::class, 'actualizarRecepcion'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/inventario/recepciones/eliminar/{id}', [InventarioControlador::class, 'eliminarRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/ver/{id}', [InventarioControlador::class, 'verRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/imprimir/{id}', [InventarioControlador::class, 'imprimirRecepcion'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/recepciones/pdf/{id}', [InventarioControlador::class, 'descargarRecepcionPdf'], $mwEmpresa);

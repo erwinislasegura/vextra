@@ -299,6 +299,28 @@ class InventarioControlador extends Controlador
         }
     }
 
+    public function eliminarRecepcion(int $id): void
+    {
+        $this->validarPermiso('inventario_crear_recepciones');
+        validar_csrf();
+        $empresaId = (int) empresa_actual_id();
+        $inventario = new Inventario();
+        $recepcion = $inventario->obtenerRecepcion($empresaId, $id);
+        if (!$recepcion) {
+            flash('danger', 'Recepción no encontrada.');
+            $this->redirigir('/app/inventario/recepciones');
+        }
+
+        try {
+            $inventario->eliminarRecepcionCompleta($empresaId, $id);
+            flash('success', 'Recepción eliminada correctamente junto a su detalle.');
+        } catch (Throwable $e) {
+            flash('danger', 'No fue posible eliminar la recepción: ' . $e->getMessage());
+        }
+
+        $this->redirigir('/app/inventario/recepciones');
+    }
+
     public function imprimirRecepcion(int $id): void
     {
         $this->validarPermiso('inventario_ver_recepciones');
