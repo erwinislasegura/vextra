@@ -15,46 +15,7 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
     || $coincideRuta('/app/listas-precios', $rutaActual);
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
 $logoEmpresa = logo_empresa_actual();
-$logoEmpresaSrc = null;
-
-if ($logoEmpresa) {
-    if (preg_match('/^https?:\/\//i', $logoEmpresa) === 1) {
-        $logoEmpresaSrc = $logoEmpresa;
-    } else {
-        $logoNormalizado = str_replace('\\', '/', trim($logoEmpresa));
-
-        if (preg_match('#/public/uploads/#', $logoNormalizado) === 1) {
-            $logoNormalizado = '/uploads/' . ltrim((string) substr($logoNormalizado, (int) strpos($logoNormalizado, '/public/uploads/') + 16), '/');
-        }
-
-        if (str_starts_with($logoNormalizado, '/public/uploads/')) {
-            $logoNormalizado = '/uploads/' . ltrim(substr($logoNormalizado, 16), '/');
-        } elseif (str_starts_with($logoNormalizado, 'public/uploads/')) {
-            $logoNormalizado = '/uploads/' . ltrim(substr($logoNormalizado, 15), '/');
-        } elseif (str_starts_with($logoNormalizado, 'uploads/')) {
-            $logoNormalizado = '/' . $logoNormalizado;
-        }
-
-        if (str_starts_with($logoNormalizado, '/uploads/')) {
-            $raizProyecto = dirname(__DIR__, 4);
-            $rutaRaiz = $raizProyecto . $logoNormalizado;
-            $rutaPublica = $raizProyecto . '/public' . $logoNormalizado;
-            $rutaLegacy = $raizProyecto . '/aplicacion/public' . $logoNormalizado;
-
-            if (is_file($rutaRaiz)) {
-                $logoEmpresaSrc = url($logoNormalizado);
-            } elseif (is_file($rutaPublica)) {
-                $logoEmpresaSrc = url('/public' . $logoNormalizado);
-            } elseif (is_file($rutaLegacy)) {
-                $logoEmpresaSrc = url('/aplicacion/public' . $logoNormalizado);
-            } else {
-                $logoEmpresaSrc = url($logoNormalizado);
-            }
-        } else {
-            $logoEmpresaSrc = url($logoNormalizado);
-        }
-    }
-}
+$logoEmpresaSrc = $logoEmpresa ? (url('/app/logo-empresa') . '?v=' . urlencode($logoEmpresa)) : null;
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
   <div class="mb-3">

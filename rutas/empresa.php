@@ -60,6 +60,7 @@ $enrutador->agregar('GET', '/app/cotizaciones/producto-movimientos/{id}', [Cotiz
 
 $enrutador->agregar('GET', '/app/configuracion', [ConfiguracionControlador::class, 'index'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/configuracion', [ConfiguracionControlador::class, 'guardar'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/logo-empresa', [ConfiguracionControlador::class, 'logoEmpresa'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/usuarios', [UsuariosControlador::class, 'index'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/usuarios', [UsuariosControlador::class, 'guardar'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/usuarios/ver/{id}', [UsuariosControlador::class, 'ver'], $mwEmpresa);

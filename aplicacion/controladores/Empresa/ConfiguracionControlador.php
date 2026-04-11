@@ -88,6 +88,57 @@ class ConfiguracionControlador extends Controlador
         $this->redirigir('/app/configuracion');
     }
 
+    public function logoEmpresa(): void
+    {
+        $empresaId = empresa_actual_id();
+        $empresa = (new Empresa())->obtenerConfiguracion((int) $empresaId);
+        $logo = trim((string) ($empresa['logo'] ?? ''));
+
+        if ($logo === '') {
+            http_response_code(404);
+            exit('Logo no configurado.');
+        }
+
+        if (preg_match('/^https?:\/\//i', $logo) === 1) {
+            header('Location: ' . $logo, true, 302);
+            return;
+        }
+
+        $logo = str_replace('\\', '/', $logo);
+        if (!str_starts_with($logo, '/')) {
+            $logo = '/' . ltrim($logo, '/');
+        }
+
+        if (str_starts_with($logo, '/public/uploads/')) {
+            $logo = '/uploads/' . ltrim(substr($logo, 16), '/');
+        } elseif (str_starts_with($logo, '/aplicacion/public/uploads/')) {
+            $logo = '/uploads/' . ltrim(substr($logo, 26), '/');
+        }
+
+        $raiz = dirname(__DIR__, 4);
+        $candidatas = [
+            $raiz . $logo,
+            $raiz . '/public' . $logo,
+            $raiz . '/aplicacion/public' . $logo,
+        ];
+
+        foreach ($candidatas as $ruta) {
+            if (!is_file($ruta)) {
+                continue;
+            }
+
+            $mime = (string) (mime_content_type($ruta) ?: 'application/octet-stream');
+            header('Content-Type: ' . $mime);
+            header('Content-Length: ' . (string) filesize($ruta));
+            header('Cache-Control: private, max-age=300');
+            readfile($ruta);
+            return;
+        }
+
+        http_response_code(404);
+        exit('Logo no encontrado.');
+    }
+
 
 
     public function correosStock(): void
