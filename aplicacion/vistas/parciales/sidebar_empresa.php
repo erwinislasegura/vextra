@@ -36,7 +36,15 @@ if ($logoEmpresa) {
         }
 
         if (str_starts_with($logoNormalizado, '/uploads/')) {
-            $logoEmpresaSrc = $logoNormalizado;
+            $raizProyecto = dirname(__DIR__, 4);
+            $rutaPublica = $raizProyecto . '/public' . $logoNormalizado;
+            $rutaLegacy = $raizProyecto . '/aplicacion/public' . $logoNormalizado;
+
+            if (!is_file($rutaPublica) && is_file($rutaLegacy)) {
+                $logoEmpresaSrc = url('/aplicacion/public' . $logoNormalizado);
+            } else {
+                $logoEmpresaSrc = $logoNormalizado;
+            }
         } else {
             $logoEmpresaSrc = url($logoNormalizado);
         }
