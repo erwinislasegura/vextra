@@ -14,9 +14,56 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
     || $coincideRuta('/app/categorias', $rutaActual)
     || $coincideRuta('/app/listas-precios', $rutaActual);
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
+$logoEmpresa = logo_empresa_actual();
+$logoEmpresaSrc = null;
+
+if ($logoEmpresa) {
+    if (preg_match('/^https?:\/\//i', $logoEmpresa) === 1) {
+        $logoEmpresaSrc = $logoEmpresa;
+    } else {
+        $logoNormalizado = str_replace('\\', '/', trim($logoEmpresa));
+
+        if (preg_match('#/public/uploads/#', $logoNormalizado) === 1) {
+            $logoNormalizado = '/uploads/' . ltrim((string) substr($logoNormalizado, (int) strpos($logoNormalizado, '/public/uploads/') + 16), '/');
+        }
+
+        if (str_starts_with($logoNormalizado, '/public/uploads/')) {
+            $logoNormalizado = '/uploads/' . ltrim(substr($logoNormalizado, 16), '/');
+        } elseif (str_starts_with($logoNormalizado, 'public/uploads/')) {
+            $logoNormalizado = '/uploads/' . ltrim(substr($logoNormalizado, 15), '/');
+        } elseif (str_starts_with($logoNormalizado, 'uploads/')) {
+            $logoNormalizado = '/' . $logoNormalizado;
+        }
+
+        if (str_starts_with($logoNormalizado, '/uploads/')) {
+            $raizProyecto = dirname(__DIR__, 4);
+            $rutaRaiz = $raizProyecto . $logoNormalizado;
+            $rutaPublica = $raizProyecto . '/public' . $logoNormalizado;
+            $rutaLegacy = $raizProyecto . '/aplicacion/public' . $logoNormalizado;
+
+            if (is_file($rutaRaiz)) {
+                $logoEmpresaSrc = url($logoNormalizado);
+            } elseif (is_file($rutaPublica)) {
+                $logoEmpresaSrc = url('/public' . $logoNormalizado);
+            } elseif (is_file($rutaLegacy)) {
+                $logoEmpresaSrc = url('/aplicacion/public' . $logoNormalizado);
+            } else {
+                $logoEmpresaSrc = url($logoNormalizado);
+            }
+        } else {
+            $logoEmpresaSrc = url($logoNormalizado);
+        }
+    }
+}
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
-  <h6 class="sidebar-app__titulo text-uppercase mb-3">Mi Empresa</h6>
+  <div class="mb-3">
+    <?php if ($logoEmpresaSrc): ?>
+      <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa">
+    <?php else: ?>
+      <h6 class="sidebar-app__titulo text-uppercase mb-0">Mi Empresa</h6>
+    <?php endif; ?>
+  </div>
   <nav class="nav flex-column small gap-2">
     <a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/panel', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/panel')) ?>">
       <i class="bi bi-house-door mt-1"></i>
