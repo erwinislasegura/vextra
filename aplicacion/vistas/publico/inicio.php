@@ -205,7 +205,7 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-primary" aria-hidden="true"><i class="bi bi-lightning-charge-fill"></i></span>
+                                <span class="fs-4 text-primary" aria-hidden="true">⚡</span>
                                 <div>
                                     <h3 class="h5 mb-1">Ahorro de tiempo en cotizar y vender</h3>
                                     <p class="mb-0 small">Evita rehacer propuestas y reduce búsquedas manuales. Tu equipo responde con precios y stock actualizados en minutos.</p>
@@ -216,7 +216,7 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-success" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                                <span class="fs-4 text-success" aria-hidden="true">📈</span>
                                 <div>
                                     <h3 class="h5 mb-1">Aumento de ventas con seguimiento ordenado</h3>
                                     <p class="mb-0 small">Con pipeline y trazabilidad por cliente, se priorizan oportunidades con mejor cierre y se evita perder negocios por falta de seguimiento.</p>
@@ -227,7 +227,7 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-warning" aria-hidden="true"><i class="bi bi-box-seam-fill"></i></span>
+                                <span class="fs-4 text-warning" aria-hidden="true">📦</span>
                                 <div>
                                     <h3 class="h5 mb-1">Control de stock para proteger márgenes</h3>
                                     <p class="mb-0 small">Cada venta impacta inventario en tiempo real, reduciendo sobreventa, compras urgentes y pérdidas por descoordinación operativa.</p>
@@ -309,7 +309,7 @@ $faqSchema = [
         </div>
         <div class="landing-timeline" aria-label="Línea de tiempo de casos de uso empresariales">
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-truck"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">🚚</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 1</span>
                     <h3 class="h6 mb-1">Distribuidoras</h3>
@@ -317,7 +317,7 @@ $faqSchema = [
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-shop-window"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">🏬</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 2</span>
                     <h3 class="h6 mb-1">Retail especializado</h3>
@@ -325,7 +325,7 @@ $faqSchema = [
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-tools"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">🛠️</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 3</span>
                     <h3 class="h6 mb-1">Servicios técnicos</h3>
@@ -333,7 +333,7 @@ $faqSchema = [
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-graph-up-arrow"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">📈</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 4</span>
                     <h3 class="h6 mb-1">Pymes en expansión</h3>

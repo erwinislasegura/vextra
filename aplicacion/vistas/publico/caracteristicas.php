@@ -301,7 +301,7 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
         </div>
         <div class="landing-timeline landing-timeline--5" aria-label="Línea de tiempo de uso práctico de Vextra">
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">👥</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 1</span>
                     <h3 class="h6 mb-1">Registras clientes</h3>
@@ -309,7 +309,7 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-box-seam"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">📦</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 2</span>
                     <h3 class="h6 mb-1">Agregas productos</h3>
@@ -317,7 +317,7 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">📄</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 3</span>
                     <h3 class="h6 mb-1">Creas cotizaciones</h3>
@@ -325,7 +325,7 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-activity"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">📊</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 4</span>
                     <h3 class="h6 mb-1">Haces seguimiento</h3>
@@ -333,7 +333,7 @@ $capturaConFallbackInline = static function (array $archivos) use ($capturaConFa
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true"><i class="bi bi-check2-circle"></i></span>
+                <span class="landing-timeline__icon" aria-hidden="true">✅</span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Paso 5</span>
                     <h3 class="h6 mb-1">Cierras ventas</h3>
