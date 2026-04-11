@@ -3,6 +3,9 @@
         <div class="row align-items-center g-4">
             <div class="col-lg-8">
                 <span class="badge bg-info-subtle text-info-emphasis mb-2">Planes del sistema de cotizaciones</span>
+                <div class="mb-2">
+                    <span class="badge text-bg-success">15 días gratis!!</span>
+                </div>
                 <h1 class="display-6 fw-bold mb-3">Elige el plan ideal para vender con orden y escalar tu operación comercial</h1>
                 <p class="lead text-secondary mb-0">Compara precios, beneficios y alcance de cada plan para implementar un software de cotizaciones que se adapte a la etapa actual de tu empresa.</p>
             </div>
@@ -36,6 +39,9 @@
                 <div class="col-md-4">
                     <div class="card h-100 border-2" style="border-color: <?= e($plan['color_visual']) ?> !important;">
                         <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <span class="badge text-bg-success">gratis!!</span>
+                            </div>
                             <h2 class="h5 mb-2"><?= e($plan['nombre']) ?></h2>
                             <p class="small text-secondary mb-3"><?= e($plan['resumen_comercial'] ?: $plan['descripcion_comercial']) ?></p>
                             <div

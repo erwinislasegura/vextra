@@ -122,6 +122,9 @@ $faqSchema = [
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
                 <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Software para empresas Chile: cotización + POS + inventario</span>
+                <div class="mb-2">
+                    <span class="badge text-bg-success">15 días gratis!!</span>
+                </div>
                 <h1 class="display-6 fw-bold mb-3">Sistema de cotizaciones y ventas con inventario para crecer con control real</h1>
                 <p class="lead text-secondary">Vextra es un software de cotización online que conecta tu gestión comercial, sistema punto de venta y sistema de inventario para que tu empresa venda más, responda rápido y opere con orden administrativo.</p>
                 <div class="d-flex flex-wrap gap-2">
