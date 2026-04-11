@@ -19,6 +19,7 @@ foreach (($cotizacion['items'] ?? []) as $it) {
     $descuentoListaMonto += (float) ($it['descuento_monto'] ?? 0);
 }
 $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
+$logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' . urlencode((string) $empresa['logo'])) : null;
 ?>
 <style>
   * { box-sizing: border-box; }
@@ -55,6 +56,7 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
     margin-bottom: 14px;
   }
   .empresa, .doc { width: 50%; }
+  .empresa-logo { max-width: 180px; max-height: 70px; object-fit: contain; display: block; margin-bottom: 8px; }
   .empresa h1 {
     margin: 0 0 6px;
     color: #1f4e79;
@@ -209,6 +211,9 @@ $mostrarTarjetaLista = $listaNombre !== '' && $descuentoListaMonto > 0;
 <div class="hoja">
   <div class="encabezado">
     <div class="empresa">
+      <?php if ($logoEmpresaSrc): ?>
+        <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo empresa" class="empresa-logo">
+      <?php endif; ?>
       <h1><?= e($empresaNombre) ?></h1>
       <p><strong>RUT:</strong> <?= e($empresa['identificador_fiscal'] ?? '') ?></p>
       <p><?= e(trim((string) (($empresa['direccion'] ?? '') . ', ' . ($empresa['ciudad'] ?? '')))) ?></p>
