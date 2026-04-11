@@ -413,7 +413,12 @@ class Inventario extends Modelo
     public function listarOrdenesCompra(int $empresaId, array $filtros = []): array
     {
         $sql = 'SELECT o.*, p.nombre AS proveedor_nombre, u.nombre AS usuario_nombre,
-            (SELECT r.numero_documento FROM recepciones_inventario r WHERE r.empresa_id = o.empresa_id AND r.orden_compra_id = o.id ORDER BY r.id DESC LIMIT 1) AS numero_recepcion
+            (SELECT r.numero_documento FROM recepciones_inventario r WHERE r.empresa_id = o.empresa_id AND r.orden_compra_id = o.id ORDER BY r.id DESC LIMIT 1) AS numero_recepcion,
+            CASE
+              WHEN EXISTS (SELECT 1 FROM recepciones_inventario r2 WHERE r2.empresa_id = o.empresa_id AND r2.orden_compra_id = o.id)
+              THEN "recepcionada"
+              ELSE o.estado
+            END AS estado_mostrado
             FROM ordenes_compra o
             LEFT JOIN proveedores_inventario p ON p.id = o.proveedor_id
             LEFT JOIN usuarios u ON u.id = o.usuario_id
@@ -428,8 +433,14 @@ class Inventario extends Modelo
 
         $estado = (string) ($filtros['estado'] ?? '');
         if ($estado !== '') {
-            $sql .= ' AND o.estado = :estado';
-            $params['estado'] = $estado;
+            if ($estado === 'recepcionada') {
+                $sql .= ' AND EXISTS (SELECT 1 FROM recepciones_inventario r3 WHERE r3.empresa_id = o.empresa_id AND r3.orden_compra_id = o.id)';
+            } elseif ($estado === 'aprobada') {
+                $sql .= ' AND o.estado = "aprobada" AND NOT EXISTS (SELECT 1 FROM recepciones_inventario r3 WHERE r3.empresa_id = o.empresa_id AND r3.orden_compra_id = o.id)';
+            } else {
+                $sql .= ' AND o.estado = :estado';
+                $params['estado'] = $estado;
+            }
         }
 
         $sql .= ' ORDER BY o.id DESC LIMIT 300';
