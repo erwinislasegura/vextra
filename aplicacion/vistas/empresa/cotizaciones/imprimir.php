@@ -65,18 +65,20 @@ $logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' .
   .empresa p { margin: 1px 0; font-size: 12px; }
   .doc { text-align: right; }
   .doc-inline {
-    padding: 6px 8px;
-    border: 1px solid #d8dee8;
-    background: #f8fafc;
+    margin-top: 14px;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
     display: inline-flex;
     gap: 10px;
     flex-direction: column;
     align-items: flex-end;
     font-size: 11px;
-    color: #1f4e79;
+    color: #111827;
     min-width: 230px;
   }
-  .doc-inline strong { color: #1f4e79; }
+  .doc-inline .doc-titulo { color: #1f4e79; }
+  .doc-inline .doc-meta { color: #111827; }
   .lista-precio {
     margin: 0 0 10px;
     background: #f8fafc;
@@ -231,10 +233,10 @@ $logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' .
     </div>
     <div class="doc">
       <div class="doc-inline">
-        <span><strong>COTIZACIÓN</strong></span>
-        <span><strong>N°:</strong> <?= e($cotizacion['numero'] ?? '') ?></span>
-        <span><strong>Fecha:</strong> <?= e($fechaEmision) ?></span>
-        <span><strong>Validez:</strong> <?= e($fechaVencimiento) ?></span>
+        <span class="doc-titulo"><strong>COTIZACIÓN</strong></span>
+        <span class="doc-meta"><strong>N°:</strong> <?= e($cotizacion['numero'] ?? '') ?></span>
+        <span class="doc-meta"><strong>Fecha:</strong> <?= e($fechaEmision) ?></span>
+        <span class="doc-meta"><strong>Validez:</strong> <?= e($fechaVencimiento) ?></span>
       </div>
     </div>
   </div>
