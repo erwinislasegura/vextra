@@ -59,8 +59,25 @@ class InventarioControlador extends Controlador
         $proveedores = $inventario->listarProveedores($empresaId);
         $productos = $inventario->listarProductos($empresaId);
         $ordenCompraSeleccionada = $ordenCompraId > 0 ? $inventario->obtenerOrdenCompra($empresaId, $ordenCompraId) : null;
+        if ($ordenCompraSeleccionada && (string) ($ordenCompraSeleccionada['estado'] ?? '') !== 'aprobada') {
+            $ordenCompraSeleccionada = null;
+        }
+        $ordenesCompraAprobadas = $inventario->listarOrdenesCompra($empresaId, ['estado' => 'aprobada']);
+        $ordenesCompraAprobadas = array_map(static function (array $orden) use ($inventario, $empresaId): array {
+            $ordenCompleta = $inventario->obtenerOrdenCompra($empresaId, (int) ($orden['id'] ?? 0)) ?? [];
+            return [
+                'id' => (int) ($orden['id'] ?? 0),
+                'numero' => (string) ($orden['numero'] ?? ''),
+                'proveedor_id' => (int) ($orden['proveedor_id'] ?? 0),
+                'proveedor_nombre' => (string) ($orden['proveedor_nombre'] ?? ''),
+                'fecha_emision' => (string) ($orden['fecha_emision'] ?? ''),
+                'referencia' => (string) ($orden['referencia'] ?? ''),
+                'observacion' => (string) ($orden['observacion'] ?? ''),
+                'detalles' => $ordenCompleta['detalles'] ?? [],
+            ];
+        }, $ordenesCompraAprobadas);
 
-        $this->vista('empresa/inventario/recepciones', compact('recepciones', 'proveedores', 'productos', 'ordenCompraSeleccionada', 'filtrosRecepciones'), 'empresa');
+        $this->vista('empresa/inventario/recepciones', compact('recepciones', 'proveedores', 'productos', 'ordenCompraSeleccionada', 'ordenesCompraAprobadas', 'filtrosRecepciones'), 'empresa');
     }
 
     public function exportarRecepcionesExcel(): void
@@ -144,6 +161,18 @@ class InventarioControlador extends Controlador
 
         $tiposPermitidos = ['guia_despacho', 'factura'];
         $tipoDocumento = in_array($_POST['tipo_documento'] ?? '', $tiposPermitidos, true) ? $_POST['tipo_documento'] : 'guia_despacho';
+        $ordenCompraId = (int) ($_POST['orden_compra_id'] ?? 0);
+        $ordenCompra = null;
+        if ($ordenCompraId > 0) {
+            $ordenCompra = $inventario->obtenerOrdenCompra($empresaId, $ordenCompraId);
+            if (!$ordenCompra || (string) ($ordenCompra['estado'] ?? '') !== 'aprobada') {
+                flash('danger', 'Solo puedes usar órdenes de compra aprobadas para cargar datos de recepción.');
+                $this->redirigir('/app/inventario/recepciones');
+            }
+            if ($proveedorId <= 0) {
+                $proveedorId = (int) ($ordenCompra['proveedor_id'] ?? 0);
+            }
+        }
 
         $productoIds = $_POST['producto_id'] ?? [];
         $cantidades = $_POST['cantidad'] ?? [];
@@ -165,6 +194,25 @@ class InventarioControlador extends Controlador
         }
 
         if ($detalles === []) {
+            if ($ordenCompra && !empty($ordenCompra['detalles'])) {
+                foreach ((array) $ordenCompra['detalles'] as $detalleOrden) {
+                    $pid = (int) ($detalleOrden['producto_id'] ?? 0);
+                    $cantidad = (float) ($detalleOrden['cantidad'] ?? 0);
+                    $costo = (float) ($detalleOrden['costo_unitario'] ?? 0);
+                    if ($pid <= 0 || $cantidad <= 0) {
+                        continue;
+                    }
+                    $detalles[] = [
+                        'producto_id' => $pid,
+                        'cantidad' => $cantidad,
+                        'costo_unitario' => $costo,
+                        'subtotal' => $costo > 0 ? ($cantidad * $costo) : 0,
+                    ];
+                }
+            }
+        }
+
+        if ($detalles === []) {
             flash('danger', 'Agrega al menos un producto con cantidad válida para registrar la recepción.');
             $this->redirigir('/app/inventario/recepciones');
         }
@@ -173,7 +221,7 @@ class InventarioControlador extends Controlador
             $recepcionId = $inventario->crearRecepcion([
                 'empresa_id' => $empresaId,
                 'proveedor_id' => $proveedorId > 0 ? $proveedorId : null,
-                'orden_compra_id' => (int) ($_POST['orden_compra_id'] ?? 0) ?: null,
+                'orden_compra_id' => $ordenCompraId > 0 ? $ordenCompraId : null,
                 'tipo_documento' => $tipoDocumento,
                 'numero_documento' => trim((string) ($_POST['numero_documento'] ?? '')),
                 'fecha_documento' => trim((string) ($_POST['fecha_documento'] ?? date('Y-m-d'))),
