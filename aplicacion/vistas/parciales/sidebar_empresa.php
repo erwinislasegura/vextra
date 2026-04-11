@@ -37,10 +37,15 @@ if ($logoEmpresa) {
 
         if (str_starts_with($logoNormalizado, '/uploads/')) {
             $raizProyecto = dirname(__DIR__, 4);
+            $rutaRaiz = $raizProyecto . $logoNormalizado;
             $rutaPublica = $raizProyecto . '/public' . $logoNormalizado;
             $rutaLegacy = $raizProyecto . '/aplicacion/public' . $logoNormalizado;
 
-            if (!is_file($rutaPublica) && is_file($rutaLegacy)) {
+            if (is_file($rutaRaiz)) {
+                $logoEmpresaSrc = $logoNormalizado;
+            } elseif (is_file($rutaPublica)) {
+                $logoEmpresaSrc = url('/public' . $logoNormalizado);
+            } elseif (is_file($rutaLegacy)) {
                 $logoEmpresaSrc = url('/aplicacion/public' . $logoNormalizado);
             } else {
                 $logoEmpresaSrc = $logoNormalizado;
@@ -54,8 +59,7 @@ if ($logoEmpresa) {
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
   <div class="mb-3">
     <?php if ($logoEmpresaSrc): ?>
-      <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-      <h6 class="sidebar-app__titulo text-uppercase mb-0" style="display:none;">Mi Empresa</h6>
+      <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa">
     <?php else: ?>
       <h6 class="sidebar-app__titulo text-uppercase mb-0">Mi Empresa</h6>
     <?php endif; ?>
