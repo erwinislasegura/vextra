@@ -77,12 +77,18 @@
 
                 <div class="col-md-4">
                     <label class="form-label">Nueva contraseña</label>
-                    <input name="nueva_password" type="password" class="form-control" minlength="8" autocomplete="new-password">
+                    <div class="input-group">
+                        <input id="nueva_password" name="nueva_password" type="password" class="form-control" minlength="8" autocomplete="new-password">
+                        <button type="button" class="btn btn-outline-secondary" data-toggle-password="#nueva_password">Mostrar</button>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label">Confirmar nueva contraseña</label>
-                    <input name="confirmar_password" type="password" class="form-control" minlength="8" autocomplete="new-password">
+                    <div class="input-group">
+                        <input id="confirmar_password" name="confirmar_password" type="password" class="form-control" minlength="8" autocomplete="new-password">
+                        <button type="button" class="btn btn-outline-secondary" data-toggle-password="#confirmar_password">Mostrar</button>
+                    </div>
                 </div>
             <?php endif; ?>
 
@@ -93,3 +99,24 @@
         </form>
     </div>
 </div>
+
+<script>
+(() => {
+    const botones = document.querySelectorAll('[data-toggle-password]');
+    botones.forEach((boton) => {
+        const selectorInput = boton.getAttribute('data-toggle-password');
+        if (!selectorInput) {
+            return;
+        }
+        const input = document.querySelector(selectorInput);
+        if (!input) {
+            return;
+        }
+        boton.addEventListener('click', () => {
+            const visible = input.type === 'text';
+            input.type = visible ? 'password' : 'text';
+            boton.textContent = visible ? 'Mostrar' : 'Ocultar';
+        });
+    });
+})();
+</script>
