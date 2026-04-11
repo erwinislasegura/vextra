@@ -538,4 +538,19 @@ class Inventario extends Modelo
         $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id')
             ->execute(['estado' => $estado, 'empresa_id' => $empresaId, 'id' => $ordenCompraId]);
     }
+
+    public function actualizarEstadoOrdenCompraManual(int $empresaId, int $ordenCompraId, string $estado): void
+    {
+        $estadoNormalizado = mb_strtolower(trim($estado));
+        if (!in_array($estadoNormalizado, ['aprobada', 'rechazada'], true)) {
+            throw new \InvalidArgumentException('Estado de orden de compra no permitido.');
+        }
+
+        $stmt = $this->db->prepare('UPDATE ordenes_compra SET estado = :estado, fecha_actualizacion = NOW() WHERE empresa_id = :empresa_id AND id = :id');
+        $stmt->execute([
+            'estado' => $estadoNormalizado,
+            'empresa_id' => $empresaId,
+            'id' => $ordenCompraId,
+        ]);
+    }
 }

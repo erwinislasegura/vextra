@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ordenes_compra (
   numero VARCHAR(80) NOT NULL,
   fecha_emision DATE NOT NULL,
   fecha_entrega_estimada DATE NULL,
-  estado ENUM('borrador','emitida','parcial','recibida','anulada') NOT NULL DEFAULT 'emitida',
+  estado ENUM('borrador','emitida','parcial','recibida','aprobada','rechazada','anulada') NOT NULL DEFAULT 'emitida',
   referencia VARCHAR(120) NULL,
   observacion TEXT NULL,
   usuario_id BIGINT UNSIGNED NULL,
