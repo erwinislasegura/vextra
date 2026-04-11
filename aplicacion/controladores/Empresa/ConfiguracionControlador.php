@@ -198,7 +198,7 @@ class ConfiguracionControlador extends Controlador
             $this->redirigir('/app/configuracion');
         }
 
-        $directorio = dirname(__DIR__, 3) . '/public/uploads/logos';
+        $directorio = dirname(__DIR__, 4) . '/uploads/logos';
         if (!is_dir($directorio)) {
             mkdir($directorio, 0775, true);
         }
