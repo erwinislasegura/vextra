@@ -696,7 +696,7 @@ class InventarioControlador extends Controlador
     private function obtenerFiltrosOrdenesCompra(): array
     {
         $estado = trim(mb_strtolower((string) ($_GET['estado'] ?? '')));
-        $permitidos = ['emitida', 'parcial', 'recepcionada', 'cancelada'];
+        $permitidos = ['emitida', 'parcial', 'recibida', 'aprobada', 'rechazada', 'anulada', 'recepcionada', 'cancelada'];
         if (!in_array($estado, $permitidos, true)) {
             $estado = '';
         }
@@ -705,6 +705,34 @@ class InventarioControlador extends Controlador
             'q' => trim((string) ($_GET['q'] ?? '')),
             'estado' => $estado,
         ];
+    }
+
+    public function cambiarEstadoOrdenCompra(int $id): void
+    {
+        $this->validarPermiso('inventario_crear_recepciones');
+        validar_csrf();
+        $empresaId = (int) empresa_actual_id();
+        $estado = trim(mb_strtolower((string) ($_POST['estado'] ?? '')));
+        if (!in_array($estado, ['aprobada', 'rechazada'], true)) {
+            flash('danger', 'Estado de orden no permitido.');
+            $this->redirigir('/app/inventario/ordenes-compra');
+        }
+
+        $inventario = new Inventario();
+        $orden = $inventario->obtenerOrdenCompra($empresaId, $id);
+        if (!$orden) {
+            flash('danger', 'Orden de compra no encontrada.');
+            $this->redirigir('/app/inventario/ordenes-compra');
+        }
+
+        try {
+            $inventario->actualizarEstadoOrdenCompraManual($empresaId, $id, $estado);
+            flash('success', 'Orden de compra ' . ($estado === 'aprobada' ? 'aprobada' : 'rechazada') . ' correctamente.');
+        } catch (Throwable $e) {
+            flash('danger', 'No fue posible actualizar el estado: ' . $e->getMessage());
+        }
+
+        $this->redirigir('/app/inventario/ordenes-compra');
     }
 
     public function guardarOrdenCompra(): void

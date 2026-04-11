@@ -145,6 +145,7 @@ $enrutador->agregar('POST', '/app/inventario/ordenes-compra', [InventarioControl
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/editar/{id}', [InventarioControlador::class, 'editarOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/inventario/ordenes-compra/editar/{id}', [InventarioControlador::class, 'actualizarOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/ver/{id}', [InventarioControlador::class, 'verOrdenCompra'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/inventario/ordenes-compra/estado/{id}', [InventarioControlador::class, 'cambiarEstadoOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/imprimir/{id}', [InventarioControlador::class, 'imprimirOrdenCompra'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/inventario/ordenes-compra/pdf/{id}', [InventarioControlador::class, 'descargarOrdenCompraPdf'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/inventario/ordenes-compra/enviar/{id}', [InventarioControlador::class, 'enviarOrdenCompra'], $mwEmpresa);

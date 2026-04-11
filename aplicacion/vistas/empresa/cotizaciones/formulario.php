@@ -37,6 +37,7 @@ $puedeGuardar = $hayClientes && $hayProductos;
 <form method="POST" class="d-grid gap-3" id="form-cotizacion">
     <?= csrf_campo() ?>
     <input type="hidden" name="token_publico" id="token_publico" value="<?= e($tokenPrevisualizacion ?? '') ?>">
+    <input type="hidden" name="orden_compra_origen_id" id="orden_compra_origen_id" value="">
 
     <div class="card">
         <div class="card-header">Datos cotización</div>
@@ -73,6 +74,21 @@ $puedeGuardar = $hayClientes && $hayProductos;
                     <option>enviada</option>
                     <option>aprobada</option>
                     <option>rechazada</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="small d-block">Cotización automática desde orden aprobada</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="switch_oc_aprobada">
+                    <label class="form-check-label" for="switch_oc_aprobada">Usar datos de una orden de compra aprobada</label>
+                </div>
+                <select class="form-select mt-2 d-none" id="orden_compra_aprobada_id">
+                    <option value="">Seleccionar orden aprobada...</option>
+                    <?php foreach (($ordenesCompraAprobadas ?? []) as $ordenAprobada): ?>
+                        <option value="<?= (int) ($ordenAprobada['id'] ?? 0) ?>">
+                            <?= e((string) ($ordenAprobada['numero'] ?? '')) ?> · <?= e((string) ($ordenAprobada['proveedor_nombre'] ?? 'Sin proveedor')) ?> · <?= e((string) ($ordenAprobada['fecha_emision'] ?? '')) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -448,6 +464,9 @@ function confirmarEnvioCotizacionCrear() {
     }
     const listasPorCliente = <?= json_encode($listasPreciosPorCliente ?? [], JSON_UNESCAPED_UNICODE) ?>;
     const clientes = <?= json_encode($clientes ?? [], JSON_UNESCAPED_UNICODE) ?>;
+    const ordenesCompraAprobadas = <?= json_encode($ordenesCompraAprobadas ?? [], JSON_UNESCAPED_UNICODE) ?>;
+    const switchOcAprobada = document.getElementById('switch_oc_aprobada');
+    const selectOcAprobada = document.getElementById('orden_compra_aprobada_id');
 
     function fmt(valor) {
         return '$' + (Math.round((valor + Number.EPSILON) * 100) / 100).toFixed(2);
@@ -804,6 +823,45 @@ function confirmarEnvioCotizacionCrear() {
         actualizarIndicadorLista();
     }
 
+    async function cargarDatosDesdeOrdenCompraAprobada() {
+        const ordenId = parseInt(selectOcAprobada?.value || '0', 10);
+        if (!ordenId) { return; }
+        const orden = ordenesCompraAprobadas.find((o) => parseInt(o.id || 0, 10) === ordenId);
+        if (!orden) { return; }
+        const detalles = Array.isArray(orden.detalles) ? orden.detalles : [];
+        if (detalles.length === 0) {
+            alert('La orden seleccionada no tiene detalle para cargar.');
+            return;
+        }
+        cuerpo.innerHTML = '';
+        detalles.forEach((detalle) => {
+            agregarFila();
+            const fila = cuerpo.lastElementChild;
+            if (!fila) { return; }
+            const selectProducto = fila.querySelector('.js-producto');
+            const inputCantidad = fila.querySelector('.js-cantidad');
+            const inputPrecio = fila.querySelector('.js-precio');
+            const inputIva = fila.querySelector('.js-iva');
+            const inputDescripcion = fila.querySelector('.js-descripcion');
+            const prodId = String(parseInt(detalle.producto_id || 0, 10));
+            if (selectProducto) { selectProducto.value = prodId; }
+            if (inputCantidad) { inputCantidad.value = String(Number(detalle.cantidad || 0)); }
+            if (inputPrecio) { inputPrecio.value = String(Number(detalle.costo_unitario || 0)); }
+            if (inputIva) { inputIva.value = '19'; }
+            if (inputDescripcion && selectProducto) {
+                const opcion = selectProducto.options[selectProducto.selectedIndex];
+                inputDescripcion.value = String(opcion?.dataset?.descripcion || opcion?.dataset?.nombre || '');
+            }
+        });
+        const referencia = String(orden.referencia || '').trim();
+        const observacion = String(orden.observacion || '').trim();
+        const inputObs = document.querySelector('[name=\"observaciones\"]');
+        if (inputObs) {
+            inputObs.value = [referencia !== '' ? `Orden aprobada ${orden.numero}` : `Orden aprobada ${orden.numero}`, referencia, observacion].filter(Boolean).join(' · ');
+        }
+        await aplicarListaATodasLineas(false);
+    }
+
     btnAgregar.addEventListener('click', () => {
         agregarFila();
         recalcular();
@@ -820,6 +878,24 @@ function confirmarEnvioCotizacionCrear() {
         aplicarListaATodasLineas(true);
     });
     document.getElementById('lista_precio_id')?.addEventListener('change', () => { aplicarListaATodasLineas(true); });
+    switchOcAprobada?.addEventListener('change', () => {
+        if (!selectOcAprobada) { return; }
+        selectOcAprobada.classList.toggle('d-none', !switchOcAprobada.checked);
+        if (!switchOcAprobada.checked) {
+            selectOcAprobada.value = '';
+            const inputOrdenOrigen = document.getElementById('orden_compra_origen_id');
+            if (inputOrdenOrigen) {
+                inputOrdenOrigen.value = '';
+            }
+        }
+    });
+    selectOcAprobada?.addEventListener('change', cargarDatosDesdeOrdenCompraAprobada);
+    selectOcAprobada?.addEventListener('change', () => {
+        const inputOrdenOrigen = document.getElementById('orden_compra_origen_id');
+        if (inputOrdenOrigen) {
+            inputOrdenOrigen.value = String(selectOcAprobada?.value || '');
+        }
+    });
     aplicarListaATodasLineas(true);
 })();
 </script>
