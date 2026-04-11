@@ -48,11 +48,14 @@ $logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' .
     border-radius: 8px;
   }
   .encabezado {
-    display: block;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
     border-bottom: 2px solid #1f4e79;
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
+  .empresa, .doc { width: 50%; }
   .empresa-logo { max-width: 180px; max-height: 70px; object-fit: contain; display: block; margin-bottom: 8px; }
   .empresa h1 {
     margin: 0 0 6px;
@@ -60,16 +63,18 @@ $logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' .
     font-size: 22px;
   }
   .empresa p { margin: 1px 0; font-size: 12px; }
+  .doc { text-align: right; }
   .doc-inline {
-    margin-top: 8px;
     padding: 6px 8px;
     border: 1px solid #d8dee8;
     background: #f8fafc;
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
+    display: inline-flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-end;
     font-size: 11px;
     color: #1f4e79;
+    min-width: 230px;
   }
   .doc-inline strong { color: #1f4e79; }
   .lista-precio {
@@ -195,6 +200,9 @@ $logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' .
     .encabezado,
     .grid-2,
     .firmas { grid-template-columns: 1fr; display: grid; }
+    .empresa, .doc { width: 100%; }
+    .doc { text-align: left; }
+    .doc-inline { align-items: flex-start; min-width: 0; display: flex; }
     .totales { width: 100%; }
   }
 </style>
@@ -220,6 +228,8 @@ $logoEmpresaSrc = !empty($empresa['logo']) ? (url('/app/logo-empresa') . '?v=' .
       <p><strong>Teléfono:</strong> <?= e($empresa['telefono'] ?? '') ?></p>
       <p><strong>Correo:</strong> <?= e($empresa['correo'] ?? '') ?></p>
       <p><strong>Web:</strong> <?= e($empresa['sitio_web'] ?? '') ?></p>
+    </div>
+    <div class="doc">
       <div class="doc-inline">
         <span><strong>COTIZACIÓN</strong></span>
         <span><strong>N°:</strong> <?= e($cotizacion['numero'] ?? '') ?></span>
