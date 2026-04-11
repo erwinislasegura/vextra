@@ -20,10 +20,26 @@ $logoEmpresaSrc = null;
 if ($logoEmpresa) {
     if (preg_match('/^https?:\/\//i', $logoEmpresa) === 1) {
         $logoEmpresaSrc = $logoEmpresa;
-    } elseif (str_starts_with($logoEmpresa, '/uploads/')) {
-        $logoEmpresaSrc = $logoEmpresa;
     } else {
-        $logoEmpresaSrc = url($logoEmpresa);
+        $logoNormalizado = str_replace('\\', '/', trim($logoEmpresa));
+
+        if (preg_match('#/public/uploads/#', $logoNormalizado) === 1) {
+            $logoNormalizado = '/uploads/' . ltrim((string) substr($logoNormalizado, (int) strpos($logoNormalizado, '/public/uploads/') + 16), '/');
+        }
+
+        if (str_starts_with($logoNormalizado, '/public/uploads/')) {
+            $logoNormalizado = '/uploads/' . ltrim(substr($logoNormalizado, 16), '/');
+        } elseif (str_starts_with($logoNormalizado, 'public/uploads/')) {
+            $logoNormalizado = '/uploads/' . ltrim(substr($logoNormalizado, 15), '/');
+        } elseif (str_starts_with($logoNormalizado, 'uploads/')) {
+            $logoNormalizado = '/' . $logoNormalizado;
+        }
+
+        if (str_starts_with($logoNormalizado, '/uploads/')) {
+            $logoEmpresaSrc = $logoNormalizado;
+        } else {
+            $logoEmpresaSrc = url($logoNormalizado);
+        }
     }
 }
 ?>
