@@ -139,6 +139,8 @@ class GestionComercial extends Modelo
     public function listarAprobacionesCotizaciones(int $empresaId, string $buscar = '', string $estadoAprobacion = '', int $limite = 60): array
     {
         $sql = 'SELECT ac.*, c.numero AS cotizacion_numero, c.estado AS cotizacion_estado,
+                c.firma_cliente AS cotizacion_firma_cliente,
+                c.nombre_firmante_cliente AS cotizacion_nombre_firmante,
                 COALESCE(NULLIF(cl.razon_social, ""), NULLIF(cl.nombre_comercial, ""), cl.nombre) AS cliente_nombre
             FROM aprobaciones_cotizacion ac
             LEFT JOIN cotizaciones c ON c.id = ac.cotizacion_id AND c.empresa_id = ac.empresa_id AND c.fecha_eliminacion IS NULL
