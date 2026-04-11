@@ -43,12 +43,23 @@
       </div>
       <?php if (($permiteGestionListasPrecios ?? false)): ?>
       <div class="col-md-4">
-        <label class="form-label">Listas de precios</label>
-        <select name="lista_precio_ids[]" class="form-select" multiple size="4">
-          <?php foreach (($listasPrecios ?? []) as $lp): ?>
-            <option value="<?= (int) $lp['id'] ?>"><?= e($lp['nombre']) ?></option>
-          <?php endforeach; ?>
-        </select>
+        <label class="form-label d-block">Listas de precios</label>
+        <div class="dropdown" data-bs-auto-close="outside">
+          <button class="btn btn-outline-secondary btn-sm dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Seleccionar listas
+          </button>
+          <div class="dropdown-menu p-2 w-100" style="max-height:220px; overflow:auto;">
+            <?php foreach (($listasPrecios ?? []) as $lp): ?>
+              <label class="dropdown-item-text d-flex align-items-center gap-2 py-1">
+                <input class="form-check-input mt-0" type="checkbox" name="lista_precio_ids[]" value="<?= (int) $lp['id'] ?>">
+                <span><?= e($lp['nombre']) ?></span>
+              </label>
+            <?php endforeach; ?>
+            <?php if (empty($listasPrecios ?? [])): ?>
+              <span class="dropdown-item-text text-muted small">No hay listas disponibles.</span>
+            <?php endif; ?>
+          </div>
+        </div>
         <div class="form-text">Puedes asociar una o más listas. Si no seleccionas ninguna, se cotiza sin lista.</div>
       </div>
       <?php endif; ?>
