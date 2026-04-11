@@ -1020,8 +1020,20 @@ class GestionComercialControlador extends Controlador
         if (!isset($mapeo[$modulo])) {
             $this->redirigir('/app/panel');
         }
-        $this->modelo->eliminar($mapeo[$modulo]['tabla'], empresa_actual_id(), $id);
-        flash('success', 'Registro eliminado correctamente.');
+
+        try {
+            $this->modelo->eliminar($mapeo[$modulo]['tabla'], empresa_actual_id(), $id);
+            flash('success', 'Registro eliminado correctamente.');
+        } catch (\PDOException $e) {
+            $codigoSql = (string) ($e->errorInfo[0] ?? '');
+
+            if ($codigoSql === '23000') {
+                flash('danger', 'No se puede eliminar este registro porque está siendo utilizado por otros datos del sistema.');
+            } else {
+                flash('danger', 'No fue posible eliminar el registro en este momento.');
+            }
+        }
+
         $this->redirigir('/app/' . $modulo);
     }
 
