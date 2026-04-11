@@ -89,6 +89,7 @@ class AutenticacionControlador extends Controlador
             'planPreseleccionado' => $planPreseleccionado,
             'tipoCobroPreseleccionado' => $tipoCobroPreseleccionado,
             'datosFormulario' => $datosFormulario,
+            'requiereRecaptcha' => true,
             'meta_title' => 'Registro de empresa | Vextra',
             'meta_description' => 'Crea tu cuenta empresarial en Vextra y elige un plan mensual o anual para ordenar tus cotizaciones y ventas.',
             'meta_keywords' => 'registro vextra, crear cuenta empresarial, planes de cotizaciones',
