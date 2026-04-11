@@ -865,6 +865,10 @@ class InventarioControlador extends Controlador
             flash('danger', 'Orden de compra no encontrada.');
             $this->redirigir('/app/inventario/ordenes-compra');
         }
+        if (in_array((string) ($orden['estado'] ?? ''), ['aprobada', 'recepcionada'], true)) {
+            flash('danger', 'No puedes editar una orden en estado aprobada o recepcionada.');
+            $this->redirigir('/app/inventario/ordenes-compra');
+        }
 
         $proveedores = $inventario->listarProveedores($empresaId);
         $productos = $inventario->listarProductos($empresaId);
@@ -880,6 +884,10 @@ class InventarioControlador extends Controlador
         $orden = $inventario->obtenerOrdenCompra($empresaId, $id);
         if (!$orden) {
             flash('danger', 'Orden de compra no encontrada.');
+            $this->redirigir('/app/inventario/ordenes-compra');
+        }
+        if (in_array((string) ($orden['estado'] ?? ''), ['aprobada', 'recepcionada'], true)) {
+            flash('danger', 'No puedes editar una orden en estado aprobada o recepcionada.');
             $this->redirigir('/app/inventario/ordenes-compra');
         }
 
