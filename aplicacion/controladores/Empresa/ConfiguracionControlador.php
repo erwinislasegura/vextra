@@ -88,6 +88,57 @@ class ConfiguracionControlador extends Controlador
         $this->redirigir('/app/configuracion');
     }
 
+    public function logoEmpresa(): void
+    {
+        $empresaId = empresa_actual_id();
+        $empresa = (new Empresa())->obtenerConfiguracion((int) $empresaId);
+        $logo = trim((string) ($empresa['logo'] ?? ''));
+
+        if ($logo === '') {
+            http_response_code(404);
+            exit('Logo no configurado.');
+        }
+
+        if (preg_match('/^https?:\/\//i', $logo) === 1) {
+            header('Location: ' . $logo, true, 302);
+            return;
+        }
+
+        $logo = str_replace('\\', '/', $logo);
+        if (!str_starts_with($logo, '/')) {
+            $logo = '/' . ltrim($logo, '/');
+        }
+
+        if (str_starts_with($logo, '/public/uploads/')) {
+            $logo = '/uploads/' . ltrim(substr($logo, 16), '/');
+        } elseif (str_starts_with($logo, '/aplicacion/public/uploads/')) {
+            $logo = '/uploads/' . ltrim(substr($logo, 26), '/');
+        }
+
+        $raiz = dirname(__DIR__, 4);
+        $candidatas = [
+            $raiz . $logo,
+            $raiz . '/public' . $logo,
+            $raiz . '/aplicacion/public' . $logo,
+        ];
+
+        foreach ($candidatas as $ruta) {
+            if (!is_file($ruta)) {
+                continue;
+            }
+
+            $mime = (string) (mime_content_type($ruta) ?: 'application/octet-stream');
+            header('Content-Type: ' . $mime);
+            header('Content-Length: ' . (string) filesize($ruta));
+            header('Cache-Control: private, max-age=300');
+            readfile($ruta);
+            return;
+        }
+
+        http_response_code(404);
+        exit('Logo no encontrado.');
+    }
+
 
 
     public function correosStock(): void
@@ -198,16 +249,47 @@ class ConfiguracionControlador extends Controlador
             $this->redirigir('/app/configuracion');
         }
 
-        $directorio = dirname(__DIR__, 3) . '/public/uploads/logos';
-        if (!is_dir($directorio)) {
-            mkdir($directorio, 0775, true);
+        $nombreFinal = 'logo_empresa_' . empresa_actual_id() . '_' . date('YmdHis') . '.' . $extension;
+        $raizProyecto = dirname(__DIR__, 4);
+        $directorios = [
+            $raizProyecto . '/uploads/logos',
+            $raizProyecto . '/public/uploads/logos',
+        ];
+
+        foreach ($directorios as $directorio) {
+            if (!is_dir($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
         }
 
-        $nombreFinal = 'logo_empresa_' . empresa_actual_id() . '_' . date('YmdHis') . '.' . $extension;
-        $rutaFinal = $directorio . '/' . $nombreFinal;
+        $directorioPrincipal = null;
+        foreach ($directorios as $directorio) {
+            if (is_dir($directorio) && is_writable($directorio)) {
+                $directorioPrincipal = $directorio;
+                break;
+            }
+        }
+
+        if ($directorioPrincipal === null) {
+            flash('danger', 'No hay permisos para guardar el logo en el servidor.');
+            $this->redirigir('/app/configuracion');
+        }
+
+        $rutaFinal = $directorioPrincipal . '/' . $nombreFinal;
         if (!move_uploaded_file($tmp, $rutaFinal)) {
             flash('danger', 'No se pudo guardar el archivo del logo.');
             $this->redirigir('/app/configuracion');
+        }
+
+        foreach ($directorios as $directorioReplica) {
+            $rutaReplica = $directorioReplica . '/' . $nombreFinal;
+            if ($rutaReplica === $rutaFinal) {
+                continue;
+            }
+
+            if (is_dir($directorioReplica) && is_writable($directorioReplica)) {
+                @copy($rutaFinal, $rutaReplica);
+            }
         }
 
         return '/uploads/logos/' . $nombreFinal;
