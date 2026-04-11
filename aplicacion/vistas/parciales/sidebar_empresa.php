@@ -15,11 +15,23 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
     || $coincideRuta('/app/listas-precios', $rutaActual);
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
 $logoEmpresa = logo_empresa_actual();
+$logoEmpresaSrc = null;
+
+if ($logoEmpresa) {
+    if (preg_match('/^https?:\/\//i', $logoEmpresa) === 1) {
+        $logoEmpresaSrc = $logoEmpresa;
+    } elseif (str_starts_with($logoEmpresa, '/uploads/')) {
+        $logoEmpresaSrc = $logoEmpresa;
+    } else {
+        $logoEmpresaSrc = url($logoEmpresa);
+    }
+}
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
   <div class="mb-3">
-    <?php if ($logoEmpresa): ?>
-      <img src="<?= e(url($logoEmpresa)) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa">
+    <?php if ($logoEmpresaSrc): ?>
+      <img src="<?= e($logoEmpresaSrc) ?>" alt="Logo de mi empresa" class="sidebar-app__logo-empresa" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <h6 class="sidebar-app__titulo text-uppercase mb-0" style="display:none;">Mi Empresa</h6>
     <?php else: ?>
       <h6 class="sidebar-app__titulo text-uppercase mb-0">Mi Empresa</h6>
     <?php endif; ?>
