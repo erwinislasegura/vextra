@@ -19,6 +19,7 @@ SOURCE base_datos/actualizaciones/actualizacion_pos_moneda.sql;
 SOURCE base_datos/actualizaciones/actualizacion_pos_comercial.sql;
 SOURCE base_datos/actualizaciones/actualizacion_cotizaciones_token_publico.sql;
 SOURCE base_datos/actualizaciones/actualizacion_cotizaciones_lista_precio.sql;
+SOURCE base_datos/actualizaciones/actualizacion_cotizaciones_origen_orden_compra.sql;
 SOURCE base_datos/actualizaciones/actualizacion_cotizaciones_detalle_descuentos.sql;
 SOURCE base_datos/actualizaciones/actualizacion_cotizaciones_firma_cliente.sql;
 SOURCE base_datos/actualizaciones/actualizacion_documentos_plantillas_correo.sql;
@@ -27,6 +28,7 @@ SOURCE base_datos/actualizaciones/actualizacion_mejora_panel_comercial.sql;
 SOURCE base_datos/actualizaciones/actualizacion_inventario_alertas_stock.sql;
 SOURCE base_datos/actualizaciones/actualizacion_productos_campos_inventario.sql;
 SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_inventario.sql;
+SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_aprobacion.sql;
 SOURCE base_datos/actualizaciones/actualizacion_recepciones_fecha_actualizacion.sql;
 SOURCE base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql;
 
