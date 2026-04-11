@@ -225,9 +225,16 @@ function validar_recaptcha_post(string $accionEsperada = 'submit'): bool
 
     $cfg = obtener_configuracion_recaptcha();
     $secret = trim((string) ($cfg['recaptcha_secret_key'] ?? ''));
+    $siteKey = trim((string) ($cfg['recaptcha_site_key'] ?? ''));
     $token = trim((string) ($_POST['g-recaptcha-response'] ?? ''));
 
-    if ($secret === '' || $token === '') {
+    // Evita bloquear formularios públicos por configuraciones incompletas.
+    if ($secret === '' || $siteKey === '') {
+        error_log('[recaptcha] Validación omitida por configuración incompleta (site/secret key vacía).');
+        return true;
+    }
+
+    if ($token === '') {
         return false;
     }
 
@@ -251,8 +258,9 @@ function validar_recaptcha_post(string $accionEsperada = 'submit'): bool
 
     $respuesta = curl_exec($ch);
     if ($respuesta === false) {
+        error_log('[recaptcha] Error al consultar siteverify: ' . curl_error($ch));
         curl_close($ch);
-        return false;
+        return true;
     }
 
     curl_close($ch);
@@ -261,12 +269,17 @@ function validar_recaptcha_post(string $accionEsperada = 'submit'): bool
         return false;
     }
 
-    $action = (string) ($json['action'] ?? '');
-    $score = (float) ($json['score'] ?? 0);
+    $action = strtolower(trim((string) ($json['action'] ?? '')));
+    $accionEsperada = strtolower(trim($accionEsperada));
 
     if ($action !== '' && $accionEsperada !== '' && $action !== $accionEsperada) {
         return false;
     }
 
+    if (!array_key_exists('score', $json)) {
+        return true;
+    }
+
+    $score = (float) $json['score'];
     return $score >= 0.5;
 }

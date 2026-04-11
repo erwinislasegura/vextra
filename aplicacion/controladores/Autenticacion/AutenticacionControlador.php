@@ -8,10 +8,6 @@ use Aplicacion\Modelos\Usuario;
 use Aplicacion\Modelos\Empresa;
 use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Suscripcion;
-use Aplicacion\Servicios\FlowApiService;
-use Aplicacion\Servicios\FlowPagosService;
-use Aplicacion\Servicios\FlowPlanesService;
-use Aplicacion\Servicios\FlowSuscripcionesService;
 use Throwable;
 
 class AutenticacionControlador extends Controlador
@@ -90,6 +86,7 @@ class AutenticacionControlador extends Controlador
             'planPreseleccionado' => $planPreseleccionado,
             'tipoCobroPreseleccionado' => $tipoCobroPreseleccionado,
             'datosFormulario' => $datosFormulario,
+            'requiereRecaptcha' => true,
             'meta_title' => 'Registro de empresa | Vextra',
             'meta_description' => 'Crea tu cuenta empresarial en Vextra y elige un plan mensual o anual para ordenar tus cotizaciones y ventas.',
             'meta_keywords' => 'registro vextra, crear cuenta empresarial, planes de cotizaciones',
@@ -198,13 +195,14 @@ class AutenticacionControlador extends Controlador
                 'estado' => 'activo',
             ]);
 
+            $diasPruebaRegistro = 15;
             $suscripcionId = $suscripcionModel->crear([
                 'empresa_id' => $empresaId,
                 'plan_id' => $planId,
                 'estado' => 'pendiente',
                 'fecha_inicio' => date('Y-m-d'),
-                'fecha_vencimiento' => $tipoCobro === 'anual' ? date('Y-m-d', strtotime('+365 days')) : date('Y-m-d', strtotime('+30 days')),
-                'observaciones' => 'Alta inicial desde registro (' . $tipoCobro . '). Pendiente de pago Flow.',
+                'fecha_vencimiento' => date('Y-m-d', strtotime('+' . $diasPruebaRegistro . ' days')),
+                'observaciones' => 'Alta inicial desde registro (' . $tipoCobro . '). Prueba gratis de ' . $diasPruebaRegistro . ' días antes del primer cobro.',
                 'renovacion_automatica' => 1,
             ]);
 
@@ -219,41 +217,7 @@ class AutenticacionControlador extends Controlador
             $this->redirigir('/registro');
         }
 
-        try {
-            (new FlowPlanesService())->crearOActualizarPlan($planId, $tipoCobro);
-            $urlRetornoPago = FlowApiService::construirUrlPublica('/retorno/pago?origen=registro');
-            $urlWebhookPago = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
-            $respuestaPago = (new FlowPagosService())->crearPagoUnico(
-                (int) $empresaId,
-                $planId,
-                $tipoCobro,
-                'Cobro inicial plan por registro',
-                $urlRetornoPago,
-                $urlWebhookPago,
-                (int) $suscripcionId
-            );
-            if (isset($respuestaPago['url'], $respuestaPago['token'])) {
-                $_SESSION['flow_pago_registro_pendiente'] = [
-                    'empresa_id' => (int) $empresaId,
-                    'suscripcion_id' => (int) $suscripcionId,
-                    'flow_token' => (string) $respuestaPago['token'],
-                    'correo_admin' => (string) $correoAdmin,
-                    'nombre_admin' => (string) $nombreAdmin,
-                    'password_admin' => (string) $password,
-                    'fecha' => date('c'),
-                ];
-                $this->redirigir($respuestaPago['url'] . '?token=' . $respuestaPago['token']);
-            }
-
-            throw new \RuntimeException('Flow no devolvió URL/token para iniciar el pago del plan.');
-        } catch (Throwable $e) {
-            $this->revertirRegistroPendiente($empresaId, $suscripcionId, (string) $correoAdmin);
-            $this->guardarDatosRegistroTemporal($_POST);
-            flash('danger', 'No fue posible iniciar el pago del plan en Flow, por lo que el registro fue cancelado para que puedas intentarlo nuevamente con los mismos datos. Detalle: ' . $e->getMessage());
-            $this->redirigir('/registro?plan=' . $planId . '&frecuencia=' . $tipoCobro);
-        }
-
-        flash('success', 'Empresa creada con éxito. Tu cuenta administrativa ya está activa para iniciar sesión.');
+        flash('success', 'Empresa creada con éxito. Se activó tu prueba gratis de 15 días. El pago ecommerce se solicitará al finalizar la prueba.');
         $this->redirigir('/iniciar-sesion');
     }
 
