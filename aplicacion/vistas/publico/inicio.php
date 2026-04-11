@@ -144,9 +144,9 @@ $faqSchema = [
             <div class="col-12 col-lg-6">
                 <div class="row g-3">
                     <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" decoding="async" fetchpriority="high"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy"></a><figcaption>POS conectado</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy"></a><figcaption>Gestión de clientes</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy" decoding="async"></a><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy" decoding="async"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy" decoding="async"></a><figcaption>Gestión de clientes</figcaption></figure></div>
                 </div>
             </div>
         </div>
@@ -162,7 +162,7 @@ $faqSchema = [
         <div class="landing-slider" data-slider data-slider-interval="3200">
             <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
                 <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
-                    <img src="<?= e($capturaUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy">
+                    <img src="<?= e($capturaUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy" decoding="async">
                     <div class="landing-carousel-caption">
                         <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
                         <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
@@ -433,6 +433,9 @@ $faqSchema = [
         const slides = Array.from(slider.querySelectorAll('[data-slide]'));
         const dots = Array.from(slider.querySelectorAll('[data-slide-dot]'));
         const interval = Number(slider.getAttribute('data-slider-interval') || 3200);
+        const prefiereReducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const esPantallaTactil = window.matchMedia('(pointer: coarse)').matches;
+        const autoplayPermitido = !prefiereReducirMovimiento && !esPantallaTactil;
         let actual = 0;
         let timer = null;
 
@@ -449,7 +452,7 @@ $faqSchema = [
             timer = null;
         };
         const iniciar = () => {
-            if (slides.length < 2 || document.hidden) return;
+            if (!autoplayPermitido || slides.length < 2 || document.hidden) return;
             detener();
             timer = window.setInterval(() => pintar(actual + 1), interval);
         };
