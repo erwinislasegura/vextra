@@ -184,6 +184,7 @@
 
     let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
     let botonInstalar = null;
+    const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
 
     const obtenerBoton = () => {
       if (botonInstalar) return botonInstalar;
@@ -192,13 +193,20 @@
       botonInstalar.className = 'pwa-install-btn';
       botonInstalar.innerHTML = '<i class="bi bi-download me-1"></i> Instalar app';
       botonInstalar.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        try {
-          await deferredPrompt.userChoice;
-        } catch (_) {
-          // Ignorado
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          try {
+            await deferredPrompt.userChoice;
+          } catch (_) {
+            // Ignorado
+          }
+          return;
         }
+
+        const mensaje = esIOS
+          ? 'En iPhone/iPad: abre Compartir y luego "Añadir a pantalla de inicio".'
+          : 'Si no aparece el popup, usa el menú del navegador y selecciona "Instalar aplicación".';
+        alert(mensaje);
       });
       document.body.appendChild(botonInstalar);
       return botonInstalar;
@@ -206,9 +214,9 @@
 
     const mostrarSiDisponible = () => {
       deferredPrompt = window.__vextraDeferredInstallPrompt || deferredPrompt;
-      if (deferredPrompt) {
-        obtenerBoton().classList.add('show');
-      }
+      const boton = obtenerBoton();
+      boton.classList.add('show');
+      boton.setAttribute('data-install-ready', deferredPrompt ? '1' : '0');
     };
 
     window.addEventListener('vextra:install-ready', mostrarSiDisponible);

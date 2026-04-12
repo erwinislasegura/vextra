@@ -223,6 +223,7 @@ body.preview-open{overflow:hidden}
 .sidebar-admin{background:#2f343d !important;border-color:#23272f !important}
 .sidebar-admin{overflow-y:auto;overscroll-behavior:contain;height:100vh;-webkit-overflow-scrolling:touch}
 .sidebar-admin .nav{padding-bottom:1rem;max-height:calc(100vh - 120px);overflow-y:auto}
+.sidebar-admin .sidebar-admin__group .d-grid{grid-template-columns:1fr !important}
 .sidebar-admin__brand{display:flex;flex-direction:column;gap:.45rem}
 .sidebar-admin__logo{display:block !important;height:36px !important;width:auto !important;max-width:146px !important;object-fit:contain}
 .sidebar-admin .sidebar-app__titulo{color:#e5e7eb}
@@ -255,6 +256,7 @@ body.preview-open{overflow:hidden}
   display:none;
 }
 .pwa-install-btn.show{display:inline-flex;align-items:center}
+.pwa-install-btn[data-install-ready="0"]{background:#374151;border-color:#374151}
 @media (max-width: 991.98px){
   .app-shell-admin{position:relative}
   .app-shell-admin .sidebar-admin{
