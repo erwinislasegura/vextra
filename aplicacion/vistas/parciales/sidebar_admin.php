@@ -5,24 +5,32 @@ if (is_file(__DIR__ . '/../../../img/logo/logo-vextra-blanco.png')) {
     $logoAdmin = '/img/logo/logo-vextra-blanco.png';
 }
 $items = [
-    ['/admin/panel', 'Dashboard', 'bi-speedometer2'],
-    ['/admin/empresas', 'Empresas', 'bi-buildings'],
-    ['/admin/administradores-empresa', 'Administradores de empresas', 'bi-people'],
-    ['/admin/planes', 'Planes', 'bi-award'],
-    ['/admin/funcionalidades', 'Funciones de planes', 'bi-grid-3x3-gap'],
-    ['/admin/suscripciones', 'Suscripciones', 'bi-card-checklist'],
-    ['/admin/pagos', 'Pagos', 'bi-cash-stack'],
-    ['/admin/flow', 'Flow dashboard', 'bi-credit-card-2-front'],
-    ['/admin/flow/configuracion', 'Flow configuración', 'bi-shield-lock'],
-    ['/admin/flow/planes', 'Flow planes', 'bi-diagram-3'],
-    ['/admin/flow/clientes', 'Flow clientes', 'bi-person-badge'],
-    ['/admin/flow/suscripciones', 'Flow suscripciones', 'bi-arrow-repeat'],
-    ['/admin/flow/pagos', 'Flow pagos', 'bi-wallet2'],
-    ['/admin/flow/logs', 'Flow logs/webhooks', 'bi-journal-text'],
-    ['/admin/reportes', 'Reportes', 'bi-bar-chart-line'],
-    ['/admin/configuracion', 'Configuración general', 'bi-gear'],
-    ['/admin/configuracion#imap-smtp-admin', 'IMAP/SMTP notificaciones', 'bi-envelope-at'],
-    ['/admin/historial', 'Historial / actividad', 'bi-clock-history'],
+    'General' => [
+        ['/admin/panel', 'Dashboard ejecutivo', 'bi-speedometer2'],
+        ['/admin/reportes', 'Reportes', 'bi-bar-chart-line'],
+        ['/admin/historial', 'Historial y actividad', 'bi-clock-history'],
+    ],
+    'Comercial' => [
+        ['/admin/empresas', 'Empresas', 'bi-buildings'],
+        ['/admin/administradores-empresa', 'Administradores empresas', 'bi-people'],
+        ['/admin/planes', 'Planes', 'bi-award'],
+        ['/admin/funcionalidades', 'Funciones de planes', 'bi-grid-3x3-gap'],
+        ['/admin/suscripciones', 'Suscripciones', 'bi-card-checklist'],
+        ['/admin/pagos', 'Pagos', 'bi-cash-stack'],
+    ],
+    'Flow' => [
+        ['/admin/flow', 'Dashboard Flow', 'bi-credit-card-2-front'],
+        ['/admin/flow/configuracion', 'Configuración', 'bi-shield-lock'],
+        ['/admin/flow/planes', 'Planes', 'bi-diagram-3'],
+        ['/admin/flow/clientes', 'Clientes', 'bi-person-badge'],
+        ['/admin/flow/suscripciones', 'Suscripciones', 'bi-arrow-repeat'],
+        ['/admin/flow/pagos', 'Pagos', 'bi-wallet2'],
+        ['/admin/flow/logs', 'Logs y webhooks', 'bi-journal-text'],
+    ],
+    'Sistema' => [
+        ['/admin/configuracion', 'Configuración general', 'bi-gear'],
+        ['/admin/configuracion#imap-smtp-admin', 'Correo IMAP/SMTP', 'bi-envelope-at'],
+    ],
 ];
 ?>
 <aside class="sidebar sidebar-app sidebar-admin p-3 border-end">
@@ -30,12 +38,19 @@ $items = [
     <img src="<?= e(url($logoAdmin)) ?>" alt="Vextra" class="sidebar-admin__logo" width="146" height="72">
     <div class="sidebar-app__titulo">Centro de control SaaS</div>
   </a>
-  <nav class="nav flex-column small gap-1">
-    <?php foreach ($items as [$url, $texto, $icono]): ?>
-      <?php $urlPath = parse_url($url, PHP_URL_PATH) ?: $url; ?>
-      <a class="nav-link d-flex align-items-center gap-2 <?= str_starts_with($rutaActual, $urlPath) ? 'active' : '' ?>" href="<?= e(url($url)) ?>">
-        <i class="bi <?= e($icono) ?>"></i><span><?= e($texto) ?></span>
-      </a>
+  <nav class="nav flex-column small gap-2">
+    <?php foreach ($items as $seccion => $links): ?>
+      <div class="sidebar-admin__group">
+        <div class="sidebar-admin__group-title"><?= e($seccion) ?></div>
+        <div class="d-grid gap-1">
+          <?php foreach ($links as [$url, $texto, $icono]): ?>
+            <?php $urlPath = parse_url($url, PHP_URL_PATH) ?: $url; ?>
+            <a class="nav-link d-flex align-items-center gap-2 <?= str_starts_with($rutaActual, $urlPath) ? 'active' : '' ?>" href="<?= e(url($url)) ?>">
+              <i class="bi <?= e($icono) ?>"></i><span><?= e($texto) ?></span>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      </div>
     <?php endforeach; ?>
   </nav>
 </aside>
