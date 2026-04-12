@@ -1,4 +1,5 @@
 <?php
+use Aplicacion\Modelos\SoporteChat;
 $rutaActual = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $base = base_path_url();
 if ($base !== '' && str_starts_with($rutaActual, $base . '/')) {
@@ -16,6 +17,7 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
 $logoEmpresa = logo_empresa_actual();
 $logoEmpresaSrc = $logoEmpresa ? (url('/app/logo-empresa') . '?v=' . urlencode($logoEmpresa)) : null;
+$soporteNoLeidosCliente = (new SoporteChat())->contarNoLeidosEmpresa((int) (empresa_actual_id() ?? 0));
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
   <div class="mb-3">

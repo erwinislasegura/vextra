@@ -1,5 +1,7 @@
 <?php
+use Aplicacion\Modelos\SoporteChat;
 $rutaActual = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$chatsSoporteNuevosAdmin = (new SoporteChat())->contarNoLeidosAdmin();
 $logoAdmin = '/img/logo/logo_vextra.png';
 if (is_file(__DIR__ . '/../../../img/logo/logo-vextra-blanco.png')) {
     $logoAdmin = '/img/logo/logo-vextra-blanco.png';
@@ -48,6 +50,9 @@ $items = [
             <?php $urlPath = parse_url($url, PHP_URL_PATH) ?: $url; ?>
             <a class="nav-link d-flex align-items-center gap-2 <?= str_starts_with($rutaActual, $urlPath) ? 'active' : '' ?>" href="<?= e(url($url)) ?>">
               <i class="bi <?= e($icono) ?>"></i><span><?= e($texto) ?></span>
+              <?php if ($urlPath === '/admin/soporte-chats' && $chatsSoporteNuevosAdmin > 0): ?>
+                <span class="badge text-bg-success ms-auto"><?= (int) $chatsSoporteNuevosAdmin ?></span>
+              <?php endif; ?>
             </a>
           <?php endforeach; ?>
         </div>
