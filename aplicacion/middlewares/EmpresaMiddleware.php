@@ -11,12 +11,9 @@ class EmpresaMiddleware
         $usuario = usuario_actual();
         $esSuperAdmin = ($usuario['rol_codigo'] ?? '') === 'superadministrador';
         $contextoEmpresa = (int) ($_SESSION['admin_empresa_contexto_id'] ?? 0);
+        $accesoComoContextoEmpresa = $esSuperAdmin && $contextoEmpresa > 0;
 
-        if ($esSuperAdmin && $contextoEmpresa > 0) {
-            return;
-        }
-
-        if (!tiene_rol([
+        if (!$accesoComoContextoEmpresa && !tiene_rol([
             'administrador_empresa',
             'vendedor',
             'administrativo',
