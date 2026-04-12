@@ -6,6 +6,21 @@ use Aplicacion\Nucleo\Modelo;
 
 class Empresa extends Modelo
 {
+    private function tablasDependientesDe(string $tabla): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT
+                kcu.table_name AS tabla_hija,
+                kcu.column_name AS columna_hija,
+                kcu.referenced_column_name AS columna_padre
+            FROM information_schema.key_column_usage kcu
+            WHERE kcu.table_schema = DATABASE()
+              AND kcu.referenced_table_name = :tabla"
+        );
+        $stmt->execute(['tabla' => $tabla]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+    }
+
     private function tablasConEmpresaId(): array
     {
         $stmt = $this->db->query("SELECT DISTINCT table_name FROM information_schema.columns WHERE table_schema = DATABASE() AND column_name = 'empresa_id'");
@@ -41,11 +56,56 @@ class Empresa extends Modelo
         return $resumen;
     }
 
+    private function eliminarDependenciasSinEmpresaId(int $empresaId, array $tablasConEmpresaId): void
+    {
+        foreach ($tablasConEmpresaId as $tablaPadre) {
+            foreach ($this->tablasDependientesDe($tablaPadre) as $relacion) {
+                $tablaHija = (string) ($relacion['tabla_hija'] ?? '');
+                if ($tablaHija === '' || in_array($tablaHija, $tablasConEmpresaId, true) || $tablaHija === 'empresas') {
+                    continue;
+                }
+
+                $columnaHija = (string) ($relacion['columna_hija'] ?? '');
+                $columnaPadre = (string) ($relacion['columna_padre'] ?? '');
+                if ($columnaHija === '' || $columnaPadre === '') {
+                    continue;
+                }
+
+                $tablaPadreSegura = '`' . str_replace('`', '', $tablaPadre) . '`';
+                $tablaHijaSegura = '`' . str_replace('`', '', $tablaHija) . '`';
+                $columnaHijaSegura = '`' . str_replace('`', '', $columnaHija) . '`';
+                $columnaPadreSegura = '`' . str_replace('`', '', $columnaPadre) . '`';
+
+                if ($this->tablaTieneColumna($tablaHija, 'fecha_eliminacion')) {
+                    $stmt = $this->db->prepare(
+                        'UPDATE ' . $tablaHijaSegura . ' hija
+                         INNER JOIN ' . $tablaPadreSegura . ' padre ON hija.' . $columnaHijaSegura . ' = padre.' . $columnaPadreSegura . '
+                         SET hija.fecha_eliminacion = NOW()
+                         WHERE padre.empresa_id = :empresa_id
+                           AND hija.fecha_eliminacion IS NULL'
+                    );
+                    $stmt->execute(['empresa_id' => $empresaId]);
+                    continue;
+                }
+
+                $stmt = $this->db->prepare(
+                    'DELETE hija FROM ' . $tablaHijaSegura . ' hija
+                     INNER JOIN ' . $tablaPadreSegura . ' padre ON hija.' . $columnaHijaSegura . ' = padre.' . $columnaPadreSegura . '
+                     WHERE padre.empresa_id = :empresa_id'
+                );
+                $stmt->execute(['empresa_id' => $empresaId]);
+            }
+        }
+    }
+
     public function eliminarConDatosAsociados(int $empresaId): void
     {
         $this->db->beginTransaction();
         try {
-            foreach ($this->tablasConEmpresaId() as $tabla) {
+            $tablasConEmpresaId = $this->tablasConEmpresaId();
+            $this->eliminarDependenciasSinEmpresaId($empresaId, $tablasConEmpresaId);
+
+            foreach ($tablasConEmpresaId as $tabla) {
                 $tablaSegura = '`' . str_replace('`', '', $tabla) . '`';
                 if ($this->tablaTieneColumna($tabla, 'fecha_eliminacion')) {
                     $stmt = $this->db->prepare('UPDATE ' . $tablaSegura . ' SET fecha_eliminacion = NOW() WHERE empresa_id = :empresa_id AND fecha_eliminacion IS NULL');
