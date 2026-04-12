@@ -1,5 +1,6 @@
 const CACHE_NAME = 'vextra-shell-v1';
 const APP_SHELL = [
+  '/',
   '/site.webmanifest',
   '/assets/css/app.css',
   '/assets/js/app.js',
