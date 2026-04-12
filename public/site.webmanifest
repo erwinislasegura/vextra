@@ -1,6 +1,10 @@
 {
   "name": "Vextra",
   "short_name": "Vextra",
+  "description": "Panel de gestión comercial, inventario y administración.",
+  "id": "/app/panel",
+  "start_url": "/app/panel",
+  "scope": "/",
   "icons": [
     {
       "src": "/img/logo/icono.png",
@@ -15,5 +19,6 @@
   ],
   "theme_color": "#4632a8",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "display": "standalone",
+  "orientation": "portrait"
 }
