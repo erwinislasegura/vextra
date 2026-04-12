@@ -34,6 +34,9 @@ class SoporteChatsAdminControlador extends Controlador
 
         $mensaje = trim((string) ($_POST['mensaje'] ?? ''));
         if ($mensaje === '') {
+            if ($this->esperaJson()) {
+                $this->json(['ok' => false, 'mensaje' => 'Debes escribir un mensaje de respuesta.'], 422);
+            }
             flash('danger', 'Debes escribir un mensaje de respuesta.');
             $this->redirigir('/admin/soporte-chats/ver/' . $id);
         }
@@ -41,12 +44,54 @@ class SoporteChatsAdminControlador extends Controlador
         $usuario = usuario_actual();
 
         try {
-            (new SoporteChat())->responderAdmin($id, (int) ($usuario['id'] ?? 0), $mensaje);
+            $modelo = new SoporteChat();
+            $modelo->responderAdmin($id, (int) ($usuario['id'] ?? 0), $mensaje);
+            if ($this->esperaJson()) {
+                $nuevos = $modelo->listarMensajesDesde($id, max(0, (int) ($_POST['ultimo_id'] ?? 0)));
+                $this->json(['ok' => true, 'mensajes' => $nuevos]);
+            }
             flash('success', 'Respuesta enviada al cliente.');
         } catch (\Throwable $e) {
+            if ($this->esperaJson()) {
+                $this->json(['ok' => false, 'mensaje' => 'No se pudo enviar la respuesta.'], 500);
+            }
             flash('danger', 'No se pudo enviar la respuesta.');
         }
 
         $this->redirigir('/admin/soporte-chats/ver/' . $id);
+    }
+
+    public function mensajes(int $id): void
+    {
+        $modelo = new SoporteChat();
+        $chat = $modelo->obtenerChatAdmin($id);
+        if (!$chat) {
+            $this->json(['ok' => false, 'mensaje' => 'Chat no encontrado.'], 404);
+        }
+
+        $ultimoId = max(0, (int) ($_GET['ultimo_id'] ?? 0));
+        $mensajes = $ultimoId > 0 ? $modelo->listarMensajesDesde($id, $ultimoId) : $modelo->listarMensajes($id);
+        $modelo->marcarLeidoAdmin($id);
+
+        $this->json([
+            'ok' => true,
+            'mensajes' => $mensajes,
+            'no_leidos_admin' => $modelo->contarNoLeidosAdmin(),
+        ]);
+    }
+
+    private function esperaJson(): bool
+    {
+        $accept = strtolower((string) ($_SERVER['HTTP_ACCEPT'] ?? ''));
+        $xhr = strtolower((string) ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? ''));
+        return str_contains($accept, 'application/json') || $xhr === 'xmlhttprequest';
+    }
+
+    private function json(array $payload, int $status = 200): void
+    {
+        http_response_code($status);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
     }
 }

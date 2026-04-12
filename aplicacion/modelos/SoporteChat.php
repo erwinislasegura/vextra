@@ -79,6 +79,19 @@ class SoporteChat extends Modelo
         return $stmt->fetchAll();
     }
 
+
+    public function listarMensajesDesde(int $chatId, int $ultimoId = 0): array
+    {
+        $stmt = $this->db->prepare('SELECT id, chat_id, remitente_tipo, remitente_id, mensaje, fecha_creacion
+            FROM soporte_chat_mensajes
+            WHERE chat_id = :chat_id AND id > :ultimo_id
+            ORDER BY id ASC');
+        $stmt->bindValue(':chat_id', $chatId, \PDO::PARAM_INT);
+        $stmt->bindValue(':ultimo_id', $ultimoId, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function crearChat(int $empresaId, int $usuarioId, string $asunto, string $mensaje): int
     {
         $stmt = $this->db->prepare('INSERT INTO soporte_chats

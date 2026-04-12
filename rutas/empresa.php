@@ -20,8 +20,10 @@ $mwEmpresa = [AutenticadoMiddleware::class, EmpresaMiddleware::class];
 $enrutador->agregar('GET', '/app/panel', [GestionComercialControlador::class, 'inicio'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/panel/iniciar-pago-trial', [GestionComercialControlador::class, 'iniciarPagoPlanTrial'], $mwEmpresa);
 
+$enrutador->agregar('GET', '/app/soporte-chats', [SoporteChatControlador::class, 'index'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/soporte-chats/crear', [SoporteChatControlador::class, 'crear'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/soporte-chats/ver/{id}', [SoporteChatControlador::class, 'ver'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/soporte-chats/mensajes/{id}', [SoporteChatControlador::class, 'mensajes'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/soporte-chats/responder/{id}', [SoporteChatControlador::class, 'responder'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/volver-admin', [AdministradoresEmpresasControlador::class, 'volverPanelAdmin'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/clientes', [ClientesControlador::class, 'index'], $mwEmpresa);

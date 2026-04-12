@@ -62,6 +62,7 @@ $enrutador->agregar('GET', '/admin/historial', [HistorialAdminControlador::class
 
 $enrutador->agregar('GET', '/admin/soporte-chats', [SoporteChatsAdminControlador::class, 'index'], $mw);
 $enrutador->agregar('GET', '/admin/soporte-chats/ver/{id}', [SoporteChatsAdminControlador::class, 'ver'], $mw);
+$enrutador->agregar('GET', '/admin/soporte-chats/mensajes/{id}', [SoporteChatsAdminControlador::class, 'mensajes'], $mw);
 $enrutador->agregar('POST', '/admin/soporte-chats/responder/{id}', [SoporteChatsAdminControlador::class, 'responder'], $mw);
 
 
