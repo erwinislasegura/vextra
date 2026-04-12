@@ -105,4 +105,81 @@
       });
     });
   });
+
+  // Tablas admin en formato tarjeta para móviles (sin perder acciones).
+  function prepararTablasAdminMovil() {
+    document.querySelectorAll('.tabla-admin').forEach((tabla) => {
+      const encabezados = Array.from(tabla.querySelectorAll('thead th')).map((th) =>
+        (th.textContent || '').trim().replace(/\s+/g, ' ')
+      );
+      if (encabezados.length === 0) return;
+
+      tabla.classList.add('tabla-admin--stack');
+      tabla.querySelectorAll('tbody tr').forEach((fila) => {
+        Array.from(fila.children).forEach((celda, indice) => {
+          if (!(celda instanceof HTMLElement)) return;
+          if (!celda.dataset.label) {
+            celda.dataset.label = encabezados[indice] || `Campo ${indice + 1}`;
+          }
+        });
+      });
+    });
+  }
+
+  // Sidebar admin móvil tipo drawer.
+  function prepararSidebarAdminMovil() {
+    const shell = document.querySelector('.app-shell-admin');
+    const sidebar = shell ? shell.querySelector('.sidebar-admin') : null;
+    const toggle = document.querySelector('.js-sidebar-toggle');
+    if (!shell || !sidebar || !toggle) return;
+
+    const backdrop = document.createElement('button');
+    backdrop.type = 'button';
+    backdrop.className = 'app-shell-admin__backdrop';
+    backdrop.setAttribute('aria-label', 'Cerrar menú');
+    shell.appendChild(backdrop);
+
+    const cerrar = () => {
+      shell.classList.remove('sidebar-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    const abrir = () => {
+      shell.classList.add('sidebar-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('overflow-hidden');
+    };
+
+    toggle.addEventListener('click', () => {
+      if (shell.classList.contains('sidebar-open')) {
+        cerrar();
+      } else {
+        abrir();
+      }
+    });
+
+    backdrop.addEventListener('click', cerrar);
+    sidebar.querySelectorAll('a').forEach((enlace) => enlace.addEventListener('click', cerrar));
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 992) cerrar();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') cerrar();
+    });
+  }
+
+  prepararTablasAdminMovil();
+  prepararSidebarAdminMovil();
+
+  // Habilita instalación PWA para paneles (/app y /admin).
+  function prepararInstalacionPwa() {
+    const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
+    if (!enPanel) return;
+    if (!('serviceWorker' in navigator)) return;
+    // Dejamos que el navegador gestione el prompt nativo de instalación.
+    navigator.serviceWorker.register(normalizarInterna('/sw.js')).catch(() => null);
+  }
+
+  prepararInstalacionPwa();
 })();
