@@ -187,6 +187,12 @@ body.preview-open{overflow:hidden}
 .panel-cliente .card-dashboard{border:1px solid #dbe5ef;box-shadow:0 6px 14px rgba(18,42,66,.06)}
 .panel-cliente .card-dashboard .card-header{background:#f7fafd;color:#30455b;font-weight:700}
 .panel-cliente .chart-area{height:320px}
+.panel-cliente--pro .panel-cliente__hero{border:1px solid #d8e4f2;background:linear-gradient(135deg,#f6f4ff 0,#ffffff 45%,#eef4ff 100%);box-shadow:0 8px 22px rgba(33,50,74,.08)}
+.panel-cliente--pro .panel-flow-card{height:100%;background:#fff;border:1px solid #dde6f0;border-radius:.75rem;padding:.85rem .95rem;box-shadow:0 6px 18px rgba(31,47,71,.05)}
+.panel-cliente--pro .panel-flow-card__step{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#5f73a1;font-weight:700;margin-bottom:.2rem}
+.panel-cliente--pro .panel-flow-card__title{font-size:.92rem;color:#1f3348;font-weight:700}
+.panel-cliente--pro .panel-flow-card p{font-size:.79rem;color:#677d94;margin:.18rem 0 0}
+.panel-cliente--pro .panel-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem}
 .metric-card{position:relative;border-radius:.75rem;padding:1rem .95rem 1rem 3.6rem;background:#fff;border:1px solid #dde6f0;box-shadow:0 8px 18px rgba(32,53,73,.06)}
 .metric-card__icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:2.1rem;height:2.1rem;border-radius:.6rem;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
 .metric-card__meta{font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:#66788b;font-weight:700}
@@ -218,6 +224,8 @@ body.preview-open{overflow:hidden}
 .sidebar-admin__brand{display:flex;flex-direction:column;gap:.45rem}
 .sidebar-admin__logo{display:block !important;height:36px !important;width:auto !important;max-width:146px !important;object-fit:contain}
 .sidebar-admin .sidebar-app__titulo{color:#e5e7eb}
+.sidebar-admin__group{padding-top:.15rem}
+.sidebar-admin__group-title{font-size:.67rem;letter-spacing:.09em;text-transform:uppercase;color:#c4c9d1;font-weight:700;padding:.2rem .5rem}
 .sidebar-admin .nav-link{color:#f3f4f6}
 .sidebar-admin .nav-link i{color:#ffffff}
 .sidebar-admin .nav-link:hover{background:rgba(255,255,255,.12);color:#ffffff}
@@ -227,6 +235,9 @@ body.preview-open{overflow:hidden}
 .admin-kpi{background:#fff;border:1px solid #d7e0eb;border-left:4px solid var(--vextra-morado);border-radius:.65rem;padding:.7rem .8rem}
 .admin-kpi .label{font-size:.72rem;text-transform:uppercase;color:#6b7e94;font-weight:700}
 .admin-kpi .value{font-size:1.15rem;font-weight:700;color:#16283c}
+.admin-dashboard__hero{border:1px solid #d8e4f2;background:linear-gradient(135deg,#f7f9ff 0,#ffffff 50%,#f5f6ff 100%)}
+.admin-dashboard .admin-progress .progress{height:.46rem;background:#edf1f7}
+.admin-quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
 
 /* Bloqueo operativo por estado comercial */
 .app-shell--bloqueada{filter:grayscale(.08)}
