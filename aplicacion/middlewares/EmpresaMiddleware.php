@@ -39,7 +39,12 @@ class EmpresaMiddleware
             $estadosBloqueados = ['suspendida', 'vencida', 'cancelada'];
             if (in_array($estadoCuenta, $estadosBloqueados, true)) {
                 $_SESSION['bloqueo_cuenta_estado'] = $estadoCuenta;
-                if ($rutaActual !== '/app/panel') {
+                $rutasPermitidas = ['/app/panel'];
+                if ($estadoCuenta === 'vencida') {
+                    $rutasPermitidas[] = '/app/panel/iniciar-pago-trial';
+                    $rutasPermitidas[] = '/app/panel/iniciar-pago-cambio-plan';
+                }
+                if (!in_array($rutaActual, $rutasPermitidas, true)) {
                     $destino = rtrim(base_path_url(), '/') . '/app/panel';
                     header('Location: ' . $destino);
                     exit;
