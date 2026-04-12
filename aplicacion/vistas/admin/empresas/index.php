@@ -80,6 +80,7 @@
       var checkEl = document.getElementById('confirmacionEliminarCheck');
       var inputEl = document.getElementById('confirmacionEliminarNombre');
       var botonEl = document.getElementById('btnConfirmarEliminarEmpresa');
+      var backdropEl = null;
 
       function validarConfirmacion() {
         var confirmo = !!checkEl.checked;
@@ -91,10 +92,39 @@
       inputEl.addEventListener('input', validarConfirmacion);
       validarConfirmacion();
 
-      if (window.bootstrap && bootstrap.Modal) {
-        var modal = new bootstrap.Modal(modalEl, {backdrop: 'static', keyboard: false});
-        modal.show();
+      function abrirModalFallback() {
+        modalEl.classList.add('show');
+        modalEl.style.display = 'block';
+        modalEl.removeAttribute('aria-hidden');
+        modalEl.setAttribute('aria-modal', 'true');
+        document.body.classList.add('modal-open');
+        if (!backdropEl) {
+          backdropEl = document.createElement('div');
+          backdropEl.className = 'modal-backdrop fade show';
+          document.body.appendChild(backdropEl);
+        }
       }
+
+      function abrirModal() {
+        if (window.bootstrap && window.bootstrap.Modal) {
+          var modal = new window.bootstrap.Modal(modalEl, {backdrop: 'static', keyboard: false});
+          modal.show();
+          return;
+        }
+        abrirModalFallback();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', abrirModal);
+      } else {
+        abrirModal();
+      }
+
+      window.addEventListener('load', function () {
+        if (!modalEl.classList.contains('show')) {
+          abrirModal();
+        }
+      });
     })();
   </script>
 <?php endif; ?>
