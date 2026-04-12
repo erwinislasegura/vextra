@@ -10,6 +10,7 @@ use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PuntoVenta;
+use Aplicacion\Modelos\SoporteChat;
 
 class PanelEmpresaControlador extends Controlador
 {
@@ -22,6 +23,7 @@ class PanelEmpresaControlador extends Controlador
         $gestionComercialModel = new GestionComercial();
         $inventarioModel = new Inventario();
         $puntoVentaModel = new PuntoVenta();
+        $soporteChatModel = new SoporteChat();
         $planEmpresa = (new Plan())->obtenerPlanActivoEmpresa($empresaId);
         $resumenComercial = $gestionComercialModel->estadisticasInicio($empresaId);
         $productosInventario = $inventarioModel->listarProductos($empresaId);
@@ -31,6 +33,8 @@ class PanelEmpresaControlador extends Controlador
         $aprobaciones = $gestionComercialModel->listarAprobacionesCotizaciones($empresaId, '', '', 200);
         $notificaciones = $gestionComercialModel->listarTablaEmpresa('notificaciones_empresa', $empresaId, '', 100);
         $historialActividad = $gestionComercialModel->listarTablaEmpresa('historial_actividad', $empresaId, '', 8);
+        $chatsSoporte = $soporteChatModel->listarChatsEmpresa($empresaId, 5);
+        $chatsSoporteNoLeidos = $soporteChatModel->contarNoLeidosEmpresa($empresaId);
 
         $stockBajo = 0;
         $stockCritico = 0;
@@ -107,6 +111,6 @@ class PanelEmpresaControlador extends Controlador
         ]);
 
         $cotizaciones = $cotizacionModel->listar($empresaId);
-        $this->vista('empresa/panel', compact('resumen', 'cotizaciones'), 'empresa');
+        $this->vista('empresa/panel', compact('resumen', 'cotizaciones', 'chatsSoporte', 'chatsSoporteNoLeidos'), 'empresa');
     }
 }
