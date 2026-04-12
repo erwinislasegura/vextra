@@ -110,7 +110,14 @@ $chatAbierto = ($chat['estado'] ?? 'abierto') === 'abierto';
   let ultimoId = Number(app.dataset.ultimoId || 0);
   let chatAbierto = (app.dataset.chatEstado || 'abierto') === 'abierto';
 
-  const escapeHtml = (str) => String(str || '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const escapeHtml = (str) => String(str || '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+  const normalizarRutaArchivo = (ruta) => {
+    const valor = String(ruta || '');
+    if (!valor.startsWith('/')) return valor;
+    const base = String(window.APP_BASE_PATH || '').replace(/\\/$/, '');
+    if (!base || valor === base || valor.startsWith(base + '/')) return valor;
+    return base + valor;
+  };
 
   const setEstadoChat = (abierto) => {
     chatAbierto = abierto;
@@ -128,7 +135,7 @@ $chatAbierto = ($chat['estado'] ?? 'abierto') === 'abierto';
     const box = document.createElement('div');
     box.className = 'p-2 rounded border ' + (esAdmin ? 'bg-light border-success-subtle ms-4' : 'border-primary-subtle me-4');
     const mensajeHtml = m.mensaje ? `<div>${escapeHtml(m.mensaje).replace(/\n/g, '<br>')}</div>` : '';
-    const archivoHtml = m.archivo_ruta ? `<div class="mt-1"><a href="${m.archivo_ruta}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> ${escapeHtml(m.archivo_nombre || 'Adjunto')}</a></div>` : '';
+    const archivoHtml = m.archivo_ruta ? `<div class="mt-1"><a href="${normalizarRutaArchivo(m.archivo_ruta)}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> ${escapeHtml(m.archivo_nombre || 'Adjunto')}</a></div>` : '';
     box.innerHTML = `<div class="small fw-semibold ${esAdmin ? 'text-success' : 'text-primary'}">${esAdmin ? 'Soporte Vextra' : 'Mi empresa'}</div>${mensajeHtml}${archivoHtml}<div class="small text-muted mt-1">${m.fecha_creacion || ''}</div>`;
     hilo.appendChild(box);
   };
