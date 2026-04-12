@@ -110,6 +110,19 @@ class SoporteChatsAdminControlador extends Controlador
         ]);
     }
 
+
+
+    public function descargarAdjunto(int $mensajeId): void
+    {
+        $mensaje = (new SoporteChat())->obtenerMensajeAdmin($mensajeId);
+        if (!$mensaje || empty($mensaje['archivo_ruta'])) {
+            http_response_code(404);
+            exit('Archivo no encontrado.');
+        }
+
+        $this->enviarArchivo((string) $mensaje['archivo_ruta'], (string) ($mensaje['archivo_nombre'] ?? 'adjunto'));
+    }
+
     private function procesarAdjunto(?array $archivo): ?array
     {
         if (!is_array($archivo) || (int) ($archivo['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
@@ -166,6 +179,30 @@ class SoporteChatsAdminControlador extends Controlador
             'tipo' => $mime,
             'peso' => $peso,
         ];
+    }
+
+
+
+    private function enviarArchivo(string $rutaPublica, string $nombreOriginal): void
+    {
+        if (!str_starts_with($rutaPublica, '/uploads/soporte/')) {
+            http_response_code(404);
+            exit('Archivo no encontrado.');
+        }
+
+        $rutaLocal = dirname(__DIR__, 3) . '/public' . $rutaPublica;
+        if (!is_file($rutaLocal)) {
+            http_response_code(404);
+            exit('Archivo no encontrado.');
+        }
+
+        $mime = mime_content_type($rutaLocal) ?: 'application/octet-stream';
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $mime);
+        header('Content-Disposition: attachment; filename="' . rawurlencode($nombreOriginal !== '' ? $nombreOriginal : basename($rutaLocal)) . '"');
+        header('Content-Length: ' . filesize($rutaLocal));
+        readfile($rutaLocal);
+        exit;
     }
 
     private function esperaJson(): bool

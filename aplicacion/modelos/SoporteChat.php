@@ -80,6 +80,31 @@ class SoporteChat extends Modelo
         return $stmt->fetchAll();
     }
 
+
+
+    public function obtenerMensajeEmpresa(int $mensajeId, int $empresaId): ?array
+    {
+        $stmt = $this->db->prepare('SELECT m.*
+            FROM soporte_chat_mensajes m
+            INNER JOIN soporte_chats c ON c.id = m.chat_id
+            WHERE m.id = :id AND c.empresa_id = :empresa_id
+            LIMIT 1');
+        $stmt->execute(['id' => $mensajeId, 'empresa_id' => $empresaId]);
+        return $stmt->fetch() ?: null;
+    }
+
+    public function obtenerMensajeAdmin(int $mensajeId): ?array
+    {
+        $stmt = $this->db->prepare('SELECT m.*
+            FROM soporte_chat_mensajes m
+            INNER JOIN soporte_chats c ON c.id = m.chat_id
+            INNER JOIN empresas e ON e.id = c.empresa_id AND e.fecha_eliminacion IS NULL
+            WHERE m.id = :id
+            LIMIT 1');
+        $stmt->execute(['id' => $mensajeId]);
+        return $stmt->fetch() ?: null;
+    }
+
     public function listarMensajesDesde(int $chatId, int $ultimoId = 0): array
     {
         $stmt = $this->db->prepare('SELECT id, chat_id, remitente_tipo, remitente_id, mensaje, archivo_ruta, archivo_nombre, archivo_tipo, archivo_peso, fecha_creacion

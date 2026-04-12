@@ -24,6 +24,7 @@ $enrutador->agregar('GET', '/app/soporte-chats', [SoporteChatControlador::class,
 $enrutador->agregar('POST', '/app/soporte-chats/crear', [SoporteChatControlador::class, 'crear'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/soporte-chats/ver/{id}', [SoporteChatControlador::class, 'ver'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/soporte-chats/mensajes/{id}', [SoporteChatControlador::class, 'mensajes'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/soporte-chats/adjunto/{id}', [SoporteChatControlador::class, 'descargarAdjunto'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/soporte-chats/responder/{id}', [SoporteChatControlador::class, 'responder'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/volver-admin', [AdministradoresEmpresasControlador::class, 'volverPanelAdmin'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/clientes', [ClientesControlador::class, 'index'], $mwEmpresa);

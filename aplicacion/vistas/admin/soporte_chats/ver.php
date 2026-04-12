@@ -2,7 +2,7 @@
 $ultimoId = !empty($mensajes) ? (int) end($mensajes)['id'] : 0;
 $chatAbierto = ($chat['estado'] ?? 'abierto') === 'abierto';
 ?>
-<section class="card" id="soporteAdminApp" data-chat-id="<?= (int) ($chat['id'] ?? 0) ?>" data-ultimo-id="<?= $ultimoId ?>" data-chat-estado="<?= e((string) ($chat['estado'] ?? 'abierto')) ?>" data-mensajes-url-base="<?= e(url('/admin/soporte-chats/mensajes')) ?>" data-responder-url-base="<?= e(url('/admin/soporte-chats/responder')) ?>">
+<section class="card" id="soporteAdminApp" data-chat-id="<?= (int) ($chat['id'] ?? 0) ?>" data-ultimo-id="<?= $ultimoId ?>" data-chat-estado="<?= e((string) ($chat['estado'] ?? 'abierto')) ?>" data-mensajes-url-base="<?= e(url('/admin/soporte-chats/mensajes')) ?>" data-responder-url-base="<?= e(url('/admin/soporte-chats/responder')) ?>" data-adjunto-url-base="<?= e(url('/admin/soporte-chats/adjunto')) ?>">
   <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
     <div>
       <h1 class="h6 mb-0">Chat #<?= (int) ($chat['id'] ?? 0) ?> · <?= e($chat['empresa_nombre'] ?? '') ?></h1>
@@ -32,7 +32,7 @@ $chatAbierto = ($chat['estado'] ?? 'abierto') === 'abierto';
           <div class="small fw-semibold <?= $esAdmin ? 'text-success' : 'text-primary' ?>"><?= $esAdmin ? 'Administrador' : 'Cliente' ?></div>
           <?php if (trim((string) ($mensaje['mensaje'] ?? '')) !== ''): ?><div><?= nl2br(e($mensaje['mensaje'] ?? '')) ?></div><?php endif; ?>
           <?php if (!empty($mensaje['archivo_ruta'])): ?>
-            <div class="mt-1"><a href="<?= e(url((string) $mensaje['archivo_ruta'])) ?>" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> <?= e($mensaje['archivo_nombre'] ?? 'Adjunto') ?></a></div>
+            <div class="mt-1"><a href="<?= e(url('/admin/soporte-chats/adjunto/' . (int) ($mensaje['id'] ?? 0))) ?>" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> <?= e($mensaje['archivo_nombre'] ?? 'Adjunto') ?></a></div>
           <?php endif; ?>
           <div class="small text-muted mt-1"><?= e((string) ($mensaje['fecha_creacion'] ?? '')) ?></div>
         </div>
@@ -59,6 +59,7 @@ $chatAbierto = ($chat['estado'] ?? 'abierto') === 'abierto';
   const chatId = Number(app.dataset.chatId || 0);
   const mensajesUrlBase = app.dataset.mensajesUrlBase;
   const responderUrlBase = app.dataset.responderUrlBase;
+  const adjuntoUrlBase = app.dataset.adjuntoUrlBase;
   const hilo = document.getElementById('hiloAdmin');
   const estado = document.getElementById('estadoConexionAdmin');
   const estadoChat = document.getElementById('estadoChatAdmin');
@@ -93,7 +94,7 @@ $chatAbierto = ($chat['estado'] ?? 'abierto') === 'abierto';
     const item = document.createElement('div');
     item.className = 'p-2 rounded border ' + (esAdmin ? 'bg-light border-success-subtle ms-4' : 'border-primary-subtle me-4');
     const mensajeHtml = m.mensaje ? `<div>${escapeHtml(m.mensaje).replace(/\n/g, '<br>')}</div>` : '';
-    const archivoHtml = m.archivo_ruta ? `<div class="mt-1"><a href="${normalizarRutaArchivo(m.archivo_ruta)}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> ${escapeHtml(m.archivo_nombre || 'Adjunto')}</a></div>` : '';
+    const archivoHtml = m.archivo_ruta ? `<div class="mt-1"><a href="${normalizarRutaArchivo(`${adjuntoUrlBase}/${m.id}`)}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-paperclip"></i> ${escapeHtml(m.archivo_nombre || 'Adjunto')}</a></div>` : '';
     item.innerHTML = `<div class="small fw-semibold ${esAdmin ? 'text-success' : 'text-primary'}">${esAdmin ? 'Administrador' : 'Cliente'}</div>${mensajeHtml}${archivoHtml}<div class="small text-muted mt-1">${m.fecha_creacion || ''}</div>`;
     hilo.appendChild(item);
   };
