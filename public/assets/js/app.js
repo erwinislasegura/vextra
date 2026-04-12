@@ -105,4 +105,157 @@
       });
     });
   });
+
+  // Tablas admin en formato tarjeta para móviles (sin perder acciones).
+  function prepararTablasAdminMovil() {
+    document.querySelectorAll('.tabla-admin').forEach((tabla) => {
+      const encabezados = Array.from(tabla.querySelectorAll('thead th')).map((th) =>
+        (th.textContent || '').trim().replace(/\s+/g, ' ')
+      );
+      if (encabezados.length === 0) return;
+
+      tabla.classList.add('tabla-admin--stack');
+      tabla.querySelectorAll('tbody tr').forEach((fila) => {
+        Array.from(fila.children).forEach((celda, indice) => {
+          if (!(celda instanceof HTMLElement)) return;
+          if (!celda.dataset.label) {
+            celda.dataset.label = encabezados[indice] || `Campo ${indice + 1}`;
+          }
+        });
+      });
+    });
+  }
+
+  // Sidebar admin móvil tipo drawer.
+  function prepararSidebarAdminMovil() {
+    const shell = document.querySelector('.app-shell-admin');
+    const sidebar = shell ? shell.querySelector('.sidebar-admin') : null;
+    const toggle = document.querySelector('.js-sidebar-toggle');
+    if (!shell || !sidebar || !toggle) return;
+
+    const backdrop = document.createElement('button');
+    backdrop.type = 'button';
+    backdrop.className = 'app-shell-admin__backdrop';
+    backdrop.setAttribute('aria-label', 'Cerrar menú');
+    shell.appendChild(backdrop);
+
+    const cerrar = () => {
+      shell.classList.remove('sidebar-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    const abrir = () => {
+      shell.classList.add('sidebar-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('overflow-hidden');
+    };
+
+    toggle.addEventListener('click', () => {
+      if (shell.classList.contains('sidebar-open')) {
+        cerrar();
+      } else {
+        abrir();
+      }
+    });
+
+    backdrop.addEventListener('click', cerrar);
+    sidebar.querySelectorAll('a').forEach((enlace) => enlace.addEventListener('click', cerrar));
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 992) cerrar();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') cerrar();
+    });
+  }
+
+  prepararTablasAdminMovil();
+  prepararSidebarAdminMovil();
+
+  // Habilita instalación PWA para paneles (/app y /admin).
+  function prepararInstalacionPwa() {
+    const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
+    if (!enPanel) return;
+    if (!('serviceWorker' in navigator)) return;
+    const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (yaInstalada) return;
+
+    navigator.serviceWorker.register(normalizarInterna('/sw.js')).catch(() => null);
+
+    let deferredPrompt = null;
+    let installBtn = null;
+
+    const ocultar = () => {
+      if (installBtn) installBtn.classList.remove('show');
+    };
+
+    const crearBoton = () => {
+      if (installBtn) return installBtn;
+      installBtn = document.createElement('button');
+      installBtn.type = 'button';
+      installBtn.className = 'pwa-install-btn';
+      installBtn.innerHTML = '<i class="bi bi-phone me-1"></i>Instalar app';
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          try {
+            await deferredPrompt.userChoice;
+          } catch (_) {
+            // Sin acción adicional.
+          }
+          deferredPrompt = null;
+          ocultar();
+          return;
+        }
+        mostrarInstruccionesInstalacion();
+      });
+      document.body.appendChild(installBtn);
+      return installBtn;
+    };
+
+    const mostrarInstruccionesInstalacion = () => {
+      const esIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
+      const esSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent || '');
+      const mensaje = esIos && esSafari
+        ? 'En iPhone/iPad: toca Compartir y luego "Añadir a pantalla de inicio".'
+        : 'Abre el menú del navegador y selecciona "Instalar aplicación" o "Agregar a pantalla de inicio".';
+
+      if (window.bootstrap && window.bootstrap.Toast) {
+        const contenedor = document.createElement('div');
+        contenedor.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        contenedor.innerHTML = `
+          <div class="toast show text-bg-dark border-0" role="status" aria-live="polite">
+            <div class="d-flex">
+              <div class="toast-body">${mensaje}</div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+            </div>
+          </div>`;
+        document.body.appendChild(contenedor);
+        setTimeout(() => contenedor.remove(), 7000);
+        return;
+      }
+
+      alert(mensaje);
+    };
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      crearBoton().classList.add('show');
+    });
+
+    // Fallback visible: garantiza opción manual aunque el navegador no dispare beforeinstallprompt.
+    setTimeout(() => {
+      if (!deferredPrompt) {
+        crearBoton().classList.add('show');
+      }
+    }, 1200);
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      ocultar();
+    });
+  }
+
+  prepararInstalacionPwa();
 })();

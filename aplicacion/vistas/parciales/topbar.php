@@ -35,6 +35,15 @@ if ($resumenPlan) {
 }
 ?>
 <header class="topbar border-bottom bg-white px-3 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <button
+    class="btn btn-sm btn-outline-secondary d-lg-none js-sidebar-toggle"
+    type="button"
+    aria-label="Abrir menú"
+    aria-controls="sidebarPrincipal"
+    aria-expanded="false"
+  >
+    <i class="bi bi-list"></i>
+  </button>
   <div class="topbar-identidad d-flex align-items-center gap-3">
     <div class="topbar-identidad__avatar">
       <i class="bi bi-building"></i>
