@@ -6,6 +6,21 @@ use Aplicacion\Nucleo\Modelo;
 
 class Empresa extends Modelo
 {
+    private function tablasDependientesDe(string $tabla): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT
+                kcu.table_name AS tabla_hija,
+                kcu.column_name AS columna_hija,
+                kcu.referenced_column_name AS columna_padre
+            FROM information_schema.key_column_usage kcu
+            WHERE kcu.table_schema = DATABASE()
+              AND kcu.referenced_table_name = :tabla"
+        );
+        $stmt->execute(['tabla' => $tabla]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
+    }
+
     private function tablasConEmpresaId(): array
     {
         $stmt = $this->db->query("SELECT DISTINCT table_name FROM information_schema.columns WHERE table_schema = DATABASE() AND column_name = 'empresa_id'");
@@ -18,6 +33,118 @@ class Empresa extends Modelo
         $stmt = $this->db->prepare("SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = :tabla AND column_name = :columna LIMIT 1");
         $stmt->execute(['tabla' => $tabla, 'columna' => $columna]);
         return (bool) $stmt->fetchColumn();
+    }
+
+    private function ordenarTablasParaEliminar(array $tablas): array
+    {
+        if (count($tablas) <= 1) {
+            return $tablas;
+        }
+
+        $pendientes = array_fill_keys($tablas, true);
+        $hijosPorPadre = [];
+
+        $stmt = $this->db->query(
+            "SELECT table_name AS tabla_hija, referenced_table_name AS tabla_padre
+             FROM information_schema.key_column_usage
+             WHERE table_schema = DATABASE()
+               AND referenced_table_name IS NOT NULL"
+        );
+        $relaciones = $stmt ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+        foreach ($relaciones as $relacion) {
+            $tablaHija = (string) ($relacion['tabla_hija'] ?? '');
+            $tablaPadre = (string) ($relacion['tabla_padre'] ?? '');
+            if (!isset($pendientes[$tablaPadre]) || !isset($pendientes[$tablaHija]) || $tablaHija === $tablaPadre) {
+                continue;
+            }
+            $hijosPorPadre[$tablaPadre][$tablaHija] = true;
+        }
+
+        $orden = [];
+        while (!empty($pendientes)) {
+            $hojas = [];
+            foreach (array_keys($pendientes) as $tabla) {
+                $hijosActivos = array_intersect_key($hijosPorPadre[$tabla] ?? [], $pendientes);
+                if (empty($hijosActivos)) {
+                    $hojas[] = $tabla;
+                }
+            }
+
+            if (empty($hojas)) {
+                $hojas = array_keys($pendientes);
+            }
+
+            foreach ($hojas as $tabla) {
+                if (!isset($pendientes[$tabla])) {
+                    continue;
+                }
+                $orden[] = $tabla;
+                unset($pendientes[$tabla]);
+            }
+
+            foreach ($hijosPorPadre as $padre => $hijos) {
+                foreach ($hojas as $tablaEliminada) {
+                    unset($hijosPorPadre[$padre][$tablaEliminada]);
+                }
+            }
+        }
+
+        return $orden;
+    }
+
+    private function relacionesFkEntreTablas(array $tablas): array
+    {
+        if (empty($tablas)) {
+            return [];
+        }
+
+        $setTablas = array_fill_keys($tablas, true);
+        $stmt = $this->db->query(
+            "SELECT table_name AS tabla_hija, referenced_table_name AS tabla_padre
+             FROM information_schema.key_column_usage
+             WHERE table_schema = DATABASE()
+               AND referenced_table_name IS NOT NULL"
+        );
+        $relaciones = $stmt ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+
+        $resultado = [];
+        foreach ($relaciones as $relacion) {
+            $tablaHija = (string) ($relacion['tabla_hija'] ?? '');
+            $tablaPadre = (string) ($relacion['tabla_padre'] ?? '');
+            if (!isset($setTablas[$tablaHija]) || !isset($setTablas[$tablaPadre]) || $tablaHija === $tablaPadre) {
+                continue;
+            }
+            $resultado[] = ['hija' => $tablaHija, 'padre' => $tablaPadre];
+        }
+
+        return $resultado;
+    }
+
+    private function resolverTablasEliminacionFisica(array $tablas): array
+    {
+        $eliminacionFisica = [];
+        foreach ($tablas as $tabla) {
+            if (!$this->tablaTieneColumna($tabla, 'fecha_eliminacion')) {
+                $eliminacionFisica[$tabla] = true;
+            }
+        }
+
+        $relaciones = $this->relacionesFkEntreTablas($tablas);
+        $cambio = true;
+        while ($cambio) {
+            $cambio = false;
+            foreach ($relaciones as $relacion) {
+                $padre = $relacion['padre'];
+                $hija = $relacion['hija'];
+                if (!isset($eliminacionFisica[$padre]) || isset($eliminacionFisica[$hija])) {
+                    continue;
+                }
+                $eliminacionFisica[$hija] = true;
+                $cambio = true;
+            }
+        }
+
+        return $eliminacionFisica;
     }
 
     public function obtenerResumenDatosAsociados(int $empresaId): array
@@ -41,19 +168,66 @@ class Empresa extends Modelo
         return $resumen;
     }
 
+    private function eliminarDependenciasSinEmpresaId(int $empresaId, array $tablasConEmpresaId): void
+    {
+        foreach ($tablasConEmpresaId as $tablaPadre) {
+            foreach ($this->tablasDependientesDe($tablaPadre) as $relacion) {
+                $tablaHija = (string) ($relacion['tabla_hija'] ?? '');
+                if ($tablaHija === '' || in_array($tablaHija, $tablasConEmpresaId, true) || $tablaHija === 'empresas') {
+                    continue;
+                }
+
+                $columnaHija = (string) ($relacion['columna_hija'] ?? '');
+                $columnaPadre = (string) ($relacion['columna_padre'] ?? '');
+                if ($columnaHija === '' || $columnaPadre === '') {
+                    continue;
+                }
+
+                $tablaPadreSegura = '`' . str_replace('`', '', $tablaPadre) . '`';
+                $tablaHijaSegura = '`' . str_replace('`', '', $tablaHija) . '`';
+                $columnaHijaSegura = '`' . str_replace('`', '', $columnaHija) . '`';
+                $columnaPadreSegura = '`' . str_replace('`', '', $columnaPadre) . '`';
+
+                if ($this->tablaTieneColumna($tablaHija, 'fecha_eliminacion')) {
+                    $stmt = $this->db->prepare(
+                        'UPDATE ' . $tablaHijaSegura . ' hija
+                         INNER JOIN ' . $tablaPadreSegura . ' padre ON hija.' . $columnaHijaSegura . ' = padre.' . $columnaPadreSegura . '
+                         SET hija.fecha_eliminacion = NOW()
+                         WHERE padre.empresa_id = :empresa_id
+                           AND hija.fecha_eliminacion IS NULL'
+                    );
+                    $stmt->execute(['empresa_id' => $empresaId]);
+                    continue;
+                }
+
+                $stmt = $this->db->prepare(
+                    'DELETE hija FROM ' . $tablaHijaSegura . ' hija
+                     INNER JOIN ' . $tablaPadreSegura . ' padre ON hija.' . $columnaHijaSegura . ' = padre.' . $columnaPadreSegura . '
+                     WHERE padre.empresa_id = :empresa_id'
+                );
+                $stmt->execute(['empresa_id' => $empresaId]);
+            }
+        }
+    }
+
     public function eliminarConDatosAsociados(int $empresaId): void
     {
         $this->db->beginTransaction();
         try {
-            foreach ($this->tablasConEmpresaId() as $tabla) {
+            $tablasConEmpresaId = $this->ordenarTablasParaEliminar($this->tablasConEmpresaId());
+            $tablasEliminacionFisica = $this->resolverTablasEliminacionFisica($tablasConEmpresaId);
+            $this->eliminarDependenciasSinEmpresaId($empresaId, $tablasConEmpresaId);
+
+            foreach ($tablasConEmpresaId as $tabla) {
                 $tablaSegura = '`' . str_replace('`', '', $tabla) . '`';
-                if ($this->tablaTieneColumna($tabla, 'fecha_eliminacion')) {
-                    $stmt = $this->db->prepare('UPDATE ' . $tablaSegura . ' SET fecha_eliminacion = NOW() WHERE empresa_id = :empresa_id AND fecha_eliminacion IS NULL');
-                    $stmt->execute(['empresa_id' => $empresaId]);
-                } else {
+                if (isset($tablasEliminacionFisica[$tabla])) {
                     $stmt = $this->db->prepare('DELETE FROM ' . $tablaSegura . ' WHERE empresa_id = :empresa_id');
                     $stmt->execute(['empresa_id' => $empresaId]);
+                    continue;
                 }
+
+                $stmt = $this->db->prepare('UPDATE ' . $tablaSegura . ' SET fecha_eliminacion = NOW() WHERE empresa_id = :empresa_id AND fecha_eliminacion IS NULL');
+                $stmt->execute(['empresa_id' => $empresaId]);
             }
 
             $stmtEmpresa = $this->db->prepare('UPDATE empresas SET estado = "cancelada", fecha_eliminacion = NOW(), fecha_actualizacion = NOW() WHERE id = :id');
