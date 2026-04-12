@@ -13,6 +13,7 @@ use Aplicacion\Controladores\Admin\PagosControlador;
 use Aplicacion\Controladores\Admin\ReportesControlador;
 use Aplicacion\Controladores\Admin\ConfiguracionGeneralControlador;
 use Aplicacion\Controladores\Admin\HistorialAdminControlador;
+use Aplicacion\Controladores\Admin\SoporteChatsAdminControlador;
 
 use Aplicacion\Controladores\Admin\FlowAdminControlador;
 
@@ -58,6 +59,11 @@ $enrutador->agregar('GET', '/admin/reportes', [ReportesControlador::class, 'inde
 $enrutador->agregar('GET', '/admin/configuracion', [ConfiguracionGeneralControlador::class, 'index'], $mw);
 $enrutador->agregar('POST', '/admin/configuracion', [ConfiguracionGeneralControlador::class, 'guardar'], $mw);
 $enrutador->agregar('GET', '/admin/historial', [HistorialAdminControlador::class, 'index'], $mw);
+
+$enrutador->agregar('GET', '/admin/soporte-chats', [SoporteChatsAdminControlador::class, 'index'], $mw);
+$enrutador->agregar('GET', '/admin/soporte-chats/ver/{id}', [SoporteChatsAdminControlador::class, 'ver'], $mw);
+$enrutador->agregar('GET', '/admin/soporte-chats/mensajes/{id}', [SoporteChatsAdminControlador::class, 'mensajes'], $mw);
+$enrutador->agregar('POST', '/admin/soporte-chats/responder/{id}', [SoporteChatsAdminControlador::class, 'responder'], $mw);
 
 
 $enrutador->agregar('GET', '/admin/flow', [FlowAdminControlador::class, 'dashboard'], $mw);
