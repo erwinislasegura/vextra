@@ -221,6 +221,7 @@ body.preview-open{overflow:hidden}
 
 /* Panel administrador global */
 .sidebar-admin{background:#2f343d !important;border-color:#23272f !important}
+.sidebar-admin{overflow-y:auto;overscroll-behavior:contain}
 .sidebar-admin__brand{display:flex;flex-direction:column;gap:.45rem}
 .sidebar-admin__logo{display:block !important;height:36px !important;width:auto !important;max-width:146px !important;object-fit:contain}
 .sidebar-admin .sidebar-app__titulo{color:#e5e7eb}

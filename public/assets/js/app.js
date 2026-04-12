@@ -196,46 +196,18 @@
       installBtn.className = 'pwa-install-btn';
       installBtn.innerHTML = '<i class="bi bi-phone me-1"></i>Instalar app';
       installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          try {
-            await deferredPrompt.userChoice;
-          } catch (_) {
-            // Sin acción adicional.
-          }
-          deferredPrompt = null;
-          ocultar();
-          return;
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        try {
+          await deferredPrompt.userChoice;
+        } catch (_) {
+          // Sin acción adicional.
         }
-        mostrarInstruccionesInstalacion();
+        deferredPrompt = null;
+        ocultar();
       });
       document.body.appendChild(installBtn);
       return installBtn;
-    };
-
-    const mostrarInstruccionesInstalacion = () => {
-      const esIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
-      const esSafari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent || '');
-      const mensaje = esIos && esSafari
-        ? 'En iPhone/iPad: toca Compartir y luego "Añadir a pantalla de inicio".'
-        : 'Abre el menú del navegador y selecciona "Instalar aplicación" o "Agregar a pantalla de inicio".';
-
-      if (window.bootstrap && window.bootstrap.Toast) {
-        const contenedor = document.createElement('div');
-        contenedor.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-        contenedor.innerHTML = `
-          <div class="toast show text-bg-dark border-0" role="status" aria-live="polite">
-            <div class="d-flex">
-              <div class="toast-body">${mensaje}</div>
-              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
-            </div>
-          </div>`;
-        document.body.appendChild(contenedor);
-        setTimeout(() => contenedor.remove(), 7000);
-        return;
-      }
-
-      alert(mensaje);
     };
 
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -243,13 +215,6 @@
       deferredPrompt = event;
       crearBoton().classList.add('show');
     });
-
-    // Fallback visible: garantiza opción manual aunque el navegador no dispare beforeinstallprompt.
-    setTimeout(() => {
-      if (!deferredPrompt) {
-        crearBoton().classList.add('show');
-      }
-    }, 1200);
 
     window.addEventListener('appinstalled', () => {
       deferredPrompt = null;
