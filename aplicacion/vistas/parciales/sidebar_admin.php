@@ -17,6 +17,7 @@ $items = [
         ['/admin/funcionalidades', 'Funciones de planes', 'bi-grid-3x3-gap'],
         ['/admin/suscripciones', 'Suscripciones', 'bi-card-checklist'],
         ['/admin/pagos', 'Pagos', 'bi-cash-stack'],
+        ['/admin/soporte-chats', 'Chat soporte', 'bi-headset'],
     ],
     'Flow' => [
         ['/admin/flow', 'Dashboard Flow', 'bi-credit-card-2-front'],

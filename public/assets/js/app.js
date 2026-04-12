@@ -81,6 +81,10 @@
     });
 
     form.addEventListener('submit', () => {
+      if (form.dataset.asyncChat === '1') {
+        return;
+      }
+
       if (!form.checkValidity()) {
         return;
       }
