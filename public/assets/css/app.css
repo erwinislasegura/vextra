@@ -218,6 +218,8 @@ body.preview-open{overflow:hidden}
 .sidebar-admin__brand{display:flex;flex-direction:column;gap:.45rem}
 .sidebar-admin__logo{display:block !important;height:36px !important;width:auto !important;max-width:146px !important;object-fit:contain}
 .sidebar-admin .sidebar-app__titulo{color:#e5e7eb}
+.sidebar-admin__group{padding-top:.15rem}
+.sidebar-admin__group-title{font-size:.67rem;letter-spacing:.09em;text-transform:uppercase;color:#c4c9d1;font-weight:700;padding:.2rem .5rem}
 .sidebar-admin .nav-link{color:#f3f4f6}
 .sidebar-admin .nav-link i{color:#ffffff}
 .sidebar-admin .nav-link:hover{background:rgba(255,255,255,.12);color:#ffffff}
@@ -227,6 +229,9 @@ body.preview-open{overflow:hidden}
 .admin-kpi{background:#fff;border:1px solid #d7e0eb;border-left:4px solid var(--vextra-morado);border-radius:.65rem;padding:.7rem .8rem}
 .admin-kpi .label{font-size:.72rem;text-transform:uppercase;color:#6b7e94;font-weight:700}
 .admin-kpi .value{font-size:1.15rem;font-weight:700;color:#16283c}
+.admin-dashboard__hero{border:1px solid #d8e4f2;background:linear-gradient(135deg,#f7f9ff 0,#ffffff 50%,#f5f6ff 100%)}
+.admin-dashboard .admin-progress .progress{height:.46rem;background:#edf1f7}
+.admin-quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
 
 /* Bloqueo operativo por estado comercial */
 .app-shell--bloqueada{filter:grayscale(.08)}
