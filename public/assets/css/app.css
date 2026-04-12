@@ -240,6 +240,21 @@ body.preview-open{overflow:hidden}
 .admin-dashboard__hero{border:1px solid #d8e4f2;background:linear-gradient(135deg,#f7f9ff 0,#ffffff 50%,#f5f6ff 100%)}
 .admin-dashboard .admin-progress .progress{height:.46rem;background:#edf1f7}
 .admin-quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
+.pwa-install-btn{
+  position:fixed;
+  right:1rem;
+  bottom:1rem;
+  z-index:1080;
+  border:1px solid #4632a8;
+  background:#4632a8;
+  color:#fff;
+  border-radius:999px;
+  padding:.55rem .9rem;
+  font-size:.8rem;
+  box-shadow:0 8px 18px rgba(19,31,53,.22);
+  display:none;
+}
+.pwa-install-btn.show{display:inline-flex;align-items:center}
 @media (max-width: 991.98px){
   .app-shell-admin{position:relative}
   .app-shell-admin .sidebar-admin{

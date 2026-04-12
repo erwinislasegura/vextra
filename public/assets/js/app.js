@@ -177,8 +177,43 @@
     const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
     if (!enPanel) return;
     if (!('serviceWorker' in navigator)) return;
-    // Dejamos que el navegador gestione el prompt nativo de instalación.
-    navigator.serviceWorker.register(normalizarInterna('/sw.js')).catch(() => null);
+    const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (yaInstalada) return;
+
+    navigator.serviceWorker.register(normalizarInterna('/sw.js'), { scope: normalizarInterna('/') }).catch(() => null);
+
+    let deferredPrompt = null;
+    let botonInstalar = null;
+
+    const obtenerBoton = () => {
+      if (botonInstalar) return botonInstalar;
+      botonInstalar = document.createElement('button');
+      botonInstalar.type = 'button';
+      botonInstalar.className = 'pwa-install-btn';
+      botonInstalar.innerHTML = '<i class="bi bi-download me-1"></i> Instalar app';
+      botonInstalar.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        try {
+          await deferredPrompt.userChoice;
+        } catch (_) {
+          // Ignorado
+        }
+      });
+      document.body.appendChild(botonInstalar);
+      return botonInstalar;
+    };
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      obtenerBoton().classList.add('show');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      if (botonInstalar) botonInstalar.classList.remove('show');
+    });
   }
 
   prepararInstalacionPwa();
