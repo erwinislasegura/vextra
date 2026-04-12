@@ -171,7 +171,11 @@ class EmpresasControlador extends Controlador
             (new LogAdministracion())->registrar('empresas', 'eliminar', 'Eliminación completa de empresa y datos asociados', $id);
             flash('success', 'Empresa eliminada correctamente junto con sus datos asociados.');
         } catch (Throwable $e) {
-            flash('danger', 'No se pudo eliminar la empresa.');
+            $detalle = trim((string) $e->getMessage());
+            if ($detalle === '') {
+                $detalle = 'Ocurrió un error interno sin detalle técnico.';
+            }
+            flash('danger', 'No se pudo eliminar la empresa: ' . $detalle);
         }
 
         $this->redirigir('/admin/empresas');
