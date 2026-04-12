@@ -182,7 +182,7 @@
 
     navigator.serviceWorker.register(normalizarInterna('/sw.js'), { scope: normalizarInterna('/') }).catch(() => null);
 
-    let deferredPrompt = null;
+    let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
     let botonInstalar = null;
 
     const obtenerBoton = () => {
@@ -204,14 +204,20 @@
       return botonInstalar;
     };
 
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-      obtenerBoton().classList.add('show');
-    });
+    const mostrarSiDisponible = () => {
+      deferredPrompt = window.__vextraDeferredInstallPrompt || deferredPrompt;
+      if (deferredPrompt) {
+        obtenerBoton().classList.add('show');
+      }
+    };
+
+    window.addEventListener('vextra:install-ready', mostrarSiDisponible);
+    window.addEventListener('beforeinstallprompt', mostrarSiDisponible);
+    mostrarSiDisponible();
 
     window.addEventListener('appinstalled', () => {
       deferredPrompt = null;
+      window.__vextraDeferredInstallPrompt = null;
       if (botonInstalar) botonInstalar.classList.remove('show');
     });
   }
