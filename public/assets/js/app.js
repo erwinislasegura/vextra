@@ -177,49 +177,8 @@
     const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
     if (!enPanel) return;
     if (!('serviceWorker' in navigator)) return;
-    const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (yaInstalada) return;
-
+    // Dejamos que el navegador gestione el prompt nativo de instalación.
     navigator.serviceWorker.register(normalizarInterna('/sw.js')).catch(() => null);
-
-    let deferredPrompt = null;
-    let installBtn = null;
-
-    const ocultar = () => {
-      if (installBtn) installBtn.classList.remove('show');
-    };
-
-    const crearBoton = () => {
-      if (installBtn) return installBtn;
-      installBtn = document.createElement('button');
-      installBtn.type = 'button';
-      installBtn.className = 'pwa-install-btn';
-      installBtn.innerHTML = '<i class="bi bi-phone me-1"></i>Instalar app';
-      installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        try {
-          await deferredPrompt.userChoice;
-        } catch (_) {
-          // Sin acción adicional.
-        }
-        deferredPrompt = null;
-        ocultar();
-      });
-      document.body.appendChild(installBtn);
-      return installBtn;
-    };
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-      crearBoton().classList.add('show');
-    });
-
-    window.addEventListener('appinstalled', () => {
-      deferredPrompt = null;
-      ocultar();
-    });
   }
 
   prepararInstalacionPwa();
