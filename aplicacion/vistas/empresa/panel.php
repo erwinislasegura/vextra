@@ -58,6 +58,8 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
     </div>
   </div>
 
+
+
   <div class="panel-cliente__flow row g-2 mb-3">
     <div class="col-md-4"><div class="panel-flow-card"><div class="panel-flow-card__step">Paso 1</div><div class="panel-flow-card__title">Captura oportunidad</div><p>Crea cotización o cliente en segundos.</p></div></div>
     <div class="col-md-4"><div class="panel-flow-card"><div class="panel-flow-card__step">Paso 2</div><div class="panel-flow-card__title">Ejecuta operación</div><p>Gestiona inventario, POS y aprobaciones.</p></div></div>
