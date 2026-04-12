@@ -90,6 +90,75 @@ class GestionComercialControlador extends Controlador
         }
     }
 
+    public function iniciarPagoCambioPlan(): void
+    {
+        validar_csrf();
+
+        $empresaId = empresa_actual_id();
+        $planId = (int) ($_POST['plan_id'] ?? 0);
+        $tipoCobro = (string) ($_POST['tipo_cobro'] ?? 'mensual');
+        $tipoCobro = in_array($tipoCobro, ['mensual', 'anual'], true) ? $tipoCobro : 'mensual';
+
+        $empresa = (new \Aplicacion\Modelos\Empresa())->buscar($empresaId);
+        if (!$empresa || (string) ($empresa['estado'] ?? '') !== 'vencida') {
+            flash('danger', 'Esta opción solo está disponible para cuentas vencidas.');
+            $this->redirigir('/app/panel');
+        }
+
+        $plan = (new Plan())->buscar($planId);
+        if (!$plan || (string) ($plan['estado'] ?? '') !== 'activo' || (int) ($plan['visible'] ?? 0) !== 1) {
+            flash('danger', 'Selecciona un plan válido para continuar.');
+            $this->redirigir('/app/panel');
+        }
+
+        $suscripcion = (new Suscripcion())->obtenerUltimaPorEmpresa($empresaId);
+        if (!$suscripcion) {
+            flash('danger', 'No encontramos una suscripción activa para iniciar el cambio de plan.');
+            $this->redirigir('/app/panel');
+        }
+
+        try {
+            $suscripcionActualizada = [
+                'empresa_id' => (int) $empresaId,
+                'plan_id' => (int) $plan['id'],
+                'estado' => (string) ($suscripcion['estado'] ?? 'vencida'),
+                'fecha_inicio' => (string) ($suscripcion['fecha_inicio'] ?? date('Y-m-d')),
+                'fecha_vencimiento' => (string) ($suscripcion['fecha_vencimiento'] ?? date('Y-m-d')),
+                'observaciones' => 'Cambio de plan solicitado desde cuenta vencida (' . $tipoCobro . ').',
+            ];
+            (new Suscripcion())->actualizar((int) ($suscripcion['id'] ?? 0), $suscripcionActualizada);
+
+            $urlRetornoPago = FlowApiService::construirUrlPublica('/retorno/pago?origen=trial_pago');
+            $urlWebhookPago = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
+            $respuestaPago = (new FlowPagosService())->crearPagoUnico(
+                (int) $empresaId,
+                (int) $plan['id'],
+                $tipoCobro,
+                'Cambio de plan y reactivación de cuenta vencida',
+                $urlRetornoPago,
+                $urlWebhookPago,
+                (int) ($suscripcion['id'] ?? 0)
+            );
+
+            if (isset($respuestaPago['url'], $respuestaPago['token'])) {
+                $_SESSION['flow_pago_trial_pendiente'] = [
+                    'empresa_id' => (int) $empresaId,
+                    'suscripcion_id' => (int) ($suscripcion['id'] ?? 0),
+                    'flow_token' => (string) $respuestaPago['token'],
+                    'plan_id' => (int) $plan['id'],
+                    'tipo_cobro' => $tipoCobro,
+                    'fecha' => date('c'),
+                ];
+                $this->redirigir($respuestaPago['url'] . '?token=' . $respuestaPago['token']);
+            }
+
+            throw new \RuntimeException('Flow no devolvió URL/token para iniciar el pago.');
+        } catch (\Throwable $e) {
+            flash('danger', 'No fue posible iniciar el pago del nuevo plan. Intenta nuevamente en unos minutos. Detalle: ' . $e->getMessage());
+            $this->redirigir('/app/panel');
+        }
+    }
+
     public function contactos(): void
     {
         $empresaId = empresa_actual_id();

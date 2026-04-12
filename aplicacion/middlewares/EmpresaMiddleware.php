@@ -11,12 +11,9 @@ class EmpresaMiddleware
         $usuario = usuario_actual();
         $esSuperAdmin = ($usuario['rol_codigo'] ?? '') === 'superadministrador';
         $contextoEmpresa = (int) ($_SESSION['admin_empresa_contexto_id'] ?? 0);
+        $accesoComoContextoEmpresa = $esSuperAdmin && $contextoEmpresa > 0;
 
-        if ($esSuperAdmin && $contextoEmpresa > 0) {
-            return;
-        }
-
-        if (!tiene_rol([
+        if (!$accesoComoContextoEmpresa && !tiene_rol([
             'administrador_empresa',
             'vendedor',
             'administrativo',
@@ -42,7 +39,12 @@ class EmpresaMiddleware
             $estadosBloqueados = ['suspendida', 'vencida', 'cancelada'];
             if (in_array($estadoCuenta, $estadosBloqueados, true)) {
                 $_SESSION['bloqueo_cuenta_estado'] = $estadoCuenta;
-                if ($rutaActual !== '/app/panel') {
+                $rutasPermitidas = ['/app/panel'];
+                if ($estadoCuenta === 'vencida') {
+                    $rutasPermitidas[] = '/app/panel/iniciar-pago-trial';
+                    $rutasPermitidas[] = '/app/panel/iniciar-pago-cambio-plan';
+                }
+                if (!in_array($rutaActual, $rutasPermitidas, true)) {
                     $destino = rtrim(base_path_url(), '/') . '/app/panel';
                     header('Location: ' . $destino);
                     exit;
