@@ -12,12 +12,20 @@ use Aplicacion\Controladores\Empresa\GestionComercialControlador;
 use Aplicacion\Controladores\Empresa\DocumentosControlador;
 use Aplicacion\Controladores\Empresa\PuntoVentaControlador;
 use Aplicacion\Controladores\Empresa\InventarioControlador;
+use Aplicacion\Controladores\Empresa\SoporteChatControlador;
 use Aplicacion\Controladores\Admin\AdministradoresEmpresasControlador;
 
 $mwEmpresa = [AutenticadoMiddleware::class, EmpresaMiddleware::class];
 
 $enrutador->agregar('GET', '/app/panel', [GestionComercialControlador::class, 'inicio'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/panel/iniciar-pago-trial', [GestionComercialControlador::class, 'iniciarPagoPlanTrial'], $mwEmpresa);
+
+$enrutador->agregar('GET', '/app/soporte-chats', [SoporteChatControlador::class, 'index'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/soporte-chats/crear', [SoporteChatControlador::class, 'crear'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/soporte-chats/ver/{id}', [SoporteChatControlador::class, 'ver'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/soporte-chats/mensajes/{id}', [SoporteChatControlador::class, 'mensajes'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/soporte-chats/adjunto/{id}', [SoporteChatControlador::class, 'descargarAdjunto'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/soporte-chats/responder/{id}', [SoporteChatControlador::class, 'responder'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/volver-admin', [AdministradoresEmpresasControlador::class, 'volverPanelAdmin'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/clientes', [ClientesControlador::class, 'index'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/clientes/exportar/excel', [ClientesControlador::class, 'exportarExcel'], $mwEmpresa);
