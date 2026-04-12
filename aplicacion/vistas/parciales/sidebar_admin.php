@@ -36,7 +36,7 @@ $items = [
     ],
 ];
 ?>
-<aside class="sidebar sidebar-app sidebar-admin p-3 border-end">
+<aside class="sidebar sidebar-app sidebar-admin p-3 border-end" id="sidebarPrincipal">
   <a href="<?= e(url('/admin/panel')) ?>" class="sidebar-admin__brand mb-3 text-decoration-none">
     <img src="<?= e(url($logoAdmin)) ?>" alt="Vextra" class="sidebar-admin__logo" width="146" height="72">
     <div class="sidebar-app__titulo">Centro de control SaaS</div>
