@@ -58,6 +58,47 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
     </div>
   </div>
 
+
+
+  <div id="chat-soporte" class="card card-dashboard mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-headset me-1"></i>Chat de soporte</span>
+      <a class="btn btn-sm btn-outline-success" href="<?= e(url('/app/soporte-chats/ver/' . (int) ($chatsSoporte[0]['id'] ?? 0))) ?>" <?= empty($chatsSoporte) ? 'style="pointer-events:none;opacity:.5"' : '' ?>>Abrir último chat</a>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-lg-5">
+          <form method="POST" action="<?= e(url('/app/soporte-chats/crear')) ?>" class="d-grid gap-2">
+            <?= csrf_campo() ?>
+            <input type="text" class="form-control" name="asunto" maxlength="180" required placeholder="Asunto del soporte">
+            <textarea class="form-control" rows="4" name="mensaje" required placeholder="Cuéntanos qué necesitas y te responderemos por este chat"></textarea>
+            <button type="submit" class="btn btn-primary">Enviar a soporte</button>
+          </form>
+        </div>
+        <div class="col-lg-7">
+          <div class="small text-muted mb-2">Conversaciones recientes <?php if (($chatsSoporteNoLeidos ?? 0) > 0): ?><span class="badge text-bg-success ms-1"><?= (int) $chatsSoporteNoLeidos ?> nuevo(s)</span><?php endif; ?></div>
+          <?php if (!empty($chatsSoporte)): ?>
+            <div class="list-group">
+              <?php foreach ($chatsSoporte as $chatSoporte): ?>
+                <a href="<?= e(url('/app/soporte-chats/ver/' . (int) $chatSoporte['id'])) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                  <span>
+                    <strong><?= e($chatSoporte['asunto']) ?></strong>
+                    <small class="d-block text-muted">Último mensaje: <?= e((string) $chatSoporte['fecha_ultimo_mensaje']) ?></small>
+                  </span>
+                  <?php if ((int) ($chatSoporte['no_leidos_cliente'] ?? 0) > 0): ?>
+                    <span class="badge text-bg-success">Nuevo</span>
+                  <?php endif; ?>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <div class="text-muted small">Aún no hay chats de soporte. Crea el primero desde este panel.</div>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="panel-cliente__flow row g-2 mb-3">
     <div class="col-md-4"><div class="panel-flow-card"><div class="panel-flow-card__step">Paso 1</div><div class="panel-flow-card__title">Captura oportunidad</div><p>Crea cotización o cliente en segundos.</p></div></div>
     <div class="col-md-4"><div class="panel-flow-card"><div class="panel-flow-card__step">Paso 2</div><div class="panel-flow-card__title">Ejecuta operación</div><p>Gestiona inventario, POS y aprobaciones.</p></div></div>

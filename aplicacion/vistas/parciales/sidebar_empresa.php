@@ -1,4 +1,5 @@
 <?php
+use Aplicacion\Modelos\SoporteChat;
 $rutaActual = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $base = base_path_url();
 if ($base !== '' && str_starts_with($rutaActual, $base . '/')) {
@@ -16,6 +17,7 @@ $esProductos = $coincideRuta('/app/productos', $rutaActual)
 $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
 $logoEmpresa = logo_empresa_actual();
 $logoEmpresaSrc = $logoEmpresa ? (url('/app/logo-empresa') . '?v=' . urlencode($logoEmpresa)) : null;
+$soporteNoLeidosCliente = (new SoporteChat())->contarNoLeidosEmpresa((int) (empresa_actual_id() ?? 0));
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
   <div class="mb-3">
@@ -87,5 +89,8 @@ $logoEmpresaSrc = $logoEmpresa ? (url('/app/logo-empresa') . '?v=' . urlencode($
     <?php if ($tieneModulo('modulo_usuarios')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/usuarios', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/usuarios')) ?>"><i class="bi bi-people mt-1"></i><span>Usuarios y permisos</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_notificaciones')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/notificaciones', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/notificaciones')) ?>"><i class="bi bi-bell mt-1"></i><span>Notificaciones</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_historial')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/historial', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/historial')) ?>"><i class="bi bi-clock-history mt-1"></i><span>Historial / actividad</span></a><?php endif; ?>
+    <div class="pt-2 border-top"><div class="text-uppercase text-muted fw-semibold px-2">Soporte</div></div>
+    <a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/soporte-chats', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/panel')) ?>#chat-soporte"><i class="bi bi-headset mt-1"></i><span>Chat soporte</span><?php if ($soporteNoLeidosCliente > 0): ?><span class="badge text-bg-success ms-auto"><?= (int) $soporteNoLeidosCliente ?></span><?php endif; ?></a>
+
   </nav>
 </aside>
