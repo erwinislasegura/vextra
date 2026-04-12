@@ -35,6 +35,63 @@ class Empresa extends Modelo
         return (bool) $stmt->fetchColumn();
     }
 
+    private function ordenarTablasParaEliminar(array $tablas): array
+    {
+        if (count($tablas) <= 1) {
+            return $tablas;
+        }
+
+        $pendientes = array_fill_keys($tablas, true);
+        $hijosPorPadre = [];
+
+        $stmt = $this->db->query(
+            "SELECT table_name AS tabla_hija, referenced_table_name AS tabla_padre
+             FROM information_schema.key_column_usage
+             WHERE table_schema = DATABASE()
+               AND referenced_table_name IS NOT NULL"
+        );
+        $relaciones = $stmt ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
+        foreach ($relaciones as $relacion) {
+            $tablaHija = (string) ($relacion['tabla_hija'] ?? '');
+            $tablaPadre = (string) ($relacion['tabla_padre'] ?? '');
+            if (!isset($pendientes[$tablaPadre]) || !isset($pendientes[$tablaHija]) || $tablaHija === $tablaPadre) {
+                continue;
+            }
+            $hijosPorPadre[$tablaPadre][$tablaHija] = true;
+        }
+
+        $orden = [];
+        while (!empty($pendientes)) {
+            $hojas = [];
+            foreach (array_keys($pendientes) as $tabla) {
+                $hijosActivos = array_intersect_key($hijosPorPadre[$tabla] ?? [], $pendientes);
+                if (empty($hijosActivos)) {
+                    $hojas[] = $tabla;
+                }
+            }
+
+            if (empty($hojas)) {
+                $hojas = array_keys($pendientes);
+            }
+
+            foreach ($hojas as $tabla) {
+                if (!isset($pendientes[$tabla])) {
+                    continue;
+                }
+                $orden[] = $tabla;
+                unset($pendientes[$tabla]);
+            }
+
+            foreach ($hijosPorPadre as $padre => $hijos) {
+                foreach ($hojas as $tablaEliminada) {
+                    unset($hijosPorPadre[$padre][$tablaEliminada]);
+                }
+            }
+        }
+
+        return $orden;
+    }
+
     public function obtenerResumenDatosAsociados(int $empresaId): array
     {
         $resumen = [];
@@ -102,7 +159,7 @@ class Empresa extends Modelo
     {
         $this->db->beginTransaction();
         try {
-            $tablasConEmpresaId = $this->tablasConEmpresaId();
+            $tablasConEmpresaId = $this->ordenarTablasParaEliminar($this->tablasConEmpresaId());
             $this->eliminarDependenciasSinEmpresaId($empresaId, $tablasConEmpresaId);
 
             foreach ($tablasConEmpresaId as $tabla) {
