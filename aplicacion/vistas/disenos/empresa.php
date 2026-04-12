@@ -80,25 +80,32 @@ $mensajesBloqueo = [
                     </div>
                     <div class="modal-body">
                         <?php if ($estadoBloqueoCuenta === 'vencida'): ?>
-                            <p class="mb-3 fs-6"><?= e($configBloqueo['detalle']) ?></p>
+                            <p class="mb-2 fs-6"><?= e($configBloqueo['detalle']) ?></p>
+                            <p class="text-secondary small mb-3">Selecciona una opción de reactivación. El pago se procesa de forma segura mediante Flow.</p>
                             <div class="bloqueo-cuenta-opcion mb-3">
-                                <h6 class="mb-1">1) Pagar plan actual</h6>
-                                <p class="text-secondary small mb-2">Continúa con tu plan vigente y completa el pago seguro en Flow para reactivar de inmediato.</p>
+                                <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                    <h6 class="mb-0">Renovar plan actual</h6>
+                                    <span class="badge text-bg-light border">Más rápido</span>
+                                </div>
+                                <p class="text-secondary small mb-2">Mantén tu plan vigente y reactiva tu cuenta en minutos.</p>
                                 <form method="POST" action="<?= e(url('/app/panel/iniciar-pago-trial')) ?>" class="m-0">
                                     <?= csrf_campo() ?>
-                                    <button type="submit" class="btn btn-dark btn-sm">
-                                        <i class="bi bi-credit-card me-1"></i>Pagar plan actual en Flow
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        <i class="bi bi-shield-lock me-1"></i>Pagar plan actual en Flow
                                     </button>
                                 </form>
                             </div>
 
                             <div class="bloqueo-cuenta-opcion">
-                                <h6 class="mb-1">2) Cambiar plan y pagar</h6>
-                                <p class="text-secondary small mb-2">Elige el plan y la modalidad de cobro. Te enviaremos al checkout de Flow para finalizar el pago.</p>
+                                <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                    <h6 class="mb-0">Cambiar plan y pagar</h6>
+                                    <span class="badge text-bg-light border">Flexible</span>
+                                </div>
+                                <p class="text-secondary small mb-2">Elige el plan y modalidad de cobro antes de continuar al checkout de Flow.</p>
                                 <form method="POST" action="<?= e(url('/app/panel/iniciar-pago-cambio-plan')) ?>" class="row g-2 align-items-end">
                                     <?= csrf_campo() ?>
                                     <div class="col-md-6">
-                                        <label class="form-label small mb-1">Plan</label>
+                                        <label class="form-label small mb-1">Plan a contratar</label>
                                         <select name="plan_id" class="form-select form-select-sm" required>
                                             <option value="">Selecciona plan...</option>
                                             <?php foreach ($planesCambioVencida as $planOpcion): ?>
@@ -110,20 +117,20 @@ $mensajesBloqueo = [
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label small mb-1">Cobro</label>
+                                        <label class="form-label small mb-1">Modalidad</label>
                                         <select name="tipo_cobro" class="form-select form-select-sm" required>
                                             <option value="mensual">Mensual</option>
                                             <option value="anual">Anual</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3 d-grid">
-                                        <button type="submit" class="btn btn-outline-dark btn-sm">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
                                             Pagar en Flow
                                         </button>
                                     </div>
                                 </form>
                             </div>
-                            <p class="mb-0 text-secondary small mt-3">Mientras este estado permanezca activo, no podrás operar módulos ni ejecutar procesos internos.</p>
+                            <p class="mb-0 text-secondary small mt-3"><i class="bi bi-info-circle me-1"></i>Mientras este estado permanezca activo, no podrás operar módulos ni ejecutar procesos internos.</p>
                         <?php else: ?>
                             <p class="mb-2 fs-6"><?= e($configBloqueo['detalle']) ?></p>
                             <p class="mb-0 text-secondary small">Mientras este estado permanezca activo, por seguridad no podrás operar módulos, crear registros ni ejecutar procesos internos.</p>

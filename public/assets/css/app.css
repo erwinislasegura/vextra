@@ -253,7 +253,7 @@ body.preview-open{overflow:hidden}
 #modalBloqueoCuenta .modal-header.modal-bloqueo--suspendida{background-color:#f59f00 !important;border-bottom-color:#d97706 !important}
 #modalBloqueoCuenta .modal-header.modal-bloqueo--vencida{background-color:#111827 !important;border-bottom-color:#1f2937 !important}
 #modalBloqueoCuenta .modal-header.modal-bloqueo--cancelada{background-color:#dc2626 !important;border-bottom-color:#991b1b !important}
-#modalBloqueoCuenta .bloqueo-cuenta-opcion{border:1px solid #e5e7eb;border-radius:.55rem;padding:.75rem .85rem;background:#fff}
+#modalBloqueoCuenta .bloqueo-cuenta-opcion{border:1px solid #e5e7eb;border-radius:.7rem;padding:.85rem .9rem;background:#fcfcfd;box-shadow:0 2px 6px rgba(15,23,42,.04)}
 #modalBloqueoCuenta .bloqueo-cuenta-opcion + .bloqueo-cuenta-opcion{margin-top:.65rem}
 
 
