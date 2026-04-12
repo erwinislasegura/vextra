@@ -10,6 +10,7 @@ class SoporteChat extends Modelo
     {
         parent::__construct();
         $this->asegurarTablas();
+        $this->asegurarColumnasAdjuntos();
     }
 
     public function listarChatsEmpresa(int $empresaId, int $limite = 20): array
@@ -71,7 +72,7 @@ class SoporteChat extends Modelo
 
     public function listarMensajes(int $chatId): array
     {
-        $stmt = $this->db->prepare('SELECT id, chat_id, remitente_tipo, remitente_id, mensaje, fecha_creacion
+        $stmt = $this->db->prepare('SELECT id, chat_id, remitente_tipo, remitente_id, mensaje, archivo_ruta, archivo_nombre, archivo_tipo, archivo_peso, fecha_creacion
             FROM soporte_chat_mensajes
             WHERE chat_id = :chat_id
             ORDER BY id ASC');
@@ -79,10 +80,9 @@ class SoporteChat extends Modelo
         return $stmt->fetchAll();
     }
 
-
     public function listarMensajesDesde(int $chatId, int $ultimoId = 0): array
     {
-        $stmt = $this->db->prepare('SELECT id, chat_id, remitente_tipo, remitente_id, mensaje, fecha_creacion
+        $stmt = $this->db->prepare('SELECT id, chat_id, remitente_tipo, remitente_id, mensaje, archivo_ruta, archivo_nombre, archivo_tipo, archivo_peso, fecha_creacion
             FROM soporte_chat_mensajes
             WHERE chat_id = :chat_id AND id > :ultimo_id
             ORDER BY id ASC');
@@ -92,7 +92,7 @@ class SoporteChat extends Modelo
         return $stmt->fetchAll();
     }
 
-    public function crearChat(int $empresaId, int $usuarioId, string $asunto, string $mensaje): int
+    public function crearChat(int $empresaId, int $usuarioId, string $asunto, string $mensaje, ?array $adjunto = null): int
     {
         $stmt = $this->db->prepare('INSERT INTO soporte_chats
             (empresa_id, asunto, estado, no_leidos_admin, no_leidos_cliente, fecha_ultimo_mensaje, fecha_creacion, fecha_actualizacion)
@@ -103,18 +103,21 @@ class SoporteChat extends Modelo
         ]);
 
         $chatId = (int) $this->db->lastInsertId();
-        $this->agregarMensaje($chatId, 'cliente', $usuarioId, $mensaje);
+        $this->agregarMensaje($chatId, 'cliente', $usuarioId, $mensaje, $adjunto);
         return $chatId;
     }
 
-    public function responderCliente(int $chatId, int $empresaId, int $usuarioId, string $mensaje): void
+    public function responderCliente(int $chatId, int $empresaId, int $usuarioId, string $mensaje, ?array $adjunto = null): void
     {
         $chat = $this->obtenerChatEmpresa($chatId, $empresaId);
         if (!$chat) {
             throw new \RuntimeException('Chat no encontrado.');
         }
+        if (($chat['estado'] ?? 'abierto') !== 'abierto') {
+            throw new \RuntimeException('El chat está cerrado.');
+        }
 
-        $this->agregarMensaje($chatId, 'cliente', $usuarioId, $mensaje);
+        $this->agregarMensaje($chatId, 'cliente', $usuarioId, $mensaje, $adjunto);
         $stmt = $this->db->prepare('UPDATE soporte_chats
             SET no_leidos_admin = no_leidos_admin + 1,
                 estado = "abierto",
@@ -124,14 +127,17 @@ class SoporteChat extends Modelo
         $stmt->execute(['id' => $chatId]);
     }
 
-    public function responderAdmin(int $chatId, int $adminId, string $mensaje): void
+    public function responderAdmin(int $chatId, int $adminId, string $mensaje, ?array $adjunto = null): void
     {
         $chat = $this->obtenerChatAdmin($chatId);
         if (!$chat) {
             throw new \RuntimeException('Chat no encontrado.');
         }
+        if (($chat['estado'] ?? 'abierto') !== 'abierto') {
+            throw new \RuntimeException('El chat está cerrado.');
+        }
 
-        $this->agregarMensaje($chatId, 'admin', $adminId, $mensaje);
+        $this->agregarMensaje($chatId, 'admin', $adminId, $mensaje, $adjunto);
         $stmt = $this->db->prepare('UPDATE soporte_chats
             SET no_leidos_cliente = no_leidos_cliente + 1,
                 no_leidos_admin = 0,
@@ -140,6 +146,27 @@ class SoporteChat extends Modelo
                 fecha_actualizacion = NOW()
             WHERE id = :id');
         $stmt->execute(['id' => $chatId]);
+    }
+
+    public function cerrarChatAdmin(int $chatId): void
+    {
+        $stmt = $this->db->prepare('UPDATE soporte_chats SET estado = "cerrado", no_leidos_admin = 0, no_leidos_cliente = 0, fecha_actualizacion = NOW() WHERE id = :id');
+        $stmt->execute(['id' => $chatId]);
+    }
+
+    public function eliminarChatAdmin(int $chatId): void
+    {
+        $archivos = $this->listarArchivosChat($chatId);
+
+        $stmt = $this->db->prepare('DELETE FROM soporte_chats WHERE id = :id');
+        $stmt->execute(['id' => $chatId]);
+
+        foreach ($archivos as $ruta) {
+            $rutaLocal = $this->resolverRutaLocalAdjunto($ruta);
+            if ($rutaLocal && is_file($rutaLocal)) {
+                @unlink($rutaLocal);
+            }
+        }
     }
 
     public function marcarLeidoAdmin(int $chatId): void
@@ -167,17 +194,45 @@ class SoporteChat extends Modelo
         return (int) ($stmt->fetch()['total'] ?? 0);
     }
 
-    private function agregarMensaje(int $chatId, string $remitenteTipo, int $remitenteId, string $mensaje): void
+    private function agregarMensaje(int $chatId, string $remitenteTipo, int $remitenteId, string $mensaje, ?array $adjunto = null): void
     {
         $stmt = $this->db->prepare('INSERT INTO soporte_chat_mensajes
-            (chat_id, remitente_tipo, remitente_id, mensaje, fecha_creacion)
-            VALUES (:chat_id, :remitente_tipo, :remitente_id, :mensaje, NOW())');
+            (chat_id, remitente_tipo, remitente_id, mensaje, archivo_ruta, archivo_nombre, archivo_tipo, archivo_peso, fecha_creacion)
+            VALUES (:chat_id, :remitente_tipo, :remitente_id, :mensaje, :archivo_ruta, :archivo_nombre, :archivo_tipo, :archivo_peso, NOW())');
         $stmt->execute([
             'chat_id' => $chatId,
             'remitente_tipo' => $remitenteTipo,
             'remitente_id' => $remitenteId,
             'mensaje' => $mensaje,
+            'archivo_ruta' => $adjunto['ruta'] ?? null,
+            'archivo_nombre' => $adjunto['nombre'] ?? null,
+            'archivo_tipo' => $adjunto['tipo'] ?? null,
+            'archivo_peso' => $adjunto['peso'] ?? null,
         ]);
+    }
+
+    private function listarArchivosChat(int $chatId): array
+    {
+        $stmt = $this->db->prepare('SELECT archivo_ruta FROM soporte_chat_mensajes WHERE chat_id = :chat_id AND archivo_ruta IS NOT NULL');
+        $stmt->execute(['chat_id' => $chatId]);
+        $salida = [];
+        foreach ($stmt->fetchAll(\PDO::FETCH_COLUMN) as $ruta) {
+            $ruta = trim((string) $ruta);
+            if ($ruta !== '') {
+                $salida[] = $ruta;
+            }
+        }
+        return array_values(array_unique($salida));
+    }
+
+    private function resolverRutaLocalAdjunto(string $rutaPublica): ?string
+    {
+        $rutaPublica = trim($rutaPublica);
+        if ($rutaPublica === '' || !str_starts_with($rutaPublica, '/uploads/soporte/')) {
+            return null;
+        }
+
+        return dirname(__DIR__, 2) . '/public' . $rutaPublica;
     }
 
     private function asegurarTablas(): void
@@ -207,5 +262,32 @@ class SoporteChat extends Modelo
             INDEX idx_soporte_mensajes_chat (chat_id),
             CONSTRAINT fk_soporte_mensajes_chat FOREIGN KEY (chat_id) REFERENCES soporte_chats(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
+    }
+
+    private function asegurarColumnasAdjuntos(): void
+    {
+        $columnas = [
+            'archivo_ruta' => 'ALTER TABLE soporte_chat_mensajes ADD COLUMN archivo_ruta VARCHAR(255) NULL AFTER mensaje',
+            'archivo_nombre' => 'ALTER TABLE soporte_chat_mensajes ADD COLUMN archivo_nombre VARCHAR(255) NULL AFTER archivo_ruta',
+            'archivo_tipo' => 'ALTER TABLE soporte_chat_mensajes ADD COLUMN archivo_tipo VARCHAR(120) NULL AFTER archivo_nombre',
+            'archivo_peso' => 'ALTER TABLE soporte_chat_mensajes ADD COLUMN archivo_peso BIGINT UNSIGNED NULL AFTER archivo_tipo',
+        ];
+
+        foreach ($columnas as $columna => $sql) {
+            if (!$this->tablaTieneColumna('soporte_chat_mensajes', $columna)) {
+                try {
+                    $this->db->exec($sql);
+                } catch (\Throwable $e) {
+                    // Evitar bloquear ejecución en ambientes sin permisos ALTER.
+                }
+            }
+        }
+    }
+
+    private function tablaTieneColumna(string $tabla, string $columna): bool
+    {
+        $stmt = $this->db->prepare('SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :tabla AND COLUMN_NAME = :columna LIMIT 1');
+        $stmt->execute(['tabla' => $tabla, 'columna' => $columna]);
+        return (bool) $stmt->fetchColumn();
     }
 }
