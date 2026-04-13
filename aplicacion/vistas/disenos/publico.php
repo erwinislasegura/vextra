@@ -61,6 +61,14 @@
   <link rel="shortcut icon" href="<?= e($faviconUrl) ?>">
   <link rel="apple-touch-icon" sizes="180x180" href="<?= e($faviconUrl) ?>">
   <link rel="manifest" href="<?= e($baseUrl . url('/site.webmanifest')) ?>">
+  <script>
+    window.__vextraDeferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', function (event) {
+      event.preventDefault();
+      window.__vextraDeferredInstallPrompt = event;
+      window.dispatchEvent(new CustomEvent('vextra:install-ready'));
+    });
+  </script>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://www.googletagmanager.com">
   <link rel="preconnect" href="https://www.google.com">

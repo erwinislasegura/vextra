@@ -195,7 +195,7 @@ class AutenticacionControlador extends Controlador
                 'estado' => 'activo',
             ]);
 
-            $diasPruebaRegistro = 15;
+            $diasPruebaRegistro = 30;
             $suscripcionId = $suscripcionModel->crear([
                 'empresa_id' => $empresaId,
                 'plan_id' => $planId,
@@ -217,7 +217,7 @@ class AutenticacionControlador extends Controlador
             $this->redirigir('/registro');
         }
 
-        flash('success', '¡Bienvenido a Vextra! Tu empresa se creó correctamente y ya tienes 15 días de prueba gratis. Te avisaremos antes de que finalice tu prueba.');
+        flash('success', '¡Bienvenido a Vextra! Tu empresa se creó correctamente y ya tienes 30 días de prueba gratis. Te avisaremos antes de que finalice tu prueba.');
         $this->redirigir('/iniciar-sesion');
     }
 

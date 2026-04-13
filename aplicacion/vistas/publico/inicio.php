@@ -77,7 +77,7 @@ $faqSeo = [
     ],
     [
         'pregunta' => '¿Cómo puedo comenzar a usar Vextra en mi empresa?',
-        'respuesta' => 'Puedes solicitar una demo guiada y luego contratar el plan que mejor se ajuste a tu operación, cantidad de usuarios y volumen de ventas.',
+        'respuesta' => 'Puedes comenzar con una prueba gratis de 30 días y luego contratar el plan que mejor se ajuste a tu operación, cantidad de usuarios y volumen de ventas.',
     ],
     [
         'pregunta' => '¿Cuál plan recomiendan para una pyme que quiere ordenarse y crecer?',
@@ -123,15 +123,14 @@ $faqSchema = [
             <div class="col-lg-7">
                 <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Software para empresas Chile: cotización + POS + inventario</span>
                 <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
-                    <span class="badge text-bg-success fs-6 px-3 py-2">🎁 15 días de prueba gratis!!</span>
+                    <span class="badge text-bg-success fs-6 px-3 py-2">🎁 30 días de prueba gratis!!</span>
                     <span class="small fw-semibold text-success">Empieza hoy y el primer cobro se realiza al terminar tu prueba.</span>
                 </div>
                 <h1 class="display-6 fw-bold mb-3">Sistema de cotizaciones y ventas con inventario para crecer con control real</h1>
                 <p class="lead text-secondary">Vextra es un software de cotización online que conecta tu gestión comercial, sistema punto de venta y sistema de inventario para que tu empresa venda más, responda rápido y opere con orden administrativo.</p>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 15 días</a>
+                    <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
                     <a href="#planes" class="btn btn-outline-primary">Contratar plan</a>
-                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary">Solicitar demo</a>
                 </div>
                 <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
             </div>
@@ -294,7 +293,6 @@ $faqSchema = [
                             <div class="d-grid gap-2 mt-auto">
                                 <a href="<?= e(url('/registro?plan=' . (int) $plan['id'] . '&frecuencia=mensual')) ?>" class="btn btn-outline-primary btn-sm" data-home-link>Comenzar ahora</a>
                                 <a href="<?= e(url('/registro?plan=' . (int) $plan['id'] . '&frecuencia=mensual')) ?>" class="btn btn-primary btn-sm" data-home-link>Contratar plan</a>
-                                <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary btn-sm">Solicitar demo</a>
                             </div>
                         </div>
                     </article>
@@ -420,11 +418,10 @@ $faqSchema = [
 <section class="py-5">
     <div class="container text-center">
         <h2 class="h3">¿Listo para vender más con orden comercial y control de stock?</h2>
-        <p class="text-secondary">Elige tu siguiente paso: comenzar ahora, contratar un plan o solicitar una demo con asesoría para tu empresa.</p>
+        <p class="text-secondary">Elige tu siguiente paso: comenzar ahora o contratar un plan para tu empresa.</p>
         <div class="d-flex justify-content-center gap-2 flex-wrap">
             <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar ahora</a>
             <a href="#planes" class="btn btn-outline-primary">Contratar plan</a>
-            <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary">Solicitar demo</a>
         </div>
     </div>
 </section>
@@ -441,7 +438,6 @@ $faqSchema = [
 <div class="d-md-none mobile-buy-bar">
     <div class="d-flex gap-2 w-100">
         <a href="#planes" class="btn btn-primary btn-sm flex-fill">Contratar plan</a>
-        <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-secondary btn-sm flex-fill">Solicitar demo</a>
     </div>
 </div>
 
