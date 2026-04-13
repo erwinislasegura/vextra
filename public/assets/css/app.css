@@ -222,14 +222,22 @@ body.preview-open{overflow:hidden}
 /* Panel administrador global */
 .sidebar-admin{background:#2f343d !important;border-color:#23272f !important}
 .sidebar-admin{overflow-y:auto;overscroll-behavior:contain;height:100vh;-webkit-overflow-scrolling:touch}
-.sidebar-admin .nav{padding-bottom:1rem;max-height:calc(100vh - 120px);overflow-y:auto}
+.sidebar-admin .nav{
+  display:flex;
+  flex-direction:column;
+  flex-wrap:nowrap !important;
+  align-items:stretch;
+  padding-bottom:1rem;
+  max-height:calc(100vh - 120px);
+  overflow-y:auto;
+}
 .sidebar-admin .sidebar-admin__group .d-grid{grid-template-columns:1fr !important}
 .sidebar-admin__brand{display:flex;flex-direction:column;gap:.45rem}
 .sidebar-admin__logo{display:block !important;height:36px !important;width:auto !important;max-width:146px !important;object-fit:contain}
 .sidebar-admin .sidebar-app__titulo{color:#e5e7eb}
-.sidebar-admin__group{padding-top:.15rem}
+.sidebar-admin__group{padding-top:.15rem;width:100%;min-width:100%}
 .sidebar-admin__group-title{font-size:.67rem;letter-spacing:.09em;text-transform:uppercase;color:#c4c9d1;font-weight:700;padding:.2rem .5rem}
-.sidebar-admin .nav-link{color:#f3f4f6}
+.sidebar-admin .nav-link{color:#f3f4f6;width:100%}
 .sidebar-admin .nav-link i{color:#ffffff}
 .sidebar-admin .nav-link:hover{background:rgba(255,255,255,.12);color:#ffffff}
 .sidebar-admin .nav-link.active{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 3px 0 0 #ffffff}
@@ -243,20 +251,26 @@ body.preview-open{overflow:hidden}
 .admin-quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
 .pwa-install-btn{
   position:fixed;
-  right:1rem;
-  bottom:1rem;
+  top:.72rem;
+  right:.75rem;
   z-index:1080;
   border:1px solid #4632a8;
-  background:#4632a8;
+  background:linear-gradient(145deg,#4f46e5,#4632a8);
   color:#fff;
-  border-radius:999px;
-  padding:.55rem .9rem;
-  font-size:.8rem;
-  box-shadow:0 8px 18px rgba(19,31,53,.22);
+  border-radius:.7rem;
+  padding:.45rem .6rem;
+  font-size:.78rem;
+  font-weight:600;
+  box-shadow:0 10px 22px rgba(19,31,53,.24);
   display:none;
+  gap:.38rem;
+  align-items:center;
 }
+.pwa-install-btn i{font-size:.95rem;line-height:1}
 .pwa-install-btn.show{display:inline-flex;align-items:center}
 .pwa-install-btn[data-install-ready="0"]{background:#374151;border-color:#374151}
+.pwa-install-btn:hover{filter:brightness(1.05)}
+
 @media (max-width: 991.98px){
   .admin-quick-actions{grid-template-columns:1fr}
   .app-shell-admin{position:relative}
