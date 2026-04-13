@@ -669,12 +669,16 @@ class GestionComercialControlador extends Controlador
                 $this->redirigir('/app/listas-precios');
             }
 
+            if (!in_array($tipoLista, $this->tiposListaPreciosPermitidos(), true)) {
+                $tipoLista = 'general';
+            }
+
             $this->modelo->crear('listas_precios', [
                 'empresa_id' => $empresaId,
                 'nombre' => $nombre,
                 'vigencia_desde' => $vigenciaDesde,
                 'vigencia_hasta' => $vigenciaHasta,
-                'tipo_lista' => $tipoLista !== '' ? $tipoLista : 'general',
+                'tipo_lista' => $tipoLista,
                 'canal_venta' => $canalVenta !== '' ? $canalVenta : null,
                 'ajuste_tipo' => $ajusteTipo,
                 'ajuste_porcentaje' => $ajustePorcentaje,
@@ -1247,11 +1251,15 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/listas-precios/editar/' . $id);
         }
 
+        if (!in_array($tipoLista, $this->tiposListaPreciosPermitidos(), true)) {
+            $tipoLista = 'general';
+        }
+
         $this->modelo->actualizarDinamico('listas_precios', $empresaId, $id, [
             'nombre' => $nombre,
             'vigencia_desde' => $vigenciaDesde,
             'vigencia_hasta' => $vigenciaHasta,
-            'tipo_lista' => $tipoLista !== '' ? $tipoLista : 'general',
+            'tipo_lista' => $tipoLista,
             'canal_venta' => $canalVenta !== '' ? $canalVenta : null,
             'ajuste_tipo' => $ajusteTipo,
             'ajuste_porcentaje' => $ajustePorcentaje,
@@ -1275,6 +1283,11 @@ class GestionComercialControlador extends Controlador
             'notificaciones' => ['tabla' => 'notificaciones_empresa', 'titulo' => 'Notificaciones'],
             'historial' => ['tabla' => 'historial_actividad', 'titulo' => 'Historial / actividad'],
         ];
+    }
+
+    private function tiposListaPreciosPermitidos(): array
+    {
+        return ['general', 'cliente', 'canal', 'volumen'];
     }
 
     public function precioProducto(): void
