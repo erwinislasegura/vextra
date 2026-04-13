@@ -64,24 +64,29 @@ class EmpresasControlador extends Controlador
         try {
             $empresaModelo = new Empresa();
             $suscripcionModelo = new Suscripcion();
-
-            $empresaModelo->actualizarEstado($id, $estado);
+            $db = BaseDatos::obtener();
+            $db->beginTransaction();
 
             $suscripcionActual = $suscripcionModelo->obtenerUltimaPorEmpresa($id);
             if ($suscripcionActual) {
-                $suscripcionModelo->actualizar((int) $suscripcionActual['id'], [
-                    'empresa_id' => $id,
-                    'plan_id' => (int) ($suscripcionActual['plan_id'] ?? 0),
-                    'estado' => $estado,
-                    'fecha_inicio' => (string) ($suscripcionActual['fecha_inicio'] ?? date('Y-m-d')),
-                    'fecha_vencimiento' => (string) ($suscripcionActual['fecha_vencimiento'] ?? date('Y-m-d')),
-                    'observaciones' => trim((string) ($suscripcionActual['observaciones'] ?? '')),
-                ]);
+                $observaciones = trim((string) ($suscripcionActual['observaciones'] ?? ''));
+                $nota = 'Cambio de estado desde admin: ' . $estado;
+                $suscripcionModelo->actualizarEstado(
+                    (int) $suscripcionActual['id'],
+                    $estado,
+                    $observaciones !== '' ? ($observaciones . ' | ' . $nota) : $nota
+                );
             }
+
+            $empresaModelo->actualizarEstado($id, $estado);
+            $db->commit();
 
             (new LogAdministracion())->registrar('empresas', 'cambiar_estado', 'Cambio de estado a ' . $estado, $id);
             flash('success', 'Estado de empresa y suscripción actualizado.');
         } catch (\Throwable $e) {
+            if (isset($db) && $db->inTransaction()) {
+                $db->rollBack();
+            }
             flash('danger', 'No se pudo actualizar el estado de la empresa.');
         }
         $this->redirigir('/admin/empresas/ver/' . $id);
