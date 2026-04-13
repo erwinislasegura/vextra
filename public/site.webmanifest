@@ -2,9 +2,13 @@
   "name": "Vextra",
   "short_name": "Vextra",
   "description": "Panel de gestión comercial, inventario y administración.",
-  "id": "/",
-  "start_url": "/",
+  "lang": "es-CL",
+  "dir": "ltr",
+  "id": "/iniciar-sesion",
+  "start_url": "/iniciar-sesion?source=pwa",
   "scope": "/",
+  "categories": ["business", "productivity", "finance"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/img/logo/icono.png",
@@ -20,5 +24,22 @@
   "theme_color": "#4632a8",
   "background_color": "#ffffff",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "shortcuts": [
+    {
+      "name": "Iniciar sesión",
+      "short_name": "Login",
+      "url": "/iniciar-sesion"
+    },
+    {
+      "name": "Panel administrativo",
+      "short_name": "Admin",
+      "url": "/admin/panel"
+    },
+    {
+      "name": "Panel empresa",
+      "short_name": "Empresa",
+      "url": "/app/panel"
+    }
+  ]
 }
