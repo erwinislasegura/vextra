@@ -258,6 +258,7 @@ body.preview-open{overflow:hidden}
 .pwa-install-btn.show{display:inline-flex;align-items:center}
 .pwa-install-btn[data-install-ready="0"]{background:#374151;border-color:#374151}
 @media (max-width: 991.98px){
+  .admin-quick-actions{grid-template-columns:1fr}
   .app-shell-admin{position:relative}
   .app-shell-admin .sidebar-admin{
     position:fixed;

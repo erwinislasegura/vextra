@@ -175,7 +175,9 @@
   // Habilita instalación PWA para paneles (/app y /admin).
   function prepararInstalacionPwa() {
     const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
-    if (!enPanel) return;
+    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(window.location.pathname || '');
+    const enExperienciaApp = enPanel || enAutenticacion;
+    if (!enExperienciaApp) return;
     if (!('serviceWorker' in navigator)) return;
     const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     if (yaInstalada) return;
@@ -219,8 +221,13 @@
       boton.setAttribute('data-install-ready', deferredPrompt ? '1' : '0');
     };
 
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      window.__vextraDeferredInstallPrompt = event;
+      mostrarSiDisponible();
+    });
     window.addEventListener('vextra:install-ready', mostrarSiDisponible);
-    window.addEventListener('beforeinstallprompt', mostrarSiDisponible);
     mostrarSiDisponible();
 
     window.addEventListener('appinstalled', () => {

@@ -1,10 +1,11 @@
-const CACHE_NAME = 'vextra-shell-v1';
+const CACHE_NAME = 'vextra-shell-v2';
 const APP_SHELL = [
-  '/',
+  '/iniciar-sesion',
   '/site.webmanifest',
   '/assets/css/app.css',
   '/assets/js/app.js',
   '/img/logo/logo_vextra.png',
+  '/img/logo/icono.png',
 ];
 
 self.addEventListener('install', (event) => {
