@@ -174,8 +174,13 @@
 
   // Habilita instalación PWA para paneles (/app y /admin).
   function prepararInstalacionPwa() {
-    const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
-    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(window.location.pathname || '');
+    const rutaActual = window.location.pathname || '';
+    const rutaSinBase = base && (rutaActual === base || rutaActual.startsWith(base + '/'))
+      ? (rutaActual.slice(base.length) || '/')
+      : rutaActual;
+
+    const enPanel = /^\/(app|admin)(\/|$)/.test(rutaSinBase);
+    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(rutaSinBase);
     const enExperienciaApp = enPanel || enAutenticacion;
     if (!enExperienciaApp) return;
     if (!('serviceWorker' in navigator)) return;
