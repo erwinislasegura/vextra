@@ -6,6 +6,13 @@ use Aplicacion\Nucleo\Modelo;
 
 class Cotizacion extends Modelo
 {
+    public function contar(int $empresaId): int
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) total FROM cotizaciones WHERE empresa_id = :empresa_id AND fecha_eliminacion IS NULL');
+        $stmt->execute(['empresa_id' => $empresaId]);
+        return (int) ($stmt->fetch()['total'] ?? 0);
+    }
+
     public function listar(int $empresaId): array
     {
         $sql = 'SELECT c.*,

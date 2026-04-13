@@ -157,7 +157,7 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
             <div class="col-sm-6 col-xl-3"><div class="border rounded p-3 h-100"><div class="small text-muted">Clientes</div><div class="h5 mb-0"><?= (int) ($resumen['total_clientes'] ?? 0) ?></div></div></div>
             <div class="col-sm-6 col-xl-3"><div class="border rounded p-3 h-100"><div class="small text-muted">Productos/Servicios</div><div class="h5 mb-0"><?= (int) ($resumen['total_productos'] ?? 0) ?></div></div></div>
             <div class="col-sm-6 col-xl-3"><div class="border rounded p-3 h-100"><div class="small text-muted">Cotizaciones</div><div class="h5 mb-0"><?= (int) ($resumen['total_cotizaciones'] ?? 0) ?></div></div></div>
-            <div class="col-sm-6 col-xl-3"><div class="border rounded p-3 h-100"><div class="small text-muted">Plan activo</div><div class="h5 mb-0"><?= e((string) ($resumen['plan_actual'] ?? 'N/A')) ?></div></div></div>
+            <div class="col-sm-6 col-xl-3"><div class="border rounded p-3 h-100"><div class="small text-muted">Plan activo</div><div class="h5 mb-0"><?= e((string) (($resumen['plan_actual_nombre'] ?? null) ?: ($resumen['plan_actual'] ?? 'N/A'))) ?></div></div></div>
           </div>
         </div>
       </div>

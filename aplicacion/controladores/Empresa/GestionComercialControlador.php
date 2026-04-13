@@ -5,6 +5,7 @@ namespace Aplicacion\Controladores\Empresa;
 use Aplicacion\Nucleo\Controlador;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Cliente;
+use Aplicacion\Modelos\Producto;
 use Aplicacion\Modelos\Cotizacion;
 use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Suscripcion;
@@ -27,14 +28,23 @@ class GestionComercialControlador extends Controlador
     {
         $empresaId = empresa_actual_id();
         $resumen = $this->modelo->estadisticasInicio($empresaId);
+        $clienteModel = new Cliente();
+        $productoModel = new Producto();
+        $cotizacionModel = new Cotizacion();
         $planEmpresa = (new Plan())->obtenerPlanActivoEmpresa($empresaId);
+        $planId = (int) ($planEmpresa['plan_id'] ?? 0);
+        $planActual = $planId > 0 ? (new Plan())->buscar($planId) : null;
         $resumen = array_merge($resumen, [
+            'total_clientes' => $clienteModel->contar($empresaId),
+            'total_productos' => $productoModel->contar($empresaId),
+            'total_cotizaciones' => $cotizacionModel->contar($empresaId),
             'plan_actual' => $planEmpresa['plan_id'] ?? null,
+            'plan_actual_nombre' => $planActual['nombre'] ?? null,
             'estado_suscripcion' => $planEmpresa['estado'] ?? null,
             'fecha_vencimiento' => $planEmpresa['fecha_vencimiento'] ?? null,
             'dias_restantes_plan' => isset($planEmpresa['fecha_vencimiento']) ? (int) floor((strtotime((string) $planEmpresa['fecha_vencimiento']) - strtotime(date('Y-m-d'))) / 86400) : null,
         ]);
-        $cotizaciones = (new Cotizacion())->listar($empresaId);
+        $cotizaciones = $cotizacionModel->listar($empresaId);
         $this->vista('empresa/panel', compact('resumen', 'cotizaciones'), 'empresa');
     }
 
