@@ -3,6 +3,7 @@
 namespace Aplicacion\Middlewares;
 
 use Aplicacion\Modelos\Empresa;
+use Aplicacion\Modelos\Suscripcion;
 
 class EmpresaMiddleware
 {
@@ -34,6 +35,8 @@ class EmpresaMiddleware
 
         $empresaId = empresa_actual_id();
         if ($empresaId > 0) {
+            $empresa = (new Empresa())->buscar($empresaId);
+            $this->sincronizarVencimientoSuscripcion($empresaId, $empresa);
             $empresa = (new Empresa())->buscar($empresaId);
             $estadoCuenta = (string) ($empresa['estado'] ?? '');
             $estadosBloqueados = ['suspendida', 'vencida', 'cancelada'];
@@ -101,6 +104,47 @@ class EmpresaMiddleware
                 exit('Tu plan actual no incluye esta funcionalidad.');
             }
         }
+    }
+
+    private function sincronizarVencimientoSuscripcion(int $empresaId, ?array $empresa): void
+    {
+        if ($empresaId <= 0 || !$empresa) {
+            return;
+        }
+
+        $estadoEmpresa = (string) ($empresa['estado'] ?? '');
+        if (in_array($estadoEmpresa, ['cancelada', 'suspendida'], true)) {
+            return;
+        }
+
+        $suscripcion = (new Suscripcion())->obtenerUltimaPorEmpresa($empresaId);
+        if (!$suscripcion) {
+            return;
+        }
+
+        $fechaVencimiento = (string) ($suscripcion['fecha_vencimiento'] ?? '');
+        if ($fechaVencimiento === '') {
+            return;
+        }
+
+        $vencio = strtotime($fechaVencimiento) < strtotime(date('Y-m-d'));
+        if (!$vencio) {
+            return;
+        }
+
+        $estadoSuscripcion = (string) ($suscripcion['estado'] ?? '');
+        if (in_array($estadoSuscripcion, ['vencida', 'cancelada', 'suspendida'], true) && $estadoEmpresa === 'vencida') {
+            return;
+        }
+
+        (new Suscripcion())->actualizar((int) $suscripcion['id'], [
+            'empresa_id' => $empresaId,
+            'plan_id' => (int) ($suscripcion['plan_id'] ?? $empresa['plan_id'] ?? 0),
+            'estado' => 'vencida',
+            'fecha_inicio' => (string) ($suscripcion['fecha_inicio'] ?? date('Y-m-d')),
+            'fecha_vencimiento' => $fechaVencimiento,
+            'observaciones' => 'Suscripción vencida automáticamente por fin de período de prueba.',
+        ]);
     }
 
 }
