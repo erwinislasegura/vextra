@@ -174,8 +174,13 @@
 
   // Habilita instalación PWA para paneles (/app y /admin).
   function prepararInstalacionPwa() {
-    const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
-    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(window.location.pathname || '');
+    const rutaActual = window.location.pathname || '';
+    const rutaSinBase = base && (rutaActual === base || rutaActual.startsWith(base + '/'))
+      ? (rutaActual.slice(base.length) || '/')
+      : rutaActual;
+
+    const enPanel = /^\/(app|admin)(\/|$)/.test(rutaSinBase);
+    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(rutaSinBase);
     const enExperienciaApp = enPanel || enAutenticacion;
     if (!enExperienciaApp) return;
     if (!('serviceWorker' in navigator)) return;
@@ -186,6 +191,7 @@
 
     let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
     let botonInstalar = null;
+    let instaladorAbierto = false;
     const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
 
     const obtenerBoton = () => {
@@ -193,21 +199,18 @@
       botonInstalar = document.createElement('button');
       botonInstalar.type = 'button';
       botonInstalar.className = 'pwa-install-btn';
-      botonInstalar.innerHTML = '<i class="bi bi-download me-1"></i> Instalar app';
+      botonInstalar.setAttribute('aria-label', 'Instalar aplicación');
+      botonInstalar.setAttribute('title', 'Instalar aplicación');
+      botonInstalar.innerHTML = '<i class="bi bi-box-arrow-down" aria-hidden="true"></i><span>Instalar</span>';
       botonInstalar.addEventListener('click', async () => {
         if (deferredPrompt) {
-          deferredPrompt.prompt();
-          try {
-            await deferredPrompt.userChoice;
-          } catch (_) {
-            // Ignorado
-          }
+          await intentarAbrirInstalador();
           return;
         }
 
         const mensaje = esIOS
           ? 'En iPhone/iPad: abre Compartir y luego "Añadir a pantalla de inicio".'
-          : 'Si no aparece el popup, usa el menú del navegador y selecciona "Instalar aplicación".';
+          : 'Si no aparece la ventana, haz clic en el icono de instalar del navegador o en menú > "Instalar aplicación".';
         alert(mensaje);
       });
       document.body.appendChild(botonInstalar);
@@ -221,11 +224,27 @@
       boton.setAttribute('data-install-ready', deferredPrompt ? '1' : '0');
     };
 
+    const intentarAbrirInstalador = async () => {
+      if (!deferredPrompt || instaladorAbierto) return;
+      instaladorAbierto = true;
+      try {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+      } catch (_) {
+        // Ignorado
+      } finally {
+        instaladorAbierto = false;
+      }
+    };
+
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
       deferredPrompt = event;
       window.__vextraDeferredInstallPrompt = event;
       mostrarSiDisponible();
+      setTimeout(() => {
+        intentarAbrirInstalador();
+      }, 250);
     });
     window.addEventListener('vextra:install-ready', mostrarSiDisponible);
     mostrarSiDisponible();

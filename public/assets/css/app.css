@@ -243,20 +243,26 @@ body.preview-open{overflow:hidden}
 .admin-quick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem}
 .pwa-install-btn{
   position:fixed;
-  right:1rem;
-  bottom:1rem;
+  top:.72rem;
+  right:.75rem;
   z-index:1080;
   border:1px solid #4632a8;
-  background:#4632a8;
+  background:linear-gradient(145deg,#4f46e5,#4632a8);
   color:#fff;
-  border-radius:999px;
-  padding:.55rem .9rem;
-  font-size:.8rem;
-  box-shadow:0 8px 18px rgba(19,31,53,.22);
+  border-radius:.7rem;
+  padding:.45rem .6rem;
+  font-size:.78rem;
+  font-weight:600;
+  box-shadow:0 10px 22px rgba(19,31,53,.24);
   display:none;
+  gap:.38rem;
+  align-items:center;
 }
+.pwa-install-btn i{font-size:.95rem;line-height:1}
 .pwa-install-btn.show{display:inline-flex;align-items:center}
 .pwa-install-btn[data-install-ready="0"]{background:#374151;border-color:#374151}
+.pwa-install-btn:hover{filter:brightness(1.05)}
+
 @media (max-width: 991.98px){
   .admin-quick-actions{grid-template-columns:1fr}
   .app-shell-admin{position:relative}
