@@ -14,7 +14,7 @@ class ServicioPreciosLista
         $this->db = BaseDatos::obtener();
     }
 
-    public function calcularPrecioProducto(int $empresaId, int $productoId, ?int $clienteId = null, ?string $canal = null, ?string $fecha = null, ?int $listaPrecioId = null): ?array
+    public function calcularPrecioProducto(int $empresaId, int $productoId, ?int $clienteId = null, ?string $canal = null, ?string $fecha = null, ?int $listaPrecioId = null, float $cantidad = 1): ?array
     {
         $producto = $this->obtenerProducto($empresaId, $productoId);
         if (!$producto) {
@@ -22,9 +22,13 @@ class ServicioPreciosLista
         }
 
         $lista = $this->resolverListaPrecio($empresaId, $clienteId, $canal, $fecha, $listaPrecioId);
-        $regla = $lista ? $this->resolverRegla($empresaId, (int) $lista['id'], (int) $producto['id'], (int) ($producto['categoria_id'] ?? 0)) : null;
+        $cantidad = max(0, $cantidad);
+        $regla = $lista ? $this->resolverRegla($empresaId, (int) $lista['id'], (int) $producto['id'], (int) ($producto['categoria_id'] ?? 0), $cantidad) : null;
         if ($regla === null && $lista) {
             $regla = $this->resolverReglaDesdeCamposLista($lista);
+        }
+        if ($regla === null && $lista && ($lista['tipo_lista'] ?? '') === 'volumen') {
+            $regla = $this->resolverReglaEscalonadaDesdeTexto((string) ($lista['reglas_base'] ?? ''), $cantidad);
         }
         if ($regla === null && $lista) {
             $regla = $this->resolverReglaDesdeTexto((string) ($lista['reglas_base'] ?? ''));
@@ -97,10 +101,18 @@ class ServicioPreciosLista
         return null;
     }
 
-    private function resolverRegla(int $empresaId, int $listaId, int $productoId, int $categoriaId): ?array
+    private function resolverRegla(int $empresaId, int $listaId, int $productoId, int $categoriaId, float $cantidad): ?array
     {
         if (!$this->tablaExiste('listas_precios_reglas')) {
             return null;
+        }
+
+        $filtroCantidad = '';
+        if ($this->columnaExiste('listas_precios_reglas', 'cantidad_min')) {
+            $filtroCantidad .= ' AND (cantidad_min IS NULL OR cantidad_min <= :cantidad)';
+        }
+        if ($this->columnaExiste('listas_precios_reglas', 'cantidad_max')) {
+            $filtroCantidad .= ' AND (cantidad_max IS NULL OR cantidad_max >= :cantidad)';
         }
 
         $sql = 'SELECT * FROM listas_precios_reglas
@@ -112,6 +124,7 @@ class ServicioPreciosLista
                 OR (ambito = "producto" AND producto_id = :producto_id)
                 OR (ambito = "categoria" AND categoria_id = :categoria_id)
               )
+              ' . $filtroCantidad . '
             ORDER BY
               CASE
                 WHEN ambito = "producto" THEN 1
@@ -122,12 +135,16 @@ class ServicioPreciosLista
               id DESC
             LIMIT 1';
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
+        $params = [
             'empresa_id' => $empresaId,
             'lista_precio_id' => $listaId,
             'producto_id' => $productoId,
             'categoria_id' => $categoriaId,
-        ]);
+        ];
+        if ($filtroCantidad !== '') {
+            $params['cantidad'] = $cantidad;
+        }
+        $stmt->execute($params);
         return $stmt->fetch() ?: null;
     }
 
@@ -178,6 +195,45 @@ class ServicioPreciosLista
             'prioridad' => 500,
             'porcentaje' => $porcentaje,
             'tipo_ajuste' => $tipo,
+        ];
+    }
+
+    private function resolverReglaEscalonadaDesdeTexto(string $reglasBase, float $cantidad): ?array
+    {
+        if ($reglasBase === '' || $cantidad <= 0) {
+            return null;
+        }
+
+        preg_match_all('/(\d+(?:[\.,]\d+)?)\s*(?:u(?:nidades?)?)?\s*[:=\\-]>?\s*(\d+(?:[\.,]\d+)?)\s*%/iu', $reglasBase, $matches, PREG_SET_ORDER);
+        if ($matches === []) {
+            return null;
+        }
+
+        $tramoSeleccionado = null;
+        foreach ($matches as $match) {
+            $cantidadMin = (float) str_replace(',', '.', (string) ($match[1] ?? '0'));
+            $porcentaje = (float) str_replace(',', '.', (string) ($match[2] ?? '0'));
+            if ($cantidad < $cantidadMin || $porcentaje <= 0) {
+                continue;
+            }
+            if ($tramoSeleccionado === null || $cantidadMin > $tramoSeleccionado['cantidad_min']) {
+                $tramoSeleccionado = [
+                    'cantidad_min' => $cantidadMin,
+                    'porcentaje' => $porcentaje,
+                ];
+            }
+        }
+
+        if ($tramoSeleccionado === null) {
+            return null;
+        }
+
+        return [
+            'id' => 0,
+            'ambito' => 'global',
+            'prioridad' => 450,
+            'porcentaje' => $tramoSeleccionado['porcentaje'],
+            'tipo_ajuste' => 'descuento',
         ];
     }
 

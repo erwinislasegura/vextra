@@ -31,8 +31,13 @@ $formulario = '
 </div>
 <div class="col-md-2">
     <label class="form-label">Tipo de lista</label>
-    <input name="tipo_lista" class="form-control" value="general" placeholder="general / mayorista / campaña">
-    <div class="form-text">Ejemplo: General, Mayorista, Promoción.</div>
+    <select name="tipo_lista" class="form-select">
+        <option value="general">General</option>
+        <option value="cliente">Cliente</option>
+        <option value="canal">Canal</option>
+        <option value="volumen">Volumen (escalonado)</option>
+    </select>
+    <div class="form-text">Usa "Volumen" para activar descuentos por tramos de cantidad.</div>
 </div>
 <div class="col-md-2">
     <label class="form-label">Canal de venta</label>
@@ -65,8 +70,8 @@ $formulario = '
 </div>
 <div class="col-12">
     <label class="form-label">Reglas base (recomendado para productos y cotizaciones)</label>
-    <textarea name="reglas_base" class="form-control" rows="5" placeholder="Ejemplo recomendado:\n- ALCANCE: categoria=electrónica\n- AJUSTE: +8% sobre precio base\n- DESCUENTO: 3% por cantidad > 20\n- OBS: aplicar en cotizaciones B2B"></textarea>
-    <div class="form-text">Tip: escribe reglas claras por categoría/SKU para reutilizarlas en futuros cálculos de cotización.</div>
+    <textarea name="reglas_base" class="form-control" rows="5" placeholder="Ejemplo recomendado:\n- ALCANCE: categoria=electrónica\n- AJUSTE: +8% sobre precio base\n- DESCUENTO: 3% por cantidad > 20\n- TRAMOS VOLUMEN (tipo=volumen): 10:15%, 50:20%\n- OBS: aplicar en cotizaciones B2B"></textarea>
+    <div class="form-text">Para tipo "Volumen", usa formato de tramos en texto: <code>10:15%, 50:20%</code>.</div>
 </div>';
 
 $registrosListado = array_map(static function (array $fila): array {
