@@ -62,10 +62,31 @@ class EmpresasControlador extends Controlador
         validar_csrf();
         $estado = $_POST['estado'] ?? 'activa';
         try {
-            (new Empresa())->actualizarEstado($id, $estado);
+            $empresaModelo = new Empresa();
+            $suscripcionModelo = new Suscripcion();
+            $db = BaseDatos::obtener();
+            $db->beginTransaction();
+
+            $suscripcionActual = $suscripcionModelo->obtenerUltimaPorEmpresa($id);
+            if ($suscripcionActual) {
+                $observaciones = trim((string) ($suscripcionActual['observaciones'] ?? ''));
+                $nota = 'Cambio de estado desde admin: ' . $estado;
+                $suscripcionModelo->actualizarEstado(
+                    (int) $suscripcionActual['id'],
+                    $estado,
+                    $observaciones !== '' ? ($observaciones . ' | ' . $nota) : $nota
+                );
+            }
+
+            $empresaModelo->actualizarEstado($id, $estado);
+            $db->commit();
+
             (new LogAdministracion())->registrar('empresas', 'cambiar_estado', 'Cambio de estado a ' . $estado, $id);
-            flash('success', 'Estado de empresa actualizado.');
+            flash('success', 'Estado de empresa y suscripción actualizado.');
         } catch (\Throwable $e) {
+            if (isset($db) && $db->inTransaction()) {
+                $db->rollBack();
+            }
             flash('danger', 'No se pudo actualizar el estado de la empresa.');
         }
         $this->redirigir('/admin/empresas/ver/' . $id);
