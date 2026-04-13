@@ -172,69 +172,12 @@
   prepararTablasAdminMovil();
   prepararSidebarAdminMovil();
 
-  // Habilita instalación PWA para paneles (/app y /admin).
+  // Habilita instalación PWA para toda la experiencia (incluida landing).
   function prepararInstalacionPwa() {
-    const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
-    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(window.location.pathname || '');
-    const enExperienciaApp = enPanel || enAutenticacion;
-    if (!enExperienciaApp) return;
     if (!('serviceWorker' in navigator)) return;
     const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     if (yaInstalada) return;
-
     navigator.serviceWorker.register(normalizarInterna('/sw.js'), { scope: normalizarInterna('/') }).catch(() => null);
-
-    let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
-    let botonInstalar = null;
-    const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
-
-    const obtenerBoton = () => {
-      if (botonInstalar) return botonInstalar;
-      botonInstalar = document.createElement('button');
-      botonInstalar.type = 'button';
-      botonInstalar.className = 'pwa-install-btn';
-      botonInstalar.innerHTML = '<i class="bi bi-download me-1"></i> Instalar app';
-      botonInstalar.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          try {
-            await deferredPrompt.userChoice;
-          } catch (_) {
-            // Ignorado
-          }
-          return;
-        }
-
-        const mensaje = esIOS
-          ? 'En iPhone/iPad: abre Compartir y luego "Añadir a pantalla de inicio".'
-          : 'Si no aparece el popup, usa el menú del navegador y selecciona "Instalar aplicación".';
-        alert(mensaje);
-      });
-      document.body.appendChild(botonInstalar);
-      return botonInstalar;
-    };
-
-    const mostrarSiDisponible = () => {
-      deferredPrompt = window.__vextraDeferredInstallPrompt || deferredPrompt;
-      const boton = obtenerBoton();
-      boton.classList.add('show');
-      boton.setAttribute('data-install-ready', deferredPrompt ? '1' : '0');
-    };
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-      window.__vextraDeferredInstallPrompt = event;
-      mostrarSiDisponible();
-    });
-    window.addEventListener('vextra:install-ready', mostrarSiDisponible);
-    mostrarSiDisponible();
-
-    window.addEventListener('appinstalled', () => {
-      deferredPrompt = null;
-      window.__vextraDeferredInstallPrompt = null;
-      if (botonInstalar) botonInstalar.classList.remove('show');
-    });
   }
 
   prepararInstalacionPwa();

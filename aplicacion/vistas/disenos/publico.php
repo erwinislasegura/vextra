@@ -39,6 +39,8 @@
   <meta name="keywords" content="<?= e($metaKeywords) ?>">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#4632a8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta property="og:type" content="website">
   <meta property="og:title" content="<?= e($metaTitle) ?>">
   <meta property="og:description" content="<?= e($metaDescription) ?>">
