@@ -624,8 +624,10 @@ function confirmarEnvioCotizacionCrear() {
 
     async function autocompletarPrecioDesdeLista(fila, forzar = false) {
         const selectProducto = fila.querySelector('.js-producto');
+        const inputCantidad = fila.querySelector('.js-cantidad');
         const clienteId = selectCliente?.value || '';
         const listaPrecioId = selectLista?.value || '';
+        const cantidad = parseFloat(inputCantidad?.value || '0');
 
         if (!selectProducto || !selectProducto.value || !clienteId) {
             renderInfoLista(fila, null);
@@ -637,7 +639,8 @@ function confirmarEnvioCotizacionCrear() {
             const params = new URLSearchParams({
                 producto_id: selectProducto.value,
                 cliente_id: clienteId,
-                lista_precio_id: listaPrecioId
+                lista_precio_id: listaPrecioId,
+                cantidad: String(Math.max(0, cantidad || 0))
             });
             const resp = await fetch('<?= e(url('/app/listas-precios/precio-producto')) ?>?' + params.toString(), {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -736,6 +739,13 @@ function confirmarEnvioCotizacionCrear() {
             control.addEventListener('input', recalcular);
             control.addEventListener('change', recalcular);
         });
+        const inputCantidad = fila.querySelector('.js-cantidad');
+        if (inputCantidad) {
+            inputCantidad.addEventListener('change', async () => {
+                await autocompletarPrecioDesdeLista(fila, true);
+                recalcular();
+            });
+        }
 
         const selectProducto = fila.querySelector('.js-producto');
         const inputDescripcion = fila.querySelector('.js-descripcion');
