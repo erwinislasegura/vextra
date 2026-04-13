@@ -177,63 +177,7 @@
     if (!('serviceWorker' in navigator)) return;
     const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     if (yaInstalada) return;
-
     navigator.serviceWorker.register(normalizarInterna('/sw.js'), { scope: normalizarInterna('/') }).catch(() => null);
-
-    let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
-    let instaladorAbierto = false;
-
-    const intentarAbrirInstalador = async () => {
-      if (!deferredPrompt || instaladorAbierto) return;
-      instaladorAbierto = true;
-      try {
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-      } catch (_) {
-        // Ignorado
-      } finally {
-        instaladorAbierto = false;
-      }
-    };
-
-    const intentarAbrirInstalador = async () => {
-      if (!deferredPrompt || instaladorAbierto) return;
-      instaladorAbierto = true;
-      try {
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-      } catch (_) {
-        // Ignorado
-      } finally {
-        instaladorAbierto = false;
-      }
-    };
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-      window.__vextraDeferredInstallPrompt = event;
-      setTimeout(() => {
-        intentarAbrirInstalador();
-      }, 250);
-    });
-    window.addEventListener('vextra:install-ready', () => {
-      deferredPrompt = window.__vextraDeferredInstallPrompt || deferredPrompt;
-      setTimeout(() => {
-        intentarAbrirInstalador();
-      }, 250);
-    });
-
-    if (window.__vextraDeferredInstallPrompt) {
-      setTimeout(() => {
-        intentarAbrirInstalador();
-      }, 250);
-    }
-
-    window.addEventListener('appinstalled', () => {
-      deferredPrompt = null;
-      window.__vextraDeferredInstallPrompt = null;
-    });
   }
 
   prepararInstalacionPwa();
