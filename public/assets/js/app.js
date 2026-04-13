@@ -191,6 +191,7 @@
 
     let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
     let botonInstalar = null;
+    let instaladorAbierto = false;
     const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
 
     const obtenerBoton = () => {
@@ -203,12 +204,7 @@
       botonInstalar.innerHTML = '<i class="bi bi-box-arrow-down" aria-hidden="true"></i><span>Instalar</span>';
       botonInstalar.addEventListener('click', async () => {
         if (deferredPrompt) {
-          deferredPrompt.prompt();
-          try {
-            await deferredPrompt.userChoice;
-          } catch (_) {
-            // Ignorado
-          }
+          await intentarAbrirInstalador();
           return;
         }
 
@@ -228,11 +224,27 @@
       boton.setAttribute('data-install-ready', deferredPrompt ? '1' : '0');
     };
 
+    const intentarAbrirInstalador = async () => {
+      if (!deferredPrompt || instaladorAbierto) return;
+      instaladorAbierto = true;
+      try {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+      } catch (_) {
+        // Ignorado
+      } finally {
+        instaladorAbierto = false;
+      }
+    };
+
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
       deferredPrompt = event;
       window.__vextraDeferredInstallPrompt = event;
       mostrarSiDisponible();
+      setTimeout(() => {
+        intentarAbrirInstalador();
+      }, 250);
     });
     window.addEventListener('vextra:install-ready', mostrarSiDisponible);
     mostrarSiDisponible();

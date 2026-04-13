@@ -263,19 +263,6 @@ body.preview-open{overflow:hidden}
 .pwa-install-btn[data-install-ready="0"]{background:#374151;border-color:#374151}
 .pwa-install-btn:hover{filter:brightness(1.05)}
 
-.public-navbar .navbar-collapse,
-.public-navbar .navbar-nav{
-  width:100%;
-}
-.public-navbar .navbar-nav{
-  flex-direction:column;
-  align-items:stretch !important;
-  gap:.35rem;
-}
-.public-navbar .navbar-nav .nav-link,
-.public-navbar .navbar-nav .btn{
-  width:100%;
-}
 @media (max-width: 991.98px){
   .admin-quick-actions{grid-template-columns:1fr}
   .app-shell-admin{position:relative}
