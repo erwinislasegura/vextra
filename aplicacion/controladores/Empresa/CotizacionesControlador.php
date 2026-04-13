@@ -140,6 +140,7 @@ class CotizacionesControlador extends Controlador
                 $productoId,
                 $clienteIdSeleccionado,
                 $listaPrecioId,
+                $cantidad,
                 $precio,
                 $descuentoTipo,
                 $descuentoValor
@@ -501,6 +502,7 @@ class CotizacionesControlador extends Controlador
                 $productoId,
                 $clienteIdSeleccionado,
                 $listaPrecioId,
+                $cantidad,
                 $precio,
                 $descuentoTipo,
                 $descuentoValor
@@ -589,6 +591,7 @@ class CotizacionesControlador extends Controlador
         ?int $productoId,
         ?int $clienteId,
         ?int $listaPrecioId,
+        float $cantidad,
         float $precio,
         string $descuentoTipo,
         float $descuentoValor
@@ -597,7 +600,7 @@ class CotizacionesControlador extends Controlador
             return [$precio, $descuentoTipo, $descuentoValor];
         }
 
-        $precioCalculado = $servicioPrecios->calcularPrecioProducto($empresaId, $productoId, $clienteId, null, date('Y-m-d'), $listaPrecioId);
+        $precioCalculado = $servicioPrecios->calcularPrecioProducto($empresaId, $productoId, $clienteId, null, date('Y-m-d'), $listaPrecioId, $cantidad);
         if (!$precioCalculado) {
             return [$precio, $descuentoTipo, $descuentoValor];
         }

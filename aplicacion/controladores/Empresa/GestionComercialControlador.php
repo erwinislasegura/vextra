@@ -593,12 +593,16 @@ class GestionComercialControlador extends Controlador
                 $this->redirigir('/app/listas-precios');
             }
 
+            if (!in_array($tipoLista, $this->tiposListaPreciosPermitidos(), true)) {
+                $tipoLista = 'general';
+            }
+
             $this->modelo->crear('listas_precios', [
                 'empresa_id' => $empresaId,
                 'nombre' => $nombre,
                 'vigencia_desde' => $vigenciaDesde,
                 'vigencia_hasta' => $vigenciaHasta,
-                'tipo_lista' => $tipoLista !== '' ? $tipoLista : 'general',
+                'tipo_lista' => $tipoLista,
                 'canal_venta' => $canalVenta !== '' ? $canalVenta : null,
                 'ajuste_tipo' => $ajusteTipo,
                 'ajuste_porcentaje' => $ajustePorcentaje,
@@ -1171,11 +1175,15 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/listas-precios/editar/' . $id);
         }
 
+        if (!in_array($tipoLista, $this->tiposListaPreciosPermitidos(), true)) {
+            $tipoLista = 'general';
+        }
+
         $this->modelo->actualizarDinamico('listas_precios', $empresaId, $id, [
             'nombre' => $nombre,
             'vigencia_desde' => $vigenciaDesde,
             'vigencia_hasta' => $vigenciaHasta,
-            'tipo_lista' => $tipoLista !== '' ? $tipoLista : 'general',
+            'tipo_lista' => $tipoLista,
             'canal_venta' => $canalVenta !== '' ? $canalVenta : null,
             'ajuste_tipo' => $ajusteTipo,
             'ajuste_porcentaje' => $ajustePorcentaje,
@@ -1201,12 +1209,18 @@ class GestionComercialControlador extends Controlador
         ];
     }
 
+    private function tiposListaPreciosPermitidos(): array
+    {
+        return ['general', 'cliente', 'canal', 'volumen'];
+    }
+
     public function precioProducto(): void
     {
         $empresaId = empresa_actual_id();
         $productoId = (int) ($_GET['producto_id'] ?? 0);
         $clienteId = (int) ($_GET['cliente_id'] ?? 0) ?: null;
         $listaPrecioId = (int) ($_GET['lista_precio_id'] ?? 0) ?: null;
+        $cantidad = max(0, (float) ($_GET['cantidad'] ?? 1));
 
         header('Content-Type: application/json; charset=UTF-8');
 
@@ -1222,7 +1236,8 @@ class GestionComercialControlador extends Controlador
             $clienteId,
             null,
             date('Y-m-d'),
-            $listaPrecioId
+            $listaPrecioId,
+            $cantidad
         );
 
         if (!$precio) {

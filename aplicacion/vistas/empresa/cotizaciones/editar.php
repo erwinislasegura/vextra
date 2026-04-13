@@ -523,7 +523,7 @@ if ($listaPrecioCotizacionId > 0) {
 
         if (!tieneLista) {
             fila.dataset.listaAplicada = 'no';
-            celda.innerHTML = '<span style="color:#b94a48;">Sin lista para este cliente.</span>';
+            celda.innerHTML = '<span style="color:#b94a48;">La lista no aplica (cliente, estado o vigencia).</span>';
             actualizarIndicadorLista();
             return;
         }
@@ -564,15 +564,22 @@ if ($listaPrecioCotizacionId > 0) {
 
     async function autocompletarPrecioDesdeLista(fila, forzar = false) {
         const selectProducto = fila.querySelector('.js-producto');
+        const inputCantidad = fila.querySelector('.js-cantidad');
         const clienteId = selectCliente?.value || '';
         const listaPrecioId = selectLista?.value || '';
-        if (!selectProducto || !selectProducto.value || !clienteId) {
+        const cantidad = parseFloat(inputCantidad?.value || '0');
+        if (!selectProducto || !selectProducto.value || (!clienteId && !listaPrecioId)) {
             renderInfoLista(fila, null);
             aplicarPrecioBaseSinLista(fila, forzar);
             return;
         }
         try {
-            const params = new URLSearchParams({ producto_id: selectProducto.value, cliente_id: clienteId, lista_precio_id: listaPrecioId });
+            const params = new URLSearchParams({
+                producto_id: selectProducto.value,
+                cliente_id: clienteId,
+                lista_precio_id: listaPrecioId,
+                cantidad: String(Math.max(0, cantidad || 0))
+            });
             const resp = await fetch('<?= e(url('/app/listas-precios/precio-producto')) ?>?' + params.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             const data = await resp.json();
             if (data.ok && data.data && typeof data.data.precio_final !== 'undefined') {
@@ -609,6 +616,13 @@ if ($listaPrecioCotizacionId > 0) {
             if (cuerpo.querySelectorAll('tr').length > 1) { fila.remove(); recalcular(); }
         });
         fila.querySelectorAll('input, select').forEach((c) => { c.addEventListener('input', recalcular); c.addEventListener('change', recalcular); });
+        const inputCantidad = fila.querySelector('.js-cantidad');
+        if (inputCantidad) {
+            inputCantidad.addEventListener('change', async () => {
+                await autocompletarPrecioDesdeLista(fila, true);
+                recalcular();
+            });
+        }
         const selectProducto = fila.querySelector('.js-producto');
         const inputDescripcion = fila.querySelector('.js-descripcion');
         const btnEditarDescripcion = fila.querySelector('.js-editar-descripcion');
@@ -707,14 +721,14 @@ if ($listaPrecioCotizacionId > 0) {
 
         todasLasListas.forEach((lista) => {
             const idLista = parseInt(lista.id || 0, 10);
-            if (!permitidas.has(idLista)) { return; }
             const option = document.createElement('option');
             option.value = String(idLista);
-            option.textContent = String(lista.nombre || ('Lista #' + idLista));
+            const nombreLista = String(lista.nombre || ('Lista #' + idLista));
+            option.textContent = permitidas.has(idLista) ? nombreLista : `${nombreLista} (manual)`;
             selectLista.appendChild(option);
         });
 
-        if (valorActual !== '' && permitidas.has(parseInt(valorActual, 10))) {
+        if (valorActual !== '' && todasLasListas.some((lista) => parseInt(lista.id || 0, 10) === parseInt(valorActual, 10))) {
             selectLista.value = valorActual;
         } else {
             selectLista.value = '';
