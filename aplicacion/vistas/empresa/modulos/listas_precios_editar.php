@@ -111,6 +111,17 @@
                 ><?= e((string) ($registro['reglas_base'] ?? '')) ?></textarea>
                 <div class="form-text">Para tipo "Volumen", usa formato de tramos: <code>10:15%, 50:20%</code>.</div>
             </div>
+            <div class="col-12" data-reglas-volumen style="display:none;">
+                <div class="alert alert-secondary mb-0">
+                    <strong class="d-block mb-1">Reglas escalonadas más usadas</strong>
+                    <ul class="mb-0 small">
+                        <li>5:10%, 10:15%, 50:20%</li>
+                        <li>10:12%, 25:18%, 100:25%</li>
+                        <li>20:8%, 40:12%, 80:16%</li>
+                        <li>Mayorista 2026: 10:15%, 50:20%</li>
+                    </ul>
+                </div>
+            </div>
 
             <div class="col-12">
                 <button class="btn btn-primary btn-sm">Guardar cambios</button>
@@ -119,3 +130,19 @@
         </form>
     </div>
 </div>
+<script>
+(() => {
+    const form = document.querySelector('form');
+    if (!form) { return; }
+    const tipoLista = form.querySelector('select[name="tipo_lista"]');
+    const bloqueReglas = form.querySelector('[data-reglas-volumen]');
+    if (!tipoLista || !bloqueReglas) { return; }
+
+    const toggleReglas = () => {
+        bloqueReglas.style.display = tipoLista.value === 'volumen' ? '' : 'none';
+    };
+
+    tipoLista.addEventListener('change', toggleReglas);
+    toggleReglas();
+})();
+</script>

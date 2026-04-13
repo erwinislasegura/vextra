@@ -523,7 +523,7 @@ if ($listaPrecioCotizacionId > 0) {
 
         if (!tieneLista) {
             fila.dataset.listaAplicada = 'no';
-            celda.innerHTML = '<span style="color:#b94a48;">Sin lista para este cliente.</span>';
+            celda.innerHTML = '<span style="color:#b94a48;">La lista no aplica (cliente, estado o vigencia).</span>';
             actualizarIndicadorLista();
             return;
         }
@@ -568,7 +568,7 @@ if ($listaPrecioCotizacionId > 0) {
         const clienteId = selectCliente?.value || '';
         const listaPrecioId = selectLista?.value || '';
         const cantidad = parseFloat(inputCantidad?.value || '0');
-        if (!selectProducto || !selectProducto.value || !clienteId) {
+        if (!selectProducto || !selectProducto.value || (!clienteId && !listaPrecioId)) {
             renderInfoLista(fila, null);
             aplicarPrecioBaseSinLista(fila, forzar);
             return;
@@ -721,14 +721,14 @@ if ($listaPrecioCotizacionId > 0) {
 
         todasLasListas.forEach((lista) => {
             const idLista = parseInt(lista.id || 0, 10);
-            if (!permitidas.has(idLista)) { return; }
             const option = document.createElement('option');
             option.value = String(idLista);
-            option.textContent = String(lista.nombre || ('Lista #' + idLista));
+            const nombreLista = String(lista.nombre || ('Lista #' + idLista));
+            option.textContent = permitidas.has(idLista) ? nombreLista : `${nombreLista} (manual)`;
             selectLista.appendChild(option);
         });
 
-        if (valorActual !== '' && permitidas.has(parseInt(valorActual, 10))) {
+        if (valorActual !== '' && todasLasListas.some((lista) => parseInt(lista.id || 0, 10) === parseInt(valorActual, 10))) {
             selectLista.value = valorActual;
         } else {
             selectLista.value = '';

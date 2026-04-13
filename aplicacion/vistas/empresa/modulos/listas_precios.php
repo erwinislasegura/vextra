@@ -72,6 +72,17 @@ $formulario = '
     <label class="form-label">Reglas base (recomendado para productos y cotizaciones)</label>
     <textarea name="reglas_base" class="form-control" rows="5" placeholder="Ejemplo recomendado:\n- ALCANCE: categoria=electrónica\n- AJUSTE: +8% sobre precio base\n- DESCUENTO: 3% por cantidad > 20\n- TRAMOS VOLUMEN (tipo=volumen): 10:15%, 50:20%\n- OBS: aplicar en cotizaciones B2B"></textarea>
     <div class="form-text">Para tipo "Volumen", usa formato de tramos en texto: <code>10:15%, 50:20%</code>.</div>
+</div>
+<div class="col-12" data-reglas-volumen style="display:none;">
+    <div class="alert alert-secondary mb-0">
+        <strong class="d-block mb-1">Reglas escalonadas más usadas</strong>
+        <ul class="mb-0 small">
+            <li>5:10%, 10:15%, 50:20%</li>
+            <li>10:12%, 25:18%, 100:25%</li>
+            <li>20:8%, 40:12%, 80:16%</li>
+            <li>Mayorista 2026: 10:15%, 50:20%</li>
+        </ul>
+    </div>
 </div>';
 
 $registrosListado = array_map(static function (array $fila): array {
@@ -101,3 +112,19 @@ render_modulo_simple(
     'Listas de precios configuradas'
 );
 ?>
+<script>
+(() => {
+    const form = document.querySelector('form[action*="/app/listas-precios"]');
+    if (!form) { return; }
+    const tipoLista = form.querySelector('select[name="tipo_lista"]');
+    const bloqueReglas = form.querySelector('[data-reglas-volumen]');
+    if (!tipoLista || !bloqueReglas) { return; }
+
+    const toggleReglas = () => {
+        bloqueReglas.style.display = tipoLista.value === 'volumen' ? '' : 'none';
+    };
+
+    tipoLista.addEventListener('change', toggleReglas);
+    toggleReglas();
+})();
+</script>
