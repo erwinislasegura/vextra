@@ -196,6 +196,19 @@
       }
     };
 
+    const intentarAbrirInstalador = async () => {
+      if (!deferredPrompt || instaladorAbierto) return;
+      instaladorAbierto = true;
+      try {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+      } catch (_) {
+        // Ignorado
+      } finally {
+        instaladorAbierto = false;
+      }
+    };
+
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
       deferredPrompt = event;
