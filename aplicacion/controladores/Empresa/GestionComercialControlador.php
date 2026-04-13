@@ -1296,6 +1296,7 @@ class GestionComercialControlador extends Controlador
         $productoId = (int) ($_GET['producto_id'] ?? 0);
         $clienteId = (int) ($_GET['cliente_id'] ?? 0) ?: null;
         $listaPrecioId = (int) ($_GET['lista_precio_id'] ?? 0) ?: null;
+        $cantidad = max(0, (float) ($_GET['cantidad'] ?? 1));
 
         header('Content-Type: application/json; charset=UTF-8');
 
@@ -1311,7 +1312,8 @@ class GestionComercialControlador extends Controlador
             $clienteId,
             null,
             date('Y-m-d'),
-            $listaPrecioId
+            $listaPrecioId,
+            $cantidad
         );
 
         if (!$precio) {

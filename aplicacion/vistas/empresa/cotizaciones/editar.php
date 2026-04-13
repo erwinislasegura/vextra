@@ -564,15 +564,22 @@ if ($listaPrecioCotizacionId > 0) {
 
     async function autocompletarPrecioDesdeLista(fila, forzar = false) {
         const selectProducto = fila.querySelector('.js-producto');
+        const inputCantidad = fila.querySelector('.js-cantidad');
         const clienteId = selectCliente?.value || '';
         const listaPrecioId = selectLista?.value || '';
+        const cantidad = parseFloat(inputCantidad?.value || '0');
         if (!selectProducto || !selectProducto.value || !clienteId) {
             renderInfoLista(fila, null);
             aplicarPrecioBaseSinLista(fila, forzar);
             return;
         }
         try {
-            const params = new URLSearchParams({ producto_id: selectProducto.value, cliente_id: clienteId, lista_precio_id: listaPrecioId });
+            const params = new URLSearchParams({
+                producto_id: selectProducto.value,
+                cliente_id: clienteId,
+                lista_precio_id: listaPrecioId,
+                cantidad: String(Math.max(0, cantidad || 0))
+            });
             const resp = await fetch('<?= e(url('/app/listas-precios/precio-producto')) ?>?' + params.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             const data = await resp.json();
             if (data.ok && data.data && typeof data.data.precio_final !== 'undefined') {
@@ -609,6 +616,13 @@ if ($listaPrecioCotizacionId > 0) {
             if (cuerpo.querySelectorAll('tr').length > 1) { fila.remove(); recalcular(); }
         });
         fila.querySelectorAll('input, select').forEach((c) => { c.addEventListener('input', recalcular); c.addEventListener('change', recalcular); });
+        const inputCantidad = fila.querySelector('.js-cantidad');
+        if (inputCantidad) {
+            inputCantidad.addEventListener('change', async () => {
+                await autocompletarPrecioDesdeLista(fila, true);
+                recalcular();
+            });
+        }
         const selectProducto = fila.querySelector('.js-producto');
         const inputDescripcion = fila.querySelector('.js-descripcion');
         const btnEditarDescripcion = fila.querySelector('.js-editar-descripcion');
