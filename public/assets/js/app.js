@@ -181,38 +181,19 @@
     navigator.serviceWorker.register(normalizarInterna('/sw.js'), { scope: normalizarInterna('/') }).catch(() => null);
 
     let deferredPrompt = window.__vextraDeferredInstallPrompt || null;
-    let botonInstalar = null;
     let instaladorAbierto = false;
-    const esIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent || '');
 
-    const obtenerBoton = () => {
-      if (botonInstalar) return botonInstalar;
-      botonInstalar = document.createElement('button');
-      botonInstalar.type = 'button';
-      botonInstalar.className = 'pwa-install-btn';
-      botonInstalar.setAttribute('aria-label', 'Instalar aplicación');
-      botonInstalar.setAttribute('title', 'Instalar aplicación');
-      botonInstalar.innerHTML = '<i class="bi bi-box-arrow-down" aria-hidden="true"></i><span>Instalar</span>';
-      botonInstalar.addEventListener('click', async () => {
-        if (deferredPrompt) {
-          await intentarAbrirInstalador();
-          return;
-        }
-
-        const mensaje = esIOS
-          ? 'En iPhone/iPad: abre Compartir y luego "Añadir a pantalla de inicio".'
-          : 'Si no aparece la ventana, haz clic en el icono de instalar del navegador o en menú > "Instalar aplicación".';
-        alert(mensaje);
-      });
-      document.body.appendChild(botonInstalar);
-      return botonInstalar;
-    };
-
-    const mostrarSiDisponible = () => {
-      deferredPrompt = window.__vextraDeferredInstallPrompt || deferredPrompt;
-      const boton = obtenerBoton();
-      boton.classList.add('show');
-      boton.setAttribute('data-install-ready', deferredPrompt ? '1' : '0');
+    const intentarAbrirInstalador = async () => {
+      if (!deferredPrompt || instaladorAbierto) return;
+      instaladorAbierto = true;
+      try {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+      } catch (_) {
+        // Ignorado
+      } finally {
+        instaladorAbierto = false;
+      }
     };
 
     const intentarAbrirInstalador = async () => {
@@ -232,18 +213,26 @@
       event.preventDefault();
       deferredPrompt = event;
       window.__vextraDeferredInstallPrompt = event;
-      mostrarSiDisponible();
       setTimeout(() => {
         intentarAbrirInstalador();
       }, 250);
     });
-    window.addEventListener('vextra:install-ready', mostrarSiDisponible);
-    mostrarSiDisponible();
+    window.addEventListener('vextra:install-ready', () => {
+      deferredPrompt = window.__vextraDeferredInstallPrompt || deferredPrompt;
+      setTimeout(() => {
+        intentarAbrirInstalador();
+      }, 250);
+    });
+
+    if (window.__vextraDeferredInstallPrompt) {
+      setTimeout(() => {
+        intentarAbrirInstalador();
+      }, 250);
+    }
 
     window.addEventListener('appinstalled', () => {
       deferredPrompt = null;
       window.__vextraDeferredInstallPrompt = null;
-      if (botonInstalar) botonInstalar.classList.remove('show');
     });
   }
 
