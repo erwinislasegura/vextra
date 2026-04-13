@@ -1,5 +1,6 @@
-const CACHE_NAME = 'vextra-shell-v2';
+const CACHE_NAME = 'vextra-shell-v3';
 const APP_SHELL = [
+  '/',
   '/iniciar-sesion',
   '/site.webmanifest',
   '/assets/css/app.css',
@@ -8,9 +9,23 @@ const APP_SHELL = [
   '/img/logo/icono.png',
 ];
 
+function basePathActual() {
+  const scope = new URL(self.registration.scope).pathname || '/';
+  return scope.endsWith('/') ? scope.slice(0, -1) : scope;
+}
+
+function normalizarRecurso(path) {
+  const base = basePathActual();
+  if (!base || base === '/') return path;
+  return `${base}${path}`;
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).catch(() => null)
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL.map((path) => normalizarRecurso(path))))
+      .catch(() => null)
   );
   self.skipWaiting();
 });

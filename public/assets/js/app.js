@@ -172,17 +172,8 @@
   prepararTablasAdminMovil();
   prepararSidebarAdminMovil();
 
-  // Habilita instalación PWA para paneles (/app y /admin).
+  // Habilita instalación PWA para toda la experiencia (incluida landing).
   function prepararInstalacionPwa() {
-    const rutaActual = window.location.pathname || '';
-    const rutaSinBase = base && (rutaActual === base || rutaActual.startsWith(base + '/'))
-      ? (rutaActual.slice(base.length) || '/')
-      : rutaActual;
-
-    const enPanel = /^\/(app|admin)(\/|$)/.test(rutaSinBase);
-    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(rutaSinBase);
-    const enExperienciaApp = enPanel || enAutenticacion;
-    if (!enExperienciaApp) return;
     if (!('serviceWorker' in navigator)) return;
     const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     if (yaInstalada) return;

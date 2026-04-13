@@ -39,6 +39,8 @@
   <meta name="keywords" content="<?= e($metaKeywords) ?>">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#4632a8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta property="og:type" content="website">
   <meta property="og:title" content="<?= e($metaTitle) ?>">
   <meta property="og:description" content="<?= e($metaDescription) ?>">
@@ -59,6 +61,14 @@
   <link rel="shortcut icon" href="<?= e($faviconUrl) ?>">
   <link rel="apple-touch-icon" sizes="180x180" href="<?= e($faviconUrl) ?>">
   <link rel="manifest" href="<?= e($baseUrl . url('/site.webmanifest')) ?>">
+  <script>
+    window.__vextraDeferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', function (event) {
+      event.preventDefault();
+      window.__vextraDeferredInstallPrompt = event;
+      window.dispatchEvent(new CustomEvent('vextra:install-ready'));
+    });
+  </script>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://www.googletagmanager.com">
   <link rel="preconnect" href="https://www.google.com">
