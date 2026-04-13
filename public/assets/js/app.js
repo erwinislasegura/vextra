@@ -174,8 +174,13 @@
 
   // Habilita instalación PWA para paneles (/app y /admin).
   function prepararInstalacionPwa() {
-    const enPanel = /^\/(app|admin)(\/|$)/.test(window.location.pathname || '');
-    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(window.location.pathname || '');
+    const rutaActual = window.location.pathname || '';
+    const rutaSinBase = base && (rutaActual === base || rutaActual.startsWith(base + '/'))
+      ? (rutaActual.slice(base.length) || '/')
+      : rutaActual;
+
+    const enPanel = /^\/(app|admin)(\/|$)/.test(rutaSinBase);
+    const enAutenticacion = /^\/(iniciar-sesion|registro|recuperar-contrasena|restablecer-contrasena)(\/|$)/.test(rutaSinBase);
     const enExperienciaApp = enPanel || enAutenticacion;
     if (!enExperienciaApp) return;
     if (!('serviceWorker' in navigator)) return;
@@ -193,7 +198,9 @@
       botonInstalar = document.createElement('button');
       botonInstalar.type = 'button';
       botonInstalar.className = 'pwa-install-btn';
-      botonInstalar.innerHTML = '<i class="bi bi-download me-1"></i> Instalar app';
+      botonInstalar.setAttribute('aria-label', 'Instalar aplicación');
+      botonInstalar.setAttribute('title', 'Instalar aplicación');
+      botonInstalar.innerHTML = '<i class="bi bi-box-arrow-down" aria-hidden="true"></i><span>Instalar</span>';
       botonInstalar.addEventListener('click', async () => {
         if (deferredPrompt) {
           deferredPrompt.prompt();
@@ -207,7 +214,7 @@
 
         const mensaje = esIOS
           ? 'En iPhone/iPad: abre Compartir y luego "Añadir a pantalla de inicio".'
-          : 'Si no aparece el popup, usa el menú del navegador y selecciona "Instalar aplicación".';
+          : 'Si no aparece la ventana, haz clic en el icono de instalar del navegador o en menú > "Instalar aplicación".';
         alert(mensaje);
       });
       document.body.appendChild(botonInstalar);
