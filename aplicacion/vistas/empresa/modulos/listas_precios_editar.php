@@ -48,13 +48,13 @@
 
             <div class="col-md-2">
                 <label class="form-label">Tipo de lista</label>
-                <input
-                    name="tipo_lista"
-                    class="form-control"
-                    placeholder="general / mayorista / campaña"
-                    value="<?= e((string) ($registro['tipo_lista'] ?? 'general')) ?>"
-                >
-                <div class="form-text">Ejemplo: General, Mayorista, Promoción.</div>
+                <select name="tipo_lista" class="form-select">
+                    <option value="general" <?= ($registro['tipo_lista'] ?? 'general') === 'general' ? 'selected' : '' ?>>General</option>
+                    <option value="cliente" <?= ($registro['tipo_lista'] ?? '') === 'cliente' ? 'selected' : '' ?>>Cliente</option>
+                    <option value="canal" <?= ($registro['tipo_lista'] ?? '') === 'canal' ? 'selected' : '' ?>>Canal</option>
+                    <option value="volumen" <?= ($registro['tipo_lista'] ?? '') === 'volumen' ? 'selected' : '' ?>>Volumen (escalonado)</option>
+                </select>
+                <div class="form-text">Usa "Volumen" para activar descuentos por tramos de cantidad.</div>
             </div>
             <div class="col-md-2">
                 <label class="form-label">Canal de venta</label>
@@ -106,9 +106,10 @@
 - ALCANCE: categoria=electrónica
 - AJUSTE: +8% sobre precio base
 - DESCUENTO: 3% por cantidad > 20
+- TRAMOS VOLUMEN (tipo=volumen): 10:15%, 50:20%
 - OBS: aplicar en cotizaciones B2B"
                 ><?= e((string) ($registro['reglas_base'] ?? '')) ?></textarea>
-                <div class="form-text">Tip: mantén reglas claras por categoría/SKU para su uso futuro en cotizaciones.</div>
+                <div class="form-text">Para tipo "Volumen", usa formato de tramos: <code>10:15%, 50:20%</code>.</div>
             </div>
 
             <div class="col-12">
