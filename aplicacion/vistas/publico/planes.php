@@ -4,7 +4,7 @@
             <div class="col-lg-8">
                 <span class="badge bg-info-subtle text-info-emphasis mb-2">Planes del sistema de cotizaciones</span>
                 <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
-                    <span class="badge text-bg-success fs-6 px-3 py-2">🎁 15 días de prueba gratis!!</span>
+                    <span class="badge text-bg-success fs-6 px-3 py-2">🎁 30 días de prueba gratis!!</span>
                     <span class="small fw-semibold text-success">Todos los planes incluyen prueba gratis antes del primer cobro.</span>
                 </div>
                 <h1 class="display-6 fw-bold mb-3">Elige el plan ideal para vender con orden y escalar tu operación comercial</h1>
@@ -41,7 +41,7 @@
                     <div class="card h-100 border-2" style="border-color: <?= e($plan['color_visual']) ?> !important;">
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
-                                <span class="badge text-bg-success">15 días de prueba gratis!!</span>
+                                <span class="badge text-bg-success">30 días de prueba gratis!!</span>
                             </div>
                             <h2 class="h5 mb-2"><?= e($plan['nombre']) ?></h2>
                             <p class="small text-secondary mb-3"><?= e($plan['resumen_comercial'] ?: $plan['descripcion_comercial']) ?></p>
@@ -63,7 +63,7 @@
                                     class="btn btn-primary btn-sm"
                                     data-plan-link
                                     href="<?= e(url('/registro?plan=' . (int) $plan['id'] . '&frecuencia=mensual')) ?>"
-                                >Contratar plan (15 días gratis)</a>
+                                >Contratar plan (30 días gratis)</a>
                                 <a class="btn btn-outline-secondary btn-sm" href="<?= e(url('/contacto')) ?>">Hablar con ventas</a>
                             </div>
                         </div>
