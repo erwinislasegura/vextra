@@ -410,9 +410,30 @@ class PublicoControlador extends Controlador
 
         $correo = mb_strtolower(trim((string) ($_POST['correo'] ?? '')));
         $nombre = trim((string) ($_POST['nombre'] ?? ''));
+        $telefono = trim((string) ($_POST['telefono'] ?? ''));
+        $documento = trim((string) ($_POST['documento'] ?? ''));
+        $empresaComprador = trim((string) ($_POST['empresa'] ?? ''));
         $direccion = trim((string) ($_POST['direccion'] ?? ''));
-        if ($nombre === '' || $direccion === '' || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-            flash('danger', 'Completa tus datos de compra (nombre, correo y dirección).');
+        $referencia = trim((string) ($_POST['referencia'] ?? ''));
+        $comuna = trim((string) ($_POST['comuna'] ?? ''));
+        $ciudad = trim((string) ($_POST['ciudad'] ?? ''));
+        $region = trim((string) ($_POST['region'] ?? ''));
+        $acepta = isset($_POST['acepta_terminos']) && (string) $_POST['acepta_terminos'] === '1';
+
+        $telefonoNormalizado = preg_replace('/\s+/', '', $telefono) ?? '';
+        $telefonoValido = preg_match('/^\+?[0-9]{8,15}$/', $telefonoNormalizado) === 1;
+
+        if (
+            $nombre === ''
+            || $direccion === ''
+            || $comuna === ''
+            || $ciudad === ''
+            || $region === ''
+            || !filter_var($correo, FILTER_VALIDATE_EMAIL)
+            || !$telefonoValido
+            || !$acepta
+        ) {
+            flash('danger', 'Completa los datos de facturación y envío (nombre, correo, teléfono, dirección, comuna, ciudad, región y aceptación de términos).');
             $this->redirigir('/catalogo/' . $empresaId);
         }
 
@@ -467,9 +488,18 @@ class PublicoControlador extends Controlador
 
         $_SESSION['catalogo_checkout_' . $respuesta['token']] = [
             'empresa_id' => $empresaId,
-            'nombre' => $nombre,
-            'correo' => $correo,
-            'direccion' => $direccion,
+            'comprador' => [
+                'nombre' => $nombre,
+                'correo' => $correo,
+                'telefono' => $telefono,
+                'documento' => $documento,
+                'empresa' => $empresaComprador,
+                'direccion' => $direccion,
+                'referencia' => $referencia,
+                'comuna' => $comuna,
+                'ciudad' => $ciudad,
+                'region' => $region,
+            ],
             'total' => $total,
             'items' => $resumen,
             'fecha' => date('c'),
