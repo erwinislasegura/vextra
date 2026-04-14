@@ -1,6 +1,41 @@
 <?php
 $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
+$resolverImagenProducto = static function (?string $ruta): string {
+    $ruta = trim((string) $ruta);
+    if ($ruta === '') {
+        return url('/img/placeholder-producto.svg');
+    }
+    if (preg_match('/^https?:\/\//i', $ruta) === 1) {
+        return $ruta;
+    }
+
+    $normalizada = str_replace('\\', '/', $ruta);
+    $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
+    $normalizada = preg_replace('#^/?public/#i', '/', $normalizada) ?? $normalizada;
+    if (str_contains($normalizada, '/uploads/')) {
+        $partes = explode('/uploads/', $normalizada, 2);
+        $normalizada = '/uploads/' . ($partes[1] ?? '');
+    } elseif (str_contains($normalizada, 'productos_catalogo/')) {
+        $partes = explode('productos_catalogo/', $normalizada, 2);
+        $normalizada = '/uploads/productos_catalogo/' . ($partes[1] ?? '');
+    }
+    $normalizada = '/' . ltrim($normalizada, '/');
+
+    if (str_starts_with($normalizada, '/uploads/') || str_starts_with($normalizada, '/img/')) {
+        return url($normalizada);
+    }
+
+    return url('/' . ltrim($normalizada, '/'));
+};
 ?>
+<style>
+  .catalogo-card{border:1px solid #edf0f3;border-radius:1rem;overflow:hidden;transition:all .2s ease;cursor:pointer}
+  .catalogo-card:hover{transform:translateY(-2px);box-shadow:0 .75rem 1.5rem rgba(17,24,39,.10)!important}
+  .catalogo-card__img{height:220px;object-fit:cover;background:#f8fafc}
+  .catalogo-card__desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:60px}
+  .catalogo-card__cta{border-radius:.75rem}
+  .modal-producto__img{max-height:360px;object-fit:cover;border-radius:.9rem;background:#f8fafc}
+</style>
 <section class="py-4 bg-white border-bottom">
   <div class="container">
     <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 justify-content-between">
@@ -42,18 +77,22 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
       <?php endif; ?>
       <?php foreach ($productos as $producto): ?>
         <div class="col-md-6 col-lg-4">
-          <article class="card border-0 shadow-sm h-100">
+          <article class="card catalogo-card shadow-sm h-100" data-producto-card
+            data-id="<?= (int) $producto['id'] ?>"
+            data-name="<?= e((string) ($producto['nombre'] ?? 'Producto')) ?>"
+            data-price="<?= (float) ($producto['precio'] ?? 0) ?>"
+            data-category="<?= e((string) ($producto['categoria'] ?? 'Sin categoría')) ?>"
+            data-description="<?= e((string) ($producto['descripcion'] ?? 'Sin descripción')) ?>"
+            data-image="<?= e($resolverImagenProducto((string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? ''))) ?>">
             <?php $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? ''); ?>
-            <?php if ($imagenProducto !== ''): ?>
-              <img src="<?= e(str_starts_with($imagenProducto, 'http') ? $imagenProducto : url($imagenProducto)) ?>" alt="<?= e((string) ($producto['nombre'] ?? 'Producto')) ?>" class="card-img-top" style="height:200px;object-fit:cover;">
-            <?php endif; ?>
+            <img src="<?= e($resolverImagenProducto($imagenProducto)) ?>" alt="<?= e((string) ($producto['nombre'] ?? 'Producto')) ?>" class="card-img-top catalogo-card__img" loading="lazy">
             <div class="card-body d-flex flex-column">
               <div class="small text-muted mb-1"><?= e((string) ($producto['categoria'] ?? 'Sin categoría')) ?></div>
               <h2 class="h6 mb-1"><?= e((string) ($producto['nombre'] ?? '')) ?></h2>
-              <p class="text-muted small flex-grow-1"><?= e((string) ($producto['descripcion'] ?? 'Sin descripción')) ?></p>
+              <p class="text-muted small flex-grow-1 catalogo-card__desc"><?= e((string) ($producto['descripcion'] ?? 'Sin descripción')) ?></p>
               <div class="d-flex justify-content-between align-items-center mt-2">
                 <strong><?= e($fmon((float) ($producto['precio'] ?? 0))) ?></strong>
-                <button class="btn btn-sm btn-outline-primary" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e((string) $producto['nombre']) ?>" data-price="<?= (float) ($producto['precio'] ?? 0) ?>">Agregar</button>
+                <button class="btn btn-sm btn-outline-primary catalogo-card__cta" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e((string) $producto['nombre']) ?>" data-price="<?= (float) ($producto['precio'] ?? 0) ?>">Comprar</button>
               </div>
             </div>
           </article>
@@ -111,20 +150,73 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
   </div>
 </div>
 
+<div class="modal fade" id="modalProductoDetalle" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="row g-3 g-lg-4 align-items-start">
+          <div class="col-lg-6">
+            <img id="detalleProductoImagen" src="" alt="Producto" class="w-100 modal-producto__img">
+          </div>
+          <div class="col-lg-6">
+            <div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div>
+            <h3 class="h4 mb-2" id="detalleProductoNombre"></h3>
+            <p class="text-muted mb-3" id="detalleProductoDescripcion"></p>
+            <div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light">
+              <div>
+                <div class="small text-muted">Precio</div>
+                <div class="h4 mb-0" id="detalleProductoPrecio"></div>
+              </div>
+              <button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Comprar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
-  const storageKey = 'vextra_catalogo_carrito_<?= (int) $empresa['id'] ?>';
-  let cart = [];
-  try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
-  const carritoVista = document.getElementById('carritoVista');
-  const carritoVistaCheckout = document.getElementById('carritoVistaCheckout');
-  const carritoContador = document.getElementById('carritoContador');
-  const abrirResumenBtn = document.getElementById('abrirResumenCarrito');
-  const carritoJson = document.getElementById('carrito_json');
-  const modalResumen = new bootstrap.Modal(document.getElementById('modalResumenCarrito'));
-  const modalCheckout = new bootstrap.Modal(document.getElementById('modalCheckout'));
+  const initCatalogo = () => {
+    if (!window.bootstrap || typeof window.bootstrap.Modal !== 'function') {
+      window.setTimeout(initCatalogo, 80);
+      return;
+    }
 
-  const render = () => {
+    const storageKey = 'vextra_catalogo_carrito_<?= (int) $empresa['id'] ?>';
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
+    const carritoVista = document.getElementById('carritoVista');
+    const carritoVistaCheckout = document.getElementById('carritoVistaCheckout');
+    const carritoContador = document.getElementById('carritoContador');
+    const abrirResumenBtn = document.getElementById('abrirResumenCarrito');
+    const carritoJson = document.getElementById('carrito_json');
+    const modalResumen = new bootstrap.Modal(document.getElementById('modalResumenCarrito'));
+    const modalCheckout = new bootstrap.Modal(document.getElementById('modalCheckout'));
+    const modalProductoDetalle = new bootstrap.Modal(document.getElementById('modalProductoDetalle'));
+    const detalleNombre = document.getElementById('detalleProductoNombre');
+    const detalleDescripcion = document.getElementById('detalleProductoDescripcion');
+    const detalleCategoria = document.getElementById('detalleProductoCategoria');
+    const detallePrecio = document.getElementById('detalleProductoPrecio');
+    const detalleImagen = document.getElementById('detalleProductoImagen');
+    const detalleAgregarBtn = document.getElementById('detalleAgregarCarrito');
+    let productoSeleccionado = null;
+
+    const money = (value) => `$${Math.round(Number(value || 0)).toLocaleString('es-CL')}`;
+
+    const agregarProducto = (id, precio, nombre) => {
+      if (!id || Number.isNaN(id)) return;
+      const ex = cart.find((x) => Number(x.producto_id) === Number(id));
+      if (ex) ex.cantidad += 1;
+      else cart.push({ producto_id: Number(id), nombre: String(nombre || 'Producto'), precio: Number(precio || 0), cantidad: 1 });
+      render();
+    };
+
+    const render = () => {
     if (!Array.isArray(cart) || !cart.length) {
       carritoVista.innerHTML = 'Tu carrito está vacío.';
       carritoVistaCheckout.innerHTML = 'Tu carrito está vacío.';
@@ -138,47 +230,74 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
       <div class="d-flex justify-content-between border-bottom py-2">
         <div>${i.nombre} <span class="text-muted">x${i.cantidad}</span></div>
         <div>
-          $${Math.round(i.precio * i.cantidad).toLocaleString('es-CL')}
+          ${money(i.precio * i.cantidad)}
           <button type="button" class="btn btn-link text-danger btn-sm p-0 ms-2" data-remove="${idx}">Quitar</button>
         </div>
-      </div>`).join('') + `<div class="fw-bold text-end mt-2">Total: $${Math.round(total).toLocaleString('es-CL')}</div>`;
+      </div>`).join('') + `<div class="fw-bold text-end mt-2">Total: ${money(total)}</div>`;
     carritoVista.innerHTML = resumenHtml;
     carritoVistaCheckout.innerHTML = resumenHtml;
     carritoJson.value = JSON.stringify(cart.map((i) => ({ producto_id: Number(i.producto_id), cantidad: Number(i.cantidad) })));
     carritoContador.textContent = String(cart.reduce((acc, i) => acc + Number(i.cantidad || 0), 0));
     localStorage.setItem(storageKey, JSON.stringify(cart));
-  };
+    };
 
-  document.querySelectorAll('[data-add-cart]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const id = Number(btn.dataset.id || 0);
-      const precio = Number(btn.dataset.price || 0);
-      const nombre = String(btn.dataset.name || 'Producto');
-      const ex = cart.find((x) => Number(x.producto_id) === id);
-      if (ex) ex.cantidad += 1;
-      else cart.push({ producto_id: id, nombre, precio, cantidad: 1 });
-      render();
+    document.querySelectorAll('[data-add-cart]').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        agregarProducto(Number(btn.dataset.id || 0), Number(btn.dataset.price || 0), String(btn.dataset.name || 'Producto'));
+        modalResumen.show();
+      });
+    });
+
+    document.querySelectorAll('[data-producto-card]').forEach((card) => {
+      card.addEventListener('click', (event) => {
+        if (event.target.closest('[data-add-cart]')) return;
+        productoSeleccionado = {
+          id: Number(card.dataset.id || 0),
+          nombre: String(card.dataset.name || 'Producto'),
+          precio: Number(card.dataset.price || 0),
+          categoria: String(card.dataset.category || 'Sin categoría'),
+          descripcion: String(card.dataset.description || 'Sin descripción'),
+          imagen: String(card.dataset.image || ''),
+        };
+
+        detalleNombre.textContent = productoSeleccionado.nombre;
+        detalleDescripcion.textContent = productoSeleccionado.descripcion;
+        detalleCategoria.textContent = productoSeleccionado.categoria;
+        detallePrecio.textContent = money(productoSeleccionado.precio);
+        detalleImagen.src = productoSeleccionado.imagen;
+        detalleImagen.alt = productoSeleccionado.nombre;
+        modalProductoDetalle.show();
+      });
+    });
+
+    detalleAgregarBtn.addEventListener('click', () => {
+      if (!productoSeleccionado) return;
+      agregarProducto(productoSeleccionado.id, productoSeleccionado.precio, productoSeleccionado.nombre);
+      modalProductoDetalle.hide();
       modalResumen.show();
     });
-  });
 
-  carritoVista.addEventListener('click', (e) => {
-    const idx = Number(e.target.dataset.remove);
-    if (Number.isNaN(idx)) return;
-    cart.splice(idx, 1);
+    carritoVista.addEventListener('click', (e) => {
+      const idx = Number(e.target.dataset.remove);
+      if (Number.isNaN(idx)) return;
+      cart.splice(idx, 1);
+      render();
+    });
+
+    abrirResumenBtn.addEventListener('click', () => {
+      modalResumen.show();
+    });
+
+    document.getElementById('btnIrFormularioPago').addEventListener('click', () => {
+      if (!cart.length) return;
+      modalResumen.hide();
+      modalCheckout.show();
+    });
+
     render();
-  });
+  };
 
-  abrirResumenBtn.addEventListener('click', () => {
-    modalResumen.show();
-  });
-
-  document.getElementById('btnIrFormularioPago').addEventListener('click', () => {
-    if (!cart.length) return;
-    modalResumen.hide();
-    modalCheckout.show();
-  });
-
-  render();
+  initCatalogo();
 })();
 </script>
