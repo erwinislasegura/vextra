@@ -10,8 +10,16 @@ $resolverImagenProducto = static function (?string $ruta): string {
     }
 
     $normalizada = str_replace('\\', '/', $ruta);
+    if (str_starts_with($normalizada, '/media/archivo')) {
+        return url($normalizada);
+    }
+
     $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
     $normalizada = preg_replace('#^/?public/#i', '/', $normalizada) ?? $normalizada;
+    $normalizada = preg_replace('#^/?aplicacion/public/#i', '/', $normalizada) ?? $normalizada;
+    if (str_starts_with($normalizada, 'uploads/')) {
+        $normalizada = '/' . $normalizada;
+    }
     if (str_contains($normalizada, '/uploads/')) {
         $partes = explode('/uploads/', $normalizada, 2);
         $normalizada = '/uploads/' . ($partes[1] ?? '');
