@@ -13,7 +13,10 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
           <div class="text-muted">Catálogo en línea con compra y pago inmediato por Flow</div>
         </div>
       </div>
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCheckout">Finalizar compra</button>
+      <button class="btn btn-primary position-relative" type="button" id="abrirResumenCarrito">
+        Ver carrito
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="carritoContador">0</span>
+      </button>
     </div>
   </div>
 </section>
@@ -60,6 +63,24 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
   </div>
 </section>
 
+<div class="modal fade" id="modalResumenCarrito" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Resumen del carrito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="carritoVista" class="small mb-0 text-muted">Tu carrito está vacío.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Seguir comprando</button>
+        <button type="button" class="btn btn-primary" id="btnIrFormularioPago">Pagar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
@@ -70,7 +91,10 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <div id="carritoVista" class="small mb-3 text-muted">Tu carrito está vacío.</div>
+          <div class="border rounded p-2 mb-3 bg-light">
+            <div class="small fw-semibold mb-1">Resumen de compra</div>
+            <div id="carritoVistaCheckout" class="small text-muted">Tu carrito está vacío.</div>
+          </div>
           <input type="hidden" name="carrito_json" id="carrito_json" value="[]">
           <div class="row g-2">
             <div class="col-md-6"><label class="form-label">Nombre completo</label><input class="form-control" name="nombre" required></div>
@@ -80,7 +104,7 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Seguir comprando</button>
-          <button class="btn btn-primary" type="submit">Pagar con Flow</button>
+          <button class="btn btn-primary" type="submit">Pagar ahora</button>
         </div>
       </form>
     </div>
@@ -93,17 +117,24 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
   const carritoVista = document.getElementById('carritoVista');
+  const carritoVistaCheckout = document.getElementById('carritoVistaCheckout');
+  const carritoContador = document.getElementById('carritoContador');
+  const abrirResumenBtn = document.getElementById('abrirResumenCarrito');
   const carritoJson = document.getElementById('carrito_json');
+  const modalResumen = new bootstrap.Modal(document.getElementById('modalResumenCarrito'));
+  const modalCheckout = new bootstrap.Modal(document.getElementById('modalCheckout'));
 
   const render = () => {
     if (!Array.isArray(cart) || !cart.length) {
       carritoVista.innerHTML = 'Tu carrito está vacío.';
+      carritoVistaCheckout.innerHTML = 'Tu carrito está vacío.';
       carritoJson.value = '[]';
+      carritoContador.textContent = '0';
       localStorage.setItem(storageKey, '[]');
       return;
     }
     const total = cart.reduce((acc, i) => acc + (Number(i.precio || 0) * Number(i.cantidad || 0)), 0);
-    carritoVista.innerHTML = cart.map((i, idx) => `
+    const resumenHtml = cart.map((i, idx) => `
       <div class="d-flex justify-content-between border-bottom py-2">
         <div>${i.nombre} <span class="text-muted">x${i.cantidad}</span></div>
         <div>
@@ -111,7 +142,10 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
           <button type="button" class="btn btn-link text-danger btn-sm p-0 ms-2" data-remove="${idx}">Quitar</button>
         </div>
       </div>`).join('') + `<div class="fw-bold text-end mt-2">Total: $${Math.round(total).toLocaleString('es-CL')}</div>`;
+    carritoVista.innerHTML = resumenHtml;
+    carritoVistaCheckout.innerHTML = resumenHtml;
     carritoJson.value = JSON.stringify(cart.map((i) => ({ producto_id: Number(i.producto_id), cantidad: Number(i.cantidad) })));
+    carritoContador.textContent = String(cart.reduce((acc, i) => acc + Number(i.cantidad || 0), 0));
     localStorage.setItem(storageKey, JSON.stringify(cart));
   };
 
@@ -124,6 +158,7 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
       if (ex) ex.cantidad += 1;
       else cart.push({ producto_id: id, nombre, precio, cantidad: 1 });
       render();
+      modalResumen.show();
     });
   });
 
@@ -132,6 +167,16 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
     if (Number.isNaN(idx)) return;
     cart.splice(idx, 1);
     render();
+  });
+
+  abrirResumenBtn.addEventListener('click', () => {
+    modalResumen.show();
+  });
+
+  document.getElementById('btnIrFormularioPago').addEventListener('click', () => {
+    if (!cart.length) return;
+    modalResumen.hide();
+    modalCheckout.show();
   });
 
   render();

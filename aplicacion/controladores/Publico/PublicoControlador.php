@@ -379,7 +379,8 @@ class PublicoControlador extends Controlador
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
         $logoCatalogo = $this->resolverLogoCatalogo((string) ($empresa['logo'] ?? ''));
 
-        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo'), 'catalogo_publico');
+        $ocultarNavbarPublico = true;
+        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function checkoutCatalogo(int $empresaId): void
@@ -495,7 +496,8 @@ class PublicoControlador extends Controlador
         }
 
         $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
-        $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token'), 'catalogo_publico');
+        $ocultarNavbarPublico = true;
+        $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     private function resolverLogoCatalogo(string $logo): ?string
