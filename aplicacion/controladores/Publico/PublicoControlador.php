@@ -410,9 +410,30 @@ class PublicoControlador extends Controlador
 
         $correo = mb_strtolower(trim((string) ($_POST['correo'] ?? '')));
         $nombre = trim((string) ($_POST['nombre'] ?? ''));
+        $telefono = trim((string) ($_POST['telefono'] ?? ''));
+        $documento = trim((string) ($_POST['documento'] ?? ''));
+        $empresaComprador = trim((string) ($_POST['empresa'] ?? ''));
         $direccion = trim((string) ($_POST['direccion'] ?? ''));
-        if ($nombre === '' || $direccion === '' || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-            flash('danger', 'Completa tus datos de compra (nombre, correo y dirección).');
+        $referencia = trim((string) ($_POST['referencia'] ?? ''));
+        $comuna = trim((string) ($_POST['comuna'] ?? ''));
+        $ciudad = trim((string) ($_POST['ciudad'] ?? ''));
+        $region = trim((string) ($_POST['region'] ?? ''));
+        $acepta = isset($_POST['acepta_terminos']) && (string) $_POST['acepta_terminos'] === '1';
+
+        $telefonoNormalizado = preg_replace('/\s+/', '', $telefono) ?? '';
+        $telefonoValido = preg_match('/^\+?[0-9]{8,15}$/', $telefonoNormalizado) === 1;
+
+        if (
+            $nombre === ''
+            || $direccion === ''
+            || $comuna === ''
+            || $ciudad === ''
+            || $region === ''
+            || !filter_var($correo, FILTER_VALIDATE_EMAIL)
+            || !$telefonoValido
+            || !$acepta
+        ) {
+            flash('danger', 'Completa los datos de facturación y envío (nombre, correo, teléfono, dirección, comuna, ciudad, región y aceptación de términos).');
             $this->redirigir('/catalogo/' . $empresaId);
         }
 
@@ -467,9 +488,18 @@ class PublicoControlador extends Controlador
 
         $_SESSION['catalogo_checkout_' . $respuesta['token']] = [
             'empresa_id' => $empresaId,
-            'nombre' => $nombre,
-            'correo' => $correo,
-            'direccion' => $direccion,
+            'comprador' => [
+                'nombre' => $nombre,
+                'correo' => $correo,
+                'telefono' => $telefono,
+                'documento' => $documento,
+                'empresa' => $empresaComprador,
+                'direccion' => $direccion,
+                'referencia' => $referencia,
+                'comuna' => $comuna,
+                'ciudad' => $ciudad,
+                'region' => $region,
+            ],
             'total' => $total,
             'items' => $resumen,
             'fecha' => date('c'),
@@ -536,6 +566,57 @@ class PublicoControlador extends Controlador
         exit;
     }
 
+    public function mediaArchivo(): void
+    {
+        $ruta = trim((string) ($_GET['ruta'] ?? ''));
+        if ($ruta === '') {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $normalizada = str_replace('\\', '/', $ruta);
+        $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
+        $normalizada = preg_replace('#^/?public/#i', '/', $normalizada) ?? $normalizada;
+        if (!str_starts_with($normalizada, '/')) {
+            $normalizada = '/' . ltrim($normalizada, '/');
+        }
+
+        if (
+            !str_starts_with($normalizada, '/uploads/')
+            && !str_starts_with($normalizada, '/img/')
+        ) {
+            http_response_code(403);
+            exit('Ruta no permitida');
+        }
+
+        $raiz = dirname(__DIR__, 3);
+        $candidatas = [
+            $raiz . '/public' . $normalizada,
+            $raiz . $normalizada,
+            $raiz . '/aplicacion/public' . $normalizada,
+        ];
+
+        $rutaAbs = null;
+        foreach ($candidatas as $candidata) {
+            if (is_file($candidata)) {
+                $rutaAbs = $candidata;
+                break;
+            }
+        }
+
+        if ($rutaAbs === null) {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $mime = (string) (mime_content_type($rutaAbs) ?: 'application/octet-stream');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (string) filesize($rutaAbs));
+        header('Cache-Control: public, max-age=86400');
+        readfile($rutaAbs);
+        exit;
+    }
+
     private function resolverLogoCatalogo(string $logo): ?string
     {
         return $this->resolverRutaPublicaArchivo($logo);
@@ -561,8 +642,8 @@ class PublicoControlador extends Controlador
         } elseif (str_starts_with($normalizada, '/aplicacion/public/uploads/')) {
             $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
         }
-
-        return url($normalizada);
+        $normalizada = '/' . ltrim($normalizada, '/');
+        return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void
