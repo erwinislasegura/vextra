@@ -643,6 +643,9 @@ class PublicoControlador extends Controlador
         if (preg_match('/^https?:\/\//i', $ruta) === 1) {
             return $ruta;
         }
+        if (str_starts_with($ruta, '/media/archivo')) {
+            return url($ruta);
+        }
 
         $normalizada = str_replace('\\', '/', $ruta);
         $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
@@ -655,6 +658,28 @@ class PublicoControlador extends Controlador
             $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
         }
         $normalizada = '/' . ltrim($normalizada, '/');
+
+        if (!str_starts_with($normalizada, '/uploads/') && !str_starts_with($normalizada, '/img/')) {
+            return null;
+        }
+
+        $raiz = dirname(__DIR__, 3);
+        $candidatas = [
+            $raiz . '/public' . $normalizada,
+            $raiz . $normalizada,
+            $raiz . '/aplicacion/public' . $normalizada,
+        ];
+        $existe = false;
+        foreach ($candidatas as $candidata) {
+            if (is_file($candidata)) {
+                $existe = true;
+                break;
+            }
+        }
+        if (!$existe) {
+            return null;
+        }
+
         return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
