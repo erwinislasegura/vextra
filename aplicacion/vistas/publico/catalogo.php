@@ -15,6 +15,9 @@ $resolverImagenProducto = static function (?string $ruta): string {
     if (str_contains($normalizada, '/uploads/')) {
         $partes = explode('/uploads/', $normalizada, 2);
         $normalizada = '/uploads/' . ($partes[1] ?? '');
+    } elseif (str_contains($normalizada, 'productos_catalogo/')) {
+        $partes = explode('productos_catalogo/', $normalizada, 2);
+        $normalizada = '/uploads/productos_catalogo/' . ($partes[1] ?? '');
     }
     $normalizada = '/' . ltrim($normalizada, '/');
 
@@ -32,11 +35,6 @@ $resolverImagenProducto = static function (?string $ruta): string {
   .catalogo-card__desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:60px}
   .catalogo-card__cta{border-radius:.75rem}
   .modal-producto__img{max-height:360px;object-fit:cover;border-radius:.9rem;background:#f8fafc}
-  .catalogo-slider{position:relative;overflow:hidden;border:1px solid #e5e7eb;border-radius:1rem;min-height:220px;background:#0f172a}
-  .catalogo-slider__image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
-  .catalogo-slider__overlay{position:relative;z-index:1;padding:2rem;color:#fff;max-width:640px}
-  .catalogo-slider__title{font-size:clamp(1.2rem,2.5vw,2rem);font-weight:700;line-height:1.2}
-  .catalogo-slider__desc{font-size:1rem;opacity:.92}
 </style>
 <section class="py-4 bg-white border-bottom">
   <div class="container">
