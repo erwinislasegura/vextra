@@ -6,6 +6,16 @@ use Aplicacion\Nucleo\Modelo;
 
 class ProductoImagen extends Modelo
 {
+    public function obtenerPorId(int $id): ?array
+    {
+        if (!$this->tieneTablaImagenes()) {
+            return null;
+        }
+        $stmt = $this->db->prepare('SELECT * FROM productos_imagenes WHERE id=:id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch() ?: null;
+    }
+
     public function listarPorProducto(int $empresaId, int $productoId): array
     {
         if (!$this->tieneTablaImagenes()) {
