@@ -37,10 +37,22 @@ class Producto extends Modelo
         if ($this->tieneColumna('productos', 'stock_actual')) {
             $columnas[] = 'stock_actual';
             $valores[] = ':stock_actual';
+            $data['stock_actual'] = $data['stock_actual'] ?? 0;
         }
         if ($this->tieneColumna('productos', 'stock_critico')) {
             $columnas[] = 'stock_critico';
             $valores[] = ':stock_critico';
+            $data['stock_critico'] = $data['stock_critico'] ?? 0;
+        }
+        if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
+            $columnas[] = 'mostrar_catalogo';
+            $valores[] = ':mostrar_catalogo';
+            $data['mostrar_catalogo'] = isset($data['mostrar_catalogo']) ? (int) $data['mostrar_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
+            $columnas[] = 'imagen_catalogo_url';
+            $valores[] = ':imagen_catalogo_url';
+            $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
 
         $sql = 'INSERT INTO productos (' . implode(',', $columnas) . ') VALUES (' . implode(',', $valores) . ')';
@@ -78,9 +90,19 @@ class Producto extends Modelo
 
         if ($this->tieneColumna('productos', 'stock_critico')) {
             $sets[] = 'stock_critico=:stock_critico';
+            $data['stock_critico'] = $data['stock_critico'] ?? 0;
         }
         if ($this->tieneColumna('productos', 'stock_actual')) {
             $sets[] = 'stock_actual=:stock_actual';
+            $data['stock_actual'] = $data['stock_actual'] ?? 0;
+        }
+        if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
+            $sets[] = 'mostrar_catalogo=:mostrar_catalogo';
+            $data['mostrar_catalogo'] = isset($data['mostrar_catalogo']) ? (int) $data['mostrar_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
+            $sets[] = 'imagen_catalogo_url=:imagen_catalogo_url';
+            $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
 
         $sql = 'UPDATE productos SET ' . implode(', ', $sets) . ' WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL';
@@ -95,6 +117,37 @@ class Producto extends Modelo
         $stmt->execute(['empresa_id' => $empresaId, 'id' => $id]);
     }
 
+    public function listarParaCatalogoPublico(int $empresaId, string $buscar = '', ?int $categoriaId = null): array
+    {
+        $campoImagen = 'NULL AS imagen_catalogo';
+        if ($this->tieneTabla('productos_imagenes')) {
+            $campoImagen = '(SELECT pi.ruta FROM productos_imagenes pi WHERE pi.producto_id = p.id ORDER BY pi.es_principal DESC, pi.id ASC LIMIT 1) AS imagen_catalogo';
+        }
+
+        $sql = 'SELECT p.*, c.nombre AS categoria, ' . $campoImagen . '
+            FROM productos p
+            LEFT JOIN categorias_productos c ON c.id = p.categoria_id
+            WHERE p.empresa_id = :empresa_id
+              AND p.fecha_eliminacion IS NULL
+              AND p.estado = "activo"
+              AND COALESCE(p.mostrar_catalogo, 0) = 1';
+        $params = ['empresa_id' => $empresaId];
+
+        if ($buscar !== '') {
+            $sql .= ' AND (p.nombre LIKE :buscar OR p.descripcion LIKE :buscar OR p.codigo LIKE :buscar)';
+            $params['buscar'] = '%' . $buscar . '%';
+        }
+        if ($categoriaId !== null && $categoriaId > 0) {
+            $sql .= ' AND p.categoria_id = :categoria_id';
+            $params['categoria_id'] = $categoriaId;
+        }
+
+        $sql .= ' ORDER BY p.nombre ASC';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
     private function tieneColumna(string $tabla, string $columna): bool
     {
         $llave = $tabla . '.' . $columna;
@@ -106,5 +159,12 @@ class Producto extends Modelo
         $stmt->execute(['tabla' => $tabla, 'columna' => $columna]);
         $this->cacheColumnas[$llave] = ((int) $stmt->fetchColumn()) > 0;
         return $this->cacheColumnas[$llave];
+    }
+
+    private function tieneTabla(string $tabla): bool
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :tabla');
+        $stmt->execute(['tabla' => $tabla]);
+        return ((int) $stmt->fetchColumn()) > 0;
     }
 }
