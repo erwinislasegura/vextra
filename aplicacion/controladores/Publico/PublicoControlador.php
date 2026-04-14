@@ -612,7 +612,12 @@ class PublicoControlador extends Controlador
 
     public function imagenProducto(int $id): void
     {
-        $imagen = (new ProductoImagen())->obtenerPorId($id);
+        $imagenModel = new ProductoImagen();
+        $imagen = $imagenModel->obtenerPorId($id);
+        if (!$imagen) {
+            // Compatibilidad: permite usar /media/producto/{productoId} además de {imagenId}.
+            $imagen = $imagenModel->obtenerPrincipalPorProductoId($id);
+        }
         if (!$imagen) {
             http_response_code(404);
             exit('Imagen no encontrada');
