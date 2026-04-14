@@ -386,9 +386,21 @@ class PublicoControlador extends Controlador
             'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
             'boton_url' => trim((string) ($empresa['slider_boton_url'] ?? '')),
         ];
+        $catalogoTopbar = [
+            'texto' => trim((string) ($empresa['catalogo_topbar_texto'] ?? '')),
+            'color_primario' => trim((string) ($empresa['catalogo_color_primario'] ?? '')),
+            'color_acento' => trim((string) ($empresa['catalogo_color_acento'] ?? '')),
+            'sociales' => [
+                'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
+                'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),
+                'tiktok' => trim((string) ($empresa['catalogo_social_tiktok'] ?? '')),
+                'linkedin' => trim((string) ($empresa['catalogo_social_linkedin'] ?? '')),
+                'youtube' => trim((string) ($empresa['catalogo_social_youtube'] ?? '')),
+            ],
+        ];
 
         $ocultarNavbarPublico = true;
-        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'ocultarNavbarPublico'), 'catalogo_publico');
+        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function checkoutCatalogo(int $empresaId): void
