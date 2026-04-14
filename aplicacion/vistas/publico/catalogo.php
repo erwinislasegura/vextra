@@ -22,33 +22,71 @@ $resolverImagenProducto = static function (?string $ruta): string {
     $normalizada = '/' . ltrim($normalizada, '/');
 
     if (str_starts_with($normalizada, '/uploads/') || str_starts_with($normalizada, '/img/')) {
-        return url($normalizada);
+        return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
     return url('/' . ltrim($normalizada, '/'));
 };
 ?>
 <style>
+  .catalogo-topbar{background:#ffffff;border-bottom:1px solid #e9edf3;position:sticky;top:0;z-index:30}
+  .catalogo-topbar__inner{min-height:76px}
+  .catalogo-topbar__brand{display:flex;align-items:center;gap:.75rem;color:#111827;text-decoration:none}
+  .catalogo-topbar__logo{width:48px;height:48px;object-fit:contain;border-radius:10px;border:1px solid #e5e7eb;background:#fff}
+  .catalogo-topbar__logo--fallback{display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:700;background:linear-gradient(135deg,#6d28d9,#2563eb);color:#fff;border:none}
+  .catalogo-topbar__title{font-weight:700;line-height:1.1}
+  .catalogo-topbar__subtitle{font-size:.82rem;color:#6b7280}
+  .catalogo-topbar__nav{display:flex;align-items:center;gap:1.15rem}
+  .catalogo-topbar__nav a{font-size:.9rem;color:#334155;text-decoration:none;font-weight:500}
+  .catalogo-topbar__nav a:hover{color:#111827}
+  .catalogo-topbar__cart{border-radius:999px;padding:.55rem 1rem;font-weight:600;position:relative}
+  .catalogo-topbar__cart .badge{font-size:.68rem}
+  .catalogo-hero{background:radial-gradient(circle at 15% 0%,#4c1d95 0%,#1e3a8a 42%,#0f172a 100%);color:#fff;padding:1.75rem 0 2.25rem}
+  .catalogo-hero__content{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:center}
+  .catalogo-hero__eyebrow{letter-spacing:.18em;font-size:.72rem;text-transform:uppercase;color:#fca5a5;font-weight:700}
+  .catalogo-hero__title{font-size:clamp(1.7rem,3.3vw,2.9rem);font-weight:800;line-height:1.08;margin:.4rem 0 .8rem}
+  .catalogo-hero__desc{max-width:520px;color:#dbeafe}
+  .catalogo-hero__cta{border-radius:999px;padding:.68rem 1.35rem;font-weight:700}
+  .catalogo-slider{position:relative;border-radius:1.2rem;overflow:hidden;min-height:300px;background:linear-gradient(130deg,rgba(59,130,246,.35),rgba(76,29,149,.85));box-shadow:0 1rem 2rem rgba(15,23,42,.3)}
+  .catalogo-slider__image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+  .catalogo-slider__overlay{position:absolute;inset:0;padding:1.4rem;background:linear-gradient(100deg,rgba(15,23,42,.9) 10%,rgba(30,41,59,.35) 60%,rgba(15,23,42,.85) 100%);display:flex;flex-direction:column;justify-content:flex-end}
+  .catalogo-slider__title{font-size:clamp(1.35rem,2.4vw,2rem);font-weight:800;max-width:480px}
+  .catalogo-slider__desc{max-width:520px;color:#dbeafe}
+  .catalogo-slider__play{position:absolute;top:1rem;right:1rem;width:62px;height:62px;border-radius:999px;background:rgba(255,255,255,.95);color:#1f2937;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:0;box-shadow:0 .5rem 1.2rem rgba(0,0,0,.2)}
+  .catalogo-slider__play::before{content:'▶';margin-left:3px}
   .catalogo-card{border:1px solid #edf0f3;border-radius:1rem;overflow:hidden;transition:all .2s ease;cursor:pointer}
   .catalogo-card:hover{transform:translateY(-2px);box-shadow:0 .75rem 1.5rem rgba(17,24,39,.10)!important}
   .catalogo-card__img{height:220px;object-fit:cover;background:#f8fafc}
   .catalogo-card__desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:60px}
   .catalogo-card__cta{border-radius:.75rem}
   .modal-producto__img{max-height:360px;object-fit:cover;border-radius:.9rem;background:#f8fafc}
+  @media (max-width:991px){
+    .catalogo-topbar__inner{padding:.75rem 0}
+    .catalogo-topbar__nav{display:none}
+    .catalogo-hero__content{grid-template-columns:1fr}
+    .catalogo-slider{min-height:260px}
+  }
 </style>
-<section class="py-4 bg-white border-bottom">
+<section class="catalogo-topbar">
   <div class="container">
-    <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 justify-content-between">
-      <div class="d-flex align-items-center gap-3">
+    <div class="catalogo-topbar__inner d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+      <a class="catalogo-topbar__brand" href="#catalogoProductos">
         <?php if (!empty($logoCatalogo)): ?>
-          <img src="<?= e((string) $logoCatalogo) ?>" alt="Logo empresa" style="width:64px;height:64px;object-fit:contain;border-radius:12px;border:1px solid #e5e7eb;background:#fff;">
+          <img src="<?= e((string) $logoCatalogo) ?>" alt="Logo empresa" class="catalogo-topbar__logo">
+        <?php else: ?>
+          <span class="catalogo-topbar__logo catalogo-topbar__logo--fallback"><?= e(mb_strtoupper(mb_substr((string) ($empresa['nombre_comercial'] ?? 'C'), 0, 1))) ?></span>
         <?php endif; ?>
         <div>
-          <h1 class="h3 mb-1"><?= e((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) ?></h1>
-          <div class="text-muted">Catálogo en línea con compra y pago inmediato por Flow</div>
+          <div class="catalogo-topbar__title"><?= e((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) ?></div>
+          <div class="catalogo-topbar__subtitle">Catálogo en línea · Compra y pago inmediato</div>
         </div>
-      </div>
-      <button class="btn btn-primary position-relative" type="button" id="abrirResumenCarrito">
+      </a>
+      <nav class="catalogo-topbar__nav">
+        <a href="#catalogoHero">Inicio</a>
+        <a href="#catalogoProductos">Productos</a>
+        <a href="#catalogoFiltros">Categorías</a>
+      </nav>
+      <button class="btn btn-info text-white catalogo-topbar__cart" type="button" id="abrirResumenCarrito">
         Ver carrito
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="carritoContador">0</span>
       </button>
@@ -56,32 +94,38 @@ $resolverImagenProducto = static function (?string $ruta): string {
   </div>
 </section>
 
-<?php if (!empty($sliderCatalogo['imagen'])): ?>
-<section class="py-3 bg-white">
+<section class="catalogo-hero" id="catalogoHero">
   <div class="container">
-    <article class="catalogo-slider shadow-sm">
-      <img src="<?= e((string) $sliderCatalogo['imagen']) ?>" alt="Slider catálogo" class="catalogo-slider__image" loading="lazy">
-      <div class="catalogo-slider__overlay">
-        <?php if (!empty($sliderCatalogo['titulo'])): ?>
-          <h2 class="catalogo-slider__title mb-2"><?= e((string) $sliderCatalogo['titulo']) ?></h2>
-        <?php endif; ?>
-        <?php if (!empty($sliderCatalogo['bajada'])): ?>
-          <p class="catalogo-slider__desc mb-3"><?= e((string) $sliderCatalogo['bajada']) ?></p>
-        <?php endif; ?>
+    <div class="catalogo-hero__content">
+      <div>
+        <div class="catalogo-hero__eyebrow">Catálogo destacado</div>
+        <h1 class="catalogo-hero__title"><?= e((string) ($sliderCatalogo['titulo'] ?? 'Encuentra productos para impulsar tu operación')) ?></h1>
+        <p class="catalogo-hero__desc mb-4"><?= e((string) ($sliderCatalogo['bajada'] ?? 'Descubre nuestro catálogo con stock actualizado, compra en línea y recibe confirmación inmediata.')) ?></p>
         <?php if (!empty($sliderCatalogo['boton_texto']) && !empty($sliderCatalogo['boton_url'])): ?>
-          <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-light btn-sm px-3">
+          <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-danger catalogo-hero__cta">
             <?= e((string) $sliderCatalogo['boton_texto']) ?>
           </a>
+        <?php else: ?>
+          <a href="#catalogoProductos" class="btn btn-danger catalogo-hero__cta">Ver productos</a>
         <?php endif; ?>
       </div>
-    </article>
+      <article class="catalogo-slider">
+        <?php if (!empty($sliderCatalogo['imagen'])): ?>
+          <img src="<?= e((string) $sliderCatalogo['imagen']) ?>" alt="Slider catálogo" class="catalogo-slider__image" loading="lazy">
+        <?php endif; ?>
+        <button type="button" class="catalogo-slider__play" aria-label="Destacado catálogo"></button>
+        <div class="catalogo-slider__overlay">
+          <h2 class="catalogo-slider__title mb-2"><?= e((string) ($sliderCatalogo['titulo'] ?? 'Colección principal del catálogo')) ?></h2>
+          <p class="catalogo-slider__desc mb-0"><?= e((string) ($sliderCatalogo['bajada'] ?? 'Visualiza promociones, novedades y productos recomendados para tu negocio.')) ?></p>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
-<?php endif; ?>
 
-<section class="py-4">
+<section class="py-4" id="catalogoProductos">
   <div class="container">
-    <form class="row g-2 mb-3" method="GET">
+    <form class="row g-2 mb-3" method="GET" id="catalogoFiltros">
       <div class="col-md-6"><input class="form-control" name="q" value="<?= e($buscar) ?>" placeholder="Buscar producto o servicio"></div>
       <div class="col-md-4">
         <select class="form-select" name="categoria">
