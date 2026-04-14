@@ -7,6 +7,7 @@ use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Cotizacion;
 use Aplicacion\Modelos\Empresa;
 use Aplicacion\Modelos\Producto;
+use Aplicacion\Modelos\ProductoImagen;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PlanFuncionalidad;
@@ -378,9 +379,16 @@ class PublicoControlador extends Controlador
         $productos = (new Producto())->listarParaCatalogoPublico($empresaId, $buscar, $categoriaId > 0 ? $categoriaId : null);
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
         $logoCatalogo = $this->resolverLogoCatalogo((string) ($empresa['logo'] ?? ''));
+        $sliderCatalogo = [
+            'imagen' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen'] ?? '')),
+            'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
+            'bajada' => trim((string) ($empresa['slider_bajada'] ?? '')),
+            'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
+            'boton_url' => trim((string) ($empresa['slider_boton_url'] ?? '')),
+        ];
 
         $ocultarNavbarPublico = true;
-        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'ocultarNavbarPublico'), 'catalogo_publico');
+        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function checkoutCatalogo(int $empresaId): void
@@ -500,19 +508,61 @@ class PublicoControlador extends Controlador
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
+    public function imagenProducto(int $id): void
+    {
+        $imagen = (new ProductoImagen())->obtenerPorId($id);
+        if (!$imagen) {
+            http_response_code(404);
+            exit('Imagen no encontrada');
+        }
+
+        $rutaRel = (string) ($imagen['ruta'] ?? '');
+        if ($rutaRel === '') {
+            http_response_code(404);
+            exit('Imagen no disponible');
+        }
+        $rutaRel = '/' . ltrim(str_replace('\\', '/', $rutaRel), '/');
+        $rutaAbs = dirname(__DIR__, 3) . '/public' . $rutaRel;
+        if (!is_file($rutaAbs)) {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $mime = (string) (mime_content_type($rutaAbs) ?: 'application/octet-stream');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (string) filesize($rutaAbs));
+        header('Cache-Control: public, max-age=86400');
+        readfile($rutaAbs);
+        exit;
+    }
+
     private function resolverLogoCatalogo(string $logo): ?string
     {
-        $logo = trim($logo);
-        if ($logo === '') {
+        return $this->resolverRutaPublicaArchivo($logo);
+    }
+
+    private function resolverRutaPublicaArchivo(string $ruta): ?string
+    {
+        $ruta = trim($ruta);
+        if ($ruta === '') {
             return null;
         }
-        if (preg_match('/^https?:\/\//i', $logo) === 1) {
-            return $logo;
+        if (preg_match('/^https?:\/\//i', $ruta) === 1) {
+            return $ruta;
         }
-        if (str_starts_with($logo, '/')) {
-            return url($logo);
+
+        $normalizada = str_replace('\\', '/', $ruta);
+        $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
+        if (!str_starts_with($normalizada, '/')) {
+            $normalizada = '/' . ltrim($normalizada, '/');
         }
-        return url('/' . ltrim($logo, '/'));
+        if (str_starts_with($normalizada, '/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 16), '/');
+        } elseif (str_starts_with($normalizada, '/aplicacion/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
+        }
+
+        return url($normalizada);
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void

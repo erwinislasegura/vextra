@@ -56,6 +56,29 @@ $resolverImagenProducto = static function (?string $ruta): string {
   </div>
 </section>
 
+<?php if (!empty($sliderCatalogo['imagen'])): ?>
+<section class="py-3 bg-white">
+  <div class="container">
+    <article class="catalogo-slider shadow-sm">
+      <img src="<?= e((string) $sliderCatalogo['imagen']) ?>" alt="Slider catálogo" class="catalogo-slider__image" loading="lazy">
+      <div class="catalogo-slider__overlay">
+        <?php if (!empty($sliderCatalogo['titulo'])): ?>
+          <h2 class="catalogo-slider__title mb-2"><?= e((string) $sliderCatalogo['titulo']) ?></h2>
+        <?php endif; ?>
+        <?php if (!empty($sliderCatalogo['bajada'])): ?>
+          <p class="catalogo-slider__desc mb-3"><?= e((string) $sliderCatalogo['bajada']) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($sliderCatalogo['boton_texto']) && !empty($sliderCatalogo['boton_url'])): ?>
+          <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-light btn-sm px-3">
+            <?= e((string) $sliderCatalogo['boton_texto']) ?>
+          </a>
+        <?php endif; ?>
+      </div>
+    </article>
+  </div>
+</section>
+<?php endif; ?>
+
 <section class="py-4">
   <div class="container">
     <form class="row g-2 mb-3" method="GET">

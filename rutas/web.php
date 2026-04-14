@@ -19,6 +19,7 @@ $enrutador->agregar('GET', '/cotizacion/publica/{token}/imprimir', [PublicoContr
 $enrutador->agregar('POST', '/cotizacion/publica/{token}/decision', [PublicoControlador::class, 'registrarDecisionCotizacion']);
 $enrutador->agregar('GET', '/orden-compra/publica/{token}', [PublicoControlador::class, 'verOrdenCompraPublica']);
 $enrutador->agregar('GET', '/orden-compra/publica/{token}/imprimir', [PublicoControlador::class, 'imprimirOrdenCompraPublica']);
+$enrutador->agregar('GET', '/media/producto/{id}', [PublicoControlador::class, 'imagenProducto']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}', [PublicoControlador::class, 'catalogoEnLinea']);
 $enrutador->agregar('POST', '/catalogo/{empresaId}/checkout', [PublicoControlador::class, 'checkoutCatalogo']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}/checkout/exito', [PublicoControlador::class, 'exitoCheckoutCatalogo']);

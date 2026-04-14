@@ -13,6 +13,7 @@ use Aplicacion\Modelos\PuntoVenta;
 use Aplicacion\Modelos\Suscripcion;
 use Aplicacion\Modelos\Usuario;
 use Aplicacion\Modelos\FlowConfiguracionEmpresa;
+use Aplicacion\Modelos\Empresa;
 use Aplicacion\Servicios\FlowApiService;
 use Aplicacion\Servicios\ExcelExpoFormato;
 use Aplicacion\Servicios\FlowPagosService;
@@ -417,9 +418,91 @@ class GestionComercialControlador extends Controlador
             }
         }
 
-        $empresa = (new \Aplicacion\Modelos\Empresa())->buscar($empresaId);
+        $empresaModelo = new Empresa();
+        $empresa = $empresaModelo->buscar($empresaId);
+        $sliderCatalogo = $empresaModelo->obtenerConfiguracionCatalogoEnLinea($empresaId);
         $catalogoUrl = FlowApiService::construirUrlPublica('/catalogo/' . (int) $empresaId);
-        $this->vista('empresa/catalogo/index', compact('publicados', 'catalogoUrl', 'empresa'), 'empresa');
+        $this->vista('empresa/catalogo/index', compact('publicados', 'catalogoUrl', 'empresa', 'sliderCatalogo'), 'empresa');
+    }
+
+    public function guardarConfiguracionCatalogoEnLinea(): void
+    {
+        validar_csrf();
+        $empresaId = (int) empresa_actual_id();
+        $empresaModelo = new Empresa();
+        $actual = $empresaModelo->obtenerConfiguracionCatalogoEnLinea($empresaId);
+
+        $sliderImagen = (string) ($actual['slider_imagen'] ?? '');
+        if (isset($_POST['eliminar_slider_imagen'])) {
+            $sliderImagen = '';
+        }
+
+        $nuevaImagen = $this->guardarImagenSliderCatalogo($empresaId);
+        if ($nuevaImagen !== null) {
+            $sliderImagen = $nuevaImagen;
+        }
+
+        $sliderTitulo = trim((string) ($_POST['slider_titulo'] ?? ''));
+        $sliderBajada = trim((string) ($_POST['slider_bajada'] ?? ''));
+        $sliderBotonTexto = trim((string) ($_POST['slider_boton_texto'] ?? ''));
+        $sliderBotonUrl = trim((string) ($_POST['slider_boton_url'] ?? ''));
+
+        if ($sliderBotonUrl !== '' && filter_var($sliderBotonUrl, FILTER_VALIDATE_URL) === false) {
+            flash('danger', 'La URL del botón no es válida. Usa una URL completa, por ejemplo: https://tuempresa.cl/promocion');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+
+        $empresaModelo->guardarConfiguracionCatalogoEnLinea($empresaId, [
+            'slider_imagen' => $sliderImagen,
+            'slider_titulo' => mb_substr($sliderTitulo, 0, 120),
+            'slider_bajada' => mb_substr($sliderBajada, 0, 220),
+            'slider_boton_texto' => mb_substr($sliderBotonTexto, 0, 60),
+            'slider_boton_url' => mb_substr($sliderBotonUrl, 0, 255),
+        ]);
+
+        flash('success', 'La configuración del slider del catálogo fue actualizada.');
+        $this->redirigir('/app/catalogo-en-linea');
+    }
+
+    private function guardarImagenSliderCatalogo(int $empresaId): ?string
+    {
+        if (!isset($_FILES['slider_imagen']) || (int) ($_FILES['slider_imagen']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+        if ((int) ($_FILES['slider_imagen']['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+            flash('danger', 'No se pudo subir la imagen del slider.');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+
+        $nombre = (string) ($_FILES['slider_imagen']['name'] ?? '');
+        $tmp = (string) ($_FILES['slider_imagen']['tmp_name'] ?? '');
+        $tamano = (int) ($_FILES['slider_imagen']['size'] ?? 0);
+        if ($tamano > 4 * 1024 * 1024) {
+            flash('danger', 'La imagen del slider supera el tamaño máximo (4MB).');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+
+        $extension = mb_strtolower(pathinfo($nombre, PATHINFO_EXTENSION));
+        if (!in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true)) {
+            flash('danger', 'Formato de imagen no permitido. Usa JPG, PNG o WEBP.');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+
+        $raizProyecto = dirname(__DIR__, 3);
+        $dirAbsoluto = $raizProyecto . '/public/uploads/catalogo_slider/' . $empresaId;
+        if (!is_dir($dirAbsoluto) && !mkdir($dirAbsoluto, 0775, true) && !is_dir($dirAbsoluto)) {
+            flash('danger', 'No se pudo crear la carpeta para el slider.');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+
+        $nombreFinal = 'slider_catalogo_' . $empresaId . '_' . date('YmdHis') . '.' . $extension;
+        $destino = $dirAbsoluto . '/' . $nombreFinal;
+        if (!move_uploaded_file($tmp, $destino)) {
+            flash('danger', 'No se pudo guardar la imagen del slider.');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+
+        return '/uploads/catalogo_slider/' . $empresaId . '/' . $nombreFinal;
     }
 
     public function contactos(): void

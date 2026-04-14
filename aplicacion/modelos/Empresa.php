@@ -6,6 +6,13 @@ use Aplicacion\Nucleo\Modelo;
 
 class Empresa extends Modelo
 {
+    private function columnaExisteEnEmpresas(string $columna): bool
+    {
+        $stmt = $this->db->prepare("SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'empresas' AND column_name = :columna LIMIT 1");
+        $stmt->execute(['columna' => $columna]);
+        return (bool) $stmt->fetchColumn();
+    }
+
     private function tablasDependientesDe(string $tabla): array
     {
         $stmt = $this->db->prepare(
@@ -380,5 +387,57 @@ class Empresa extends Modelo
             'imap_remitente_correo' => $data['imap_remitente_correo'],
             'imap_remitente_nombre' => $data['imap_remitente_nombre'],
         ]);
+    }
+
+    public function obtenerConfiguracionCatalogoEnLinea(int $empresaId): array
+    {
+        $config = [
+            'slider_imagen' => '',
+            'slider_titulo' => '',
+            'slider_bajada' => '',
+            'slider_boton_texto' => '',
+            'slider_boton_url' => '',
+        ];
+
+        $columnas = array_keys($config);
+        $existentes = [];
+        foreach ($columnas as $columna) {
+            if ($this->columnaExisteEnEmpresas($columna)) {
+                $existentes[] = $columna;
+            }
+        }
+        if ($existentes === []) {
+            return $config;
+        }
+
+        $sql = 'SELECT ' . implode(', ', $existentes) . ' FROM empresas WHERE id = :id LIMIT 1';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['id' => $empresaId]);
+        $fila = $stmt->fetch() ?: [];
+        foreach ($existentes as $columna) {
+            $config[$columna] = (string) ($fila[$columna] ?? '');
+        }
+
+        return $config;
+    }
+
+    public function guardarConfiguracionCatalogoEnLinea(int $empresaId, array $data): void
+    {
+        $columnas = ['slider_imagen', 'slider_titulo', 'slider_bajada', 'slider_boton_texto', 'slider_boton_url'];
+        $sets = [];
+        $params = ['empresa_id' => $empresaId];
+        foreach ($columnas as $columna) {
+            if (!$this->columnaExisteEnEmpresas($columna)) {
+                continue;
+            }
+            $sets[] = $columna . ' = :' . $columna;
+            $params[$columna] = (string) ($data[$columna] ?? '');
+        }
+        if ($sets === []) {
+            return;
+        }
+
+        $sql = 'UPDATE empresas SET ' . implode(', ', $sets) . ', fecha_actualizacion = NOW() WHERE id = :empresa_id';
+        $this->db->prepare($sql)->execute($params);
     }
 }
