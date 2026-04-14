@@ -27,24 +27,60 @@ $resolverImagenProducto = static function (?string $ruta): string {
 
     return url('/' . ltrim($normalizada, '/'));
 };
+
+$topbarTexto = trim((string) ($catalogoTopbar['texto'] ?? ''));
+if ($topbarTexto === '') {
+    $topbarTexto = 'Envíos a todo el país • Garantía en todos los productos';
+}
+$colorPrimario = trim((string) ($catalogoTopbar['color_primario'] ?? ''));
+if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorPrimario) !== 1) {
+    $colorPrimario = '#4632A8';
+}
+$colorAcento = trim((string) ($catalogoTopbar['color_acento'] ?? ''));
+if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorAcento) !== 1) {
+    $colorAcento = '#5415B0';
+}
+$socialesTopbar = [
+    ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
+    ['id' => 'instagram', 'url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'label' => 'Instagram'],
+    ['id' => 'tiktok', 'url' => trim((string) ($catalogoTopbar['sociales']['tiktok'] ?? '')), 'label' => 'TikTok'],
+    ['id' => 'linkedin', 'url' => trim((string) ($catalogoTopbar['sociales']['linkedin'] ?? '')), 'label' => 'LinkedIn'],
+    ['id' => 'youtube', 'url' => trim((string) ($catalogoTopbar['sociales']['youtube'] ?? '')), 'label' => 'YouTube'],
+];
+$socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
+
+$renderIconoRed = static function (string $id): string {
+    return match ($id) {
+        'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
+        'instagram' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm0 1.9A3.9 3.9 0 0 0 3.9 7.8v8.4a3.9 3.9 0 0 0 3.9 3.9h8.4a3.9 3.9 0 0 0 3.9-3.9V7.8a3.9 3.9 0 0 0-3.9-3.9H7.8zm8.9 1.5a1.2 1.2 0 1 1 0 2.3 1.2 1.2 0 0 1 0-2.3zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.9a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2z"/></svg>',
+        'tiktok' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 3h2.7c.2 1.5 1 2.8 2.3 3.6.9.6 1.9.9 3 .9V10a8 8 0 0 1-4.9-1.7v7.3a5.6 5.6 0 1 1-5.6-5.6c.4 0 .7 0 1 .1v2.7a2.9 2.9 0 1 0 1.5 2.5V3z"/></svg>',
+        'linkedin' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 8.9H3.5V21h2.9V8.9zM5 3A1.8 1.8 0 1 0 5 6.6 1.8 1.8 0 0 0 5 3zM21 13.8c0-3.3-1.8-5.3-4.6-5.3-2.1 0-3 .8-3.6 1.6V8.9h-2.9V21h2.9v-6.7c0-1.8 1-2.8 2.5-2.8s2.2 1 2.2 2.8V21H21v-7.2z"/></svg>',
+        'youtube' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 12s0-3.2-.4-4.7a3 3 0 0 0-2.1-2.1C18.9 4.8 12 4.8 12 4.8s-6.9 0-8.5.4a3 3 0 0 0-2.1 2.1C1 8.8 1 12 1 12s0 3.2.4 4.7a3 3 0 0 0 2.1 2.1c1.6.4 8.5.4 8.5.4s6.9 0 8.5-.4a3 3 0 0 0 2.1-2.1c.4-1.5.4-4.7.4-4.7zm-13.8 3.9V8.1l6.1 3.9-6.1 3.9z"/></svg>',
+        default => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>',
+    };
+};
 ?>
 <style>
-  :root{--primary:#0f172a;--primary-soft:#1e293b;--accent:#2563eb;--accent-hover:#1d4ed8;--danger:#dc2626;--bg:#eef2f7;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#dbe3ee;--shadow:0 10px 25px rgba(15,23,42,.08);--radius:18px}
+  :root{--primary:<?= e($colorPrimario) ?>;--primary-soft:<?= e($colorPrimario) ?>;--accent:<?= e($colorAcento) ?>;--accent-hover:<?= e($colorPrimario) ?>;--danger:#dc2626;--bg:#eef2f7;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#dbe3ee;--shadow:0 10px 25px rgba(15,23,42,.08);--radius:18px}
   .catalogo-page{background:var(--bg)}
   .catalogo-container{width:min(1280px,92%);margin:0 auto}
-  .catalogo-topbar{background:var(--primary);color:#fff;padding:10px 0;font-size:14px}
+  .catalogo-topbar{background:var(--primary);color:#fff;padding:8px 0;font-size:13px}
   .catalogo-topbar__content{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .catalogo-topbar__sociales{display:flex;align-items:center;gap:10px}
+  .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none;transition:all .2s ease}
+  .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
+  .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:16px;align-items:center;padding:16px 0}
-  .catalogo-logo{display:flex;align-items:center;gap:.6rem;color:var(--text);font-size:40px;font-weight:800;text-decoration:none;line-height:1}
-  .catalogo-logo img{width:52px;height:52px;object-fit:contain;border-radius:12px;border:1px solid var(--border);background:#fff}
-  .catalogo-logo small{display:block;font-size:13px;font-weight:600;color:var(--muted)}
+  .catalogo-navbar{display:grid;grid-template-columns:190px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
+  .catalogo-logo img{width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff}
+  .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
-  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden;box-shadow:var(--shadow)}
-  .search-box input{width:100%;padding:14px 18px;border:none;outline:none;background:transparent;font-size:15px}
-  .search-box button{background:var(--accent);color:#fff;padding:14px 20px;font-weight:700;border:none}
+  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
+  .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
   .nav-actions{display:flex;gap:10px;align-items:center}
-  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:12px 16px;border-radius:12px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
+  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .btn-soft{background:#eff6ff;color:var(--accent)}
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
@@ -107,19 +143,25 @@ $resolverImagenProducto = static function (?string $ruta): string {
 <div class="catalogo-page">
   <div class="catalogo-topbar">
     <div class="catalogo-container catalogo-topbar__content">
-      <div>Envíos a todo el país • Garantía en todos los productos</div>
-      <div>Soporte comercial • Compras seguras • Atención premium</div>
+      <div><?= e($topbarTexto) ?></div>
+      <?php if ($socialesTopbar !== []): ?>
+        <div class="catalogo-topbar__sociales" aria-label="Redes sociales del catálogo">
+          <?php foreach ($socialesTopbar as $red): ?>
+            <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) $red['label']) ?>">
+              <?= $renderIconoRed((string) ($red['id'] ?? '')) ?>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 
   <header class="catalogo-header">
     <div class="catalogo-container catalogo-navbar">
       <a class="catalogo-logo" href="#catalogoProductos">
-        <?php if (!empty($logoCatalogo)): ?>
-          <img src="<?= e((string) $logoCatalogo) ?>" alt="Logo empresa">
-        <?php endif; ?>
+        <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
         <div>
-          <?= e((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) ?><span>Pro</span>
+          <?= e((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) ?>
           <small>Catálogo profesional</small>
         </div>
       </a>
@@ -128,8 +170,8 @@ $resolverImagenProducto = static function (?string $ruta): string {
         <button type="button" id="searchBtn">Buscar</button>
       </div>
       <div class="nav-actions">
-        <button class="btn-outline" type="button">Favoritos</button>
-        <button class="btn-outline" type="button">Mi cuenta</button>
+        <a class="btn-outline text-decoration-none" href="#nosotros">Nosotros</a>
+        <a class="btn-outline text-decoration-none" href="#contacto">Contacto</a>
       </div>
       <button class="btn-primary-custom" type="button" id="openCartHeader">Ver carrito</button>
     </div>
@@ -163,7 +205,7 @@ $resolverImagenProducto = static function (?string $ruta): string {
         </article>
       </div>
 
-      <aside class="hero-card">
+      <aside class="hero-card" id="nosotros">
         <h3>Beneficios del catálogo</h3>
         <div class="promo-box"><strong>Diseño premium</strong><p>Interfaz limpia, moderna y pensada para vender más.</p></div>
         <div class="promo-box"><strong>Carrito funcional</strong><p>Agrega productos, calcula subtotales y visualiza el total.</p></div>
@@ -252,7 +294,7 @@ $resolverImagenProducto = static function (?string $ruta): string {
     </div>
   </aside>
 
-  <footer class="footer"><div class="catalogo-container footer-content"><div><strong><?= e((string) ($empresa['nombre_comercial'] ?? 'CatálogoPro')) ?></strong><p class="mb-0">Diseño profesional para mostrar y vender productos online.</p></div><div><p class="mb-0">© <?= date('Y') ?> • Todos los derechos reservados</p></div></div></footer>
+  <footer class="footer" id="contacto"><div class="catalogo-container footer-content"><div><strong><?= e((string) ($empresa['nombre_comercial'] ?? 'CatálogoPro')) ?></strong><p class="mb-0">Diseño profesional para mostrar y vender productos online.</p></div><div><p class="mb-0">© <?= date('Y') ?> • Todos los derechos reservados</p></div></div></footer>
 </div>
 
 <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
