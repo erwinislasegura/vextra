@@ -379,9 +379,16 @@ class PublicoControlador extends Controlador
         $productos = (new Producto())->listarParaCatalogoPublico($empresaId, $buscar, $categoriaId > 0 ? $categoriaId : null);
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
         $logoCatalogo = $this->resolverLogoCatalogo((string) ($empresa['logo'] ?? ''));
+        $sliderCatalogo = [
+            'imagen' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen'] ?? '')),
+            'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
+            'bajada' => trim((string) ($empresa['slider_bajada'] ?? '')),
+            'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
+            'boton_url' => trim((string) ($empresa['slider_boton_url'] ?? '')),
+        ];
 
         $ocultarNavbarPublico = true;
-        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'ocultarNavbarPublico'), 'catalogo_publico');
+        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function checkoutCatalogo(int $empresaId): void
@@ -531,17 +538,31 @@ class PublicoControlador extends Controlador
 
     private function resolverLogoCatalogo(string $logo): ?string
     {
-        $logo = trim($logo);
-        if ($logo === '') {
+        return $this->resolverRutaPublicaArchivo($logo);
+    }
+
+    private function resolverRutaPublicaArchivo(string $ruta): ?string
+    {
+        $ruta = trim($ruta);
+        if ($ruta === '') {
             return null;
         }
-        if (preg_match('/^https?:\/\//i', $logo) === 1) {
-            return $logo;
+        if (preg_match('/^https?:\/\//i', $ruta) === 1) {
+            return $ruta;
         }
-        if (str_starts_with($logo, '/')) {
-            return url($logo);
+
+        $normalizada = str_replace('\\', '/', $ruta);
+        $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
+        if (!str_starts_with($normalizada, '/')) {
+            $normalizada = '/' . ltrim($normalizada, '/');
         }
-        return url('/' . ltrim($logo, '/'));
+        if (str_starts_with($normalizada, '/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 16), '/');
+        } elseif (str_starts_with($normalizada, '/aplicacion/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
+        }
+
+        return url($normalizada);
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void

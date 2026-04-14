@@ -28,6 +28,11 @@ $resolverImagenProducto = static function (?string $ruta): string {
   .catalogo-card__desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:60px}
   .catalogo-card__cta{border-radius:.75rem}
   .modal-producto__img{max-height:360px;object-fit:cover;border-radius:.9rem;background:#f8fafc}
+  .catalogo-slider{position:relative;overflow:hidden;border:1px solid #e5e7eb;border-radius:1rem;min-height:220px;background:#0f172a}
+  .catalogo-slider__image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+  .catalogo-slider__overlay{position:relative;z-index:1;padding:2rem;color:#fff;max-width:640px}
+  .catalogo-slider__title{font-size:clamp(1.2rem,2.5vw,2rem);font-weight:700;line-height:1.2}
+  .catalogo-slider__desc{font-size:1rem;opacity:.92}
 </style>
 <section class="py-4 bg-white border-bottom">
   <div class="container">
@@ -48,6 +53,29 @@ $resolverImagenProducto = static function (?string $ruta): string {
     </div>
   </div>
 </section>
+
+<?php if (!empty($sliderCatalogo['imagen'])): ?>
+<section class="py-3 bg-white">
+  <div class="container">
+    <article class="catalogo-slider shadow-sm">
+      <img src="<?= e((string) $sliderCatalogo['imagen']) ?>" alt="Slider catálogo" class="catalogo-slider__image" loading="lazy">
+      <div class="catalogo-slider__overlay">
+        <?php if (!empty($sliderCatalogo['titulo'])): ?>
+          <h2 class="catalogo-slider__title mb-2"><?= e((string) $sliderCatalogo['titulo']) ?></h2>
+        <?php endif; ?>
+        <?php if (!empty($sliderCatalogo['bajada'])): ?>
+          <p class="catalogo-slider__desc mb-3"><?= e((string) $sliderCatalogo['bajada']) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($sliderCatalogo['boton_texto']) && !empty($sliderCatalogo['boton_url'])): ?>
+          <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-light btn-sm px-3">
+            <?= e((string) $sliderCatalogo['boton_texto']) ?>
+          </a>
+        <?php endif; ?>
+      </div>
+    </article>
+  </div>
+</section>
+<?php endif; ?>
 
 <section class="py-4">
   <div class="container">
