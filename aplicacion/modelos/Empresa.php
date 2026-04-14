@@ -393,10 +393,19 @@ class Empresa extends Modelo
     {
         $config = [
             'slider_imagen' => '',
+            'slider_imagen_secundaria' => '',
             'slider_titulo' => '',
             'slider_bajada' => '',
             'slider_boton_texto' => '',
             'slider_boton_url' => '',
+            'catalogo_topbar_texto' => '',
+            'catalogo_social_facebook' => '',
+            'catalogo_social_instagram' => '',
+            'catalogo_social_tiktok' => '',
+            'catalogo_social_linkedin' => '',
+            'catalogo_social_youtube' => '',
+            'catalogo_color_primario' => '',
+            'catalogo_color_acento' => '',
         ];
 
         $columnas = array_keys($config);
@@ -423,7 +432,22 @@ class Empresa extends Modelo
 
     public function guardarConfiguracionCatalogoEnLinea(int $empresaId, array $data): void
     {
-        $columnas = ['slider_imagen', 'slider_titulo', 'slider_bajada', 'slider_boton_texto', 'slider_boton_url'];
+        $columnas = [
+            'slider_imagen',
+            'slider_imagen_secundaria',
+            'slider_titulo',
+            'slider_bajada',
+            'slider_boton_texto',
+            'slider_boton_url',
+            'catalogo_topbar_texto',
+            'catalogo_social_facebook',
+            'catalogo_social_instagram',
+            'catalogo_social_tiktok',
+            'catalogo_social_linkedin',
+            'catalogo_social_youtube',
+            'catalogo_color_primario',
+            'catalogo_color_acento',
+        ];
         $sets = [];
         $params = ['empresa_id' => $empresaId];
         foreach ($columnas as $columna) {

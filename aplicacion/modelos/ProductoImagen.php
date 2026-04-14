@@ -16,6 +16,16 @@ class ProductoImagen extends Modelo
         return $stmt->fetch() ?: null;
     }
 
+    public function obtenerPrincipalPorProductoId(int $productoId): ?array
+    {
+        if (!$this->tieneTablaImagenes()) {
+            return null;
+        }
+        $stmt = $this->db->prepare('SELECT * FROM productos_imagenes WHERE producto_id=:producto_id ORDER BY es_principal DESC, id ASC LIMIT 1');
+        $stmt->execute(['producto_id' => $productoId]);
+        return $stmt->fetch() ?: null;
+    }
+
     public function listarPorProducto(int $empresaId, int $productoId): array
     {
         if (!$this->tieneTablaImagenes()) {
