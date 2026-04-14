@@ -592,8 +592,22 @@ class ProductosControlador extends Controlador
                     default => 'jpg',
                 };
                 $dirRel = '/uploads/productos_catalogo/' . $empresaId;
-                $dirAbs = dirname(__DIR__, 3) . '/public' . $dirRel;
-                if (!is_dir($dirAbs) && !mkdir($dirAbs, 0775, true) && !is_dir($dirAbs)) {
+                $raizProyecto = dirname(__DIR__, 4);
+                $candidatos = [
+                    $raizProyecto . '/public' . $dirRel,
+                    $raizProyecto . '/aplicacion/public' . $dirRel,
+                ];
+                $dirAbs = null;
+                foreach ($candidatos as $candidato) {
+                    if (!is_dir($candidato) && !mkdir($candidato, 0775, true) && !is_dir($candidato)) {
+                        continue;
+                    }
+                    if (is_writable($candidato)) {
+                        $dirAbs = $candidato;
+                        break;
+                    }
+                }
+                if ($dirAbs === null) {
                     continue;
                 }
                 $nombre = 'prod_' . $productoId . '_' . substr(sha1((string) microtime(true) . '_' . $i), 0, 12) . '.' . $ext;
