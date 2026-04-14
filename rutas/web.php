@@ -22,6 +22,7 @@ $enrutador->agregar('GET', '/orden-compra/publica/{token}/imprimir', [PublicoCon
 $enrutador->agregar('GET', '/media/producto/{id}', [PublicoControlador::class, 'imagenProducto']);
 $enrutador->agregar('GET', '/media/archivo', [PublicoControlador::class, 'mediaArchivo']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}', [PublicoControlador::class, 'catalogoEnLinea']);
+$enrutador->agregar('GET', '/catalogo/{empresaId}/logo', [PublicoControlador::class, 'logoCatalogoEmpresa']);
 $enrutador->agregar('POST', '/catalogo/{empresaId}/checkout', [PublicoControlador::class, 'checkoutCatalogo']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}/checkout/exito', [PublicoControlador::class, 'exitoCheckoutCatalogo']);
 
