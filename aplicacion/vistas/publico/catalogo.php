@@ -71,9 +71,9 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
   .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:280px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
-  .catalogo-logo img{width:88px;height:44px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;padding:2px 6px}
+  .catalogo-logo img{width:120px;height:60px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;padding:4px 8px}
   .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
@@ -248,6 +248,10 @@ $renderIconoRed = static function (string $id): string {
           <?php foreach ($productos as $producto): ?>
             <?php
               $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? '');
+              $imagenProductoId = (int) ($producto['imagen_catalogo_id'] ?? 0);
+              $imagenProductoUrl = $imagenProductoId > 0
+                ? url('/media/producto/' . $imagenProductoId)
+                : $resolverImagenProducto($imagenProducto);
               $precio = (float) ($producto['precio'] ?? 0);
               $categoria = (string) ($producto['categoria'] ?? 'Sin categoría');
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
@@ -257,9 +261,9 @@ $renderIconoRed = static function (string $id): string {
               $onSale = ((int) ($producto['id'] ?? 0) % 2) === 0;
               $oldPrice = $onSale ? ($precio * 1.18) : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($resolverImagenProducto($imagenProducto)) ?>" data-stock="<?= $stock ?>" data-rating="<?= e((string) $rating) ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-rating="<?= e((string) $rating) ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>">
               <div class="product-image">
-                <img src="<?= e($resolverImagenProducto($imagenProducto)) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy">
+                <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy">
                 <span class="badge-mini <?= $onSale ? 'sale' : '' ?>"><?= $onSale ? 'Oferta' : 'Destacado' ?></span>
               </div>
               <div class="product-body">
