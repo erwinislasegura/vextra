@@ -7,6 +7,7 @@ use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Cotizacion;
 use Aplicacion\Modelos\Empresa;
 use Aplicacion\Modelos\Producto;
+use Aplicacion\Modelos\ProductoImagen;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PlanFuncionalidad;
@@ -498,6 +499,34 @@ class PublicoControlador extends Controlador
         $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    public function imagenProducto(int $id): void
+    {
+        $imagen = (new ProductoImagen())->obtenerPorId($id);
+        if (!$imagen) {
+            http_response_code(404);
+            exit('Imagen no encontrada');
+        }
+
+        $rutaRel = (string) ($imagen['ruta'] ?? '');
+        if ($rutaRel === '') {
+            http_response_code(404);
+            exit('Imagen no disponible');
+        }
+        $rutaRel = '/' . ltrim(str_replace('\\', '/', $rutaRel), '/');
+        $rutaAbs = dirname(__DIR__, 3) . '/public' . $rutaRel;
+        if (!is_file($rutaAbs)) {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $mime = (string) (mime_content_type($rutaAbs) ?: 'application/octet-stream');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (string) filesize($rutaAbs));
+        header('Cache-Control: public, max-age=86400');
+        readfile($rutaAbs);
+        exit;
     }
 
     private function resolverLogoCatalogo(string $logo): ?string

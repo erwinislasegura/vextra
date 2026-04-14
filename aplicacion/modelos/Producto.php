@@ -54,14 +54,6 @@ class Producto extends Modelo
             $valores[] = ':imagen_catalogo_url';
             $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
-        if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
-            $columnas[] = 'mostrar_catalogo';
-            $valores[] = ':mostrar_catalogo';
-        }
-        if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
-            $columnas[] = 'imagen_catalogo_url';
-            $valores[] = ':imagen_catalogo_url';
-        }
 
         $sql = 'INSERT INTO productos (' . implode(',', $columnas) . ') VALUES (' . implode(',', $valores) . ')';
         $this->db->prepare($sql)->execute($data);
@@ -112,12 +104,6 @@ class Producto extends Modelo
             $sets[] = 'imagen_catalogo_url=:imagen_catalogo_url';
             $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
-        if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
-            $sets[] = 'mostrar_catalogo=:mostrar_catalogo';
-        }
-        if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
-            $sets[] = 'imagen_catalogo_url=:imagen_catalogo_url';
-        }
 
         $sql = 'UPDATE productos SET ' . implode(', ', $sets) . ' WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL';
         $data['empresa_id'] = $empresaId;
@@ -133,9 +119,10 @@ class Producto extends Modelo
 
     public function listarParaCatalogoPublico(int $empresaId, string $buscar = '', ?int $categoriaId = null): array
     {
-        $campoImagen = 'NULL AS imagen_catalogo';
+        $campoImagen = 'NULL AS imagen_catalogo, NULL AS imagen_catalogo_id';
         if ($this->tieneTabla('productos_imagenes')) {
-            $campoImagen = '(SELECT pi.ruta FROM productos_imagenes pi WHERE pi.producto_id = p.id ORDER BY pi.es_principal DESC, pi.id ASC LIMIT 1) AS imagen_catalogo';
+            $campoImagen = '(SELECT pi.ruta FROM productos_imagenes pi WHERE pi.producto_id = p.id ORDER BY pi.es_principal DESC, pi.id ASC LIMIT 1) AS imagen_catalogo,
+                           (SELECT pi.id FROM productos_imagenes pi WHERE pi.producto_id = p.id ORDER BY pi.es_principal DESC, pi.id ASC LIMIT 1) AS imagen_catalogo_id';
         }
 
         $sql = 'SELECT p.*, c.nombre AS categoria, ' . $campoImagen . '

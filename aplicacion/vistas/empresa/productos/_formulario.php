@@ -134,7 +134,7 @@ $imagenesCatalogo = $imagenesCatalogo ?? [];
           <?php foreach ($imagenesCatalogo as $img): ?>
             <div class="col-md-4">
               <div class="border rounded p-2 h-100">
-                <img src="<?= e(url((string) ($img['ruta'] ?? ''))) ?>" alt="Imagen producto" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
+                <img src="<?= e(url('/media/producto/' . (int) ($img['id'] ?? 0))) ?>" alt="Imagen producto" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
                 <div class="form-check mt-2">
                   <input class="form-check-input" type="radio" name="imagen_principal_id" value="<?= (int) $img['id'] ?>" id="img_principal_<?= (int) $img['id'] ?>" <?= (int) ($img['es_principal'] ?? 0) === 1 ? 'checked' : '' ?>>
                   <label class="form-check-label small" for="img_principal_<?= (int) $img['id'] ?>">Principal</label>

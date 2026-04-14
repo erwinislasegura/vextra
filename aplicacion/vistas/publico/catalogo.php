@@ -43,9 +43,15 @@ $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
       <?php foreach ($productos as $producto): ?>
         <div class="col-md-6 col-lg-4">
           <article class="card border-0 shadow-sm h-100">
-            <?php $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? ''); ?>
+            <?php
+              $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? '');
+              $imagenProductoId = (int) ($producto['imagen_catalogo_id'] ?? 0);
+              $imagenSrc = $imagenProductoId > 0
+                ? url('/media/producto/' . $imagenProductoId)
+                : (str_starts_with($imagenProducto, 'http') ? $imagenProducto : url($imagenProducto));
+            ?>
             <?php if ($imagenProducto !== ''): ?>
-              <img src="<?= e(str_starts_with($imagenProducto, 'http') ? $imagenProducto : url($imagenProducto)) ?>" alt="<?= e((string) ($producto['nombre'] ?? 'Producto')) ?>" class="card-img-top" style="height:200px;object-fit:cover;">
+              <img src="<?= e($imagenSrc) ?>" alt="<?= e((string) ($producto['nombre'] ?? 'Producto')) ?>" class="card-img-top" style="height:200px;object-fit:cover;">
             <?php endif; ?>
             <div class="card-body d-flex flex-column">
               <div class="small text-muted mb-1"><?= e((string) ($producto['categoria'] ?? 'Sin categoría')) ?></div>
