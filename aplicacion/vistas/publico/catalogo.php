@@ -48,6 +48,8 @@ $socialesTopbar = [
     ['id' => 'youtube', 'url' => trim((string) ($catalogoTopbar['sociales']['youtube'] ?? '')), 'label' => 'YouTube'],
 ];
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
+$sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
+$sliderImagenSecundaria = url('/media/archivo?ruta=' . rawurlencode('/img/logo/logo color.png'));
 
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
@@ -85,16 +87,16 @@ $renderIconoRed = static function (string $id): string {
   .btn-soft{background:#eff6ff;color:var(--accent)}
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
   .hero{padding:26px 0 22px}
-  .hero-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:22px}
+  .hero-grid{display:grid;grid-template-columns:1fr}
   .slider{position:relative;min-height:420px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(135deg,#0f172a,#1d4ed8)}
-  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s ease;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;padding:40px;color:#fff}
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s ease;display:flex;align-items:flex-end;padding:40px;color:#fff;background-size:cover;background-position:center}
+  .slide::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.78) 0%,rgba(15,23,42,.45) 45%,rgba(15,23,42,.2) 100%)}
+  .slide-content{position:relative;z-index:2;max-width:min(720px,92%)}
   .slide.active{opacity:1;visibility:visible}
   .slide h2{font-size:52px;line-height:1.1;margin-bottom:14px;font-weight:800}
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
-  .slide img{width:100%;height:250px;object-fit:cover;border-radius:18px}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
-  .hero-card{background:#fff;border-radius:26px;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px;border:1px solid var(--border)}
-  .hero-card h3,.section-head h2,.sidebar h3{font-size:24px;color:var(--primary);font-weight:800}
+  .section-head h2,.sidebar h3{font-size:24px;color:var(--primary);font-weight:800}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
   .filters-section{padding:8px 0 24px}
@@ -136,7 +138,7 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
-  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap,.slide{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:720px){.products-grid{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.footer-content,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
 </style>
 
@@ -170,7 +172,7 @@ $renderIconoRed = static function (string $id): string {
         <button type="button" id="searchBtn">Buscar</button>
       </div>
       <div class="nav-actions">
-        <a class="btn-outline text-decoration-none" href="#nosotros">Nosotros</a>
+        <a class="btn-outline text-decoration-none" href="#catalogoProductos">Nosotros</a>
         <a class="btn-outline text-decoration-none" href="#contacto">Contacto</a>
       </div>
       <button class="btn-primary-custom" type="button" id="openCartHeader">Ver carrito</button>
@@ -180,8 +182,8 @@ $renderIconoRed = static function (string $id): string {
   <section class="hero">
     <div class="catalogo-container hero-grid">
       <div class="slider" id="slider">
-        <article class="slide active">
-          <div>
+        <article class="slide active" style="background-image:url('<?= e($sliderImagenPrincipal) ?>');">
+          <div class="slide-content">
             <h2><?= e((string) ($sliderCatalogo['titulo'] ?? 'Catálogo online moderno y profesional')) ?></h2>
             <p><?= e((string) ($sliderCatalogo['bajada'] ?? 'Presenta tus productos con una experiencia de compra elegante, rápida y totalmente ordenada para tus clientes.')) ?></p>
             <div class="slide-actions">
@@ -193,25 +195,15 @@ $renderIconoRed = static function (string $id): string {
               <?php endif; ?>
             </div>
           </div>
-          <div><img src="<?= e((string) ($sliderCatalogo['imagen'] ?: url('/img/placeholder-producto.svg'))) ?>" alt="Promoción principal"></div>
         </article>
-        <article class="slide">
-          <div>
+        <article class="slide" style="background-image:url('<?= e($sliderImagenSecundaria) ?>');">
+          <div class="slide-content">
             <h2>Experiencia de compra fluida</h2>
             <p>Incluye tarjetas atractivas, filtros por categoría, búsqueda, ordenamiento y carrito lateral para cerrar ventas más rápido.</p>
             <div class="slide-actions"><a href="#catalogoProductos" class="btn-primary-custom">Comprar ahora</a><button class="btn-soft" type="button" id="showStockBtnTop">Solo stock</button></div>
           </div>
-          <div><img src="<?= e((string) ($sliderCatalogo['imagen'] ?: url('/img/placeholder-producto.svg'))) ?>" alt="Colección destacada"></div>
         </article>
       </div>
-
-      <aside class="hero-card" id="nosotros">
-        <h3>Beneficios del catálogo</h3>
-        <div class="promo-box"><strong>Diseño premium</strong><p>Interfaz limpia, moderna y pensada para vender más.</p></div>
-        <div class="promo-box"><strong>Carrito funcional</strong><p>Agrega productos, calcula subtotales y visualiza el total.</p></div>
-        <div class="promo-box"><strong>Filtros inteligentes</strong><p>Busca por nombre, categoría, precio y stock disponible.</p></div>
-        <a href="<?= e(url('/app/catalogo-en-linea')) ?>" class="btn-primary-custom text-center">Configurar contenido</a>
-      </aside>
     </div>
   </section>
 
