@@ -49,6 +49,7 @@ $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $re
   .catalogo-topbar__content{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .catalogo-topbar__sociales{display:flex;align-items:center;gap:10px}
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;transition:all .2s ease}
+  .catalogo-topbar__sociales a i{color:#fff !important;font-size:15px;line-height:1}
   .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:16px;align-items:center;padding:16px 0}
