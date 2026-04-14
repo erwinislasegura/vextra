@@ -9,6 +9,7 @@ $mostrarModalCategoria = $mostrarModalCategoria ?? true;
 $modalId = $modalId ?? 'modalNuevaCategoria';
 $redirigirA = $redirigirA ?? '/app/productos';
 $unidadActual = $producto['unidad'] ?? 'unidad';
+$imagenesCatalogo = $imagenesCatalogo ?? [];
 ?>
 <div class="alert alert-info info-modulo mb-3">
   <div class="fw-semibold mb-1">Uso y buenas prácticas para productos</div>
@@ -18,7 +19,7 @@ $unidadActual = $producto['unidad'] ?? 'unidad';
     <li>Si el ítem no se ofrece temporalmente, cambia estado a <strong>inactivo</strong>.</li>
   </ul>
 </div>
-<form method="POST" action="<?= e($accion) ?>" class="row g-2">
+<form method="POST" action="<?= e($accion) ?>" class="row g-2" enctype="multipart/form-data">
   <?= csrf_campo() ?>
   <?php if (!$producto): ?>
     <input type="hidden" name="redirect_to" value="<?= e($redirigirA) ?>">
@@ -111,6 +112,44 @@ $unidadActual = $producto['unidad'] ?? 'unidad';
       <option value="inactivo" <?= ($producto['estado'] ?? '') === 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
     </select>
   </div>
+  <div class="col-md-4">
+    <label class="form-label">Imágenes del producto (máximo 3)</label>
+    <input type="file" name="imagenes_catalogo[]" class="form-control" accept="image/jpeg,image/png,image/webp" multiple>
+    <div class="form-text">Puedes subir JPG, PNG o WEBP. Máximo 3 imágenes por producto.</div>
+  </div>
+  <div class="col-md-2 d-flex align-items-end">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="mostrar_catalogo" name="mostrar_catalogo" value="1" <?= (int) ($producto['mostrar_catalogo'] ?? 0) === 1 ? 'checked' : '' ?>>
+      <label class="form-check-label" for="mostrar_catalogo">
+        Mostrar en catálogo en línea
+      </label>
+      <div class="form-text">Activa esta opción para publicar el ítem en la landing del catálogo.</div>
+    </div>
+  </div>
+  <?php if (!empty($imagenesCatalogo)): ?>
+    <div class="col-12">
+      <div class="border rounded p-2">
+        <div class="small fw-semibold mb-2">Imágenes actuales</div>
+        <div class="row g-2">
+          <?php foreach ($imagenesCatalogo as $img): ?>
+            <div class="col-md-4">
+              <div class="border rounded p-2 h-100">
+                <img src="<?= e(url('/media/producto/' . (int) ($img['id'] ?? 0))) ?>" alt="Imagen producto" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
+                <div class="form-check mt-2">
+                  <input class="form-check-input" type="radio" name="imagen_principal_id" value="<?= (int) $img['id'] ?>" id="img_principal_<?= (int) $img['id'] ?>" <?= (int) ($img['es_principal'] ?? 0) === 1 ? 'checked' : '' ?>>
+                  <label class="form-check-label small" for="img_principal_<?= (int) $img['id'] ?>">Principal</label>
+                </div>
+                <div class="form-check mt-1">
+                  <input class="form-check-input" type="checkbox" name="eliminar_imagen_ids[]" value="<?= (int) $img['id'] ?>" id="img_eliminar_<?= (int) $img['id'] ?>">
+                  <label class="form-check-label small text-danger" for="img_eliminar_<?= (int) $img['id'] ?>">Eliminar</label>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
   <div class="col-12">
     <button class="btn btn-primary btn-sm"><?= e($textoBoton) ?></button>
     <?php if ($mostrarCancelar): ?>
