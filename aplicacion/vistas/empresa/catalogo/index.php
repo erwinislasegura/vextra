@@ -40,10 +40,45 @@
 <section class="mt-3">
   <div class="card border-0 shadow-sm">
     <div class="card-body">
-      <h2 class="h5 mb-1">Slider destacado del catálogo público</h2>
-      <p class="text-muted small mb-3">Este bloque se mostrará debajo de la barra superior del catálogo en línea.</p>
+      <h2 class="h5 mb-1">Personalización del catálogo público</h2>
+      <p class="text-muted small mb-3">Configura el contenido de la barra superior y del slider destacado de tu catálogo en línea.</p>
       <form method="POST" action="<?= e(url('/app/catalogo-en-linea/configuracion')) ?>" enctype="multipart/form-data" class="row g-3">
         <?= csrf_campo() ?>
+        <div class="col-12">
+          <div class="border rounded-3 p-3">
+            <h3 class="h6 mb-2">Barra superior</h3>
+            <div class="row g-2">
+              <div class="col-12">
+                <label class="form-label">Texto principal superior</label>
+                <input type="text" name="catalogo_topbar_texto" maxlength="220" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_topbar_texto'] ?? '')) ?>" placeholder="Ejemplo: Envíos a todo Chile • Garantía oficial • Atención personalizada">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label class="form-label">Facebook (URL)</label>
+                <input type="url" name="catalogo_social_facebook" maxlength="255" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_social_facebook'] ?? '')) ?>" placeholder="https://facebook.com/tuempresa">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label class="form-label">Instagram (URL)</label>
+                <input type="url" name="catalogo_social_instagram" maxlength="255" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_social_instagram'] ?? '')) ?>" placeholder="https://instagram.com/tuempresa">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label class="form-label">TikTok (URL)</label>
+                <input type="url" name="catalogo_social_tiktok" maxlength="255" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_social_tiktok'] ?? '')) ?>" placeholder="https://tiktok.com/@tuempresa">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label class="form-label">LinkedIn (URL)</label>
+                <input type="url" name="catalogo_social_linkedin" maxlength="255" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_social_linkedin'] ?? '')) ?>" placeholder="https://linkedin.com/company/tuempresa">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label class="form-label">YouTube (URL)</label>
+                <input type="url" name="catalogo_social_youtube" maxlength="255" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_social_youtube'] ?? '')) ?>" placeholder="https://youtube.com/@tuempresa">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <hr class="my-1">
+          <h3 class="h6 mb-2">Slider destacado</h3>
+        </div>
         <div class="col-lg-5">
           <label class="form-label">Imagen (JPG, PNG o WEBP)</label>
           <input type="file" name="slider_imagen" accept="image/jpeg,image/png,image/webp" class="form-control">
