@@ -446,9 +446,37 @@ class GestionComercialControlador extends Controlador
         $sliderBajada = trim((string) ($_POST['slider_bajada'] ?? ''));
         $sliderBotonTexto = trim((string) ($_POST['slider_boton_texto'] ?? ''));
         $sliderBotonUrl = trim((string) ($_POST['slider_boton_url'] ?? ''));
+        $topbarTexto = trim((string) ($_POST['catalogo_topbar_texto'] ?? ''));
+        $sociales = [
+            'catalogo_social_facebook' => trim((string) ($_POST['catalogo_social_facebook'] ?? '')),
+            'catalogo_social_instagram' => trim((string) ($_POST['catalogo_social_instagram'] ?? '')),
+            'catalogo_social_tiktok' => trim((string) ($_POST['catalogo_social_tiktok'] ?? '')),
+            'catalogo_social_linkedin' => trim((string) ($_POST['catalogo_social_linkedin'] ?? '')),
+            'catalogo_social_youtube' => trim((string) ($_POST['catalogo_social_youtube'] ?? '')),
+        ];
+        $colorPrimarioInput = trim((string) ($_POST['catalogo_color_primario'] ?? ''));
+        if ($colorPrimarioInput === '') {
+            $colorPrimarioInput = trim((string) ($_POST['catalogo_color_primario_picker'] ?? ''));
+        }
+        $colorAcentoInput = trim((string) ($_POST['catalogo_color_acento'] ?? ''));
+        if ($colorAcentoInput === '') {
+            $colorAcentoInput = trim((string) ($_POST['catalogo_color_acento_picker'] ?? ''));
+        }
+        $colorPrimario = $this->normalizarColorHex($colorPrimarioInput);
+        $colorAcento = $this->normalizarColorHex($colorAcentoInput);
 
         if ($sliderBotonUrl !== '' && filter_var($sliderBotonUrl, FILTER_VALIDATE_URL) === false) {
             flash('danger', 'La URL del botón no es válida. Usa una URL completa, por ejemplo: https://tuempresa.cl/promocion');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+        foreach ($sociales as $campo => $valor) {
+            if ($valor !== '' && filter_var($valor, FILTER_VALIDATE_URL) === false) {
+                flash('danger', 'La URL ingresada en redes sociales no es válida. Usa un enlace completo que incluya https://');
+                $this->redirigir('/app/catalogo-en-linea');
+            }
+        }
+        if ($colorPrimario === null || $colorAcento === null) {
+            flash('danger', 'El color del catálogo no es válido. Usa formato hexadecimal, por ejemplo: #4632A8');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
@@ -458,9 +486,17 @@ class GestionComercialControlador extends Controlador
             'slider_bajada' => mb_substr($sliderBajada, 0, 220),
             'slider_boton_texto' => mb_substr($sliderBotonTexto, 0, 60),
             'slider_boton_url' => mb_substr($sliderBotonUrl, 0, 255),
+            'catalogo_topbar_texto' => mb_substr($topbarTexto, 0, 220),
+            'catalogo_social_facebook' => mb_substr((string) $sociales['catalogo_social_facebook'], 0, 255),
+            'catalogo_social_instagram' => mb_substr((string) $sociales['catalogo_social_instagram'], 0, 255),
+            'catalogo_social_tiktok' => mb_substr((string) $sociales['catalogo_social_tiktok'], 0, 255),
+            'catalogo_social_linkedin' => mb_substr((string) $sociales['catalogo_social_linkedin'], 0, 255),
+            'catalogo_social_youtube' => mb_substr((string) $sociales['catalogo_social_youtube'], 0, 255),
+            'catalogo_color_primario' => $colorPrimario,
+            'catalogo_color_acento' => $colorAcento,
         ]);
 
-        flash('success', 'La configuración del slider del catálogo fue actualizada.');
+        flash('success', 'La configuración del catálogo fue actualizada.');
         $this->redirigir('/app/catalogo-en-linea');
     }
 
@@ -503,6 +539,19 @@ class GestionComercialControlador extends Controlador
         }
 
         return '/uploads/catalogo_slider/' . $empresaId . '/' . $nombreFinal;
+    }
+
+    private function normalizarColorHex(string $valor): ?string
+    {
+        $limpio = mb_strtoupper(trim($valor));
+        if ($limpio === '') {
+            return '';
+        }
+        if (preg_match('/^#([A-F0-9]{6})$/', $limpio) !== 1) {
+            return null;
+        }
+
+        return $limpio;
     }
 
     public function contactos(): void
