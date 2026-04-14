@@ -48,6 +48,7 @@ INSERT INTO funcionalidades (nombre, codigo_interno, descripcion, tipo_valor, es
 ('Módulo ajustes', 'modulo_ajustes', 'Ajustes de inventario', 'booleano', 'activo'),
 ('Módulo movimientos', 'modulo_movimientos', 'Movimientos de inventario', 'booleano', 'activo'),
 ('Módulo vendedores', 'modulo_vendedores', 'Gestión de vendedores', 'booleano', 'activo'),
+('Módulo catálogo en línea', 'modulo_catalogo_en_linea', 'Landing pública de catálogo con filtros, carrito y checkout Flow.', 'booleano', 'activo'),
 ('Módulo reportes', 'modulo_reportes', 'Acceso a reportes', 'booleano', 'activo'),
 ('Módulo listas de precios', 'modulo_listas_precios', 'Listas de precios', 'booleano', 'activo'),
 ('Módulo órdenes de compra', 'modulo_ordenes_compra', 'Órdenes de compra', 'booleano', 'activo'),
@@ -100,17 +101,17 @@ INSERT INTO plan_funcionalidades (plan_id, funcionalidad_id, activo, valor_numer
 SELECT p.id, f.id,
   CASE
     WHEN p.slug = 'basico' AND f.codigo_interno IN (
-      'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_contactos','modulo_categorias','modulo_configuracion','modulo_checkout_flow',
+      'modulo_clientes','modulo_productos','modulo_catalogo_en_linea','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_contactos','modulo_categorias','modulo_configuracion','modulo_checkout_flow',
       'clientes_exportar_excel','clientes_gestion_listas_precios','clientes_asignar_vendedor'
     ) THEN 1
     WHEN p.slug = 'profesional' AND f.codigo_interno IN (
-      'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
+      'modulo_clientes','modulo_productos','modulo_catalogo_en_linea','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
       'modulo_contactos','modulo_vendedores','modulo_categorias','modulo_listas_precios','modulo_seguimiento','modulo_aprobaciones','modulo_documentos',
       'modulo_reportes','modulo_configuracion','modulo_checkout_flow','modulo_usuarios','modulo_correos_stock','modulo_notificaciones','modulo_historial',
       'clientes_exportar_excel','clientes_gestion_listas_precios','clientes_asignar_vendedor'
     ) THEN 1
     WHEN p.slug = 'empresa' AND f.codigo_interno IN (
-      'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
+      'modulo_clientes','modulo_productos','modulo_catalogo_en_linea','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
       'modulo_contactos','modulo_vendedores','modulo_categorias','modulo_listas_precios','modulo_seguimiento','modulo_aprobaciones','modulo_documentos',
       'modulo_reportes','modulo_configuracion','modulo_checkout_flow','modulo_usuarios','modulo_correos_stock','modulo_ordenes_compra','modulo_notificaciones','modulo_historial',
       'clientes_exportar_excel','clientes_gestion_listas_precios','clientes_asignar_vendedor'
@@ -124,7 +125,7 @@ FROM planes p
 INNER JOIN funcionalidades f
 WHERE p.slug IN ('basico','profesional','empresa')
   AND f.codigo_interno IN (
-    'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
+    'modulo_clientes','modulo_productos','modulo_catalogo_en_linea','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
     'modulo_contactos','modulo_vendedores','modulo_categorias','modulo_listas_precios','modulo_seguimiento','modulo_aprobaciones','modulo_documentos',
     'modulo_reportes','modulo_configuracion','modulo_checkout_flow','modulo_usuarios','modulo_correos_stock','modulo_ordenes_compra','modulo_notificaciones','modulo_historial',
     'clientes_exportar_excel','clientes_gestion_listas_precios','clientes_asignar_vendedor'

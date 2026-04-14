@@ -366,6 +366,22 @@ class GestionComercialControlador extends Controlador
         $this->redirigir('/app/pagos/checkout-flow');
     }
 
+    public function catalogoEnLinea(): void
+    {
+        $empresaId = empresa_actual_id();
+        $productos = (new Producto())->listar($empresaId);
+        $publicados = 0;
+        foreach ($productos as $producto) {
+            if ((int) ($producto['mostrar_catalogo'] ?? 0) === 1 && (string) ($producto['estado'] ?? '') === 'activo') {
+                $publicados++;
+            }
+        }
+
+        $empresa = (new \Aplicacion\Modelos\Empresa())->buscar($empresaId);
+        $catalogoUrl = FlowApiService::construirUrlPublica('/catalogo/' . (int) $empresaId);
+        $this->vista('empresa/catalogo/index', compact('publicados', 'catalogoUrl', 'empresa'), 'empresa');
+    }
+
     public function contactos(): void
     {
         $empresaId = empresa_actual_id();
