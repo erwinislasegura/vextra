@@ -393,6 +393,7 @@ class Empresa extends Modelo
     {
         $config = [
             'slider_imagen' => '',
+            'slider_imagen_secundaria' => '',
             'slider_titulo' => '',
             'slider_bajada' => '',
             'slider_boton_texto' => '',
@@ -433,6 +434,7 @@ class Empresa extends Modelo
     {
         $columnas = [
             'slider_imagen',
+            'slider_imagen_secundaria',
             'slider_titulo',
             'slider_bajada',
             'slider_boton_texto',

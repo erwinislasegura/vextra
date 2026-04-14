@@ -57,7 +57,7 @@ $socialesTopbar = [
 ];
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
-$sliderImagenSecundaria = url('/media/archivo?ruta=' . rawurlencode('/img/logo/logo color.png'));
+$sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
 
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
@@ -206,9 +206,16 @@ $renderIconoRed = static function (string $id): string {
         </article>
         <article class="slide" style="background-image:url('<?= e($sliderImagenSecundaria) ?>');">
           <div class="slide-content">
-            <h2>Experiencia de compra fluida</h2>
-            <p>Incluye tarjetas atractivas, filtros por categoría, búsqueda, ordenamiento y carrito lateral para cerrar ventas más rápido.</p>
-            <div class="slide-actions"><a href="#catalogoProductos" class="btn-primary-custom">Comprar ahora</a><button class="btn-soft" type="button" id="showStockBtnTop">Solo stock</button></div>
+            <h2><?= e((string) ($sliderCatalogo['titulo'] ?? 'Catálogo online moderno y profesional')) ?></h2>
+            <p><?= e((string) ($sliderCatalogo['bajada'] ?? 'Presenta tus productos con una experiencia de compra elegante, rápida y totalmente ordenada para tus clientes.')) ?></p>
+            <div class="slide-actions">
+              <a href="#catalogoProductos" class="btn-primary-custom">Ver catálogo</a>
+              <?php if (!empty($sliderCatalogo['boton_url']) && !empty($sliderCatalogo['boton_texto'])): ?>
+                <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" class="btn-outline" target="_blank" rel="noopener noreferrer"><?= e((string) $sliderCatalogo['boton_texto']) ?></a>
+              <?php else: ?>
+                <button class="btn-soft" type="button" id="showStockBtnTop">Solo stock</button>
+              <?php endif; ?>
+            </div>
           </div>
         </article>
       </div>

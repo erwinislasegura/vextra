@@ -98,7 +98,7 @@
           <h3 class="h6 mb-2">Slider destacado</h3>
         </div>
         <div class="col-lg-5">
-          <label class="form-label">Imagen (JPG, PNG o WEBP)</label>
+          <label class="form-label">Imagen principal (JPG, PNG o WEBP)</label>
           <input type="file" name="slider_imagen" accept="image/jpeg,image/png,image/webp" class="form-control">
           <div class="form-text">Recomendado: 1600x500 px, peso menor a 1 MB.</div>
           <?php if (!empty($sliderCatalogo['slider_imagen'])): ?>
@@ -107,6 +107,19 @@
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="eliminar_slider_imagen" id="eliminar_slider_imagen" value="1">
                 <label class="form-check-label" for="eliminar_slider_imagen">Eliminar imagen actual</label>
+              </div>
+            </div>
+          <?php endif; ?>
+          <hr>
+          <label class="form-label">Imagen secundaria (JPG, PNG o WEBP)</label>
+          <input type="file" name="slider_imagen_secundaria" accept="image/jpeg,image/png,image/webp" class="form-control">
+          <div class="form-text">Se usa en la segunda transición del slider.</div>
+          <?php if (!empty($sliderCatalogo['slider_imagen_secundaria'])): ?>
+            <div class="mt-3">
+              <img src="<?= e(url((string) $sliderCatalogo['slider_imagen_secundaria'])) ?>" alt="Imagen secundaria slider" class="img-fluid rounded border">
+              <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" name="eliminar_slider_imagen_secundaria" id="eliminar_slider_imagen_secundaria" value="1">
+                <label class="form-check-label" for="eliminar_slider_imagen_secundaria">Eliminar imagen secundaria</label>
               </div>
             </div>
           <?php endif; ?>

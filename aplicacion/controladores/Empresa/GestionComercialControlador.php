@@ -436,10 +436,18 @@ class GestionComercialControlador extends Controlador
         if (isset($_POST['eliminar_slider_imagen'])) {
             $sliderImagen = '';
         }
+        $sliderImagenSecundaria = (string) ($actual['slider_imagen_secundaria'] ?? '');
+        if (isset($_POST['eliminar_slider_imagen_secundaria'])) {
+            $sliderImagenSecundaria = '';
+        }
 
-        $nuevaImagen = $this->guardarImagenSliderCatalogo($empresaId);
+        $nuevaImagen = $this->guardarImagenSliderCatalogo($empresaId, 'slider_imagen', 'principal');
         if ($nuevaImagen !== null) {
             $sliderImagen = $nuevaImagen;
+        }
+        $nuevaImagenSecundaria = $this->guardarImagenSliderCatalogo($empresaId, 'slider_imagen_secundaria', 'secundaria');
+        if ($nuevaImagenSecundaria !== null) {
+            $sliderImagenSecundaria = $nuevaImagenSecundaria;
         }
 
         $sliderTitulo = trim((string) ($_POST['slider_titulo'] ?? ''));
@@ -482,6 +490,7 @@ class GestionComercialControlador extends Controlador
 
         $empresaModelo->guardarConfiguracionCatalogoEnLinea($empresaId, [
             'slider_imagen' => $sliderImagen,
+            'slider_imagen_secundaria' => $sliderImagenSecundaria,
             'slider_titulo' => mb_substr($sliderTitulo, 0, 120),
             'slider_bajada' => mb_substr($sliderBajada, 0, 220),
             'slider_boton_texto' => mb_substr($sliderBotonTexto, 0, 60),
@@ -500,21 +509,21 @@ class GestionComercialControlador extends Controlador
         $this->redirigir('/app/catalogo-en-linea');
     }
 
-    private function guardarImagenSliderCatalogo(int $empresaId): ?string
+    private function guardarImagenSliderCatalogo(int $empresaId, string $campo, string $etiqueta): ?string
     {
-        if (!isset($_FILES['slider_imagen']) || (int) ($_FILES['slider_imagen']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        if (!isset($_FILES[$campo]) || (int) ($_FILES[$campo]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
             return null;
         }
-        if ((int) ($_FILES['slider_imagen']['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
-            flash('danger', 'No se pudo subir la imagen del slider.');
+        if ((int) ($_FILES[$campo]['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+            flash('danger', 'No se pudo subir la imagen ' . $etiqueta . ' del slider.');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        $nombre = (string) ($_FILES['slider_imagen']['name'] ?? '');
-        $tmp = (string) ($_FILES['slider_imagen']['tmp_name'] ?? '');
-        $tamano = (int) ($_FILES['slider_imagen']['size'] ?? 0);
+        $nombre = (string) ($_FILES[$campo]['name'] ?? '');
+        $tmp = (string) ($_FILES[$campo]['tmp_name'] ?? '');
+        $tamano = (int) ($_FILES[$campo]['size'] ?? 0);
         if ($tamano > 4 * 1024 * 1024) {
-            flash('danger', 'La imagen del slider supera el tamaño máximo (4MB).');
+            flash('danger', 'La imagen ' . $etiqueta . ' del slider supera el tamaño máximo (4MB).');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
@@ -531,10 +540,10 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        $nombreFinal = 'slider_catalogo_' . $empresaId . '_' . date('YmdHis') . '.' . $extension;
+        $nombreFinal = 'slider_catalogo_' . $etiqueta . '_' . $empresaId . '_' . date('YmdHis') . '.' . $extension;
         $destino = $dirAbsoluto . '/' . $nombreFinal;
         if (!move_uploaded_file($tmp, $destino)) {
-            flash('danger', 'No se pudo guardar la imagen del slider.');
+            flash('danger', 'No se pudo guardar la imagen ' . $etiqueta . ' del slider.');
             $this->redirigir('/app/catalogo-en-linea');
         }
 

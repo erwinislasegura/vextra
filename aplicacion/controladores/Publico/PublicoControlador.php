@@ -381,6 +381,7 @@ class PublicoControlador extends Controlador
         $logoCatalogo = url('/catalogo/' . $empresaId . '/logo?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
         $sliderCatalogo = [
             'imagen' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen'] ?? '')),
+            'imagen_secundaria' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen_secundaria'] ?? '')),
             'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
             'bajada' => trim((string) ($empresa['slider_bajada'] ?? '')),
             'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
