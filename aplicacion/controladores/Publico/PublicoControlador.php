@@ -623,8 +623,27 @@ class PublicoControlador extends Controlador
             exit('Imagen no disponible');
         }
         $rutaRel = '/' . ltrim(str_replace('\\', '/', $rutaRel), '/');
-        $rutaAbs = dirname(__DIR__, 4) . '/public' . $rutaRel;
-        if (!is_file($rutaAbs)) {
+        if (str_starts_with($rutaRel, '/public/uploads/')) {
+            $rutaRel = '/uploads/' . ltrim(substr($rutaRel, 16), '/');
+        } elseif (str_starts_with($rutaRel, '/aplicacion/public/uploads/')) {
+            $rutaRel = '/uploads/' . ltrim(substr($rutaRel, 26), '/');
+        }
+
+        $raiz = dirname(__DIR__, 4);
+        $candidatas = [
+            $raiz . '/public' . $rutaRel,
+            $raiz . $rutaRel,
+            $raiz . '/aplicacion/public' . $rutaRel,
+        ];
+        $rutaAbs = null;
+        foreach ($candidatas as $candidata) {
+            if (is_file($candidata)) {
+                $rutaAbs = $candidata;
+                break;
+            }
+        }
+
+        if ($rutaAbs === null) {
             http_response_code(404);
             exit('Archivo no encontrado');
         }

@@ -71,9 +71,9 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
   .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:190px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:280px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
-  .catalogo-logo img{width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff}
+  .catalogo-logo img{width:88px;height:44px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;padding:2px 6px}
   .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
