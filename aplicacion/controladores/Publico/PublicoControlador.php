@@ -412,6 +412,10 @@ class PublicoControlador extends Controlador
             header('Location: ' . $logo, true, 302);
             return;
         }
+        if ($logo !== '' && str_starts_with($logo, '/media/archivo')) {
+            header('Location: ' . url($logo), true, 302);
+            return;
+        }
 
         $logo = str_replace('\\', '/', $logo);
         if ($logo !== '' && !str_starts_with($logo, '/')) {
@@ -430,6 +434,9 @@ class PublicoControlador extends Controlador
                 $raiz . $logo,
                 $raiz . '/public' . $logo,
                 $raiz . '/aplicacion/public' . $logo,
+                $raiz . '/uploads/logos/' . ltrim($logo, '/'),
+                $raiz . '/public/uploads/logos/' . ltrim($logo, '/'),
+                $raiz . '/aplicacion/public/uploads/logos/' . ltrim($logo, '/'),
             ];
             foreach ($candidatas as $ruta) {
                 if (is_file($ruta)) {
@@ -440,7 +447,7 @@ class PublicoControlador extends Controlador
         }
 
         if ($rutaLogo === null) {
-            $rutaLogo = $raiz . '/public/img/logo/icono.png';
+            $rutaLogo = $raiz . '/img/logo/icono.png';
             if (!is_file($rutaLogo)) {
                 http_response_code(404);
                 exit('Logo no encontrado');
