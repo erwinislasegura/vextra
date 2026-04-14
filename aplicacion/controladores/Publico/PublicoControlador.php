@@ -416,6 +416,9 @@ class PublicoControlador extends Controlador
         $empresa = (new Empresa())->buscar($empresaId);
         $campo = $tipo === 'secundaria' ? 'slider_imagen_secundaria' : 'slider_imagen';
         $ruta = trim((string) ($empresa[$campo] ?? ''));
+        if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
+            $ruta = $this->inferirRutaSliderPorEmpresa($empresaId, $tipo);
+        }
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
@@ -762,6 +765,75 @@ class PublicoControlador extends Controlador
         header('Cache-Control: public, max-age=300');
         readfile($rutaAbs);
         exit;
+    }
+
+    private function rutaCatalogoExiste(string $ruta): bool
+    {
+        $normalizada = str_replace('\\', '/', trim($ruta));
+        if ($normalizada === '' || preg_match('/^https?:\/\//i', $normalizada) === 1) {
+            return false;
+        }
+        if (!str_starts_with($normalizada, '/')) {
+            $normalizada = '/' . ltrim($normalizada, '/');
+        }
+        if (str_starts_with($normalizada, '/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 16), '/');
+        } elseif (str_starts_with($normalizada, '/aplicacion/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
+        }
+        $raiz = dirname(__DIR__, 4);
+        $candidatas = [
+            $raiz . $normalizada,
+            $raiz . '/public' . $normalizada,
+            $raiz . '/aplicacion/public' . $normalizada,
+        ];
+        foreach ($candidatas as $candidata) {
+            if (is_file($candidata)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function inferirRutaSliderPorEmpresa(int $empresaId, string $tipo): string
+    {
+        $raiz = dirname(__DIR__, 4);
+        $directorios = [
+            $raiz . '/public/uploads/catalogo_slider/' . $empresaId,
+            $raiz . '/aplicacion/public/uploads/catalogo_slider/' . $empresaId,
+        ];
+        $archivos = [];
+        foreach ($directorios as $dir) {
+            if (!is_dir($dir)) {
+                continue;
+            }
+            foreach ((array) glob($dir . '/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', GLOB_BRACE) as $archivo) {
+                if (is_file($archivo)) {
+                    $archivos[] = $archivo;
+                }
+            }
+        }
+        if ($archivos === []) {
+            return '';
+        }
+        usort($archivos, static fn (string $a, string $b): int => filemtime($b) <=> filemtime($a));
+        $seleccionado = $archivos[0];
+        if ($tipo === 'secundaria' && isset($archivos[1])) {
+            $seleccionado = $archivos[1];
+        }
+
+        $normalizado = str_replace('\\', '/', $seleccionado);
+        if (str_contains($normalizado, '/public/uploads/')) {
+            $partes = explode('/public/uploads/', $normalizado, 2);
+            return '/uploads/' . ($partes[1] ?? '');
+        }
+        if (str_contains($normalizado, '/aplicacion/public/uploads/')) {
+            $partes = explode('/aplicacion/public/uploads/', $normalizado, 2);
+            return '/uploads/' . ($partes[1] ?? '');
+        }
+
+        return '';
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void
