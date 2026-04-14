@@ -536,6 +536,57 @@ class PublicoControlador extends Controlador
         exit;
     }
 
+    public function mediaArchivo(): void
+    {
+        $ruta = trim((string) ($_GET['ruta'] ?? ''));
+        if ($ruta === '') {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $normalizada = str_replace('\\', '/', $ruta);
+        $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
+        $normalizada = preg_replace('#^/?public/#i', '/', $normalizada) ?? $normalizada;
+        if (!str_starts_with($normalizada, '/')) {
+            $normalizada = '/' . ltrim($normalizada, '/');
+        }
+
+        if (
+            !str_starts_with($normalizada, '/uploads/')
+            && !str_starts_with($normalizada, '/img/')
+        ) {
+            http_response_code(403);
+            exit('Ruta no permitida');
+        }
+
+        $raiz = dirname(__DIR__, 3);
+        $candidatas = [
+            $raiz . '/public' . $normalizada,
+            $raiz . $normalizada,
+            $raiz . '/aplicacion/public' . $normalizada,
+        ];
+
+        $rutaAbs = null;
+        foreach ($candidatas as $candidata) {
+            if (is_file($candidata)) {
+                $rutaAbs = $candidata;
+                break;
+            }
+        }
+
+        if ($rutaAbs === null) {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $mime = (string) (mime_content_type($rutaAbs) ?: 'application/octet-stream');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (string) filesize($rutaAbs));
+        header('Cache-Control: public, max-age=86400');
+        readfile($rutaAbs);
+        exit;
+    }
+
     private function resolverLogoCatalogo(string $logo): ?string
     {
         return $this->resolverRutaPublicaArchivo($logo);
@@ -561,8 +612,8 @@ class PublicoControlador extends Controlador
         } elseif (str_starts_with($normalizada, '/aplicacion/public/uploads/')) {
             $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
         }
-
-        return url($normalizada);
+        $normalizada = '/' . ltrim($normalizada, '/');
+        return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void

@@ -22,7 +22,7 @@ $resolverImagenProducto = static function (?string $ruta): string {
     $normalizada = '/' . ltrim($normalizada, '/');
 
     if (str_starts_with($normalizada, '/uploads/') || str_starts_with($normalizada, '/img/')) {
-        return url($normalizada);
+        return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
     return url('/' . ltrim($normalizada, '/'));
