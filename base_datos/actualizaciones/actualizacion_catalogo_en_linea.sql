@@ -1,6 +1,6 @@
 ALTER TABLE productos
-  ADD COLUMN IF NOT EXISTS mostrar_catalogo TINYINT(1) NOT NULL DEFAULT 0 AFTER estado,
-  ADD COLUMN IF NOT EXISTS imagen_catalogo_url VARCHAR(255) NULL AFTER mostrar_catalogo;
+  ADD COLUMN mostrar_catalogo TINYINT(1) NOT NULL DEFAULT 0 AFTER estado,
+  ADD COLUMN imagen_catalogo_url VARCHAR(255) NULL AFTER mostrar_catalogo;
 
 INSERT INTO funcionalidades (nombre, codigo_interno, descripcion, tipo_valor, estado)
 SELECT 'Módulo catálogo en línea', 'modulo_catalogo_en_linea', 'Landing pública de catálogo con filtros, carrito y checkout Flow.', 'booleano', 'activo'

@@ -1,5 +1,3 @@
-USE cotiza_saas;
-
 -- Funcionalidades faltantes + descripciones comerciales coherentes
 INSERT INTO funcionalidades (nombre, codigo_interno, descripcion, tipo_valor, estado)
 VALUES
