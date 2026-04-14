@@ -30,7 +30,7 @@ $resolverImagenProducto = static function (?string $ruta): string {
     $normalizada = '/' . ltrim($normalizada, '/');
 
     if (str_starts_with($normalizada, '/uploads/') || str_starts_with($normalizada, '/img/')) {
-        return url('/media/archivo?ruta=' . rawurlencode($normalizada));
+        return url($normalizada);
     }
 
     return url('/' . ltrim($normalizada, '/'));
@@ -56,7 +56,7 @@ $socialesTopbar = [
     ['id' => 'youtube', 'url' => trim((string) ($catalogoTopbar['sociales']['youtube'] ?? '')), 'label' => 'YouTube'],
 ];
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
-$sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
+$sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/img/placeholder-producto.svg'));
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
 
 $renderIconoRed = static function (string $id): string {
@@ -260,7 +260,7 @@ $renderIconoRed = static function (string $id): string {
               $imagenProductoUrlId = $imagenProductoId > 0 ? url('/media/producto/' . $imagenProductoId) : '';
               $imagenProductoUrl = $imagenProductoUrlRuta;
               $imagenProductoFallback = $imagenProductoUrlId !== '' ? $imagenProductoUrlId : '';
-              $placeholderProductoUrl = url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg'));
+              $placeholderProductoUrl = url('/img/placeholder-producto.svg');
               $precio = (float) ($producto['precio'] ?? 0);
               $categoria = (string) ($producto['categoria'] ?? 'Sin categoría');
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
