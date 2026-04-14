@@ -8,6 +8,9 @@ class ProductoImagen extends Modelo
 {
     public function listarPorProducto(int $empresaId, int $productoId): array
     {
+        if (!$this->tieneTablaImagenes()) {
+            return [];
+        }
         $stmt = $this->db->prepare('SELECT * FROM productos_imagenes WHERE empresa_id=:empresa_id AND producto_id=:producto_id ORDER BY es_principal DESC, id ASC');
         $stmt->execute(['empresa_id' => $empresaId, 'producto_id' => $productoId]);
         return $stmt->fetchAll();
@@ -15,6 +18,9 @@ class ProductoImagen extends Modelo
 
     public function contarPorProducto(int $empresaId, int $productoId): int
     {
+        if (!$this->tieneTablaImagenes()) {
+            return 0;
+        }
         $stmt = $this->db->prepare('SELECT COUNT(*) FROM productos_imagenes WHERE empresa_id=:empresa_id AND producto_id=:producto_id');
         $stmt->execute(['empresa_id' => $empresaId, 'producto_id' => $productoId]);
         return (int) $stmt->fetchColumn();
@@ -22,6 +28,9 @@ class ProductoImagen extends Modelo
 
     public function crear(int $empresaId, int $productoId, string $ruta, bool $esPrincipal = false): int
     {
+        if (!$this->tieneTablaImagenes()) {
+            return 0;
+        }
         $stmt = $this->db->prepare('INSERT INTO productos_imagenes (empresa_id, producto_id, ruta, es_principal, fecha_creacion) VALUES (:empresa_id, :producto_id, :ruta, :es_principal, NOW())');
         $stmt->execute([
             'empresa_id' => $empresaId,
@@ -34,6 +43,9 @@ class ProductoImagen extends Modelo
 
     public function marcarPrincipal(int $empresaId, int $productoId, int $imagenId): void
     {
+        if (!$this->tieneTablaImagenes()) {
+            return;
+        }
         $this->db->prepare('UPDATE productos_imagenes SET es_principal = 0 WHERE empresa_id=:empresa_id AND producto_id=:producto_id')->execute([
             'empresa_id' => $empresaId,
             'producto_id' => $productoId,
@@ -47,6 +59,9 @@ class ProductoImagen extends Modelo
 
     public function eliminarPorIds(int $empresaId, int $productoId, array $ids): void
     {
+        if (!$this->tieneTablaImagenes()) {
+            return;
+        }
         if ($ids === []) {
             return;
         }
@@ -58,5 +73,12 @@ class ProductoImagen extends Modelo
         $sql = "DELETE FROM productos_imagenes WHERE empresa_id=? AND producto_id=? AND id IN ($in)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(array_merge([$empresaId, $productoId], $ids));
+    }
+
+    private function tieneTablaImagenes(): bool
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :tabla');
+        $stmt->execute(['tabla' => 'productos_imagenes']);
+        return ((int) $stmt->fetchColumn()) > 0;
     }
 }
