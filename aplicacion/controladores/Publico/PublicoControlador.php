@@ -427,7 +427,7 @@ class PublicoControlador extends Controlador
             $logo = '/uploads/' . ltrim(substr($logo, 26), '/');
         }
 
-        $raiz = dirname(__DIR__, 3);
+        $raiz = dirname(__DIR__, 4);
         $rutaLogo = null;
         if ($logo !== '') {
             $candidatas = [
@@ -623,7 +623,7 @@ class PublicoControlador extends Controlador
             exit('Imagen no disponible');
         }
         $rutaRel = '/' . ltrim(str_replace('\\', '/', $rutaRel), '/');
-        $rutaAbs = dirname(__DIR__, 3) . '/public' . $rutaRel;
+        $rutaAbs = dirname(__DIR__, 4) . '/public' . $rutaRel;
         if (!is_file($rutaAbs)) {
             http_response_code(404);
             exit('Archivo no encontrado');
@@ -660,7 +660,7 @@ class PublicoControlador extends Controlador
             exit('Ruta no permitida');
         }
 
-        $raiz = dirname(__DIR__, 3);
+        $raiz = dirname(__DIR__, 4);
         $candidatas = [
             $raiz . '/public' . $normalizada,
             $raiz . $normalizada,
@@ -717,7 +717,7 @@ class PublicoControlador extends Controlador
             return null;
         }
 
-        $raiz = dirname(__DIR__, 3);
+        $raiz = dirname(__DIR__, 4);
         $candidatas = [
             $raiz . '/public' . $normalizada,
             $raiz . $normalizada,
