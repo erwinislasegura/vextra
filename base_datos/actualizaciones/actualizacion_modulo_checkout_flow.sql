@@ -1,5 +1,3 @@
-USE cotiza_saas;
-
 INSERT INTO funcionalidades (nombre, codigo_interno, descripcion, tipo_valor, estado)
 SELECT 'Módulo checkout Flow', 'modulo_checkout_flow', 'Checkout de pagos Flow para compartir links de cobro.', 'booleano', 'activo'
 WHERE NOT EXISTS (

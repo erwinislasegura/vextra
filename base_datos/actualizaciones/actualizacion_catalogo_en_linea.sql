@@ -1,5 +1,3 @@
-USE cotiza_saas;
-
 ALTER TABLE productos
   ADD COLUMN IF NOT EXISTS mostrar_catalogo TINYINT(1) NOT NULL DEFAULT 0 AFTER estado,
   ADD COLUMN IF NOT EXISTS imagen_catalogo_url VARCHAR(255) NULL AFTER mostrar_catalogo;
