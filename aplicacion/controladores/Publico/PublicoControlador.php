@@ -388,6 +388,8 @@ class PublicoControlador extends Controlador
         ];
         $catalogoTopbar = [
             'texto' => trim((string) ($empresa['catalogo_topbar_texto'] ?? '')),
+            'color_primario' => trim((string) ($empresa['catalogo_color_primario'] ?? '')),
+            'color_acento' => trim((string) ($empresa['catalogo_color_acento'] ?? '')),
             'sociales' => [
                 'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
                 'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),

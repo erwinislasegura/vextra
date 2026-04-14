@@ -403,6 +403,8 @@ class Empresa extends Modelo
             'catalogo_social_tiktok' => '',
             'catalogo_social_linkedin' => '',
             'catalogo_social_youtube' => '',
+            'catalogo_color_primario' => '',
+            'catalogo_color_acento' => '',
         ];
 
         $columnas = array_keys($config);
@@ -441,6 +443,8 @@ class Empresa extends Modelo
             'catalogo_social_tiktok',
             'catalogo_social_linkedin',
             'catalogo_social_youtube',
+            'catalogo_color_primario',
+            'catalogo_color_acento',
         ];
         $sets = [];
         $params = ['empresa_id' => $empresaId];
