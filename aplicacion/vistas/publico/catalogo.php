@@ -104,7 +104,7 @@ $renderIconoRed = static function (string $id): string {
   .slide h2{font-size:52px;line-height:1.1;margin-bottom:14px;font-weight:800}
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
-  .slide-actions .btn-primary-custom{color:#fff !important}
+  .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
   .section-head h2,.sidebar h3{font-size:24px;color:var(--primary);font-weight:800}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -250,8 +250,8 @@ $renderIconoRed = static function (string $id): string {
           <?php foreach ($productos as $producto): ?>
             <?php
               $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? '');
-              $imagenProductoUrl = url('/catalogo/' . (int) $empresa['id'] . '/producto/' . (int) $producto['id'] . '/imagen');
-              $imagenProductoFallback = $resolverImagenProducto($imagenProducto);
+              $imagenProductoUrl = $resolverImagenProducto($imagenProducto);
+              $imagenProductoFallback = url('/catalogo/' . (int) $empresa['id'] . '/producto/' . (int) $producto['id'] . '/imagen');
               $placeholderProductoUrl = url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg'));
               $precio = (float) ($producto['precio'] ?? 0);
               $categoria = (string) ($producto['categoria'] ?? 'Sin categoría');
