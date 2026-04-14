@@ -248,7 +248,12 @@ $renderIconoRed = static function (string $id): string {
           <?php foreach ($productos as $producto): ?>
             <?php
               $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? '');
-              $imagenProductoUrl = $resolverImagenProducto($imagenProducto);
+              $imagenProductoId = (int) ($producto['imagen_catalogo_id'] ?? 0);
+              $imagenProductoUrlRuta = $resolverImagenProducto($imagenProducto);
+              $imagenProductoUrlId = $imagenProductoId > 0 ? url('/media/producto/' . $imagenProductoId) : '';
+              $imagenProductoUrl = $imagenProductoUrlRuta;
+              $imagenProductoFallback = $imagenProductoUrlId !== '' ? $imagenProductoUrlId : '';
+              $placeholderProductoUrl = url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg'));
               $precio = (float) ($producto['precio'] ?? 0);
               $categoria = (string) ($producto['categoria'] ?? 'Sin categoría');
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
@@ -258,9 +263,15 @@ $renderIconoRed = static function (string $id): string {
               $onSale = ((int) ($producto['id'] ?? 0) % 2) === 0;
               $oldPrice = $onSale ? ($precio * 1.18) : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-rating="<?= e((string) $rating) ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-rating="<?= e((string) $rating) ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
               <div class="product-image">
-                <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy">
+                <img
+                  src="<?= e($imagenProductoUrl) ?>"
+                  alt="<?= e($nombreProducto) ?>"
+                  loading="lazy"
+                  onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){this.src=this.dataset.fallback;return;}this.onerror=null;this.src='<?= e($placeholderProductoUrl) ?>';"
+                  data-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>"
+                >
                 <span class="badge-mini <?= $onSale ? 'sale' : '' ?>"><?= $onSale ? 'Oferta' : 'Destacado' ?></span>
               </div>
               <div class="product-body">
