@@ -12,6 +12,10 @@ $resolverImagenProducto = static function (?string $ruta): string {
     $normalizada = str_replace('\\', '/', $ruta);
     $normalizada = preg_replace('#^https?://[^/]+#i', '', $normalizada) ?? $normalizada;
     $normalizada = preg_replace('#^/?public/#i', '/', $normalizada) ?? $normalizada;
+    if (str_contains($normalizada, '/uploads/')) {
+        $partes = explode('/uploads/', $normalizada, 2);
+        $normalizada = '/uploads/' . ($partes[1] ?? '');
+    }
     $normalizada = '/' . ltrim($normalizada, '/');
 
     if (str_starts_with($normalizada, '/uploads/') || str_starts_with($normalizada, '/img/')) {
@@ -85,7 +89,7 @@ $resolverImagenProducto = static function (?string $ruta): string {
               <p class="text-muted small flex-grow-1 catalogo-card__desc"><?= e((string) ($producto['descripcion'] ?? 'Sin descripción')) ?></p>
               <div class="d-flex justify-content-between align-items-center mt-2">
                 <strong><?= e($fmon((float) ($producto['precio'] ?? 0))) ?></strong>
-                <button class="btn btn-sm btn-outline-primary catalogo-card__cta" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e((string) $producto['nombre']) ?>" data-price="<?= (float) ($producto['precio'] ?? 0) ?>">Agregar</button>
+                <button class="btn btn-sm btn-outline-primary catalogo-card__cta" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e((string) $producto['nombre']) ?>" data-price="<?= (float) ($producto['precio'] ?? 0) ?>">Comprar</button>
               </div>
             </div>
           </article>
@@ -163,7 +167,7 @@ $resolverImagenProducto = static function (?string $ruta): string {
                 <div class="small text-muted">Precio</div>
                 <div class="h4 mb-0" id="detalleProductoPrecio"></div>
               </div>
-              <button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Agregar al carro</button>
+              <button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Comprar</button>
             </div>
           </div>
         </div>
@@ -174,36 +178,42 @@ $resolverImagenProducto = static function (?string $ruta): string {
 
 <script>
 (() => {
-  const storageKey = 'vextra_catalogo_carrito_<?= (int) $empresa['id'] ?>';
-  let cart = [];
-  try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
-  const carritoVista = document.getElementById('carritoVista');
-  const carritoVistaCheckout = document.getElementById('carritoVistaCheckout');
-  const carritoContador = document.getElementById('carritoContador');
-  const abrirResumenBtn = document.getElementById('abrirResumenCarrito');
-  const carritoJson = document.getElementById('carrito_json');
-  const modalResumen = new bootstrap.Modal(document.getElementById('modalResumenCarrito'));
-  const modalCheckout = new bootstrap.Modal(document.getElementById('modalCheckout'));
-  const modalProductoDetalle = new bootstrap.Modal(document.getElementById('modalProductoDetalle'));
-  const detalleNombre = document.getElementById('detalleProductoNombre');
-  const detalleDescripcion = document.getElementById('detalleProductoDescripcion');
-  const detalleCategoria = document.getElementById('detalleProductoCategoria');
-  const detallePrecio = document.getElementById('detalleProductoPrecio');
-  const detalleImagen = document.getElementById('detalleProductoImagen');
-  const detalleAgregarBtn = document.getElementById('detalleAgregarCarrito');
-  let productoSeleccionado = null;
+  const initCatalogo = () => {
+    if (!window.bootstrap || typeof window.bootstrap.Modal !== 'function') {
+      window.setTimeout(initCatalogo, 80);
+      return;
+    }
 
-  const money = (value) => `$${Math.round(Number(value || 0)).toLocaleString('es-CL')}`;
+    const storageKey = 'vextra_catalogo_carrito_<?= (int) $empresa['id'] ?>';
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
+    const carritoVista = document.getElementById('carritoVista');
+    const carritoVistaCheckout = document.getElementById('carritoVistaCheckout');
+    const carritoContador = document.getElementById('carritoContador');
+    const abrirResumenBtn = document.getElementById('abrirResumenCarrito');
+    const carritoJson = document.getElementById('carrito_json');
+    const modalResumen = new bootstrap.Modal(document.getElementById('modalResumenCarrito'));
+    const modalCheckout = new bootstrap.Modal(document.getElementById('modalCheckout'));
+    const modalProductoDetalle = new bootstrap.Modal(document.getElementById('modalProductoDetalle'));
+    const detalleNombre = document.getElementById('detalleProductoNombre');
+    const detalleDescripcion = document.getElementById('detalleProductoDescripcion');
+    const detalleCategoria = document.getElementById('detalleProductoCategoria');
+    const detallePrecio = document.getElementById('detalleProductoPrecio');
+    const detalleImagen = document.getElementById('detalleProductoImagen');
+    const detalleAgregarBtn = document.getElementById('detalleAgregarCarrito');
+    let productoSeleccionado = null;
 
-  const agregarProducto = (id, precio, nombre) => {
-    if (!id || Number.isNaN(id)) return;
-    const ex = cart.find((x) => Number(x.producto_id) === Number(id));
-    if (ex) ex.cantidad += 1;
-    else cart.push({ producto_id: Number(id), nombre: String(nombre || 'Producto'), precio: Number(precio || 0), cantidad: 1 });
-    render();
-  };
+    const money = (value) => `$${Math.round(Number(value || 0)).toLocaleString('es-CL')}`;
 
-  const render = () => {
+    const agregarProducto = (id, precio, nombre) => {
+      if (!id || Number.isNaN(id)) return;
+      const ex = cart.find((x) => Number(x.producto_id) === Number(id));
+      if (ex) ex.cantidad += 1;
+      else cart.push({ producto_id: Number(id), nombre: String(nombre || 'Producto'), precio: Number(precio || 0), cantidad: 1 });
+      render();
+    };
+
+    const render = () => {
     if (!Array.isArray(cart) || !cart.length) {
       carritoVista.innerHTML = 'Tu carrito está vacío.';
       carritoVistaCheckout.innerHTML = 'Tu carrito está vacío.';
@@ -226,62 +236,65 @@ $resolverImagenProducto = static function (?string $ruta): string {
     carritoJson.value = JSON.stringify(cart.map((i) => ({ producto_id: Number(i.producto_id), cantidad: Number(i.cantidad) })));
     carritoContador.textContent = String(cart.reduce((acc, i) => acc + Number(i.cantidad || 0), 0));
     localStorage.setItem(storageKey, JSON.stringify(cart));
-  };
+    };
 
-  document.querySelectorAll('[data-add-cart]').forEach((btn) => {
-    btn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      agregarProducto(Number(btn.dataset.id || 0), Number(btn.dataset.price || 0), String(btn.dataset.name || 'Producto'));
+    document.querySelectorAll('[data-add-cart]').forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        agregarProducto(Number(btn.dataset.id || 0), Number(btn.dataset.price || 0), String(btn.dataset.name || 'Producto'));
+        modalResumen.show();
+      });
+    });
+
+    document.querySelectorAll('[data-producto-card]').forEach((card) => {
+      card.addEventListener('click', (event) => {
+        if (event.target.closest('[data-add-cart]')) return;
+        productoSeleccionado = {
+          id: Number(card.dataset.id || 0),
+          nombre: String(card.dataset.name || 'Producto'),
+          precio: Number(card.dataset.price || 0),
+          categoria: String(card.dataset.category || 'Sin categoría'),
+          descripcion: String(card.dataset.description || 'Sin descripción'),
+          imagen: String(card.dataset.image || ''),
+        };
+
+        detalleNombre.textContent = productoSeleccionado.nombre;
+        detalleDescripcion.textContent = productoSeleccionado.descripcion;
+        detalleCategoria.textContent = productoSeleccionado.categoria;
+        detallePrecio.textContent = money(productoSeleccionado.precio);
+        detalleImagen.src = productoSeleccionado.imagen;
+        detalleImagen.alt = productoSeleccionado.nombre;
+        modalProductoDetalle.show();
+      });
+    });
+
+    detalleAgregarBtn.addEventListener('click', () => {
+      if (!productoSeleccionado) return;
+      agregarProducto(productoSeleccionado.id, productoSeleccionado.precio, productoSeleccionado.nombre);
+      modalProductoDetalle.hide();
       modalResumen.show();
     });
-  });
 
-  document.querySelectorAll('[data-producto-card]').forEach((card) => {
-    card.addEventListener('click', (event) => {
-      if (event.target.closest('[data-add-cart]')) return;
-      productoSeleccionado = {
-        id: Number(card.dataset.id || 0),
-        nombre: String(card.dataset.name || 'Producto'),
-        precio: Number(card.dataset.price || 0),
-        categoria: String(card.dataset.category || 'Sin categoría'),
-        descripcion: String(card.dataset.description || 'Sin descripción'),
-        imagen: String(card.dataset.image || ''),
-      };
-
-      detalleNombre.textContent = productoSeleccionado.nombre;
-      detalleDescripcion.textContent = productoSeleccionado.descripcion;
-      detalleCategoria.textContent = productoSeleccionado.categoria;
-      detallePrecio.textContent = money(productoSeleccionado.precio);
-      detalleImagen.src = productoSeleccionado.imagen;
-      detalleImagen.alt = productoSeleccionado.nombre;
-      modalProductoDetalle.show();
+    carritoVista.addEventListener('click', (e) => {
+      const idx = Number(e.target.dataset.remove);
+      if (Number.isNaN(idx)) return;
+      cart.splice(idx, 1);
+      render();
     });
-  });
 
-  detalleAgregarBtn.addEventListener('click', () => {
-    if (!productoSeleccionado) return;
-    agregarProducto(productoSeleccionado.id, productoSeleccionado.precio, productoSeleccionado.nombre);
-    modalProductoDetalle.hide();
-    modalResumen.show();
-  });
+    abrirResumenBtn.addEventListener('click', () => {
+      modalResumen.show();
+    });
 
-  carritoVista.addEventListener('click', (e) => {
-    const idx = Number(e.target.dataset.remove);
-    if (Number.isNaN(idx)) return;
-    cart.splice(idx, 1);
+    document.getElementById('btnIrFormularioPago').addEventListener('click', () => {
+      if (!cart.length) return;
+      modalResumen.hide();
+      modalCheckout.show();
+    });
+
     render();
-  });
+  };
 
-  abrirResumenBtn.addEventListener('click', () => {
-    modalResumen.show();
-  });
-
-  document.getElementById('btnIrFormularioPago').addEventListener('click', () => {
-    if (!cart.length) return;
-    modalResumen.hide();
-    modalCheckout.show();
-  });
-
-  render();
+  initCatalogo();
 })();
 </script>
