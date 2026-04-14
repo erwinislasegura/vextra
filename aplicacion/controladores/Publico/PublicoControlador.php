@@ -737,23 +737,6 @@ class PublicoControlador extends Controlador
             return null;
         }
 
-        $raiz = dirname(__DIR__, 4);
-        $candidatas = [
-            $raiz . '/public' . $normalizada,
-            $raiz . $normalizada,
-            $raiz . '/aplicacion/public' . $normalizada,
-        ];
-        $existe = false;
-        foreach ($candidatas as $candidata) {
-            if (is_file($candidata)) {
-                $existe = true;
-                break;
-            }
-        }
-        if (!$existe) {
-            return null;
-        }
-
         return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
