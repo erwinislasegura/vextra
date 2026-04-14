@@ -436,49 +436,94 @@ class GestionComercialControlador extends Controlador
         if (isset($_POST['eliminar_slider_imagen'])) {
             $sliderImagen = '';
         }
+        $sliderImagenSecundaria = (string) ($actual['slider_imagen_secundaria'] ?? '');
+        if (isset($_POST['eliminar_slider_imagen_secundaria'])) {
+            $sliderImagenSecundaria = '';
+        }
 
-        $nuevaImagen = $this->guardarImagenSliderCatalogo($empresaId);
+        $nuevaImagen = $this->guardarImagenSliderCatalogo($empresaId, 'slider_imagen', 'principal');
         if ($nuevaImagen !== null) {
             $sliderImagen = $nuevaImagen;
+        }
+        $nuevaImagenSecundaria = $this->guardarImagenSliderCatalogo($empresaId, 'slider_imagen_secundaria', 'secundaria');
+        if ($nuevaImagenSecundaria !== null) {
+            $sliderImagenSecundaria = $nuevaImagenSecundaria;
         }
 
         $sliderTitulo = trim((string) ($_POST['slider_titulo'] ?? ''));
         $sliderBajada = trim((string) ($_POST['slider_bajada'] ?? ''));
         $sliderBotonTexto = trim((string) ($_POST['slider_boton_texto'] ?? ''));
         $sliderBotonUrl = trim((string) ($_POST['slider_boton_url'] ?? ''));
+        $topbarTexto = trim((string) ($_POST['catalogo_topbar_texto'] ?? ''));
+        $sociales = [
+            'catalogo_social_facebook' => trim((string) ($_POST['catalogo_social_facebook'] ?? '')),
+            'catalogo_social_instagram' => trim((string) ($_POST['catalogo_social_instagram'] ?? '')),
+            'catalogo_social_tiktok' => trim((string) ($_POST['catalogo_social_tiktok'] ?? '')),
+            'catalogo_social_linkedin' => trim((string) ($_POST['catalogo_social_linkedin'] ?? '')),
+            'catalogo_social_youtube' => trim((string) ($_POST['catalogo_social_youtube'] ?? '')),
+        ];
+        $colorPrimarioInput = trim((string) ($_POST['catalogo_color_primario'] ?? ''));
+        if ($colorPrimarioInput === '') {
+            $colorPrimarioInput = trim((string) ($_POST['catalogo_color_primario_picker'] ?? ''));
+        }
+        $colorAcentoInput = trim((string) ($_POST['catalogo_color_acento'] ?? ''));
+        if ($colorAcentoInput === '') {
+            $colorAcentoInput = trim((string) ($_POST['catalogo_color_acento_picker'] ?? ''));
+        }
+        $colorPrimario = $this->normalizarColorHex($colorPrimarioInput);
+        $colorAcento = $this->normalizarColorHex($colorAcentoInput);
 
         if ($sliderBotonUrl !== '' && filter_var($sliderBotonUrl, FILTER_VALIDATE_URL) === false) {
             flash('danger', 'La URL del botón no es válida. Usa una URL completa, por ejemplo: https://tuempresa.cl/promocion');
             $this->redirigir('/app/catalogo-en-linea');
         }
+        foreach ($sociales as $campo => $valor) {
+            if ($valor !== '' && filter_var($valor, FILTER_VALIDATE_URL) === false) {
+                flash('danger', 'La URL ingresada en redes sociales no es válida. Usa un enlace completo que incluya https://');
+                $this->redirigir('/app/catalogo-en-linea');
+            }
+        }
+        if ($colorPrimario === null || $colorAcento === null) {
+            flash('danger', 'El color del catálogo no es válido. Usa formato hexadecimal, por ejemplo: #4632A8');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
 
         $empresaModelo->guardarConfiguracionCatalogoEnLinea($empresaId, [
             'slider_imagen' => $sliderImagen,
+            'slider_imagen_secundaria' => $sliderImagenSecundaria,
             'slider_titulo' => mb_substr($sliderTitulo, 0, 120),
             'slider_bajada' => mb_substr($sliderBajada, 0, 220),
             'slider_boton_texto' => mb_substr($sliderBotonTexto, 0, 60),
             'slider_boton_url' => mb_substr($sliderBotonUrl, 0, 255),
+            'catalogo_topbar_texto' => mb_substr($topbarTexto, 0, 220),
+            'catalogo_social_facebook' => mb_substr((string) $sociales['catalogo_social_facebook'], 0, 255),
+            'catalogo_social_instagram' => mb_substr((string) $sociales['catalogo_social_instagram'], 0, 255),
+            'catalogo_social_tiktok' => mb_substr((string) $sociales['catalogo_social_tiktok'], 0, 255),
+            'catalogo_social_linkedin' => mb_substr((string) $sociales['catalogo_social_linkedin'], 0, 255),
+            'catalogo_social_youtube' => mb_substr((string) $sociales['catalogo_social_youtube'], 0, 255),
+            'catalogo_color_primario' => $colorPrimario,
+            'catalogo_color_acento' => $colorAcento,
         ]);
 
-        flash('success', 'La configuración del slider del catálogo fue actualizada.');
+        flash('success', 'La configuración del catálogo fue actualizada.');
         $this->redirigir('/app/catalogo-en-linea');
     }
 
-    private function guardarImagenSliderCatalogo(int $empresaId): ?string
+    private function guardarImagenSliderCatalogo(int $empresaId, string $campo, string $etiqueta): ?string
     {
-        if (!isset($_FILES['slider_imagen']) || (int) ($_FILES['slider_imagen']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        if (!isset($_FILES[$campo]) || (int) ($_FILES[$campo]['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
             return null;
         }
-        if ((int) ($_FILES['slider_imagen']['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
-            flash('danger', 'No se pudo subir la imagen del slider.');
+        if ((int) ($_FILES[$campo]['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+            flash('danger', 'No se pudo subir la imagen ' . $etiqueta . ' del slider.');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        $nombre = (string) ($_FILES['slider_imagen']['name'] ?? '');
-        $tmp = (string) ($_FILES['slider_imagen']['tmp_name'] ?? '');
-        $tamano = (int) ($_FILES['slider_imagen']['size'] ?? 0);
+        $nombre = (string) ($_FILES[$campo]['name'] ?? '');
+        $tmp = (string) ($_FILES[$campo]['tmp_name'] ?? '');
+        $tamano = (int) ($_FILES[$campo]['size'] ?? 0);
         if ($tamano > 4 * 1024 * 1024) {
-            flash('danger', 'La imagen del slider supera el tamaño máximo (4MB).');
+            flash('danger', 'La imagen ' . $etiqueta . ' del slider supera el tamaño máximo (4MB).');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
@@ -488,21 +533,48 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        $raizProyecto = dirname(__DIR__, 3);
-        $dirAbsoluto = $raizProyecto . '/public/uploads/catalogo_slider/' . $empresaId;
-        if (!is_dir($dirAbsoluto) && !mkdir($dirAbsoluto, 0775, true) && !is_dir($dirAbsoluto)) {
+        $raizProyecto = dirname(__DIR__, 4);
+        $dirRelativo = '/uploads/catalogo_slider/' . $empresaId;
+        $candidatos = [
+            $raizProyecto . '/public' . $dirRelativo,
+            $raizProyecto . '/aplicacion/public' . $dirRelativo,
+        ];
+        $dirAbsoluto = null;
+        foreach ($candidatos as $candidato) {
+            if (!is_dir($candidato) && !mkdir($candidato, 0775, true) && !is_dir($candidato)) {
+                continue;
+            }
+            if (is_writable($candidato)) {
+                $dirAbsoluto = $candidato;
+                break;
+            }
+        }
+        if ($dirAbsoluto === null) {
             flash('danger', 'No se pudo crear la carpeta para el slider.');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        $nombreFinal = 'slider_catalogo_' . $empresaId . '_' . date('YmdHis') . '.' . $extension;
+        $nombreFinal = 'slider_catalogo_' . $etiqueta . '_' . $empresaId . '_' . date('YmdHis') . '.' . $extension;
         $destino = $dirAbsoluto . '/' . $nombreFinal;
         if (!move_uploaded_file($tmp, $destino)) {
-            flash('danger', 'No se pudo guardar la imagen del slider.');
+            flash('danger', 'No se pudo guardar la imagen ' . $etiqueta . ' del slider.');
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        return '/uploads/catalogo_slider/' . $empresaId . '/' . $nombreFinal;
+        return $dirRelativo . '/' . $nombreFinal;
+    }
+
+    private function normalizarColorHex(string $valor): ?string
+    {
+        $limpio = mb_strtoupper(trim($valor));
+        if ($limpio === '') {
+            return '';
+        }
+        if (preg_match('/^#([A-F0-9]{6})$/', $limpio) !== 1) {
+            return null;
+        }
+
+        return $limpio;
     }
 
     public function contactos(): void
