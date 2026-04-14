@@ -6,10 +6,12 @@ use Aplicacion\Nucleo\Controlador;
 use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Cotizacion;
 use Aplicacion\Modelos\Empresa;
+use Aplicacion\Modelos\Producto;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PlanFuncionalidad;
 use Aplicacion\Servicios\ServicioCorreo;
+use Aplicacion\Servicios\FlowApiService;
 
 class PublicoControlador extends Controlador
 {
@@ -362,6 +364,155 @@ class PublicoControlador extends Controlador
         $this->vista('empresa/inventario/orden_compra_imprimir', compact('orden', 'empresa', 'esVistaPublica', 'token'), 'impresion');
     }
 
+    public function catalogoEnLinea(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa || (string) ($empresa['estado'] ?? '') === 'cancelada') {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $buscar = trim((string) ($_GET['q'] ?? ''));
+        $categoriaId = (int) ($_GET['categoria'] ?? 0);
+        $productos = (new Producto())->listarParaCatalogoPublico($empresaId, $buscar, $categoriaId > 0 ? $categoriaId : null);
+        $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
+        $logoCatalogo = $this->resolverLogoCatalogo((string) ($empresa['logo'] ?? ''));
+
+        $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo'), 'catalogo_publico');
+    }
+
+    public function checkoutCatalogo(int $empresaId): void
+    {
+        validar_csrf();
+
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $carrito = json_decode((string) ($_POST['carrito_json'] ?? '[]'), true);
+        if (!is_array($carrito) || $carrito === []) {
+            flash('danger', 'Tu carrito está vacío. Agrega productos para continuar.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $correo = mb_strtolower(trim((string) ($_POST['correo'] ?? '')));
+        $nombre = trim((string) ($_POST['nombre'] ?? ''));
+        $direccion = trim((string) ($_POST['direccion'] ?? ''));
+        if ($nombre === '' || $direccion === '' || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            flash('danger', 'Completa tus datos de compra (nombre, correo y dirección).');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $itemsCatalogo = [];
+        foreach ((new Producto())->listarParaCatalogoPublico($empresaId) as $producto) {
+            $itemsCatalogo[(int) $producto['id']] = $producto;
+        }
+
+        $total = 0;
+        $resumen = [];
+        foreach ($carrito as $fila) {
+            $productoId = (int) ($fila['producto_id'] ?? 0);
+            $cantidad = max(1, (int) ($fila['cantidad'] ?? 1));
+            if (!isset($itemsCatalogo[$productoId])) {
+                continue;
+            }
+            $producto = $itemsCatalogo[$productoId];
+            $precio = (float) ($producto['precio'] ?? 0);
+            $subtotal = $precio * $cantidad;
+            $total += $subtotal;
+            $resumen[] = ['id' => $productoId, 'nombre' => (string) $producto['nombre'], 'cantidad' => $cantidad, 'precio' => $precio, 'subtotal' => $subtotal];
+        }
+
+        if ($total <= 0 || $resumen === []) {
+            flash('danger', 'No fue posible validar los productos del carrito.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $commerceOrder = 'CAT-' . $empresaId . '-' . strtoupper(substr(sha1((string) microtime(true)), 0, 10));
+        $urlRetorno = FlowApiService::construirUrlPublica('/catalogo/' . $empresaId . '/checkout/exito');
+        $urlConfirmacion = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
+
+        try {
+            $respuesta = (new FlowApiService())->post('payment/create', [
+                'commerceOrder' => $commerceOrder,
+                'subject' => 'Compra catálogo ' . (string) ($empresa['nombre_comercial'] ?? 'Vextra'),
+                'currency' => 'CLP',
+                'amount' => (int) round($total),
+                'email' => $correo,
+                'urlConfirmation' => $urlConfirmacion,
+                'urlReturn' => $urlRetorno,
+            ]);
+        } catch (\Throwable $e) {
+            flash('danger', 'No fue posible iniciar el pago en Flow: ' . $e->getMessage());
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        if (!isset($respuesta['url'], $respuesta['token'])) {
+            flash('danger', 'Flow no devolvió URL de pago.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $_SESSION['catalogo_checkout_' . $respuesta['token']] = [
+            'empresa_id' => $empresaId,
+            'nombre' => $nombre,
+            'correo' => $correo,
+            'direccion' => $direccion,
+            'total' => $total,
+            'items' => $resumen,
+            'fecha' => date('c'),
+        ];
+
+        $this->redirigir($respuesta['url'] . '?token=' . $respuesta['token']);
+    }
+
+    public function exitoCheckoutCatalogo(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $token = trim((string) ($_GET['token'] ?? ''));
+        $estado = 'pendiente';
+        if ($token !== '') {
+            try {
+                $status = (new FlowApiService())->get('payment/getStatus', ['token' => $token]);
+                $estado = match ((int) ($status['status'] ?? 0)) {
+                    2 => 'aprobado',
+                    3 => 'rechazado',
+                    4 => 'anulado',
+                    default => 'pendiente',
+                };
+            } catch (\Throwable $e) {
+                $estado = 'pendiente';
+            }
+        }
+
+        $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
+        $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token'), 'catalogo_publico');
+    }
+
+    private function resolverLogoCatalogo(string $logo): ?string
+    {
+        $logo = trim($logo);
+        if ($logo === '') {
+            return null;
+        }
+        if (preg_match('/^https?:\/\//i', $logo) === 1) {
+            return $logo;
+        }
+        if (str_starts_with($logo, '/')) {
+            return url($logo);
+        }
+        return url('/' . ltrim($logo, '/'));
+    }
+
     private function vistaPublica(string $vista, array $data, string $pagina): void
     {
         $this->vista($vista, array_merge($this->obtenerSeoPorPagina($pagina), $data), 'publico');
@@ -426,6 +577,11 @@ class PublicoControlador extends Controlador
                 'meta_title' => 'Orden de compra en línea | Vextra',
                 'meta_description' => 'Revisa el detalle de una orden de compra en línea y descarga su versión PDF.',
                 'meta_keywords' => 'orden de compra online, proveedor, documento compra',
+            ],
+            'catalogo_publico' => [
+                'meta_title' => 'Catálogo en línea | Vextra',
+                'meta_description' => 'Explora productos y servicios, usa filtros por categoría y compra con checkout Flow.',
+                'meta_keywords' => 'catalogo en linea, tienda b2b, checkout flow, carrito de compra',
             ],
         ];
 

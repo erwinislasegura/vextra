@@ -111,6 +111,19 @@ $unidadActual = $producto['unidad'] ?? 'unidad';
       <option value="inactivo" <?= ($producto['estado'] ?? '') === 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
     </select>
   </div>
+  <div class="col-md-3">
+    <label class="form-label">Imagen catálogo (URL)</label>
+    <input type="url" name="imagen_catalogo_url" class="form-control" value="<?= e((string) ($producto['imagen_catalogo_url'] ?? '')) ?>" placeholder="https://...">
+  </div>
+  <div class="col-md-3 d-flex align-items-end">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="mostrar_catalogo" name="mostrar_catalogo" value="1" <?= (int) ($producto['mostrar_catalogo'] ?? 0) === 1 ? 'checked' : '' ?>>
+      <label class="form-check-label" for="mostrar_catalogo">
+        Mostrar en catálogo en línea
+      </label>
+      <div class="form-text">Activa esta opción para publicar el ítem en la landing del catálogo.</div>
+    </div>
+  </div>
   <div class="col-12">
     <button class="btn btn-primary btn-sm"><?= e($textoBoton) ?></button>
     <?php if ($mostrarCancelar): ?>
