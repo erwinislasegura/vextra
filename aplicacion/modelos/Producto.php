@@ -111,7 +111,12 @@ class Producto extends Modelo
 
     public function listarParaCatalogoPublico(int $empresaId, string $buscar = '', ?int $categoriaId = null): array
     {
-        $sql = 'SELECT p.*, c.nombre AS categoria
+        $campoImagen = 'NULL AS imagen_catalogo';
+        if ($this->tieneTabla('productos_imagenes')) {
+            $campoImagen = '(SELECT pi.ruta FROM productos_imagenes pi WHERE pi.producto_id = p.id ORDER BY pi.es_principal DESC, pi.id ASC LIMIT 1) AS imagen_catalogo';
+        }
+
+        $sql = 'SELECT p.*, c.nombre AS categoria, ' . $campoImagen . '
             FROM productos p
             LEFT JOIN categorias_productos c ON c.id = p.categoria_id
             WHERE p.empresa_id = :empresa_id
@@ -146,5 +151,12 @@ class Producto extends Modelo
         $stmt->execute(['tabla' => $tabla, 'columna' => $columna]);
         $this->cacheColumnas[$llave] = ((int) $stmt->fetchColumn()) > 0;
         return $this->cacheColumnas[$llave];
+    }
+
+    private function tieneTabla(string $tabla): bool
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :tabla');
+        $stmt->execute(['tabla' => $tabla]);
+        return ((int) $stmt->fetchColumn()) > 0;
     }
 }

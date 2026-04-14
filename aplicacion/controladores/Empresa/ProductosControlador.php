@@ -4,6 +4,7 @@ namespace Aplicacion\Controladores\Empresa;
 
 use Aplicacion\Nucleo\Controlador;
 use Aplicacion\Modelos\Producto;
+use Aplicacion\Modelos\ProductoImagen;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Servicios\ExcelExpoFormato;
@@ -38,7 +39,7 @@ class ProductosControlador extends Controlador
             return;
         }
 
-        $modelo->crear([
+        $productoId = $modelo->crear([
             'empresa_id' => $empresaId,
             'categoria_id' => (int) ($_POST['categoria_id'] ?? 0) ?: null,
             'tipo' => $_POST['tipo'] ?? 'producto',
@@ -57,9 +58,9 @@ class ProductosControlador extends Controlador
             'stock_actual' => (float) ($_POST['stock_actual'] ?? 0),
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
             'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
-            'imagen_catalogo_url' => trim((string) ($_POST['imagen_catalogo_url'] ?? '')),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
+        $this->procesarImagenesCatalogo($empresaId, $productoId);
         flash('success', 'Producto creado correctamente.');
         $this->redirigir($this->obtenerRutaRetorno('/app/productos'));
     }
@@ -518,13 +519,15 @@ class ProductosControlador extends Controlador
             $this->redirigir('/app/productos');
         }
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 200);
-        $this->vista('empresa/productos/editar', compact('producto', 'categorias'), 'empresa');
+        $imagenesCatalogo = (new ProductoImagen())->listarPorProducto($empresaId, $id);
+        $this->vista('empresa/productos/editar', compact('producto', 'categorias', 'imagenesCatalogo'), 'empresa');
     }
 
     public function actualizar(int $id): void
     {
         validar_csrf();
-        (new Producto())->actualizar(empresa_actual_id(), $id, [
+        $empresaId = (int) empresa_actual_id();
+        (new Producto())->actualizar($empresaId, $id, [
             'categoria_id' => (int) ($_POST['categoria_id'] ?? 0) ?: null,
             'tipo' => $_POST['tipo'] ?? 'producto',
             'codigo' => trim($_POST['codigo'] ?? ''),
@@ -542,9 +545,9 @@ class ProductosControlador extends Controlador
             'stock_actual' => (float) ($_POST['stock_actual'] ?? 0),
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
             'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
-            'imagen_catalogo_url' => trim((string) ($_POST['imagen_catalogo_url'] ?? '')),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
+        $this->procesarImagenesCatalogo($empresaId, $id);
         flash('success', 'Producto actualizado correctamente.');
         $this->redirigir('/app/productos');
     }
@@ -555,5 +558,62 @@ class ProductosControlador extends Controlador
         (new Producto())->eliminar(empresa_actual_id(), $id);
         flash('success', 'Producto eliminado correctamente.');
         $this->redirigir('/app/productos');
+    }
+
+    private function procesarImagenesCatalogo(int $empresaId, int $productoId): void
+    {
+        $imagenModel = new ProductoImagen();
+        $eliminarIds = $_POST['eliminar_imagen_ids'] ?? [];
+        if (is_array($eliminarIds) && $eliminarIds !== []) {
+            $imagenModel->eliminarPorIds($empresaId, $productoId, $eliminarIds);
+        }
+
+        $totalActual = $imagenModel->contarPorProducto($empresaId, $productoId);
+        $archivos = $_FILES['imagenes_catalogo'] ?? null;
+        if (is_array($archivos) && isset($archivos['name']) && is_array($archivos['name'])) {
+            $maxNuevas = max(0, 3 - $totalActual);
+            $cantidadSubidas = 0;
+            $totalArchivos = count($archivos['name']);
+            for ($i = 0; $i < $totalArchivos && $cantidadSubidas < $maxNuevas; $i++) {
+                if ((int) ($archivos['error'][$i] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                    continue;
+                }
+                $tmp = (string) ($archivos['tmp_name'][$i] ?? '');
+                if ($tmp === '' || !is_uploaded_file($tmp)) {
+                    continue;
+                }
+                $mime = (string) (mime_content_type($tmp) ?: '');
+                if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) {
+                    continue;
+                }
+                $ext = match ($mime) {
+                    'image/png' => 'png',
+                    'image/webp' => 'webp',
+                    default => 'jpg',
+                };
+                $dirRel = '/uploads/productos_catalogo/' . $empresaId;
+                $dirAbs = dirname(__DIR__, 3) . '/public' . $dirRel;
+                if (!is_dir($dirAbs) && !mkdir($dirAbs, 0775, true) && !is_dir($dirAbs)) {
+                    continue;
+                }
+                $nombre = 'prod_' . $productoId . '_' . substr(sha1((string) microtime(true) . '_' . $i), 0, 12) . '.' . $ext;
+                $rutaAbs = $dirAbs . '/' . $nombre;
+                if (!move_uploaded_file($tmp, $rutaAbs)) {
+                    continue;
+                }
+                $imagenModel->crear($empresaId, $productoId, $dirRel . '/' . $nombre, $totalActual + $cantidadSubidas === 0);
+                $cantidadSubidas++;
+            }
+        }
+
+        $principalId = (int) ($_POST['imagen_principal_id'] ?? 0);
+        if ($principalId > 0) {
+            $imagenModel->marcarPrincipal($empresaId, $productoId, $principalId);
+        } else {
+            $imagenes = $imagenModel->listarPorProducto($empresaId, $productoId);
+            if ($imagenes !== []) {
+                $imagenModel->marcarPrincipal($empresaId, $productoId, (int) $imagenes[0]['id']);
+            }
+        }
     }
 }

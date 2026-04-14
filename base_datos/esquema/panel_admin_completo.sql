@@ -36,6 +36,7 @@ SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_recepcionada.sql;
 SOURCE base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql;
 SOURCE base_datos/actualizaciones/actualizacion_modulo_checkout_flow.sql;
 SOURCE base_datos/actualizaciones/actualizacion_catalogo_en_linea.sql;
+SOURCE base_datos/actualizaciones/actualizacion_productos_catalogo_imagenes.sql;
 
 -- Usuarios de acceso estandarizados.
 SOURCE base_datos/esquema/actualizar_usuarios_acceso.sql;
