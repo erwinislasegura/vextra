@@ -97,13 +97,14 @@ $renderIconoRed = static function (string $id): string {
   .hero{padding:26px 0 22px}
   .hero-grid{display:grid;grid-template-columns:1fr}
   .slider{position:relative;min-height:420px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(135deg,#0f172a,#1d4ed8)}
-  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s ease;display:flex;align-items:flex-end;padding:40px;color:#fff;background-size:cover;background-position:center}
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity 1.6s ease-in-out,transform 8s ease-out;transform:scale(1.05);display:flex;align-items:flex-end;padding:40px;color:#fff;background-size:cover;background-position:center}
   .slide::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.78) 0%,rgba(15,23,42,.45) 45%,rgba(15,23,42,.2) 100%)}
   .slide-content{position:relative;z-index:2;max-width:min(720px,92%)}
-  .slide.active{opacity:1;visibility:visible}
+  .slide.active{opacity:1;visibility:visible;transform:scale(1)}
   .slide h2{font-size:52px;line-height:1.1;margin-bottom:14px;font-weight:800}
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .slide-actions .btn-primary-custom{color:#fff !important}
   .section-head h2,.sidebar h3{font-size:24px;color:var(--primary);font-weight:800}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -195,11 +196,8 @@ $renderIconoRed = static function (string $id): string {
             <h2><?= e((string) ($sliderCatalogo['titulo'] ?? 'Catálogo online moderno y profesional')) ?></h2>
             <p><?= e((string) ($sliderCatalogo['bajada'] ?? 'Presenta tus productos con una experiencia de compra elegante, rápida y totalmente ordenada para tus clientes.')) ?></p>
             <div class="slide-actions">
-              <a href="#catalogoProductos" class="btn-primary-custom">Ver catálogo</a>
               <?php if (!empty($sliderCatalogo['boton_url']) && !empty($sliderCatalogo['boton_texto'])): ?>
-                <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" class="btn-outline" target="_blank" rel="noopener noreferrer"><?= e((string) $sliderCatalogo['boton_texto']) ?></a>
-              <?php else: ?>
-                <button class="btn-soft" type="button" id="showOffersBtnTop">Nuevos ingresos</button>
+                <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" class="btn-primary-custom" target="_blank" rel="noopener noreferrer"><?= e((string) $sliderCatalogo['boton_texto']) ?></a>
               <?php endif; ?>
             </div>
           </div>
@@ -209,11 +207,8 @@ $renderIconoRed = static function (string $id): string {
             <h2><?= e((string) ($sliderCatalogo['titulo'] ?? 'Catálogo online moderno y profesional')) ?></h2>
             <p><?= e((string) ($sliderCatalogo['bajada'] ?? 'Presenta tus productos con una experiencia de compra elegante, rápida y totalmente ordenada para tus clientes.')) ?></p>
             <div class="slide-actions">
-              <a href="#catalogoProductos" class="btn-primary-custom">Ver catálogo</a>
               <?php if (!empty($sliderCatalogo['boton_url']) && !empty($sliderCatalogo['boton_texto'])): ?>
-                <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" class="btn-outline" target="_blank" rel="noopener noreferrer"><?= e((string) $sliderCatalogo['boton_texto']) ?></a>
-              <?php else: ?>
-                <button class="btn-soft" type="button" id="showStockBtnTop">Solo stock</button>
+                <a href="<?= e((string) $sliderCatalogo['boton_url']) ?>" class="btn-primary-custom" target="_blank" rel="noopener noreferrer"><?= e((string) $sliderCatalogo['boton_texto']) ?></a>
               <?php endif; ?>
             </div>
           </div>
@@ -503,7 +498,7 @@ $renderIconoRed = static function (string $id): string {
       slides[idx].classList.remove('active');
       idx = (idx + 1) % slides.length;
       slides[idx].classList.add('active');
-    }, 5000);
+    }, 9000);
   };
 
   $$('.product-card').forEach((card) => {
