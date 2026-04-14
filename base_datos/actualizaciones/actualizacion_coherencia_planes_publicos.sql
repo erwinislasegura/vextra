@@ -20,6 +20,7 @@ VALUES
 ('Módulo documentos', 'modulo_documentos', 'Gestión de plantillas y documentos comerciales.', 'booleano', 'activo'),
 ('Módulo reportes', 'modulo_reportes', 'Reportes de ventas, inventario y desempeño comercial.', 'booleano', 'activo'),
 ('Módulo configuración', 'modulo_configuracion', 'Configuración general de la empresa.', 'booleano', 'activo'),
+('Módulo checkout Flow', 'modulo_checkout_flow', 'Checkout de pagos Flow para compartir links de cobro.', 'booleano', 'activo'),
 ('Módulo usuarios', 'modulo_usuarios', 'Gestión de usuarios internos y permisos.', 'booleano', 'activo'),
 ('Módulo correos stock', 'modulo_correos_stock', 'Alertas y configuración de correos de stock.', 'booleano', 'activo'),
 ('Módulo órdenes de compra', 'modulo_ordenes_compra', 'Gestión de órdenes de compra a proveedores.', 'booleano', 'activo'),
@@ -64,17 +65,17 @@ SELECT
   f.id,
   CASE
     WHEN p.slug = 'basico' AND f.codigo_interno IN (
-      'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_contactos','modulo_categorias','modulo_configuracion'
+      'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_contactos','modulo_categorias','modulo_configuracion','modulo_checkout_flow'
     ) THEN 1
     WHEN p.slug = 'profesional' AND f.codigo_interno IN (
       'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
       'modulo_contactos','modulo_vendedores','modulo_categorias','modulo_listas_precios','modulo_seguimiento','modulo_aprobaciones','modulo_documentos',
-      'modulo_reportes','modulo_configuracion','modulo_usuarios','modulo_correos_stock','modulo_notificaciones','modulo_historial'
+      'modulo_reportes','modulo_configuracion','modulo_checkout_flow','modulo_usuarios','modulo_correos_stock','modulo_notificaciones','modulo_historial'
     ) THEN 1
     WHEN p.slug = 'empresa' AND f.codigo_interno IN (
       'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
       'modulo_contactos','modulo_vendedores','modulo_categorias','modulo_listas_precios','modulo_seguimiento','modulo_aprobaciones','modulo_documentos',
-      'modulo_reportes','modulo_configuracion','modulo_usuarios','modulo_correos_stock','modulo_ordenes_compra','modulo_notificaciones','modulo_historial'
+      'modulo_reportes','modulo_configuracion','modulo_checkout_flow','modulo_usuarios','modulo_correos_stock','modulo_ordenes_compra','modulo_notificaciones','modulo_historial'
     ) THEN 1
     ELSE 0
   END AS activo,
@@ -85,7 +86,7 @@ FROM planes p
 INNER JOIN funcionalidades f ON f.codigo_interno IN (
   'modulo_clientes','modulo_productos','modulo_cotizaciones','modulo_pos','modulo_inventario','modulo_recepciones','modulo_ajustes','modulo_movimientos',
   'modulo_contactos','modulo_vendedores','modulo_categorias','modulo_listas_precios','modulo_seguimiento','modulo_aprobaciones','modulo_documentos','modulo_reportes',
-  'modulo_configuracion','modulo_usuarios','modulo_correos_stock','modulo_ordenes_compra','modulo_notificaciones','modulo_historial'
+  'modulo_configuracion','modulo_checkout_flow','modulo_usuarios','modulo_correos_stock','modulo_ordenes_compra','modulo_notificaciones','modulo_historial'
 )
 WHERE p.slug IN ('basico', 'profesional', 'empresa')
 ON DUPLICATE KEY UPDATE

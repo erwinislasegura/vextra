@@ -245,6 +245,127 @@ class GestionComercialControlador extends Controlador
         }
     }
 
+    public function checkoutFlow(): void
+    {
+        $checkoutItems = $_SESSION['flow_checkout_items'] ?? [];
+        if (!is_array($checkoutItems)) {
+            $checkoutItems = [];
+        }
+        $this->vista('empresa/pagos/checkout_flow', compact('checkoutItems'), 'empresa');
+    }
+
+    public function crearCheckoutFlow(): void
+    {
+        validar_csrf();
+
+        $empresaId = empresa_actual_id();
+        $monto = (int) round((float) ($_POST['monto'] ?? 0));
+        $descripcion = trim((string) ($_POST['descripcion'] ?? ''));
+        $correo = trim((string) ($_POST['correo'] ?? ''));
+
+        if ($monto <= 0) {
+            flash('danger', 'Debes indicar un monto mayor a 0 para crear el checkout.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+        if ($descripcion === '') {
+            flash('danger', 'La descripción del cobro es obligatoria.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        $correoLimpio = strtolower($correo);
+        if ($correoLimpio !== '' && !filter_var($correoLimpio, FILTER_VALIDATE_EMAIL)) {
+            flash('danger', 'El correo indicado no tiene un formato válido.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        $usuario = usuario_actual();
+        if ($correoLimpio === '') {
+            $correoLimpio = strtolower((string) ($usuario['correo'] ?? ''));
+        }
+        if (!filter_var($correoLimpio, FILTER_VALIDATE_EMAIL)) {
+            $correoLimpio = 'pagos.checkout.' . max(1, (int) $empresaId) . '@outlook.com';
+        }
+
+        $commerceOrder = 'EMP' . (int) $empresaId . '-CHK' . strtoupper(substr(sha1((string) microtime(true)), 0, 10));
+        $urlRetorno = FlowApiService::construirUrlPublica('/retorno/pago?origen=checkout_cliente');
+        $urlConfirmacion = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
+
+        try {
+            $respuesta = (new FlowApiService())->post('payment/create', [
+                'commerceOrder' => $commerceOrder,
+                'subject' => $descripcion,
+                'currency' => 'CLP',
+                'amount' => $monto,
+                'email' => $correoLimpio,
+                'urlConfirmation' => $urlConfirmacion,
+                'urlReturn' => $urlRetorno,
+            ]);
+        } catch (\Throwable $e) {
+            flash('danger', 'No fue posible crear el checkout en Flow. Detalle: ' . $e->getMessage());
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        if (!isset($respuesta['token'], $respuesta['url'])) {
+            flash('danger', 'Flow no devolvió token o URL para el checkout.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        $checkoutItems = $_SESSION['flow_checkout_items'] ?? [];
+        if (!is_array($checkoutItems)) {
+            $checkoutItems = [];
+        }
+
+        array_unshift($checkoutItems, [
+            'fecha' => date('Y-m-d H:i:s'),
+            'descripcion' => $descripcion,
+            'monto' => $monto,
+            'token' => (string) $respuesta['token'],
+            'url_pago' => (string) ($respuesta['url'] . '?token=' . $respuesta['token']),
+            'estado' => 'pendiente',
+            'correo' => $correoLimpio,
+        ]);
+        $_SESSION['flow_checkout_items'] = array_slice($checkoutItems, 0, 30);
+
+        flash('success', 'Checkout creado correctamente. Comparte el enlace de pago con tu cliente.');
+        $this->redirigir('/app/pagos/checkout-flow');
+    }
+
+    public function sincronizarCheckoutFlow(): void
+    {
+        validar_csrf();
+
+        $token = trim((string) ($_POST['token'] ?? ''));
+        if ($token === '') {
+            flash('danger', 'Debes indicar un token válido para sincronizar.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        try {
+            $status = (new FlowPagosService())->sincronizarEstadoPorToken($token);
+            $estado = (new FlowPagosService())->resolverEstadoPagoDesdeRespuesta($status);
+        } catch (\Throwable $e) {
+            flash('danger', 'No fue posible consultar el estado en Flow. Detalle: ' . $e->getMessage());
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        $checkoutItems = $_SESSION['flow_checkout_items'] ?? [];
+        if (is_array($checkoutItems)) {
+            foreach ($checkoutItems as &$item) {
+                if ((string) ($item['token'] ?? '') === $token) {
+                    $item['estado'] = $estado;
+                    $item['estado_flow'] = (string) ($status['status'] ?? '');
+                    $item['actualizado'] = date('Y-m-d H:i:s');
+                    break;
+                }
+            }
+            unset($item);
+            $_SESSION['flow_checkout_items'] = $checkoutItems;
+        }
+
+        flash('success', 'Estado sincronizado: ' . $estado . '.');
+        $this->redirigir('/app/pagos/checkout-flow');
+    }
+
     public function contactos(): void
     {
         $empresaId = empresa_actual_id();

@@ -77,6 +77,7 @@ class EmpresaMiddleware
             '/app/configuracion/envio-oc-html' => 'modulo_documentos',
             '/app/configuracion/correos-stock' => 'modulo_correos_stock',
             '/app/configuracion' => 'modulo_configuracion',
+            '/app/pagos/checkout-flow' => 'modulo_checkout_flow',
             '/app/usuarios' => 'modulo_usuarios',
             '/app/notificaciones' => 'modulo_notificaciones',
             '/app/historial' => 'modulo_historial',
