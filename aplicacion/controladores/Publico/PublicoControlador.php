@@ -380,8 +380,8 @@ class PublicoControlador extends Controlador
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
         $logoCatalogo = url('/catalogo/' . $empresaId . '/logo?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
         $sliderCatalogo = [
-            'imagen' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen'] ?? '')),
-            'imagen_secundaria' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen_secundaria'] ?? '')),
+            'imagen' => url('/catalogo/' . $empresaId . '/slider/principal?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
+            'imagen_secundaria' => url('/catalogo/' . $empresaId . '/slider/secundaria?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
             'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
             'bajada' => trim((string) ($empresa['slider_bajada'] ?? '')),
             'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
@@ -408,59 +408,25 @@ class PublicoControlador extends Controlador
     {
         $empresa = (new Empresa())->buscar($empresaId);
         $logo = trim((string) ($empresa['logo'] ?? ''));
+        $this->emitirArchivoCatalogo($logo, '/img/logo/icono.png');
+    }
 
-        if ($logo !== '' && preg_match('/^https?:\/\//i', $logo) === 1) {
-            header('Location: ' . $logo, true, 302);
-            return;
-        }
-        if ($logo !== '' && str_starts_with($logo, '/media/archivo')) {
-            header('Location: ' . url($logo), true, 302);
-            return;
-        }
+    public function sliderCatalogoImagen(int $empresaId, string $tipo): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        $campo = $tipo === 'secundaria' ? 'slider_imagen_secundaria' : 'slider_imagen';
+        $ruta = trim((string) ($empresa[$campo] ?? ''));
+        $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
+    }
 
-        $logo = str_replace('\\', '/', $logo);
-        if ($logo !== '' && !str_starts_with($logo, '/')) {
-            $logo = '/' . ltrim($logo, '/');
+    public function imagenCatalogoProducto(int $empresaId, int $productoId): void
+    {
+        $imagenes = (new ProductoImagen())->listarPorProducto($empresaId, $productoId);
+        $ruta = '';
+        if ($imagenes !== []) {
+            $ruta = (string) ($imagenes[0]['ruta'] ?? '');
         }
-        if (str_starts_with($logo, '/public/uploads/')) {
-            $logo = '/uploads/' . ltrim(substr($logo, 16), '/');
-        } elseif (str_starts_with($logo, '/aplicacion/public/uploads/')) {
-            $logo = '/uploads/' . ltrim(substr($logo, 26), '/');
-        }
-
-        $raiz = dirname(__DIR__, 4);
-        $rutaLogo = null;
-        if ($logo !== '') {
-            $candidatas = [
-                $raiz . $logo,
-                $raiz . '/public' . $logo,
-                $raiz . '/aplicacion/public' . $logo,
-                $raiz . '/uploads/logos/' . ltrim($logo, '/'),
-                $raiz . '/public/uploads/logos/' . ltrim($logo, '/'),
-                $raiz . '/aplicacion/public/uploads/logos/' . ltrim($logo, '/'),
-            ];
-            foreach ($candidatas as $ruta) {
-                if (is_file($ruta)) {
-                    $rutaLogo = $ruta;
-                    break;
-                }
-            }
-        }
-
-        if ($rutaLogo === null) {
-            $rutaLogo = $raiz . '/img/logo/icono.png';
-            if (!is_file($rutaLogo)) {
-                http_response_code(404);
-                exit('Logo no encontrado');
-            }
-        }
-
-        $mime = (string) (mime_content_type($rutaLogo) ?: 'application/octet-stream');
-        header('Content-Type: ' . $mime);
-        header('Content-Length: ' . (string) filesize($rutaLogo));
-        header('Cache-Control: public, max-age=300');
-        readfile($rutaLogo);
-        exit;
+        $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
     public function checkoutCatalogo(int $empresaId): void
@@ -743,6 +709,59 @@ class PublicoControlador extends Controlador
         }
 
         return url('/media/archivo?ruta=' . rawurlencode($normalizada));
+    }
+
+    private function emitirArchivoCatalogo(string $ruta, string $fallbackRel): void
+    {
+        $ruta = trim($ruta);
+        if ($ruta !== '' && preg_match('/^https?:\/\//i', $ruta) === 1) {
+            header('Location: ' . $ruta, true, 302);
+            return;
+        }
+        if ($ruta !== '' && str_starts_with($ruta, '/media/archivo')) {
+            header('Location: ' . url($ruta), true, 302);
+            return;
+        }
+
+        $normalizada = str_replace('\\', '/', $ruta);
+        if ($normalizada !== '' && !str_starts_with($normalizada, '/')) {
+            $normalizada = '/' . ltrim($normalizada, '/');
+        }
+        if (str_starts_with($normalizada, '/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 16), '/');
+        } elseif (str_starts_with($normalizada, '/aplicacion/public/uploads/')) {
+            $normalizada = '/uploads/' . ltrim(substr($normalizada, 26), '/');
+        }
+
+        $raiz = dirname(__DIR__, 4);
+        $candidatas = [];
+        if ($normalizada !== '') {
+            $candidatas[] = $raiz . $normalizada;
+            $candidatas[] = $raiz . '/public' . $normalizada;
+            $candidatas[] = $raiz . '/aplicacion/public' . $normalizada;
+        }
+        $candidatas[] = $raiz . $fallbackRel;
+        $candidatas[] = $raiz . '/public' . $fallbackRel;
+        $candidatas[] = $raiz . '/aplicacion/public' . $fallbackRel;
+
+        $rutaAbs = null;
+        foreach ($candidatas as $candidata) {
+            if (is_file($candidata)) {
+                $rutaAbs = $candidata;
+                break;
+            }
+        }
+        if ($rutaAbs === null) {
+            http_response_code(404);
+            exit('Archivo no encontrado');
+        }
+
+        $mime = (string) (mime_content_type($rutaAbs) ?: 'application/octet-stream');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (string) filesize($rutaAbs));
+        header('Cache-Control: public, max-age=300');
+        readfile($rutaAbs);
+        exit;
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void
