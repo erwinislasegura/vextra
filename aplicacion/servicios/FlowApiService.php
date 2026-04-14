@@ -3,6 +3,7 @@
 namespace Aplicacion\Servicios;
 
 use Aplicacion\Modelos\FlowConfiguracion;
+use Aplicacion\Modelos\FlowConfiguracionEmpresa;
 use RuntimeException;
 
 class FlowApiService
@@ -37,6 +38,29 @@ class FlowApiService
     public function post(string $endpoint, array $params): array
     {
         $config = $this->configuracionActiva();
+        return $this->ejecutarPostConConfig($endpoint, $params, $config);
+    }
+
+    public function postParaEmpresa(int $empresaId, string $endpoint, array $params): array
+    {
+        $config = $this->configuracionActivaEmpresa($empresaId);
+        return $this->ejecutarPostConConfig($endpoint, $params, $config);
+    }
+
+    public function get(string $endpoint, array $params): array
+    {
+        $config = $this->configuracionActiva();
+        return $this->ejecutarGetConConfig($endpoint, $params, $config);
+    }
+
+    public function getParaEmpresa(int $empresaId, string $endpoint, array $params): array
+    {
+        $config = $this->configuracionActivaEmpresa($empresaId);
+        return $this->ejecutarGetConConfig($endpoint, $params, $config);
+    }
+
+    private function ejecutarPostConConfig(string $endpoint, array $params, array $config): array
+    {
         $payload = array_merge(['apiKey' => $config['api_key']], $params);
         $payload['s'] = $this->firmaService->firmar($payload, $config['secret_key']);
         $url = rtrim((string) $config['base_url_real'], '/') . '/' . ltrim($endpoint, '/');
@@ -81,9 +105,8 @@ class FlowApiService
         return $parsed;
     }
 
-    public function get(string $endpoint, array $params): array
+    private function ejecutarGetConConfig(string $endpoint, array $params, array $config): array
     {
-        $config = $this->configuracionActiva();
         $payload = array_merge(['apiKey' => $config['api_key']], $params);
         $payload['s'] = $this->firmaService->firmar($payload, $config['secret_key']);
         $url = rtrim((string) $config['base_url_real'], '/') . '/' . ltrim($endpoint, '/') . '?' . http_build_query($payload);
@@ -118,6 +141,29 @@ class FlowApiService
         }
 
         return $parsed;
+    }
+
+    public function configuracionActivaEmpresa(int $empresaId): array
+    {
+        $configEmpresa = (new FlowConfiguracionEmpresa())->obtenerPorEmpresa($empresaId);
+        if (!$configEmpresa || (int) ($configEmpresa['activo'] ?? 0) !== 1) {
+            return $this->configuracionActiva();
+        }
+
+        $apiKey = $this->normalizarCredencial((string) ($configEmpresa['api_key'] ?? ''));
+        $secret = $this->normalizarCredencial($this->desencriptarSecret((string) ($configEmpresa['secret_key_enc'] ?? '')));
+        if ($apiKey === '' || $secret === '') {
+            throw new RuntimeException('Configura apiKey y secretKey de Flow en tu panel de Checkout.');
+        }
+
+        $configNormalizada = [
+            'api_key' => $apiKey,
+            'secret_key' => $secret,
+            'entorno' => (string) ($configEmpresa['entorno'] ?? 'sandbox'),
+            'base_url' => (string) ($configEmpresa['base_url'] ?? ''),
+        ];
+        $configNormalizada['base_url_real'] = $this->resolverBaseUrl($configNormalizada);
+        return $configNormalizada;
     }
 
     public function encriptarSecret(string $secret): string

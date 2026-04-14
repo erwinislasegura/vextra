@@ -86,7 +86,9 @@
   </script>
 </head>
 <body class="bg-light public-page">
-<?php require __DIR__ . '/../parciales/navbar_publico.php'; ?>
+<?php if (empty($ocultarNavbarPublico)): ?>
+  <?php require __DIR__ . '/../parciales/navbar_publico.php'; ?>
+<?php endif; ?>
 <main>
   <?php if ($flash = obtener_flash()): ?>
     <div class="container pt-3"><div class="alert alert-<?= e($flash['tipo']) ?>"><?= e($flash['mensaje']) ?></div></div>
