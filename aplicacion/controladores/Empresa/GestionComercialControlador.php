@@ -12,6 +12,7 @@ use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\PuntoVenta;
 use Aplicacion\Modelos\Suscripcion;
 use Aplicacion\Modelos\Usuario;
+use Aplicacion\Modelos\FlowConfiguracionEmpresa;
 use Aplicacion\Servicios\FlowApiService;
 use Aplicacion\Servicios\ExcelExpoFormato;
 use Aplicacion\Servicios\FlowPagosService;
@@ -251,7 +252,46 @@ class GestionComercialControlador extends Controlador
         if (!is_array($checkoutItems)) {
             $checkoutItems = [];
         }
-        $this->vista('empresa/pagos/checkout_flow', compact('checkoutItems'), 'empresa');
+        $empresaId = (int) empresa_actual_id();
+        $configFlowEmpresa = (new FlowConfiguracionEmpresa())->obtenerPorEmpresa($empresaId);
+        $this->vista('empresa/pagos/checkout_flow', compact('checkoutItems', 'configFlowEmpresa'), 'empresa');
+    }
+
+    public function guardarConfiguracionCheckoutFlow(): void
+    {
+        validar_csrf();
+        $empresaId = (int) empresa_actual_id();
+        $actual = (new FlowConfiguracionEmpresa())->obtenerPorEmpresa($empresaId);
+
+        $apiKey = trim((string) ($_POST['api_key'] ?? ''));
+        $secret = trim((string) ($_POST['secret_key'] ?? ''));
+        $entorno = (string) ($_POST['entorno'] ?? 'sandbox');
+        $activo = isset($_POST['activo']) ? 1 : 0;
+        if (!in_array($entorno, ['sandbox', 'produccion'], true)) {
+            $entorno = 'sandbox';
+        }
+        if ($apiKey === '') {
+            flash('danger', 'Debes ingresar tu API Key de Flow.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        $secretEnc = (string) ($actual['secret_key_enc'] ?? '');
+        if ($secret !== '') {
+            $secretEnc = (new FlowApiService())->encriptarSecret($secret);
+        }
+        if ($secretEnc === '') {
+            flash('danger', 'Debes ingresar tu Secret Key de Flow.');
+            $this->redirigir('/app/pagos/checkout-flow');
+        }
+
+        (new FlowConfiguracionEmpresa())->guardar($empresaId, [
+            'api_key' => $apiKey,
+            'secret_key_enc' => $secretEnc,
+            'entorno' => $entorno,
+            'activo' => $activo,
+        ]);
+        flash('success', 'Configuración de Flow guardada correctamente.');
+        $this->redirigir('/app/pagos/checkout-flow');
     }
 
     public function crearCheckoutFlow(): void
@@ -291,7 +331,7 @@ class GestionComercialControlador extends Controlador
         $urlConfirmacion = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
 
         try {
-            $respuesta = (new FlowApiService())->post('payment/create', [
+            $respuesta = (new FlowApiService())->postParaEmpresa($empresaId, 'payment/create', [
                 'commerceOrder' => $commerceOrder,
                 'subject' => $descripcion,
                 'currency' => 'CLP',
@@ -341,7 +381,7 @@ class GestionComercialControlador extends Controlador
         }
 
         try {
-            $status = (new FlowPagosService())->sincronizarEstadoPorToken($token);
+            $status = (new FlowApiService())->getParaEmpresa((int) empresa_actual_id(), 'payment/getStatus', ['token' => $token]);
             $estado = (new FlowPagosService())->resolverEstadoPagoDesdeRespuesta($status);
         } catch (\Throwable $e) {
             flash('danger', 'No fue posible consultar el estado en Flow. Detalle: ' . $e->getMessage());

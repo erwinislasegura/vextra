@@ -9,10 +9,47 @@ $estadoBadge = static function (string $estado): string {
 ?>
 
 <section class="container-fluid px-0">
+  <?php $configFlowEmpresa = $configFlowEmpresa ?? []; ?>
   <div class="card border-0 shadow-sm mb-3">
     <div class="card-body">
       <h1 class="h4 mb-1">Checkout Flow</h1>
       <p class="text-muted mb-0">Crea links de pago de Flow.cl para cobrar a tus clientes desde el panel.</p>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-header bg-white">
+      <strong>Configuración API Flow (tu empresa)</strong>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="<?= e(url('/app/pagos/checkout-flow/configuracion')) ?>" class="row g-3">
+        <?= csrf_campo() ?>
+        <div class="col-md-4">
+          <label class="form-label">API Key</label>
+          <input type="text" name="api_key" class="form-control" required value="<?= e((string) ($configFlowEmpresa['api_key'] ?? '')) ?>">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Secret Key</label>
+          <input type="password" name="secret_key" class="form-control" placeholder="<?= !empty($configFlowEmpresa['secret_key_enc']) ? '•••••••• (dejar vacío para mantener)' : '' ?>">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Entorno</label>
+          <select name="entorno" class="form-select">
+            <?php $entorno = (string) ($configFlowEmpresa['entorno'] ?? 'sandbox'); ?>
+            <option value="sandbox" <?= $entorno === 'sandbox' ? 'selected' : '' ?>>Sandbox</option>
+            <option value="produccion" <?= $entorno === 'produccion' ? 'selected' : '' ?>>Producción</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="flowActivoEmpresa" name="activo" value="1" <?= (int) ($configFlowEmpresa['activo'] ?? 0) === 1 ? 'checked' : '' ?>>
+            <label class="form-check-label" for="flowActivoEmpresa">Activo</label>
+          </div>
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+          <button class="btn btn-outline-primary" type="submit">Guardar configuración</button>
+        </div>
+      </form>
     </div>
   </div>
 

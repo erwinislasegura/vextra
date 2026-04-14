@@ -11,6 +11,7 @@ SOURCE base_datos/esquema/semillas.sql;
 -- Actualizaciones acumuladas del proyecto.
 SOURCE base_datos/actualizaciones/actualizacion_panel_admin_saas.sql;
 SOURCE base_datos/actualizaciones/actualizacion_flow_admin_integracion.sql;
+SOURCE base_datos/actualizaciones/actualizacion_flow_configuracion_empresa.sql;
 SOURCE base_datos/actualizaciones/actualizacion_configuracion_general_admin.sql;
 SOURCE base_datos/actualizaciones/actualizacion_funcionalidades_clientes_nuevas.sql;
 SOURCE base_datos/actualizaciones/actualizacion_roles_empresa.sql;

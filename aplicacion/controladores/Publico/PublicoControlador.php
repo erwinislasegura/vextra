@@ -437,7 +437,7 @@ class PublicoControlador extends Controlador
         $urlConfirmacion = FlowApiService::construirUrlPublica('/flow/webhook/payment-confirmation');
 
         try {
-            $respuesta = (new FlowApiService())->post('payment/create', [
+            $respuesta = (new FlowApiService())->postParaEmpresa($empresaId, 'payment/create', [
                 'commerceOrder' => $commerceOrder,
                 'subject' => 'Compra catálogo ' . (string) ($empresa['nombre_comercial'] ?? 'Vextra'),
                 'currency' => 'CLP',
@@ -482,7 +482,7 @@ class PublicoControlador extends Controlador
         $estado = 'pendiente';
         if ($token !== '') {
             try {
-                $status = (new FlowApiService())->get('payment/getStatus', ['token' => $token]);
+                $status = (new FlowApiService())->getParaEmpresa($empresaId, 'payment/getStatus', ['token' => $token]);
                 $estado = match ((int) ($status['status'] ?? 0)) {
                     2 => 'aprobado',
                     3 => 'rechazado',
