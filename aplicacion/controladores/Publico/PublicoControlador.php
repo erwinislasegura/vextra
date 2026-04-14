@@ -378,7 +378,7 @@ class PublicoControlador extends Controlador
         $categoriaId = (int) ($_GET['categoria'] ?? 0);
         $productos = (new Producto())->listarParaCatalogoPublico($empresaId, $buscar, $categoriaId > 0 ? $categoriaId : null);
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
-        $logoCatalogo = $this->resolverLogoCatalogo((string) ($empresa['logo'] ?? ''));
+        $logoCatalogo = url('/catalogo/' . $empresaId . '/logo?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
         $sliderCatalogo = [
             'imagen' => $this->resolverRutaPublicaArchivo((string) ($empresa['slider_imagen'] ?? '')),
             'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
@@ -401,6 +401,58 @@ class PublicoControlador extends Controlador
 
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    public function logoCatalogoEmpresa(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        $logo = trim((string) ($empresa['logo'] ?? ''));
+
+        if ($logo !== '' && preg_match('/^https?:\/\//i', $logo) === 1) {
+            header('Location: ' . $logo, true, 302);
+            return;
+        }
+
+        $logo = str_replace('\\', '/', $logo);
+        if ($logo !== '' && !str_starts_with($logo, '/')) {
+            $logo = '/' . ltrim($logo, '/');
+        }
+        if (str_starts_with($logo, '/public/uploads/')) {
+            $logo = '/uploads/' . ltrim(substr($logo, 16), '/');
+        } elseif (str_starts_with($logo, '/aplicacion/public/uploads/')) {
+            $logo = '/uploads/' . ltrim(substr($logo, 26), '/');
+        }
+
+        $raiz = dirname(__DIR__, 3);
+        $rutaLogo = null;
+        if ($logo !== '') {
+            $candidatas = [
+                $raiz . $logo,
+                $raiz . '/public' . $logo,
+                $raiz . '/aplicacion/public' . $logo,
+            ];
+            foreach ($candidatas as $ruta) {
+                if (is_file($ruta)) {
+                    $rutaLogo = $ruta;
+                    break;
+                }
+            }
+        }
+
+        if ($rutaLogo === null) {
+            $rutaLogo = $raiz . '/public/img/logo/icono.png';
+            if (!is_file($rutaLogo)) {
+                http_response_code(404);
+                exit('Logo no encontrado');
+            }
+        }
+
+        $mime = (string) (mime_content_type($rutaLogo) ?: 'application/octet-stream');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (string) filesize($rutaLogo));
+        header('Cache-Control: public, max-age=300');
+        readfile($rutaLogo);
+        exit;
     }
 
     public function checkoutCatalogo(int $empresaId): void
@@ -627,11 +679,6 @@ class PublicoControlador extends Controlador
         header('Cache-Control: public, max-age=86400');
         readfile($rutaAbs);
         exit;
-    }
-
-    private function resolverLogoCatalogo(string $logo): ?string
-    {
-        return $this->resolverRutaPublicaArchivo($logo);
     }
 
     private function resolverRutaPublicaArchivo(string $ruta): ?string
