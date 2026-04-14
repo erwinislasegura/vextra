@@ -737,7 +737,7 @@ class PublicoControlador extends Controlador
             return null;
         }
 
-        return url($normalizada);
+        return url('/media/archivo?ruta=' . rawurlencode($normalizada));
     }
 
     private function vistaPublica(string $vista, array $data, string $pagina): void

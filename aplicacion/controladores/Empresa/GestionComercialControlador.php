@@ -533,9 +533,23 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        $raizProyecto = dirname(__DIR__, 3);
-        $dirAbsoluto = $raizProyecto . '/public/uploads/catalogo_slider/' . $empresaId;
-        if (!is_dir($dirAbsoluto) && !mkdir($dirAbsoluto, 0775, true) && !is_dir($dirAbsoluto)) {
+        $raizProyecto = dirname(__DIR__, 4);
+        $dirRelativo = '/uploads/catalogo_slider/' . $empresaId;
+        $candidatos = [
+            $raizProyecto . '/public' . $dirRelativo,
+            $raizProyecto . '/aplicacion/public' . $dirRelativo,
+        ];
+        $dirAbsoluto = null;
+        foreach ($candidatos as $candidato) {
+            if (!is_dir($candidato) && !mkdir($candidato, 0775, true) && !is_dir($candidato)) {
+                continue;
+            }
+            if (is_writable($candidato)) {
+                $dirAbsoluto = $candidato;
+                break;
+            }
+        }
+        if ($dirAbsoluto === null) {
             flash('danger', 'No se pudo crear la carpeta para el slider.');
             $this->redirigir('/app/catalogo-en-linea');
         }
@@ -547,7 +561,20 @@ class GestionComercialControlador extends Controlador
             $this->redirigir('/app/catalogo-en-linea');
         }
 
-        return '/uploads/catalogo_slider/' . $empresaId . '/' . $nombreFinal;
+        return $dirRelativo . '/' . $nombreFinal;
+    }
+
+    private function normalizarColorHex(string $valor): ?string
+    {
+        $limpio = mb_strtoupper(trim($valor));
+        if ($limpio === '') {
+            return '';
+        }
+        if (preg_match('/^#([A-F0-9]{6})$/', $limpio) !== 1) {
+            return null;
+        }
+
+        return $limpio;
     }
 
     private function normalizarColorHex(string $valor): ?string
