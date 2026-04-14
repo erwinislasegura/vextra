@@ -27,6 +27,19 @@ $resolverImagenProducto = static function (?string $ruta): string {
 
     return url('/' . ltrim($normalizada, '/'));
 };
+
+$topbarTexto = trim((string) ($catalogoTopbar['texto'] ?? ''));
+if ($topbarTexto === '') {
+    $topbarTexto = 'Envíos a todo el país • Garantía en todos los productos';
+}
+$socialesTopbar = [
+    ['url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'icono' => 'bi-facebook', 'label' => 'Facebook'],
+    ['url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'icono' => 'bi-instagram', 'label' => 'Instagram'],
+    ['url' => trim((string) ($catalogoTopbar['sociales']['tiktok'] ?? '')), 'icono' => 'bi-tiktok', 'label' => 'TikTok'],
+    ['url' => trim((string) ($catalogoTopbar['sociales']['linkedin'] ?? '')), 'icono' => 'bi-linkedin', 'label' => 'LinkedIn'],
+    ['url' => trim((string) ($catalogoTopbar['sociales']['youtube'] ?? '')), 'icono' => 'bi-youtube', 'label' => 'YouTube'],
+];
+$socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 ?>
 <style>
   :root{--primary:#0f172a;--primary-soft:#1e293b;--accent:#2563eb;--accent-hover:#1d4ed8;--danger:#dc2626;--bg:#eef2f7;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#dbe3ee;--shadow:0 10px 25px rgba(15,23,42,.08);--radius:18px}
@@ -34,6 +47,10 @@ $resolverImagenProducto = static function (?string $ruta): string {
   .catalogo-container{width:min(1280px,92%);margin:0 auto}
   .catalogo-topbar{background:var(--primary);color:#fff;padding:10px 0;font-size:14px}
   .catalogo-topbar__content{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .catalogo-topbar__sociales{display:flex;align-items:center;gap:10px}
+  .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;transition:all .2s ease}
+  .catalogo-topbar__sociales a i{color:#fff !important;font-size:15px;line-height:1}
+  .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:16px;align-items:center;padding:16px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.6rem;color:var(--text);font-size:40px;font-weight:800;text-decoration:none;line-height:1}
@@ -107,8 +124,16 @@ $resolverImagenProducto = static function (?string $ruta): string {
 <div class="catalogo-page">
   <div class="catalogo-topbar">
     <div class="catalogo-container catalogo-topbar__content">
-      <div>Envíos a todo el país • Garantía en todos los productos</div>
-      <div>Soporte comercial • Compras seguras • Atención premium</div>
+      <div><?= e($topbarTexto) ?></div>
+      <?php if ($socialesTopbar !== []): ?>
+        <div class="catalogo-topbar__sociales" aria-label="Redes sociales del catálogo">
+          <?php foreach ($socialesTopbar as $red): ?>
+            <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) $red['label']) ?>">
+              <i class="bi <?= e((string) $red['icono']) ?>"></i>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 
