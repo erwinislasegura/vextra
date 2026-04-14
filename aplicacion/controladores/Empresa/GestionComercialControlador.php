@@ -577,6 +577,19 @@ class GestionComercialControlador extends Controlador
         return $limpio;
     }
 
+    private function normalizarColorHex(string $valor): ?string
+    {
+        $limpio = mb_strtoupper(trim($valor));
+        if ($limpio === '') {
+            return '';
+        }
+        if (preg_match('/^#([A-F0-9]{6})$/', $limpio) !== 1) {
+            return null;
+        }
+
+        return $limpio;
+    }
+
     public function contactos(): void
     {
         $empresaId = empresa_actual_id();
