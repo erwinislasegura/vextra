@@ -419,6 +419,12 @@ class PublicoControlador extends Controlador
         if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
             $ruta = $this->inferirRutaSliderPorEmpresa($empresaId, $tipo);
         }
+        if ($tipo === 'secundaria' && ($ruta === '' || !$this->rutaCatalogoExiste($ruta))) {
+            $ruta = trim((string) ($empresa['slider_imagen'] ?? ''));
+            if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
+                $ruta = $this->inferirRutaSliderPorEmpresa($empresaId, 'principal');
+            }
+        }
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
@@ -428,6 +434,13 @@ class PublicoControlador extends Controlador
         $ruta = '';
         if ($imagenes !== []) {
             $ruta = (string) ($imagenes[0]['ruta'] ?? '');
+        }
+        if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
+            $producto = (new Producto())->obtenerPorId($empresaId, $productoId);
+            $ruta = (string) ($producto['imagen_catalogo_url'] ?? '');
+        }
+        if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
+            $ruta = $this->inferirRutaProductoPorEmpresa($empresaId, $productoId);
         }
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
@@ -824,6 +837,53 @@ class PublicoControlador extends Controlador
         }
 
         $normalizado = str_replace('\\', '/', $seleccionado);
+        if (str_contains($normalizado, '/public/uploads/')) {
+            $partes = explode('/public/uploads/', $normalizado, 2);
+            return '/uploads/' . ($partes[1] ?? '');
+        }
+        if (str_contains($normalizado, '/aplicacion/public/uploads/')) {
+            $partes = explode('/aplicacion/public/uploads/', $normalizado, 2);
+            return '/uploads/' . ($partes[1] ?? '');
+        }
+
+        return '';
+    }
+
+    private function inferirRutaProductoPorEmpresa(int $empresaId, int $productoId): string
+    {
+        $raiz = dirname(__DIR__, 4);
+        $directorios = [
+            $raiz . '/public/uploads/productos_catalogo/' . $empresaId,
+            $raiz . '/aplicacion/public/uploads/productos_catalogo/' . $empresaId,
+        ];
+        $patrones = [
+            'prod_' . $productoId . '_*.jpg',
+            'prod_' . $productoId . '_*.jpeg',
+            'prod_' . $productoId . '_*.png',
+            'prod_' . $productoId . '_*.webp',
+            'prod_' . $productoId . '_*.JPG',
+            'prod_' . $productoId . '_*.JPEG',
+            'prod_' . $productoId . '_*.PNG',
+            'prod_' . $productoId . '_*.WEBP',
+        ];
+        $archivos = [];
+        foreach ($directorios as $dir) {
+            if (!is_dir($dir)) {
+                continue;
+            }
+            foreach ($patrones as $patron) {
+                foreach ((array) glob($dir . '/' . $patron) as $archivo) {
+                    if (is_file($archivo)) {
+                        $archivos[] = $archivo;
+                    }
+                }
+            }
+        }
+        if ($archivos === []) {
+            return '';
+        }
+        usort($archivos, static fn (string $a, string $b): int => filemtime($b) <=> filemtime($a));
+        $normalizado = str_replace('\\', '/', $archivos[0]);
         if (str_contains($normalizado, '/public/uploads/')) {
             $partes = explode('/public/uploads/', $normalizado, 2);
             return '/uploads/' . ($partes[1] ?? '');
