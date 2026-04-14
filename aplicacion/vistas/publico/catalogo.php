@@ -248,10 +248,7 @@ $renderIconoRed = static function (string $id): string {
           <?php foreach ($productos as $producto): ?>
             <?php
               $imagenProducto = (string) ($producto['imagen_catalogo'] ?? $producto['imagen_catalogo_url'] ?? '');
-              $imagenProductoId = (int) ($producto['imagen_catalogo_id'] ?? 0);
-              $imagenProductoUrl = $imagenProductoId > 0
-                ? url('/media/producto/' . $imagenProductoId)
-                : $resolverImagenProducto($imagenProducto);
+              $imagenProductoUrl = $resolverImagenProducto($imagenProducto);
               $precio = (float) ($producto['precio'] ?? 0);
               $categoria = (string) ($producto['categoria'] ?? 'Sin categoría');
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
