@@ -37,10 +37,22 @@ class Producto extends Modelo
         if ($this->tieneColumna('productos', 'stock_actual')) {
             $columnas[] = 'stock_actual';
             $valores[] = ':stock_actual';
+            $data['stock_actual'] = $data['stock_actual'] ?? 0;
         }
         if ($this->tieneColumna('productos', 'stock_critico')) {
             $columnas[] = 'stock_critico';
             $valores[] = ':stock_critico';
+            $data['stock_critico'] = $data['stock_critico'] ?? 0;
+        }
+        if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
+            $columnas[] = 'mostrar_catalogo';
+            $valores[] = ':mostrar_catalogo';
+            $data['mostrar_catalogo'] = isset($data['mostrar_catalogo']) ? (int) $data['mostrar_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
+            $columnas[] = 'imagen_catalogo_url';
+            $valores[] = ':imagen_catalogo_url';
+            $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
         if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
             $columnas[] = 'mostrar_catalogo';
@@ -86,9 +98,19 @@ class Producto extends Modelo
 
         if ($this->tieneColumna('productos', 'stock_critico')) {
             $sets[] = 'stock_critico=:stock_critico';
+            $data['stock_critico'] = $data['stock_critico'] ?? 0;
         }
         if ($this->tieneColumna('productos', 'stock_actual')) {
             $sets[] = 'stock_actual=:stock_actual';
+            $data['stock_actual'] = $data['stock_actual'] ?? 0;
+        }
+        if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
+            $sets[] = 'mostrar_catalogo=:mostrar_catalogo';
+            $data['mostrar_catalogo'] = isset($data['mostrar_catalogo']) ? (int) $data['mostrar_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
+            $sets[] = 'imagen_catalogo_url=:imagen_catalogo_url';
+            $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
         if ($this->tieneColumna('productos', 'mostrar_catalogo')) {
             $sets[] = 'mostrar_catalogo=:mostrar_catalogo';
