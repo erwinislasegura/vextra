@@ -11,6 +11,7 @@ SOURCE base_datos/esquema/semillas.sql;
 -- Actualizaciones acumuladas del proyecto.
 SOURCE base_datos/actualizaciones/actualizacion_panel_admin_saas.sql;
 SOURCE base_datos/actualizaciones/actualizacion_flow_admin_integracion.sql;
+SOURCE base_datos/actualizaciones/actualizacion_flow_configuracion_empresa.sql;
 SOURCE base_datos/actualizaciones/actualizacion_configuracion_general_admin.sql;
 SOURCE base_datos/actualizaciones/actualizacion_funcionalidades_clientes_nuevas.sql;
 SOURCE base_datos/actualizaciones/actualizacion_roles_empresa.sql;
@@ -33,6 +34,8 @@ SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_aprobacion.sql;
 SOURCE base_datos/actualizaciones/actualizacion_recepciones_fecha_actualizacion.sql;
 SOURCE base_datos/actualizaciones/actualizacion_ordenes_compra_recepcionada.sql;
 SOURCE base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql;
+SOURCE base_datos/actualizaciones/actualizacion_modulo_checkout_flow.sql;
+SOURCE base_datos/actualizaciones/actualizacion_catalogo_en_linea.sql;
 
 -- Usuarios de acceso estandarizados.
 SOURCE base_datos/esquema/actualizar_usuarios_acceso.sql;

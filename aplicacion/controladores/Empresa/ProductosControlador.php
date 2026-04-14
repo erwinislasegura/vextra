@@ -56,6 +56,8 @@ class ProductosControlador extends Controlador
             'stock_aviso' => (float) ($_POST['stock_critico'] ?? 0),
             'stock_actual' => (float) ($_POST['stock_actual'] ?? 0),
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
+            'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
+            'imagen_catalogo_url' => trim((string) ($_POST['imagen_catalogo_url'] ?? '')),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
         flash('success', 'Producto creado correctamente.');
@@ -539,6 +541,8 @@ class ProductosControlador extends Controlador
             'stock_aviso' => (float) ($_POST['stock_critico'] ?? 0),
             'stock_actual' => (float) ($_POST['stock_actual'] ?? 0),
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
+            'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
+            'imagen_catalogo_url' => trim((string) ($_POST['imagen_catalogo_url'] ?? '')),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
         flash('success', 'Producto actualizado correctamente.');
