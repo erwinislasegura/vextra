@@ -357,6 +357,7 @@ class Empresa extends Modelo
                 direccion = :direccion,
                 ciudad = :ciudad,
                 pais = :pais,
+                descripcion = :descripcion,
                 logo = :logo,
                 imap_host = :imap_host,
                 imap_port = :imap_port,
@@ -378,6 +379,7 @@ class Empresa extends Modelo
             'direccion' => $data['direccion'],
             'ciudad' => $data['ciudad'],
             'pais' => $data['pais'],
+            'descripcion' => $data['descripcion'],
             'logo' => $data['logo'],
             'imap_host' => $data['imap_host'],
             'imap_port' => $data['imap_port'],
@@ -406,6 +408,7 @@ class Empresa extends Modelo
             'catalogo_social_youtube' => '',
             'catalogo_color_primario' => '',
             'catalogo_color_acento' => '',
+            'catalogo_columnas_productos' => '3',
         ];
 
         $columnas = array_keys($config);
@@ -447,6 +450,7 @@ class Empresa extends Modelo
             'catalogo_social_youtube',
             'catalogo_color_primario',
             'catalogo_color_acento',
+            'catalogo_columnas_productos',
         ];
         $sets = [];
         $params = ['empresa_id' => $empresaId];

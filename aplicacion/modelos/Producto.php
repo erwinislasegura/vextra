@@ -54,6 +54,16 @@ class Producto extends Modelo
             $valores[] = ':imagen_catalogo_url';
             $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
         }
+        if ($this->tieneColumna('productos', 'destacado_catalogo')) {
+            $columnas[] = 'destacado_catalogo';
+            $valores[] = ':destacado_catalogo';
+            $data['destacado_catalogo'] = isset($data['destacado_catalogo']) ? (int) $data['destacado_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'precio_oferta')) {
+            $columnas[] = 'precio_oferta';
+            $valores[] = ':precio_oferta';
+            $data['precio_oferta'] = (float) ($data['precio_oferta'] ?? 0);
+        }
 
         $sql = 'INSERT INTO productos (' . implode(',', $columnas) . ') VALUES (' . implode(',', $valores) . ')';
         $this->db->prepare($sql)->execute($data);
@@ -103,6 +113,14 @@ class Producto extends Modelo
         if ($this->tieneColumna('productos', 'imagen_catalogo_url')) {
             $sets[] = 'imagen_catalogo_url=:imagen_catalogo_url';
             $data['imagen_catalogo_url'] = (string) ($data['imagen_catalogo_url'] ?? '');
+        }
+        if ($this->tieneColumna('productos', 'destacado_catalogo')) {
+            $sets[] = 'destacado_catalogo=:destacado_catalogo';
+            $data['destacado_catalogo'] = isset($data['destacado_catalogo']) ? (int) $data['destacado_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'precio_oferta')) {
+            $sets[] = 'precio_oferta=:precio_oferta';
+            $data['precio_oferta'] = (float) ($data['precio_oferta'] ?? 0);
         }
 
         $sql = 'UPDATE productos SET ' . implode(', ', $sets) . ' WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL';

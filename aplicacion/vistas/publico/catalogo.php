@@ -48,6 +48,10 @@ $colorAcento = trim((string) ($catalogoTopbar['color_acento'] ?? ''));
 if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorAcento) !== 1) {
     $colorAcento = '#5415B0';
 }
+$columnasProductos = (int) ($catalogoTopbar['columnas_productos'] ?? 3);
+if ($columnasProductos < 2 || $columnasProductos > 5) {
+    $columnasProductos = 3;
+}
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
     ['id' => 'instagram', 'url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'label' => 'Instagram'],
@@ -105,7 +109,7 @@ $renderIconoRed = static function (string $id): string {
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
-  .section-head h2,.sidebar h3{font-size:24px;color:var(--primary);font-weight:800}
+  .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
   .filters-section{padding:8px 0 24px}
@@ -114,41 +118,71 @@ $renderIconoRed = static function (string $id): string {
   .field input,.field select{border:1px solid var(--border);background:#fff;padding:13px 14px;border-radius:14px;outline:none;font-size:14px}
   .main-content{padding:0 0 46px}
   .content-grid{display:grid;grid-template-columns:280px 1fr;gap:22px}
-  .sidebar{background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:20px;border:1px solid var(--border);height:fit-content;position:sticky;top:106px}
-  .category-list,.feature-list{list-style:none;display:grid;gap:10px;margin-top:14px}
-  .category-list button,.feature-list button{width:100%;text-align:left;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px 14px;font-weight:700;color:var(--primary-soft)}
-  .category-list button.active{background:#eff6ff;color:var(--accent);border-color:#bfdbfe}
+  .sidebar{background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(15,23,42,.08);padding:14px;border:1px solid var(--border);height:fit-content;position:sticky;top:96px}
+  .sidebar h3{background:#f3f6fb;border:1px solid var(--border);border-radius:12px;padding:8px 10px}
+  .category-list,.feature-list{list-style:none;display:grid;gap:4px;margin-top:8px}
+  .category-list{max-height:320px;overflow:auto;padding-right:4px}
+  .feature-list{grid-template-columns:1fr 1fr}
+  .category-list button,.feature-list button{width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid #e6edf6;border-radius:0;padding:8px 4px;font-weight:400;font-size:14px;color:var(--primary-soft)}
+  .category-list button.active{color:var(--accent);font-weight:600}
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
-  .products-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
   .product-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
   .badge-mini.sale{background:#fff7ed;color:#ea580c}
+  .badge-mini.destacado{left:auto;right:14px;background:#eef2ff;color:#3730a3}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
-  .category-tag{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.3px;text-transform:uppercase}
-  .product-title{font-size:34px;font-weight:800;color:var(--primary);line-height:1.15;margin:0}
-  .product-desc{color:var(--muted);font-size:14px;min-height:42px}
-  .rating-stock{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
-  .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:42px;font-weight:800;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:700}
+  .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
+  .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
+  .product-desc{color:var(--muted);font-size:13px;line-height:1.45;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .stock-line{font-size:13px;color:var(--muted);font-weight:600}
+  .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
-  .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);font-size:20px}
-  .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:999px;padding:14px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-weight:700;border:none}
-  .cart-count{background:var(--accent);min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:13px}
+  .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
+  .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
+  .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
+  .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;border:none}
+  .cart-count{background:var(--accent);min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:12px}
   .cart-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-10px 0 30px rgba(15,23,42,.12);z-index:90;transition:right .3s ease;display:flex;flex-direction:column}
   .cart-panel.open{right:0}.cart-header,.cart-footer{padding:20px}.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
-  .cart-items{flex:1;overflow:auto;padding:18px;display:grid;gap:12px}.cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:10px}
-  .cart-item img{width:74px;height:74px;object-fit:cover;border-radius:10px}.qty-controls{display:flex;align-items:center;gap:8px;margin-top:8px}
-  .qty-controls button{width:28px;height:28px;border-radius:8px;background:#f1f5f9;border:1px solid var(--border);font-weight:700}
-  .cart-footer{border-top:1px solid var(--border);display:grid;gap:12px}.summary-row{display:flex;justify-content:space-between;font-weight:700}
+  .cart-items{flex:1;overflow:auto;padding:14px;display:grid;gap:10px}.cart-item{display:grid;grid-template-columns:60px 1fr auto;gap:8px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:8px}
+  .cart-header h3{font-size:18px;font-weight:500;margin:0;color:var(--primary)}
+  .cart-item h4{font-size:14px;font-weight:600;line-height:1.2;margin:0 0 2px;color:#243447}
+  .cart-item p{font-size:12px;font-weight:500;margin:0;color:var(--text)}
+  .cart-item__desc{font-size:11px;font-weight:400;line-height:1.35;color:var(--muted);margin-top:3px}
+  .cart-item img{width:60px;height:60px;object-fit:cover;border-radius:9px}.qty-controls{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:12px}
+  .qty-controls button{width:24px;height:24px;border-radius:7px;background:#f1f5f9;border:1px solid var(--border);font-size:13px;font-weight:500;line-height:1}
+  .cart-item .btn-danger-soft{font-size:13px;font-weight:500;padding:6px 9px}
+  .cart-footer{border-top:1px solid var(--border);display:grid;gap:10px}.summary-row{display:flex;justify-content:space-between;font-size:14px;font-weight:500}
   .empty-state{text-align:center;color:var(--muted);padding:40px 10px}.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;visibility:hidden;transition:.25s;z-index:80}.overlay.show{opacity:1;visibility:visible}
-  .footer{background:var(--primary);color:#fff;padding:28px 0;margin-top:20px}.footer-content{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
+  .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
+  .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
+  .footer-brand img{width:128px;height:60px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
+  .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:13px;color:rgba(255,255,255,.92);margin:0}
+  .footer-contact{display:grid;gap:8px}
+  .footer-contact p{display:flex;align-items:center;gap:8px}
+  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+  .footer-menu{display:grid;gap:8px}
+  .footer-menu a{color:#fff;text-decoration:none}
+  .footer-menu a:hover{text-decoration:underline}
+  .footer-follow{display:grid;gap:10px}
+  .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
+  .footer-sociales a svg{width:14px;height:14px;fill:#fff}
+  .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
+  .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
+  .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
+  .footer-bottom__content a:hover{text-decoration:underline}
+  body.public-page > footer.border-top.bg-white.mt-5{display:none}
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
-  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.footer-content,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
+  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
 </style>
 
 <div class="catalogo-page">
@@ -232,11 +266,13 @@ $renderIconoRed = static function (string $id): string {
       <aside class="sidebar">
         <h3>Categorías</h3>
         <div class="category-list" id="categoryButtons"></div>
-        <h3 style="margin-top:24px;">Acciones rápidas</h3>
+        <h3 style="margin-top:16px;">Acciones rápidas</h3>
         <div class="feature-list">
           <button type="button" id="showAllBtn">Ver todos los productos</button>
           <button type="button" id="showOffersBtn">Ver ofertas</button>
           <button type="button" id="showStockBtn">Solo con stock</button>
+          <button type="button" id="showCheapestBtn">Más baratos primero</button>
+          <button type="button" id="showExpensiveBtn">Más caros primero</button>
         </div>
       </aside>
 
@@ -258,11 +294,13 @@ $renderIconoRed = static function (string $id): string {
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
               $descripcionProducto = (string) ($producto['descripcion'] ?? 'Sin descripción');
               $stock = (int) ($producto['stock_actual'] ?? rand(3, 40));
-              $rating = number_format(4 + (($producto['id'] ?? 1) % 10) / 10, 1);
-              $onSale = ((int) ($producto['id'] ?? 0) % 2) === 0;
-              $oldPrice = $onSale ? ($precio * 1.18) : 0;
+              $destacado = (int) ($producto['destacado_catalogo'] ?? 0) === 1;
+              $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
+              $onSale = $precioOferta > 0 && $precioOferta < $precio;
+              $precioMostrar = $onSale ? $precioOferta : $precio;
+              $oldPrice = $onSale ? $precio : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-rating="<?= e((string) $rating) ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
               <div class="product-image">
                 <img
                   src="<?= e($imagenProductoUrl) ?>"
@@ -271,17 +309,27 @@ $renderIconoRed = static function (string $id): string {
                   onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){this.src=this.dataset.fallback;return;}this.onerror=null;this.src='<?= e($placeholderProductoUrl) ?>';"
                   data-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>"
                 >
-                <span class="badge-mini <?= $onSale ? 'sale' : '' ?>"><?= $onSale ? 'Oferta' : 'Destacado' ?></span>
+                <?php if ($onSale): ?>
+                  <span class="badge-mini sale">Oferta</span>
+                <?php endif; ?>
+                <?php if ($destacado): ?>
+                  <span class="badge-mini destacado">Destacado</span>
+                <?php endif; ?>
               </div>
               <div class="product-body">
                 <span class="category-tag"><?= e($categoria) ?></span>
                 <h3 class="product-title"><?= e($nombreProducto) ?></h3>
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
-                <div class="rating-stock"><span>⭐<?= e((string) $rating) ?></span><span>Stock: <?= $stock ?></span></div>
-                <div class="price-wrap"><div class="price"><?= e($fmon($precio)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
+                <div class="stock-line">Stock: <?= $stock ?></div>
+                <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
-                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>">Agregar al carrito</button>
-                  <button class="icon-btn" type="button" data-view-product aria-label="Ver producto">👁</button>
+                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">¡Lo quiero!</button>
+                  <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>
+                      <circle cx="12" cy="11.5" r="2.8"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </article>
@@ -305,7 +353,50 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </aside>
 
-  <footer class="footer" id="contacto"><div class="catalogo-container footer-content"><div><strong><?= e((string) ($empresa['nombre_comercial'] ?? 'CatálogoPro')) ?></strong><p class="mb-0">Diseño profesional para mostrar y vender productos online.</p></div><div><p class="mb-0">© <?= date('Y') ?> • Todos los derechos reservados</p></div></div></footer>
+  <footer class="footer" id="contacto">
+    <div class="catalogo-container footer-content">
+      <div class="footer-brand footer-col">
+        <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
+        <p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p>
+      </div>
+      <div class="footer-col">
+        <h4>Accesos rápidos</h4>
+        <nav class="footer-menu mt-2">
+          <a href="#catalogoProductos">Inicio</a>
+          <a href="#catalogoProductos">Nosotros</a>
+          <a href="#contacto">Contacto</a>
+          <a href="#catalogoProductos" id="showFeaturedBtnTop">Productos destacados</a>
+          <a href="#catalogoProductos" id="showOffersBtnTop">Ofertas</a>
+        </nav>
+      </div>
+      <div class="footer-contact footer-col">
+        <h4>Datos de contacto</h4>
+        <p><span class="dot">☎</span><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
+        <p><span class="dot">✉</span><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
+        <p><span class="dot">⌖</span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
+        <p><span class="dot">⌂</span><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
+      </div>
+      <div class="footer-follow footer-col">
+        <h4>Síguenos</h4>
+        <p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p>
+        <?php if ($socialesTopbar !== []): ?>
+          <div class="footer-sociales" aria-label="Redes sociales del catálogo">
+            <?php foreach ($socialesTopbar as $red): ?>
+              <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) $red['label']) ?>">
+                <?= $renderIconoRed((string) ($red['id'] ?? '')) ?>
+              </a>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <div class="catalogo-container footer-bottom__content">
+      <span>© <?= date('Y') ?> • Todos los derechos reservados</span>
+      <span>Catálogo construido con tecnología de <a href="https://vextra.cl" target="_blank" rel="noopener noreferrer">Vextra.cl</a></span>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
@@ -349,6 +440,11 @@ $renderIconoRed = static function (string $id): string {
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const money = (v) => `$${Math.round(Number(v || 0)).toLocaleString('es-CL')}`;
+  const resumenTexto = (txt, max = 68) => {
+    const limpio = String(txt || '').replace(/\s+/g, ' ').trim();
+    if (limpio.length <= max) return limpio;
+    return `${limpio.slice(0, max).trimEnd()}…`;
+  };
   const storageKey = 'vextra_catalogo_carrito_<?= (int) $empresa['id'] ?>';
 
   const cards = $$('.product-card');
@@ -360,7 +456,6 @@ $renderIconoRed = static function (string $id): string {
     description: String(card.dataset.description || ''),
     image: String(card.dataset.image || ''),
     stock: Number(card.dataset.stock || 0),
-    rating: Number(card.dataset.rating || 0),
     onSale: String(card.dataset.onsale || '0') === '1',
     featured: String(card.dataset.onsale || '0') !== '1',
     oldPrice: Number(card.dataset.oldprice || 0),
@@ -381,6 +476,7 @@ $renderIconoRed = static function (string $id): string {
   const priceFilter = $('#priceFilter');
   const sortFilter = $('#sortFilter');
   const resultsInfo = $('#resultsInfo');
+  const productsGrid = $('#productsGrid');
   const cartPanel = $('#cartPanel');
   const overlay = $('#overlay');
   const cartItems = $('#cartItems');
@@ -391,7 +487,12 @@ $renderIconoRed = static function (string $id): string {
   const carritoJson = $('#carrito_json');
 
   const modalCheckout = window.bootstrap ? new bootstrap.Modal($('#modalCheckout')) : null;
-  const modalProductoDetalle = window.bootstrap ? new bootstrap.Modal($('#modalProductoDetalle')) : null;
+  const getModalProductoDetalle = () => {
+    if (!window.bootstrap) return null;
+    const modalEl = $('#modalProductoDetalle');
+    if (!modalEl) return null;
+    return bootstrap.Modal.getOrCreateInstance(modalEl);
+  };
   const detalleNombre = $('#detalleProductoNombre');
   const detalleDescripcion = $('#detalleProductoDescripcion');
   const detalleCategoria = $('#detalleProductoCategoria');
@@ -400,10 +501,14 @@ $renderIconoRed = static function (string $id): string {
   let productoSeleccionado = null;
 
   const categories = ['all', ...new Set(products.map((p) => p.category))];
+  const categoriesSidebar = ['all', ...categories.filter((c) => c !== 'all').slice(0, 10)];
   const renderCategories = () => {
     categoryFilter.innerHTML = categories.map((c) => `<option value="${c}">${c === 'all' ? 'Todas' : c}</option>`).join('');
     categoryFilter.value = selectedCategory;
-    categoryButtons.innerHTML = categories.map((c) => `<button type="button" class="${selectedCategory === c ? 'active' : ''}" data-category="${c}">${c === 'all' ? 'Todas las categorías' : c}</button>`).join('');
+    const categoriasSidebarRender = categoriesSidebar.includes(selectedCategory) || selectedCategory === 'all'
+      ? categoriesSidebar
+      : [...categoriesSidebar, selectedCategory];
+    categoryButtons.innerHTML = categoriasSidebarRender.map((c) => `<button type="button" class="${selectedCategory === c ? 'active' : ''}" data-category="${c}">${c === 'all' ? 'Todas las categorías' : c}</button>`).join('');
     $$('button[data-category]', categoryButtons).forEach((btn) => {
       btn.addEventListener('click', () => {
         selectedCategory = btn.dataset.category || 'all';
@@ -436,7 +541,10 @@ $renderIconoRed = static function (string $id): string {
     else visible.sort((a, b) => Number(b.featured) - Number(a.featured));
 
     products.forEach((p) => { p.el.style.display = 'none'; });
-    visible.forEach((p) => { p.el.style.display = ''; p.el.parentElement && (p.el.parentElement.style.display = ''); });
+    visible.forEach((p) => {
+      p.el.style.display = '';
+      productsGrid && productsGrid.appendChild(p.el);
+    });
     resultsInfo.textContent = visible.length ? `Mostrando ${visible.length} producto(s) disponibles.` : 'No hay resultados con los filtros actuales.';
   };
 
@@ -462,6 +570,7 @@ $renderIconoRed = static function (string $id): string {
         <div>
           <h4>${item.name}</h4>
           <p>${money(item.price)} c/u</p>
+          <div class="cart-item__desc">${resumenTexto(item.description || 'Producto seleccionado')}</div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
             <span>${item.quantity}</span>
@@ -485,7 +594,7 @@ $renderIconoRed = static function (string $id): string {
     if (!product) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
-    else cart.push({ id: product.id, name: product.name, image: product.image, price: product.price, quantity: 1 });
+    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, quantity: 1 });
     renderCart();
     openCart();
   };
@@ -507,6 +616,7 @@ $renderIconoRed = static function (string $id): string {
     addBtn && addBtn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(Number(card.dataset.id || 0)); });
     const openDetail = () => {
       productoSeleccionado = products.find((p) => p.id === Number(card.dataset.id || 0)) || null;
+      const modalProductoDetalle = getModalProductoDetalle();
       if (!productoSeleccionado || !modalProductoDetalle) return;
       detalleNombre.textContent = productoSeleccionado.name;
       detalleDescripcion.textContent = productoSeleccionado.description;
@@ -516,13 +626,13 @@ $renderIconoRed = static function (string $id): string {
       detalleImagen.alt = productoSeleccionado.name;
       modalProductoDetalle.show();
     };
-    card.addEventListener('click', openDetail);
     viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetail(); });
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
     addToCart(Number(productoSeleccionado.id));
+    const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
 
@@ -550,7 +660,10 @@ $renderIconoRed = static function (string $id): string {
   $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; applyFilters(); });
   $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; applyFilters(); });
   $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; applyFilters(); });
-  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', () => { onlyOffers = true; applyFilters(); });
+  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; applyFilters(); });
+  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; applyFilters(); });
+  const featuredTop = $('#showFeaturedBtnTop'); if (featuredTop) featuredTop.addEventListener('click', (e) => { e.preventDefault(); sortFilter.value = 'featured'; onlyOffers = false; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
+  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', (e) => { e.preventDefault(); onlyOffers = true; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
   const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; applyFilters(); });
 
   searchInput.addEventListener('input', applyFilters);
