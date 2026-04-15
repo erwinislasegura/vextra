@@ -101,7 +101,7 @@ $renderIconoRed = static function (string $id): string {
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
-  .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--primary)}
+  .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff}
   .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
   .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
   .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(2){opacity:0}
@@ -212,13 +212,16 @@ $renderIconoRed = static function (string $id): string {
     .sidebar{padding:12px}
     .sidebar h3{font-size:16px}
     .category-list,.feature-list{display:flex;gap:8px;overflow:auto;max-height:none;padding:4px 2px 2px;margin-top:8px}
-    .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff}
+    .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff;font-size:13px;font-weight:500}
     .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
   @media (max-width:720px){
     .products-grid{grid-template-columns:1fr}
-    .feature-list{display:grid;grid-template-columns:1fr}
+    .category-list,.feature-list{display:grid;grid-template-columns:1fr;gap:8px;overflow:visible;padding:0;margin-top:10px}
+    .sidebar{padding:10px}
+    .sidebar h3{font-size:15px;padding:8px 10px}
+    .category-list button,.feature-list button{width:100%;border:1px solid #cfd8e6;border-radius:999px;padding:9px 12px;font-size:12.5px;font-weight:500;line-height:1.2}
     .catalogo-topbar__content,.section-head{display:flex;flex-direction:column;align-items:flex-start}
     .catalogo-navbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
     .catalogo-logo{justify-content:flex-start}
@@ -232,8 +235,9 @@ $renderIconoRed = static function (string $id): string {
     .search-box input,.search-box button{font-size:13px}
     .search-box button{padding:10px 14px}
     .nav-actions{justify-content:space-between;gap:6px}
-    .menu-link{flex:1;text-align:center;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:#fff}
-    .catalogo-navbar .btn-primary-custom{width:100%}
+    .menu-link{flex:1;text-align:center;padding:8px 8px;border:1px solid color-mix(in srgb,var(--primary) 25%,#fff);border-radius:10px;background:#fff;color:var(--primary);font-size:13px;font-weight:500}
+    .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center;font-size:14px;font-weight:600}
+    .catalogo-header.is-mobile-open .catalogo-navbar > .btn-primary-custom{width:100%}
     .filters-wrap{padding:12px}
     .field input,.field select{padding:11px 12px}
     .slide{padding:24px}
