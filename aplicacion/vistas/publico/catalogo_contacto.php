@@ -47,12 +47,24 @@ if ($mapaUrl === '') {
     }
     $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed';
 }
-if (!str_contains($mapaUrl, 'output=embed') && str_contains($mapaUrl, 'maps.google.')) {
-    if (str_contains($mapaUrl, '/maps?q=')) {
+if (!str_contains($mapaUrl, 'output=embed') && (str_contains($mapaUrl, 'maps.google.') || str_contains($mapaUrl, 'google.com/maps'))) {
+    $partesMapa = parse_url($mapaUrl);
+    $queryMapa = [];
+    if (isset($partesMapa['query'])) {
+        parse_str((string) $partesMapa['query'], $queryMapa);
+    }
+    if (isset($queryMapa['q']) && trim((string) $queryMapa['q']) !== '') {
+        $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode(trim((string) $queryMapa['q'])) . '&output=embed';
+    } elseif (isset($queryMapa['ll']) && trim((string) $queryMapa['ll']) !== '') {
+        $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode(trim((string) $queryMapa['ll'])) . '&output=embed';
+    } elseif (str_contains($mapaUrl, '/maps?q=')) {
         $mapaUrl .= (str_contains($mapaUrl, '?') ? '&' : '?') . 'output=embed';
     } elseif (str_contains($mapaUrl, '/place/')) {
-        $q = rawurlencode((string) preg_replace('#^.*?/place/#', '', $mapaUrl));
+        $ruta = (string) ($partesMapa['path'] ?? '');
+        $q = rawurlencode((string) preg_replace('#^.*?/place/#', '', $ruta));
         $mapaUrl = 'https://maps.google.com/maps?q=' . $q . '&output=embed';
+    } elseif (preg_match('/@(-?[0-9]+\.[0-9]+),(-?[0-9]+\.[0-9]+)/', $mapaUrl, $coordenadas) === 1) {
+        $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($coordenadas[1] . ',' . $coordenadas[2]) . '&output=embed';
     }
 }
 
@@ -108,38 +120,44 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain}
+  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
+  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .nav-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+  .nav-actions{display:flex;gap:10px;align-items:center}
   .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
   .menu-link:hover{color:var(--accent)}
-  .btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
+  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
+  .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
   .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
 
-  .contact-layout{padding:18px 0 24px}
-  .contact-card{background:#f8fafc;border:1px solid #d7dee9;border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .contact-layout{padding:20px 0 18px}
+  .contact-card{background:#fff;border:1px solid #d7dee9;border-radius:18px;box-shadow:0 6px 20px rgba(15,23,42,.08);padding:26px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px}
   .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:14px;color:var(--primary);margin-bottom:6px}
-  .contact-title{font-size:32px;line-height:1.15;margin-bottom:10px;color:#1f2937;font-weight:700}
-  .contact-desc{font-size:14px;line-height:1.7;color:#596780}
+  .contact-title{font-size:44px;line-height:1.1;margin-bottom:14px;color:#1f2937;font-weight:700}
+  .contact-desc{font-size:16px;line-height:1.7;color:#596780;max-width:560px}
   .contact-follow{margin-top:20px}.contact-follow h4{font-size:16px;margin-bottom:10px;color:#243447}
-  .contact-icons{display:flex;gap:10px}.contact-icons a{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff}
+  .contact-icons{display:flex;gap:10px;flex-wrap:wrap}
+  .contact-icons a{width:40px;height:40px;border:1px solid #cfd8e6;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;transition:all .2s ease}
+  .contact-icons a svg{width:21px;height:21px;fill:currentColor}
+  .contact-icons a:hover{background:var(--primary);border-color:var(--primary);color:#fff}
 
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .form-group label{display:block;font-weight:700;color:#2f3f57;margin-bottom:5px;font-size:13px}
-  .form-group input,.form-group textarea{width:100%;border:1px solid #c6d0de;padding:10px 12px;font-size:14px;border-radius:8px;background:#fff}
-  .form-group textarea{min-height:150px;resize:vertical}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}
+  .form-group label{display:block;font-weight:700;color:#2f3f57;margin-bottom:6px;font-size:13px}
+  .form-group input,.form-group textarea{width:100%;border:1px solid #b7c3d6;padding:8px 12px;font-size:14px;border-radius:8px;background:#fff;line-height:1.35}
+  .form-group input{min-height:40px}
+  .form-group textarea{min-height:132px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
-  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.2px}
+  .btn-submit{margin-top:8px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:22px;font-weight:700;letter-spacing:.2px}
 
-  .map-wrap{margin:14px 0 0}
+  .map-wrap{margin:4px 0 0;padding-bottom:18px}
   .map-card{background:#fff;border:1px solid #d7dee9;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.06)}
-  .map-wrap iframe{width:100%;height:300px;border:0;display:block}
+  .map-wrap iframe{width:100%;height:320px;border:0;display:block}
 
   .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:18px}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
@@ -150,7 +168,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
-  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:28px}.nav-actions{justify-content:flex-start}}
+  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:32px}.nav-actions{justify-content:flex-start}}
 </style>
 
 <div class="catalogo-page">
