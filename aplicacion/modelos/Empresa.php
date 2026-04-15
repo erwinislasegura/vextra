@@ -377,6 +377,7 @@ class Empresa extends Modelo
             'direccion' => $data['direccion'],
             'ciudad' => $data['ciudad'],
             'pais' => $data['pais'],
+            'descripcion' => $data['descripcion'],
             'logo' => $data['logo'],
             'imap_host' => $data['imap_host'],
             'imap_port' => $data['imap_port'],
