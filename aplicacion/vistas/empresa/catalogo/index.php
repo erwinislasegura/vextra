@@ -106,6 +106,112 @@
             </div>
           </div>
         </div>
+        <div class="col-lg-6">
+          <div class="border rounded-3 p-3 h-100">
+            <h3 class="h6 mb-2">Vista "Nosotros"</h3>
+            <p class="small text-muted mb-3">Estos datos se verán en la sección pública "Nosotros" del catálogo.</p>
+            <div class="mb-2">
+              <label class="form-label">Título</label>
+              <input type="text" name="catalogo_nosotros_titulo" maxlength="120" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_nosotros_titulo'] ?? '')) ?>" placeholder="Ejemplo: Nosotros">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Descripción</label>
+              <textarea name="catalogo_nosotros_descripcion" maxlength="900" rows="5" class="form-control" placeholder="Describe tu empresa, experiencia y propuesta de valor."><?= e((string) ($sliderCatalogo['catalogo_nosotros_descripcion'] ?? '')) ?></textarea>
+            </div>
+            <label class="form-label">Foto de nosotros (JPG, PNG o WEBP)</label>
+            <input type="file" name="catalogo_nosotros_imagen" accept="image/jpeg,image/png,image/webp" class="form-control">
+            <div class="form-text">Recomendado: imagen horizontal 1200x800 px.</div>
+            <?php if (!empty($sliderCatalogo['catalogo_nosotros_imagen'])): ?>
+              <div class="mt-3">
+                <img src="<?= e(url('/catalogo/' . $empresaId . '/nosotros/imagen?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())))) ?>" alt="Imagen nosotros" class="img-fluid rounded border" style="max-height:140px;width:auto;object-fit:cover;background:#f8fafc">
+                <div class="form-check mt-2">
+                  <input class="form-check-input" type="checkbox" name="eliminar_catalogo_nosotros_imagen" id="eliminar_catalogo_nosotros_imagen" value="1">
+                  <label class="form-check-label" for="eliminar_catalogo_nosotros_imagen">Eliminar imagen actual</label>
+                </div>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="border rounded-3 p-3 h-100">
+            <h3 class="h6 mb-2">Vista "Contacto"</h3>
+            <p class="small text-muted mb-3">Completa información clave para que tus clientes te contacten.</p>
+            <div class="mb-2">
+              <label class="form-label">Título</label>
+              <input type="text" name="catalogo_contacto_titulo" maxlength="120" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_titulo'] ?? '')) ?>" placeholder="Ejemplo: Contacto">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Descripción</label>
+              <textarea name="catalogo_contacto_descripcion" maxlength="900" rows="5" class="form-control" placeholder="Mensaje breve para invitar a contactar a tu equipo."><?= e((string) ($sliderCatalogo['catalogo_contacto_descripcion'] ?? '')) ?></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Título del bloque formulario</label>
+              <input type="text" name="catalogo_contacto_form_titulo" maxlength="160" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_titulo'] ?? '')) ?>" placeholder="Nos pondremos en contacto a la brevedad">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Subtítulo formulario</label>
+              <input type="text" name="catalogo_contacto_form_subtitulo" maxlength="160" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_subtitulo'] ?? '')) ?>" placeholder="Enviar un mensaje">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Texto de bajada formulario</label>
+              <textarea name="catalogo_contacto_form_bajada" maxlength="1200" rows="4" class="form-control" placeholder="Texto descriptivo del formulario y cómo responderás."><?= e((string) ($sliderCatalogo['catalogo_contacto_form_bajada'] ?? '')) ?></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Correo destino (donde llegan los mensajes)</label>
+              <input type="email" name="catalogo_contacto_form_correo_destino" maxlength="180" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_correo_destino'] ?? '')) ?>" placeholder="contacto@tuempresa.cl">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Texto botón envío</label>
+              <input type="text" name="catalogo_contacto_form_texto_boton" maxlength="60" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_texto_boton'] ?? '')) ?>" placeholder="Enviar mensaje">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">URL mapa (iframe o enlace)</label>
+              <input type="url" name="catalogo_contacto_mapa_url" maxlength="500" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_mapa_url'] ?? '')) ?>" placeholder="https://maps.google.com/maps?q=Santiago&output=embed">
+            </div>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <label class="form-label">Horario de atención</label>
+                <input type="text" name="catalogo_contacto_horario" maxlength="180" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_horario'] ?? '')) ?>" placeholder="Lun a Vie de 09:00 a 18:00">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">WhatsApp</label>
+                <input type="text" name="catalogo_contacto_whatsapp" maxlength="60" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_whatsapp'] ?? '')) ?>" placeholder="+56 9 1234 5678">
+              </div>
+            </div>
+            <hr>
+            <label class="form-label">Campos del formulario de contacto (activar/desactivar)</label>
+            <?php
+              $camposConfigurados = json_decode((string) ($sliderCatalogo['catalogo_contacto_form_campos'] ?? ''), true);
+              if (!is_array($camposConfigurados) || $camposConfigurados === []) {
+                $camposConfigurados = ['nombre', 'telefono', 'email', 'asunto', 'mensaje'];
+              }
+              $catalogoCamposDisponibles = [
+                'nombre' => 'Nombre',
+                'telefono' => 'Teléfono',
+                'email' => 'Email',
+                'asunto' => 'Asunto',
+                'mensaje' => 'Mensaje',
+                'empresa' => 'Empresa',
+                'whatsapp' => 'WhatsApp',
+                'ciudad' => 'Ciudad',
+                'direccion' => 'Dirección',
+                'cargo' => 'Cargo / Rol',
+              ];
+            ?>
+            <div class="row g-2">
+              <?php foreach ($catalogoCamposDisponibles as $campoClave => $campoLabel): ?>
+                <?php $checkedCampo = in_array($campoClave, $camposConfigurados, true) ? 'checked' : ''; ?>
+                <div class="col-md-6">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="catalogo_contacto_form_campos[]" value="<?= e($campoClave) ?>" id="campo_<?= e($campoClave) ?>" <?= $checkedCampo ?>>
+                    <label class="form-check-label" for="campo_<?= e($campoClave) ?>"><?= e($campoLabel) ?></label>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            <div class="form-text">Sugerencia: mantén activos Nombre, Email y Mensaje para asegurar respuestas.</div>
+          </div>
+        </div>
         <div class="col-12">
           <hr class="my-1">
           <h3 class="h6 mb-2">Slider destacado</h3>
