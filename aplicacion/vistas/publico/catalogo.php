@@ -1,5 +1,8 @@
 <?php
 $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
+$catalogoBaseUrl = url('/catalogo/' . (int) ($empresa['id'] ?? 0));
+$catalogoNosotrosUrl = $catalogoBaseUrl . '/nosotros';
+$catalogoContactoUrl = $catalogoBaseUrl . '/contacto';
 $resolverImagenProducto = static function (?string $ruta): string {
     $ruta = trim((string) $ruta);
     if ($ruta === '') {
@@ -62,7 +65,6 @@ $socialesTopbar = [
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
-
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -94,7 +96,7 @@ $renderIconoContacto = static function (string $tipo): string {
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;padding:4px 8px}
+  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
@@ -213,18 +215,14 @@ $renderIconoContacto = static function (string $tipo): string {
     <div class="catalogo-container catalogo-navbar">
       <a class="catalogo-logo" href="#catalogoProductos">
         <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
-        <div>
-          <?= e((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) ?>
-          <small>Catálogo profesional</small>
-        </div>
       </a>
       <div class="search-box">
         <input type="text" id="globalSearch" placeholder="Buscar productos, categorías o marcas...">
         <button type="button" id="searchBtn">Buscar</button>
       </div>
       <div class="nav-actions">
-        <a class="btn-outline text-decoration-none" href="#catalogoProductos">Nosotros</a>
-        <a class="btn-outline text-decoration-none" href="#contacto">Contacto</a>
+        <a class="btn-outline text-decoration-none" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+        <a class="btn-outline text-decoration-none" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
       </div>
       <button class="btn-primary-custom" type="button" id="openCartHeader">Ver carrito</button>
     </div>
@@ -361,7 +359,7 @@ $renderIconoContacto = static function (string $tipo): string {
     </div>
   </aside>
 
-  <footer class="footer" id="contacto">
+  <footer class="footer" id="footerCatalogo">
     <div class="catalogo-container footer-content">
       <div class="footer-brand footer-col">
         <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
@@ -371,8 +369,8 @@ $renderIconoContacto = static function (string $tipo): string {
         <h4>Accesos rápidos</h4>
         <nav class="footer-menu mt-2">
           <a href="#catalogoProductos">Inicio</a>
-          <a href="#catalogoProductos">Nosotros</a>
-          <a href="#contacto">Contacto</a>
+          <a href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+          <a href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
           <a href="#catalogoProductos" id="showFeaturedBtnTop">Productos destacados</a>
           <a href="#catalogoProductos" id="showOffersBtnTop">Ofertas</a>
         </nav>
