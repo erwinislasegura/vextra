@@ -1,5 +1,8 @@
 <?php
 $fmon = static fn(float $m): string => '$' . number_format($m, 0, ',', '.');
+$catalogoBaseUrl = url('/catalogo/' . (int) ($empresa['id'] ?? 0));
+$catalogoNosotrosUrl = $catalogoBaseUrl . '/nosotros';
+$catalogoContactoUrl = $catalogoBaseUrl . '/contacto';
 $resolverImagenProducto = static function (?string $ruta): string {
     $ruta = trim((string) $ruta);
     if ($ruta === '') {
@@ -62,32 +65,6 @@ $socialesTopbar = [
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
-$nosotrosTitulo = trim((string) ($catalogoTopbar['nosotros_titulo'] ?? ''));
-if ($nosotrosTitulo === '') {
-    $nosotrosTitulo = 'Nosotros';
-}
-$nosotrosDescripcion = trim((string) ($catalogoTopbar['nosotros_descripcion'] ?? ''));
-if ($nosotrosDescripcion === '') {
-    $nosotrosDescripcion = trim((string) ($empresa['descripcion'] ?? ''));
-}
-if ($nosotrosDescripcion === '') {
-    $nosotrosDescripcion = 'Somos un equipo enfocado en entregar una experiencia de compra clara, rápida y confiable para cada cliente.';
-}
-$nosotrosImagen = (string) ($catalogoTopbar['nosotros_imagen'] ?? url('/img/placeholder-producto.svg'));
-$contactoTitulo = trim((string) ($catalogoTopbar['contacto_titulo'] ?? ''));
-if ($contactoTitulo === '') {
-    $contactoTitulo = 'Contacto';
-}
-$contactoDescripcion = trim((string) ($catalogoTopbar['contacto_descripcion'] ?? ''));
-if ($contactoDescripcion === '') {
-    $contactoDescripcion = 'Estamos disponibles para resolver dudas, cotizaciones y coordinación de entregas.';
-}
-$contactoHorario = trim((string) ($catalogoTopbar['contacto_horario'] ?? ''));
-if ($contactoHorario === '') {
-    $contactoHorario = 'Lunes a viernes de 09:00 a 18:00 hrs.';
-}
-$contactoWhatsapp = trim((string) ($catalogoTopbar['contacto_whatsapp'] ?? ''));
-
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -252,8 +229,8 @@ $renderIconoContacto = static function (string $tipo): string {
         <button type="button" id="searchBtn">Buscar</button>
       </div>
       <div class="nav-actions">
-        <a class="btn-outline text-decoration-none" href="#nosotros">Nosotros</a>
-        <a class="btn-outline text-decoration-none" href="#contacto">Contacto</a>
+        <a class="btn-outline text-decoration-none" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+        <a class="btn-outline text-decoration-none" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
       </div>
       <button class="btn-primary-custom" type="button" id="openCartHeader">Ver carrito</button>
     </div>
@@ -423,8 +400,8 @@ $renderIconoContacto = static function (string $tipo): string {
         <h4>Accesos rápidos</h4>
         <nav class="footer-menu mt-2">
           <a href="#catalogoProductos">Inicio</a>
-          <a href="#nosotros">Nosotros</a>
-          <a href="#contacto">Contacto</a>
+          <a href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+          <a href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
           <a href="#catalogoProductos" id="showFeaturedBtnTop">Productos destacados</a>
           <a href="#catalogoProductos" id="showOffersBtnTop">Ofertas</a>
         </nav>

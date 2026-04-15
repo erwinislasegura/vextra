@@ -367,49 +367,58 @@ class PublicoControlador extends Controlador
 
     public function catalogoEnLinea(int $empresaId): void
     {
-        $empresa = (new Empresa())->buscar($empresaId);
-        if (!$empresa || (string) ($empresa['estado'] ?? '') === 'cancelada') {
+        $contexto = $this->obtenerContextoCatalogo($empresaId);
+        if ($contexto === null) {
             http_response_code(404);
             require __DIR__ . '/../../vistas/errores/404.php';
             return;
         }
+        $empresa = $contexto['empresa'];
+        $logoCatalogo = $contexto['logoCatalogo'];
+        $sliderCatalogo = $contexto['sliderCatalogo'];
+        $catalogoTopbar = $contexto['catalogoTopbar'];
 
         $buscar = trim((string) ($_GET['q'] ?? ''));
         $categoriaId = (int) ($_GET['categoria'] ?? 0);
         $productos = (new Producto())->listarParaCatalogoPublico($empresaId, $buscar, $categoriaId > 0 ? $categoriaId : null);
         $categorias = (new GestionComercial())->listarTablaEmpresa('categorias_productos', $empresaId, '', 300);
-        $logoCatalogo = url('/catalogo/' . $empresaId . '/logo?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
-        $sliderCatalogo = [
-            'imagen' => url('/catalogo/' . $empresaId . '/slider/principal?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
-            'imagen_secundaria' => url('/catalogo/' . $empresaId . '/slider/secundaria?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
-            'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
-            'bajada' => trim((string) ($empresa['slider_bajada'] ?? '')),
-            'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
-            'boton_url' => trim((string) ($empresa['slider_boton_url'] ?? '')),
-        ];
-        $catalogoTopbar = [
-            'texto' => trim((string) ($empresa['catalogo_topbar_texto'] ?? '')),
-            'color_primario' => trim((string) ($empresa['catalogo_color_primario'] ?? '')),
-            'color_acento' => trim((string) ($empresa['catalogo_color_acento'] ?? '')),
-            'columnas_productos' => (int) ($empresa['catalogo_columnas_productos'] ?? 3),
-            'nosotros_titulo' => trim((string) ($empresa['catalogo_nosotros_titulo'] ?? '')),
-            'nosotros_descripcion' => trim((string) ($empresa['catalogo_nosotros_descripcion'] ?? '')),
-            'contacto_titulo' => trim((string) ($empresa['catalogo_contacto_titulo'] ?? '')),
-            'contacto_descripcion' => trim((string) ($empresa['catalogo_contacto_descripcion'] ?? '')),
-            'contacto_horario' => trim((string) ($empresa['catalogo_contacto_horario'] ?? '')),
-            'contacto_whatsapp' => trim((string) ($empresa['catalogo_contacto_whatsapp'] ?? '')),
-            'sociales' => [
-                'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
-                'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),
-                'tiktok' => trim((string) ($empresa['catalogo_social_tiktok'] ?? '')),
-                'linkedin' => trim((string) ($empresa['catalogo_social_linkedin'] ?? '')),
-                'youtube' => trim((string) ($empresa['catalogo_social_youtube'] ?? '')),
-            ],
-        ];
-        $catalogoTopbar['nosotros_imagen'] = url('/catalogo/' . $empresaId . '/nosotros/imagen?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
 
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    public function catalogoNosotros(int $empresaId): void
+    {
+        $contexto = $this->obtenerContextoCatalogo($empresaId);
+        if ($contexto === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $empresa = $contexto['empresa'];
+        $logoCatalogo = $contexto['logoCatalogo'];
+        $catalogoTopbar = $contexto['catalogoTopbar'];
+        $ocultarNavbarPublico = true;
+
+        $this->vistaPublica('publico/catalogo_nosotros', compact('empresa', 'logoCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    public function catalogoContacto(int $empresaId): void
+    {
+        $contexto = $this->obtenerContextoCatalogo($empresaId);
+        if ($contexto === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $empresa = $contexto['empresa'];
+        $logoCatalogo = $contexto['logoCatalogo'];
+        $catalogoTopbar = $contexto['catalogoTopbar'];
+        $ocultarNavbarPublico = true;
+
+        $this->vistaPublica('publico/catalogo_contacto', compact('empresa', 'logoCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function logoCatalogoEmpresa(int $empresaId): void
@@ -605,6 +614,51 @@ class PublicoControlador extends Controlador
         $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    private function obtenerContextoCatalogo(int $empresaId): ?array
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa || (string) ($empresa['estado'] ?? '') === 'cancelada') {
+            return null;
+        }
+
+        $logoCatalogo = url('/catalogo/' . $empresaId . '/logo?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
+        $sliderCatalogo = [
+            'imagen' => url('/catalogo/' . $empresaId . '/slider/principal?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
+            'imagen_secundaria' => url('/catalogo/' . $empresaId . '/slider/secundaria?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
+            'titulo' => trim((string) ($empresa['slider_titulo'] ?? '')),
+            'bajada' => trim((string) ($empresa['slider_bajada'] ?? '')),
+            'boton_texto' => trim((string) ($empresa['slider_boton_texto'] ?? '')),
+            'boton_url' => trim((string) ($empresa['slider_boton_url'] ?? '')),
+        ];
+        $catalogoTopbar = [
+            'texto' => trim((string) ($empresa['catalogo_topbar_texto'] ?? '')),
+            'color_primario' => trim((string) ($empresa['catalogo_color_primario'] ?? '')),
+            'color_acento' => trim((string) ($empresa['catalogo_color_acento'] ?? '')),
+            'columnas_productos' => (int) ($empresa['catalogo_columnas_productos'] ?? 3),
+            'nosotros_titulo' => trim((string) ($empresa['catalogo_nosotros_titulo'] ?? '')),
+            'nosotros_descripcion' => trim((string) ($empresa['catalogo_nosotros_descripcion'] ?? '')),
+            'contacto_titulo' => trim((string) ($empresa['catalogo_contacto_titulo'] ?? '')),
+            'contacto_descripcion' => trim((string) ($empresa['catalogo_contacto_descripcion'] ?? '')),
+            'contacto_horario' => trim((string) ($empresa['catalogo_contacto_horario'] ?? '')),
+            'contacto_whatsapp' => trim((string) ($empresa['catalogo_contacto_whatsapp'] ?? '')),
+            'sociales' => [
+                'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
+                'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),
+                'tiktok' => trim((string) ($empresa['catalogo_social_tiktok'] ?? '')),
+                'linkedin' => trim((string) ($empresa['catalogo_social_linkedin'] ?? '')),
+                'youtube' => trim((string) ($empresa['catalogo_social_youtube'] ?? '')),
+            ],
+            'nosotros_imagen' => url('/catalogo/' . $empresaId . '/nosotros/imagen?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
+        ];
+
+        return [
+            'empresa' => $empresa,
+            'logoCatalogo' => $logoCatalogo,
+            'sliderCatalogo' => $sliderCatalogo,
+            'catalogoTopbar' => $catalogoTopbar,
+        ];
     }
 
     public function imagenProducto(int $id): void
