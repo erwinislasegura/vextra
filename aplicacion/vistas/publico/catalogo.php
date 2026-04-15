@@ -119,7 +119,7 @@ $renderIconoRed = static function (string $id): string {
   .slide-content{position:relative;z-index:2;max-width:min(720px,92%)}
   .slide.active{opacity:1;visibility:visible;transform:scale(1)}
   .slide h2{font-size:52px;line-height:1.1;margin-bottom:14px;font-weight:800}
-  .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
+  .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px;font-size:18px;font-weight:500;line-height:1.5}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
@@ -201,13 +201,19 @@ $renderIconoRed = static function (string $id): string {
     .search-box{width:100%}
     .nav-actions{justify-content:flex-start}
     .catalogo-navbar .btn-primary-custom{justify-content:center}
+    .slide h2{font-size:40px;font-weight:700}
+    .slide p{font-size:16px;font-weight:400;max-width:100%}
     .sidebar{position:static}
+    .sidebar{padding:12px}
+    .sidebar h3{font-size:16px}
+    .category-list,.feature-list{display:flex;gap:8px;overflow:auto;max-height:none;padding:4px 2px 2px;margin-top:8px}
+    .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff}
     .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
   @media (max-width:720px){
     .products-grid{grid-template-columns:1fr}
-    .feature-list{grid-template-columns:1fr}
+    .feature-list{display:grid;grid-template-columns:1fr}
     .catalogo-topbar__content,.section-head{display:flex;flex-direction:column;align-items:flex-start}
     .catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}
     .catalogo-logo{justify-content:center}
@@ -221,7 +227,8 @@ $renderIconoRed = static function (string $id): string {
     .filters-wrap{padding:12px}
     .field input,.field select{padding:11px 12px}
     .slide{padding:24px}
-    .slide h2{font-size:32px}
+    .slide h2{font-size:27px;font-weight:600}
+    .slide p{font-size:14px;font-weight:400;line-height:1.45}
     .slide-actions .btn-primary-custom{width:100%;min-width:0}
     .footer-content{grid-template-columns:1fr}
     .footer-bottom__content{flex-direction:column;align-items:flex-start}

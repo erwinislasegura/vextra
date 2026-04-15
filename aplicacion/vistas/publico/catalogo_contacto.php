@@ -113,7 +113,7 @@ $renderIconoRed = static function (string $id): string {
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
-  .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
+  .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:600;margin:0}
 
   .contact-layout{padding:20px 0 18px}
   .contact-card{background:#fff;border:1px solid #d7dee9;border-radius:18px;box-shadow:0 6px 20px rgba(15,23,42,.08);padding:26px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px;align-items:stretch}
@@ -166,7 +166,8 @@ $renderIconoRed = static function (string $id): string {
     .catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}
     .catalogo-navbar{gap:12px}
     .search-box{width:100%}
-    .contact-title{font-size:32px}
+    .contact-title{font-size:30px;font-weight:500}
+    .contact-hero h1{font-size:27px}
     .nav-actions{justify-content:flex-start}
   }
   @media (max-width:720px){
@@ -181,11 +182,11 @@ $renderIconoRed = static function (string $id): string {
     .menu-link{flex:1;text-align:center;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:#fff}
     .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center}
     .contact-hero{min-height:130px;padding:16px}
-    .contact-hero h1{font-size:26px}
+    .contact-hero h1{font-size:22px;font-weight:600}
     .contact-layout{padding-top:14px}
     .contact-card{padding:16px;gap:16px}
-    .contact-title{font-size:24px}
-    .contact-desc{font-size:15px;line-height:1.6}
+    .contact-title{font-size:22px;font-weight:500}
+    .contact-desc{font-size:14px;line-height:1.55}
     .form-group input,.form-group textarea{font-size:13px}
     .btn-submit{width:100%;padding:11px 16px}
     .map-wrap iframe{height:260px}

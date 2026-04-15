@@ -86,7 +86,7 @@ $renderIconoRed = static function (string $id): string {
   .hero-nosotros{margin-top:12px;border-radius:20px;min-height:190px;display:flex;align-items:flex-end;padding:24px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:0 18px 34px rgba(15,23,42,.16)}
   .hero-nosotros::before{content:"";position:absolute;inset:0;background:linear-gradient(95deg,color-mix(in srgb,var(--primary) 82%,#000 18%),rgba(15,23,42,.35))}
   .hero-nosotros::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 28%,color-mix(in srgb,var(--accent) 35%,transparent),transparent 40%)}
-  .hero-nosotros h1{position:relative;color:#fff;font-size:34px;font-weight:800;letter-spacing:.2px;margin:0}
+  .hero-nosotros h1{position:relative;color:#fff;font-size:34px;font-weight:700;letter-spacing:.2px;margin:0}
   .nosotros-wrap{padding:28px 0 46px}
   .nosotros-card{padding:22px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:34px;align-items:center}
   .nosotros-card img{width:100%;max-height:500px;object-fit:cover;border-radius:14px;background:#f8fafc;box-shadow:0 12px 22px rgba(15,23,42,.12)}
@@ -127,7 +127,7 @@ $renderIconoRed = static function (string $id): string {
     .search-box{width:100%}
     .nosotros-card{gap:20px}
     .hero-nosotros{min-height:170px}
-    .hero-nosotros h1{font-size:30px}
+    .hero-nosotros h1{font-size:28px;font-weight:600}
     .nosotros-texto h2{font-size:22px}
     .nosotros-extra h3{font-size:20px}
   }
@@ -143,7 +143,7 @@ $renderIconoRed = static function (string $id): string {
     .menu-link{flex:1;text-align:center;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:#fff}
     .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center}
     .hero-nosotros{min-height:150px;padding:18px}
-    .hero-nosotros h1{font-size:26px}
+    .hero-nosotros h1{font-size:22px;font-weight:600}
     .nosotros-wrap{padding:18px 0 30px}
     .nosotros-card,.nosotros-extra{padding:16px}
     .nosotros-texto p,.nosotros-extra p{font-size:15px;line-height:1.65;text-align:left}
