@@ -449,12 +449,26 @@ class GestionComercialControlador extends Controlador
         if ($nuevaImagenSecundaria !== null) {
             $sliderImagenSecundaria = $nuevaImagenSecundaria;
         }
+        $nosotrosImagen = (string) ($actual['catalogo_nosotros_imagen'] ?? '');
+        if (isset($_POST['eliminar_catalogo_nosotros_imagen'])) {
+            $nosotrosImagen = '';
+        }
+        $nuevaImagenNosotros = $this->guardarImagenSliderCatalogo($empresaId, 'catalogo_nosotros_imagen', 'de nosotros');
+        if ($nuevaImagenNosotros !== null) {
+            $nosotrosImagen = $nuevaImagenNosotros;
+        }
 
         $sliderTitulo = trim((string) ($_POST['slider_titulo'] ?? ''));
         $sliderBajada = trim((string) ($_POST['slider_bajada'] ?? ''));
         $sliderBotonTexto = trim((string) ($_POST['slider_boton_texto'] ?? ''));
         $sliderBotonUrl = trim((string) ($_POST['slider_boton_url'] ?? ''));
         $topbarTexto = trim((string) ($_POST['catalogo_topbar_texto'] ?? ''));
+        $nosotrosTitulo = trim((string) ($_POST['catalogo_nosotros_titulo'] ?? ''));
+        $nosotrosDescripcion = trim((string) ($_POST['catalogo_nosotros_descripcion'] ?? ''));
+        $contactoTitulo = trim((string) ($_POST['catalogo_contacto_titulo'] ?? ''));
+        $contactoDescripcion = trim((string) ($_POST['catalogo_contacto_descripcion'] ?? ''));
+        $contactoHorario = trim((string) ($_POST['catalogo_contacto_horario'] ?? ''));
+        $contactoWhatsapp = trim((string) ($_POST['catalogo_contacto_whatsapp'] ?? ''));
         $sociales = [
             'catalogo_social_facebook' => trim((string) ($_POST['catalogo_social_facebook'] ?? '')),
             'catalogo_social_instagram' => trim((string) ($_POST['catalogo_social_instagram'] ?? '')),
@@ -495,11 +509,18 @@ class GestionComercialControlador extends Controlador
         $empresaModelo->guardarConfiguracionCatalogoEnLinea($empresaId, [
             'slider_imagen' => $sliderImagen,
             'slider_imagen_secundaria' => $sliderImagenSecundaria,
+            'catalogo_nosotros_imagen' => $nosotrosImagen,
             'slider_titulo' => mb_substr($sliderTitulo, 0, 120),
             'slider_bajada' => mb_substr($sliderBajada, 0, 220),
             'slider_boton_texto' => mb_substr($sliderBotonTexto, 0, 60),
             'slider_boton_url' => mb_substr($sliderBotonUrl, 0, 255),
             'catalogo_topbar_texto' => mb_substr($topbarTexto, 0, 220),
+            'catalogo_nosotros_titulo' => mb_substr($nosotrosTitulo, 0, 120),
+            'catalogo_nosotros_descripcion' => mb_substr($nosotrosDescripcion, 0, 900),
+            'catalogo_contacto_titulo' => mb_substr($contactoTitulo, 0, 120),
+            'catalogo_contacto_descripcion' => mb_substr($contactoDescripcion, 0, 900),
+            'catalogo_contacto_horario' => mb_substr($contactoHorario, 0, 180),
+            'catalogo_contacto_whatsapp' => mb_substr($contactoWhatsapp, 0, 60),
             'catalogo_social_facebook' => mb_substr((string) $sociales['catalogo_social_facebook'], 0, 255),
             'catalogo_social_instagram' => mb_substr((string) $sociales['catalogo_social_instagram'], 0, 255),
             'catalogo_social_tiktok' => mb_substr((string) $sociales['catalogo_social_tiktok'], 0, 255),
