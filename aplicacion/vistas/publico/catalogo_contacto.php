@@ -107,12 +107,10 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:240px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo img{width:120px;height:60px;object-fit:contain}
-  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-  .search-box input{width:100%;padding:10px 14px;border:none;background:transparent}
-  .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .btn-outline,.btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none}
+  .nav-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+  .btn-outline,.btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
@@ -120,21 +118,23 @@ $renderIconoRed = static function (string $id): string {
   .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
 
   .contact-layout{padding:18px 0 24px}
-  .contact-card{background:#f8fafc;border:1px solid #d7dee9;border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:24px;display:grid;grid-template-columns:3fr 2fr;gap:24px}
+  .contact-card{background:#f8fafc;border:1px solid #d7dee9;border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
   .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:14px;color:var(--primary);margin-bottom:6px}
   .contact-title{font-size:32px;line-height:1.15;margin-bottom:10px;color:#1f2937;font-weight:700}
   .contact-desc{font-size:14px;line-height:1.7;color:#596780}
   .contact-follow{margin-top:20px}.contact-follow h4{font-size:16px;margin-bottom:10px;color:#243447}
   .contact-icons{display:flex;gap:10px}.contact-icons a{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff}
 
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .form-group label{display:block;font-weight:700;color:#2f3f57;margin-bottom:5px;font-size:13px}
   .form-group input,.form-group textarea{width:100%;border:1px solid #c6d0de;padding:10px 12px;font-size:14px;border-radius:8px;background:#fff}
-  .form-group textarea{min-height:190px;resize:vertical}
+  .form-group textarea{min-height:150px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
   .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.2px}
 
-  .map-wrap{margin:6px 0 0}.map-wrap iframe{width:100%;height:350px;border:0;display:block}
+  .map-wrap{margin:14px 0 0}
+  .map-card{background:#fff;border:1px solid #d7dee9;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.06)}
+  .map-wrap iframe{width:100%;height:300px;border:0;display:block}
 
   .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:18px}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
@@ -145,7 +145,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
-  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:28px}}
+  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:28px}.nav-actions{justify-content:flex-start}}
 </style>
 
 <div class="catalogo-page">
@@ -159,9 +159,11 @@ $renderIconoRed = static function (string $id): string {
   <header class="catalogo-header">
     <div class="catalogo-container catalogo-navbar">
       <a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a>
-      <div class="search-box"><input type="text" placeholder="Ir al catálogo para buscar productos..." disabled><button type="button" onclick="window.location.href='<?= e($catalogoBaseUrl) ?>'">Ir</button></div>
-      <a class="btn-outline" href="<?= e($catalogoBaseUrl) ?>">Catálogo</a>
-      <a class="btn-primary-custom" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+      <nav class="nav-actions" aria-label="Menú superior catálogo">
+        <a class="btn-outline" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
+        <a class="btn-outline" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+        <a class="btn-primary-custom" href="<?= e($catalogoBaseUrl . '/contacto') ?>">Contacto</a>
+      </nav>
     </div>
   </header>
 
@@ -193,7 +195,13 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </section>
 
-  <?php if ($mapaActivo): ?><div class="map-wrap"><iframe src="<?= e($mapaUrl) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe></div><?php endif; ?>
+  <?php if ($mapaActivo): ?>
+    <div class="catalogo-container map-wrap">
+      <div class="map-card">
+        <iframe src="<?= e($mapaUrl) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <footer class="footer">
     <div class="catalogo-container footer-content">
