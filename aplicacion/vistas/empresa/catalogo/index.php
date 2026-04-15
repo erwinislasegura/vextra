@@ -168,6 +168,11 @@
               <label class="form-label">URL mapa (iframe o enlace)</label>
               <input type="url" name="catalogo_contacto_mapa_url" maxlength="500" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_mapa_url'] ?? '')) ?>" placeholder="https://maps.google.com/maps?q=Santiago&output=embed">
             </div>
+            <div class="form-check form-switch mb-2">
+              <?php $mapaActivo = (string) ($sliderCatalogo['catalogo_contacto_mapa_activo'] ?? '1'); ?>
+              <input class="form-check-input" type="checkbox" role="switch" id="catalogo_contacto_mapa_activo" name="catalogo_contacto_mapa_activo" value="1" <?= $mapaActivo !== '0' ? 'checked' : '' ?>>
+              <label class="form-check-label" for="catalogo_contacto_mapa_activo">Mostrar mapa en la página de contacto</label>
+            </div>
             <div class="row g-2">
               <div class="col-md-6">
                 <label class="form-label">Horario de atención</label>

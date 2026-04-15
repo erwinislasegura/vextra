@@ -415,10 +415,11 @@ class PublicoControlador extends Controlador
 
         $empresa = $contexto['empresa'];
         $logoCatalogo = $contexto['logoCatalogo'];
+        $sliderCatalogo = $contexto['sliderCatalogo'];
         $catalogoTopbar = $contexto['catalogoTopbar'];
         $ocultarNavbarPublico = true;
 
-        $this->vistaPublica('publico/catalogo_contacto', compact('empresa', 'logoCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
+        $this->vistaPublica('publico/catalogo_contacto', compact('empresa', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function enviarContactoCatalogo(int $empresaId): void
@@ -741,6 +742,7 @@ class PublicoControlador extends Controlador
             'contacto_form_campos' => trim((string) ($empresa['catalogo_contacto_form_campos'] ?? '')),
             'contacto_form_texto_boton' => trim((string) ($empresa['catalogo_contacto_form_texto_boton'] ?? '')),
             'contacto_mapa_url' => trim((string) ($empresa['catalogo_contacto_mapa_url'] ?? '')),
+            'contacto_mapa_activo' => (string) ($empresa['catalogo_contacto_mapa_activo'] ?? '1'),
             'sociales' => [
                 'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
                 'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),

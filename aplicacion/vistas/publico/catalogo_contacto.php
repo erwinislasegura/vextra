@@ -9,7 +9,7 @@ if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorPrimario) !== 1) {
 }
 $colorAcento = trim((string) ($catalogoTopbar['color_acento'] ?? ''));
 if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorAcento) !== 1) {
-    $colorAcento = '#DAA520';
+    $colorAcento = '#5415B0';
 }
 $topbarTexto = trim((string) ($catalogoTopbar['texto'] ?? ''));
 if ($topbarTexto === '') {
@@ -25,12 +25,19 @@ if ($contactoSubtitulo === '') {
 }
 $contactoBajada = trim((string) ($catalogoTopbar['contacto_form_bajada'] ?? ''));
 if ($contactoBajada === '') {
-    $contactoBajada = 'Déjanos tu consulta y el equipo responderá a la brevedad dentro de nuestro horario de atención.';
+    $contactoBajada = 'Déjanos tu consulta y te responderemos dentro de nuestro horario de atención.';
 }
 $textoBoton = trim((string) ($catalogoTopbar['contacto_form_texto_boton'] ?? ''));
 if ($textoBoton === '') {
     $textoBoton = 'Enviar mensaje';
 }
+
+$sliderImagen = trim((string) ($sliderCatalogo['imagen'] ?? ''));
+if ($sliderImagen === '') {
+    $sliderImagen = url('/img/placeholder-producto.svg');
+}
+
+$mapaActivo = (string) ($catalogoTopbar['contacto_mapa_activo'] ?? '1') !== '0';
 $mapaUrl = trim((string) ($catalogoTopbar['contacto_mapa_url'] ?? ''));
 if ($mapaUrl === '') {
     $direccionMapa = trim((string) (($empresa['direccion'] ?? '') . ' ' . ($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')));
@@ -38,6 +45,14 @@ if ($mapaUrl === '') {
         $direccionMapa = 'Santiago Chile';
     }
     $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed';
+}
+if (!str_contains($mapaUrl, 'output=embed') && str_contains($mapaUrl, 'maps.google.')) {
+    if (str_contains($mapaUrl, '/maps?q=')) {
+        $mapaUrl .= (str_contains($mapaUrl, '?') ? '&' : '?') . 'output=embed';
+    } elseif (str_contains($mapaUrl, '/place/')) {
+        $q = rawurlencode((string) preg_replace('#^.*?/place/#', '', $mapaUrl));
+        $mapaUrl = 'https://maps.google.com/maps?q=' . $q . '&output=embed';
+    }
 }
 
 $camposPermitidos = [
@@ -57,15 +72,9 @@ if (!is_array($camposActivos) || $camposActivos === []) {
     $camposActivos = ['nombre', 'telefono', 'email', 'asunto', 'mensaje'];
 }
 $camposActivos = array_values(array_filter(array_map(static fn($campo): string => trim((string) $campo), $camposActivos), static fn($campo): bool => isset($camposPermitidos[$campo])));
-if (!in_array('nombre', $camposActivos, true)) {
-    array_unshift($camposActivos, 'nombre');
-}
-if (!in_array('email', $camposActivos, true)) {
-    $camposActivos[] = 'email';
-}
-if (!in_array('mensaje', $camposActivos, true)) {
-    $camposActivos[] = 'mensaje';
-}
+if (!in_array('nombre', $camposActivos, true)) $camposActivos[] = 'nombre';
+if (!in_array('email', $camposActivos, true)) $camposActivos[] = 'email';
+if (!in_array('mensaje', $camposActivos, true)) $camposActivos[] = 'mensaje';
 
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
@@ -87,45 +96,45 @@ $renderIconoRed = static function (string $id): string {
 };
 ?>
 <style>
-  :root{--primary:<?= e($colorPrimario) ?>;--accent:<?= e($colorAcento) ?>;--bg:#f1f1f1;--border:#d8d8d8;--text:#2d2525;--muted:#5d5d5d;--shadow:0 8px 20px rgba(0,0,0,.06)}
-  .catalogo-page{background:var(--bg);min-height:100vh}
+  :root{--primary:<?= e($colorPrimario) ?>;--accent:<?= e($colorAcento) ?>;--bg:#eef2f7;--border:#dbe3ee;--text:#0f172a;--muted:#64748b;--shadow:0 10px 25px rgba(15,23,42,.08)}
+  .catalogo-page{background:var(--bg)}
   .catalogo-container{width:min(1280px,92%);margin:0 auto}
   .catalogo-topbar{background:var(--primary);color:#fff;padding:8px 0;font-size:13px}
   .catalogo-topbar__content{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .catalogo-topbar__sociales{display:flex;align-items:center;gap:10px}
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
-  .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
+  .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   .catalogo-navbar{display:grid;grid-template-columns:240px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
+  .catalogo-logo img{width:120px;height:60px;object-fit:contain}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-  .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
-  .search-box button{background:var(--accent);color:#1b1b1b;padding:10px 18px;font-weight:700;border:none}
-  .btn-outline,.btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:#222;text-decoration:none}
-  .btn-primary-custom{background:var(--accent);border-color:var(--accent)}
+  .search-box input{width:100%;padding:10px 14px;border:none;background:transparent}
+  .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
+  .btn-outline,.btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none}
+  .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
 
-  .contact-layout{padding:34px 0 24px}
-  .contact-card{background:#fff;border:1px solid #e5e5e5;box-shadow:var(--shadow);padding:30px;display:grid;grid-template-columns:340px 1fr;gap:36px}
-  .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:18px;color:var(--accent);margin-bottom:10px}
-  .contact-title{font-size:56px;line-height:1.02;color:#352f2f;margin-bottom:18px;font-weight:700;letter-spacing:-.6px}
-  .contact-desc{color:var(--muted);font-size:18px;line-height:1.6}
-  .contact-desc strong{color:#3f3a3a}
-  .contact-follow{margin-top:38px}
-  .contact-follow h4{font-size:20px;margin-bottom:12px;color:#2d2525}
-  .contact-icons{display:flex;gap:8px}
-  .contact-icons a{width:44px;height:44px;border:1px solid #666;display:inline-flex;align-items:center;justify-content:center;color:#333;text-decoration:none;background:#fff}
+  .contact-hero{margin-top:10px;border-radius:18px;min-height:210px;display:flex;align-items:flex-end;padding:24px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
+  .contact-hero h1{position:relative;color:#fff;font-size:42px;font-weight:800;margin:0}
+
+  .contact-layout{padding:18px 0 24px}
+  .contact-card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:360px 1fr;gap:30px}
+  .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--primary);margin-bottom:8px}
+  .contact-title{font-size:56px;line-height:1.05;margin-bottom:12px;color:#312d34;font-weight:800}
+  .contact-desc{font-size:18px;line-height:1.6;color:var(--muted)}
+  .contact-follow{margin-top:24px}.contact-follow h4{font-size:20px;margin-bottom:10px}
+  .contact-icons{display:flex;gap:10px}.contact-icons a{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff}
 
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .form-group label{display:block;font-weight:700;color:#2f3c4a;margin-bottom:4px}
-  .form-group input,.form-group textarea{width:100%;border:1px solid #d8d8d8;padding:12px 14px;font-size:16px;background:#fff;color:#333}
-  .form-group textarea{min-height:180px;resize:vertical}
+  .form-group label{display:block;font-weight:700;color:#334155;margin-bottom:5px}
+  .form-group input,.form-group textarea{width:100%;border:1px solid var(--border);padding:12px 14px;font-size:16px;border-radius:8px;background:#fff}
+  .form-group textarea{min-height:190px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
-  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#111;padding:14px 30px;font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:14px 30px;border-radius:10px;font-size:20px;font-weight:800;text-transform:uppercase}
 
-  .map-wrap{margin:0;width:100%}
-  .map-wrap iframe{display:block;width:100%;height:420px;border:0}
+  .map-wrap{margin:6px 0 0}.map-wrap iframe{width:100%;height:350px;border:0;display:block}
 
-  .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),#5a2fb8)}
+  .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:18px}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
   .footer-brand img{width:128px;height:60px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
@@ -134,21 +143,14 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
-
-  @media (max-width:1100px){.catalogo-navbar,.contact-card,.footer-content{grid-template-columns:1fr}.contact-title{font-size:42px}}
+  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:42px}}
 </style>
 
 <div class="catalogo-page">
   <div class="catalogo-topbar">
     <div class="catalogo-container catalogo-topbar__content">
       <div><?= e($topbarTexto) ?></div>
-      <?php if ($socialesTopbar !== []): ?>
-        <div class="catalogo-topbar__sociales">
-          <?php foreach ($socialesTopbar as $red): ?>
-            <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
+      <?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?>
     </div>
   </div>
 
@@ -161,39 +163,25 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </header>
 
+  <section class="catalogo-container"><div class="contact-hero" style="background-image:url('<?= e($sliderImagen) ?>')"><h1>Contacto</h1></div></section>
+
   <section class="contact-layout">
     <div class="catalogo-container contact-card">
       <div>
         <div class="contact-subtitle"><?= e($contactoSubtitulo) ?></div>
-        <h1 class="contact-title"><?= e($contactoTitulo) ?></h1>
+        <h2 class="contact-title"><?= e($contactoTitulo) ?></h2>
         <p class="contact-desc"><?= nl2br(e($contactoBajada)) ?></p>
-
-        <?php if ($socialesTopbar !== []): ?>
-          <div class="contact-follow">
-            <h4>Síguenos:</h4>
-            <div class="contact-icons">
-              <?php foreach ($socialesTopbar as $red): ?>
-                <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) ($red['label'] ?? 'Red social')) ?>"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a>
-              <?php endforeach; ?>
-            </div>
-          </div>
-        <?php endif; ?>
+        <?php if ($socialesTopbar !== []): ?><div class="contact-follow"><h4>Síguenos:</h4><div class="contact-icons"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) ($red['label'] ?? 'Red social')) ?>"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div></div><?php endif; ?>
       </div>
-
       <div>
         <form method="POST" action="<?= e($accionFormulario) ?>">
           <?= csrf_campo() ?>
           <div class="form-grid">
-            <?php foreach ($camposActivos as $campoClave): ?>
-              <?php $cfg = $camposPermitidos[$campoClave] ?? null; if ($cfg === null) { continue; } ?>
-              <?php $esTextarea = $cfg['type'] === 'textarea'; ?>
+            <?php foreach ($camposActivos as $campoClave): $cfg = $camposPermitidos[$campoClave] ?? null; if ($cfg === null) continue; $esTextarea = $cfg['type'] === 'textarea'; ?>
               <div class="form-group <?= $esTextarea ? 'full' : '' ?>">
-                <label for="campo_<?= e($campoClave) ?>"><?= e((string) $cfg['label']) ?></label>
-                <?php if ($esTextarea): ?>
-                  <textarea id="campo_<?= e($campoClave) ?>" name="<?= e($campoClave) ?>" placeholder="<?= e((string) $cfg['placeholder']) ?>" <?= !empty($cfg['required']) ? 'required' : '' ?>></textarea>
-                <?php else: ?>
-                  <input id="campo_<?= e($campoClave) ?>" type="<?= e((string) $cfg['type']) ?>" name="<?= e($campoClave) ?>" placeholder="<?= e((string) $cfg['placeholder']) ?>" <?= !empty($cfg['required']) ? 'required' : '' ?>>
-                <?php endif; ?>
+                <label for="campo_<?= e($campoClave) ?>"><?= e((string) $cfg['label']) ?><?= !empty($cfg['required']) ? ' *' : '' ?></label>
+                <?php if ($esTextarea): ?><textarea id="campo_<?= e($campoClave) ?>" name="<?= e($campoClave) ?>" placeholder="<?= e((string) $cfg['placeholder']) ?>" <?= !empty($cfg['required']) ? 'required' : '' ?>></textarea>
+                <?php else: ?><input id="campo_<?= e($campoClave) ?>" type="<?= e((string) $cfg['type']) ?>" name="<?= e($campoClave) ?>" placeholder="<?= e((string) $cfg['placeholder']) ?>" <?= !empty($cfg['required']) ? 'required' : '' ?>><?php endif; ?>
               </div>
             <?php endforeach; ?>
           </div>
@@ -203,9 +191,7 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </section>
 
-  <div class="map-wrap">
-    <iframe src="<?= e($mapaUrl) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe>
-  </div>
+  <?php if ($mapaActivo): ?><div class="map-wrap"><iframe src="<?= e($mapaUrl) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe></div><?php endif; ?>
 
   <footer class="footer">
     <div class="catalogo-container footer-content">
