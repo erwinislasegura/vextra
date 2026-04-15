@@ -1,3 +1,5 @@
+<?php $empresaId = (int) ($empresa['id'] ?? 0); ?>
+
 <section class="container-fluid px-0">
   <div class="card border-0 shadow-sm mb-3">
     <div class="card-body">
@@ -90,6 +92,17 @@
                 <label class="form-label">Código color acento</label>
                 <input type="text" name="catalogo_color_acento" maxlength="7" class="form-control" value="<?= e($colorAcento) ?>" placeholder="#5415B0">
               </div>
+              <div class="col-md-6 col-xl-3">
+                <label class="form-label">Columnas de productos (catálogo público)</label>
+                <?php $columnasProductos = (int) ($sliderCatalogo['catalogo_columnas_productos'] ?? 3); ?>
+                <?php if ($columnasProductos < 2 || $columnasProductos > 5) { $columnasProductos = 3; } ?>
+                <select name="catalogo_columnas_productos" class="form-select">
+                  <option value="2" <?= $columnasProductos === 2 ? 'selected' : '' ?>>2 columnas</option>
+                  <option value="3" <?= $columnasProductos === 3 ? 'selected' : '' ?>>3 columnas</option>
+                  <option value="4" <?= $columnasProductos === 4 ? 'selected' : '' ?>>4 columnas</option>
+                  <option value="5" <?= $columnasProductos === 5 ? 'selected' : '' ?>>5 columnas</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -103,7 +116,7 @@
           <div class="form-text">Recomendado: 1600x500 px, peso menor a 1 MB.</div>
           <?php if (!empty($sliderCatalogo['slider_imagen'])): ?>
             <div class="mt-3">
-              <img src="<?= e(url((string) $sliderCatalogo['slider_imagen'])) ?>" alt="Imagen actual slider" class="img-fluid rounded border">
+              <img src="<?= e(url('/catalogo/' . $empresaId . '/slider/principal?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())))) ?>" alt="Imagen actual slider" class="img-fluid rounded border" style="max-height:110px;width:auto;object-fit:contain;background:#f8fafc">
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="eliminar_slider_imagen" id="eliminar_slider_imagen" value="1">
                 <label class="form-check-label" for="eliminar_slider_imagen">Eliminar imagen actual</label>
@@ -116,7 +129,7 @@
           <div class="form-text">Se usa en la segunda transición del slider.</div>
           <?php if (!empty($sliderCatalogo['slider_imagen_secundaria'])): ?>
             <div class="mt-3">
-              <img src="<?= e(url((string) $sliderCatalogo['slider_imagen_secundaria'])) ?>" alt="Imagen secundaria slider" class="img-fluid rounded border">
+              <img src="<?= e(url('/catalogo/' . $empresaId . '/slider/secundaria?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())))) ?>" alt="Imagen secundaria slider" class="img-fluid rounded border" style="max-height:110px;width:auto;object-fit:contain;background:#f8fafc">
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="eliminar_slider_imagen_secundaria" id="eliminar_slider_imagen_secundaria" value="1">
                 <label class="form-check-label" for="eliminar_slider_imagen_secundaria">Eliminar imagen secundaria</label>
