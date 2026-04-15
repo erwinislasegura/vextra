@@ -1,3 +1,5 @@
+<?php $empresaId = (int) ($empresa['id'] ?? 0); ?>
+
 <section class="container-fluid px-0">
   <div class="card border-0 shadow-sm mb-3">
     <div class="card-body">
@@ -103,7 +105,7 @@
           <div class="form-text">Recomendado: 1600x500 px, peso menor a 1 MB.</div>
           <?php if (!empty($sliderCatalogo['slider_imagen'])): ?>
             <div class="mt-3">
-              <img src="<?= e(url((string) $sliderCatalogo['slider_imagen'])) ?>" alt="Imagen actual slider" class="img-fluid rounded border">
+              <img src="<?= e(url('/catalogo/' . $empresaId . '/slider/principal?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())))) ?>" alt="Imagen actual slider" class="img-fluid rounded border">
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="eliminar_slider_imagen" id="eliminar_slider_imagen" value="1">
                 <label class="form-check-label" for="eliminar_slider_imagen">Eliminar imagen actual</label>
@@ -116,7 +118,7 @@
           <div class="form-text">Se usa en la segunda transición del slider.</div>
           <?php if (!empty($sliderCatalogo['slider_imagen_secundaria'])): ?>
             <div class="mt-3">
-              <img src="<?= e(url((string) $sliderCatalogo['slider_imagen_secundaria'])) ?>" alt="Imagen secundaria slider" class="img-fluid rounded border">
+              <img src="<?= e(url('/catalogo/' . $empresaId . '/slider/secundaria?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())))) ?>" alt="Imagen secundaria slider" class="img-fluid rounded border">
               <div class="form-check mt-2">
                 <input class="form-check-input" type="checkbox" name="eliminar_slider_imagen_secundaria" id="eliminar_slider_imagen_secundaria" value="1">
                 <label class="form-check-label" for="eliminar_slider_imagen_secundaria">Eliminar imagen secundaria</label>
