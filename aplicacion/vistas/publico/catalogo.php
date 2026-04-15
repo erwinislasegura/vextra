@@ -218,26 +218,22 @@ $renderIconoRed = static function (string $id): string {
   }
   @media (max-width:720px){
     .products-grid{grid-template-columns:1fr}
-    .category-list,.feature-list{display:grid;grid-template-columns:1fr;gap:8px;overflow:visible;padding:0;margin-top:10px}
-    .sidebar{padding:10px}
-    .sidebar h3{font-size:15px;padding:8px 10px}
-    .category-list button,.feature-list button{width:100%;border:1px solid #cfd8e6;border-radius:999px;padding:9px 12px;font-size:12.5px;font-weight:500;line-height:1.2}
+    .sidebar{display:none}
     .catalogo-topbar__content,.section-head{display:flex;flex-direction:column;align-items:flex-start}
     .catalogo-navbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
     .catalogo-logo{justify-content:flex-start}
     .catalogo-logo img{width:110px;height:56px}
     .catalogo-mobile-toggle{display:inline-flex}
-    .search-box,.nav-actions,.catalogo-navbar > .btn-primary-custom{display:none}
+    .search-box,.nav-actions{display:none}
     .catalogo-header.is-mobile-open .search-box{display:flex;grid-column:1/-1}
     .catalogo-header.is-mobile-open .nav-actions{display:flex;grid-column:1/-1}
-    .catalogo-header.is-mobile-open .catalogo-navbar > .btn-primary-custom{display:flex;grid-column:1/-1}
+    .catalogo-navbar > .btn-primary-custom{display:flex !important;grid-column:1/-1}
     .search-box{border-radius:14px}
     .search-box input,.search-box button{font-size:13px}
     .search-box button{padding:10px 14px}
     .nav-actions{justify-content:space-between;gap:6px}
     .menu-link{flex:1;text-align:center;padding:8px 8px;border:1px solid color-mix(in srgb,var(--primary) 25%,#fff);border-radius:10px;background:#fff;color:var(--primary);font-size:13px;font-weight:500}
     .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center;font-size:14px;font-weight:600}
-    .catalogo-header.is-mobile-open .catalogo-navbar > .btn-primary-custom{width:100%}
     .filters-wrap{padding:12px}
     .field input,.field select{padding:11px 12px}
     .slide{padding:24px}
