@@ -137,6 +137,7 @@ $renderIconoRed = static function (string $id): string {
   .stock-line{font-size:13px;color:var(--muted);font-weight:600}
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:24px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
+  .card-actions .btn-primary-custom{font-size:14px;font-weight:600;padding:8px 12px}
   .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
   .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
   .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:999px;padding:14px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-weight:700;border:none}
@@ -284,7 +285,7 @@ $renderIconoRed = static function (string $id): string {
                 <div class="stock-line">Stock: <?= $stock ?></div>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precio)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
-                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>">Agregar al carrito</button>
+                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>">¡Lo quiero!</button>
                   <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>
