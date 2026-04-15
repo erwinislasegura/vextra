@@ -158,18 +158,16 @@ $renderIconoRed = static function (string $id): string {
   .cart-item .btn-danger-soft{font-size:13px;font-weight:500;padding:6px 9px}
   .cart-footer{border-top:1px solid var(--border);display:grid;gap:10px}.summary-row{display:flex;justify-content:space-between;font-size:14px;font-weight:500}
   .empty-state{text-align:center;color:var(--muted);padding:40px 10px}.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;visibility:hidden;transition:.25s;z-index:80}.overlay.show{opacity:1;visibility:visible}
-  .footer{position:relative;color:#fff;padding:34px 0 24px;margin-top:20px;background:linear-gradient(135deg,rgba(15,23,42,.55),rgba(15,23,42,.55)),linear-gradient(120deg,var(--primary),var(--accent));overflow:hidden}
-  .footer::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.09) 0 1px,transparent 1px),radial-gradient(circle at 80% 40%,rgba(255,255,255,.07) 0 1px,transparent 1px);background-size:120px 120px;opacity:.35;pointer-events:none}
-  .footer-content{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:24px}
-  .footer-col h4{font-size:24px;font-weight:700;margin:0 0 12px}
+  .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
+  .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
+  .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
   .footer-brand img{width:128px;height:60px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
-  .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:14px;color:rgba(255,255,255,.92);margin:0}
+  .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:13px;color:rgba(255,255,255,.92);margin:0}
   .footer-contact{display:grid;gap:8px}
   .footer-contact p{display:flex;align-items:center;gap:8px}
-  .footer-contact p .dot{width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
   .footer-menu{display:grid;gap:8px}
   .footer-menu a{color:#fff;text-decoration:none}
-  .footer-menu a::before{content:"›";display:inline-block;color:#fca5a5;margin-right:7px}
   .footer-menu a:hover{text-decoration:underline}
   .footer-follow{display:grid;gap:10px}
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -359,7 +357,6 @@ $renderIconoRed = static function (string $id): string {
     <div class="catalogo-container footer-content">
       <div class="footer-brand footer-col">
         <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
-        <h4><?= e((string) ($empresa['nombre_comercial'] ?? 'CatálogoPro')) ?></h4>
         <p>Diseño profesional para mostrar y vender productos online.</p>
       </div>
       <div class="footer-col">
@@ -376,7 +373,7 @@ $renderIconoRed = static function (string $id): string {
         <h4>Datos de contacto</h4>
         <p><span class="dot">☎</span><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
         <p><span class="dot">✉</span><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
-        <p><span class="dot">📍</span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
+        <p><span class="dot">⌖</span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
         <p><span class="dot">⌂</span><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
         <p>© <?= date('Y') ?> • Todos los derechos reservados</p>
       </div>
