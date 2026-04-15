@@ -98,14 +98,14 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:340px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
   .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
-  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden;min-width:0}
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .nav-actions{display:flex;gap:10px;align-items:center}
-  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
+  .nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent;white-space:nowrap}
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -162,8 +162,37 @@ $renderIconoRed = static function (string $id): string {
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
   body.public-page > footer.border-top.bg-white.mt-5{display:none}
-  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:32px}.nav-actions{justify-content:flex-start}}
-  @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
+  @media (max-width:1100px){
+    .catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}
+    .catalogo-navbar{gap:12px}
+    .search-box{width:100%}
+    .contact-title{font-size:32px}
+    .nav-actions{justify-content:flex-start}
+  }
+  @media (max-width:720px){
+    .catalogo-topbar__content{flex-direction:column;align-items:flex-start}
+    .catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}
+    .catalogo-logo{justify-content:center}
+    .catalogo-logo img{width:110px;height:56px}
+    .search-box{border-radius:14px}
+    .search-box input,.search-box button{font-size:13px}
+    .search-box button{padding:10px 14px}
+    .nav-actions{justify-content:space-between;gap:6px}
+    .menu-link{flex:1;text-align:center;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:#fff}
+    .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center}
+    .contact-hero{min-height:130px;padding:16px}
+    .contact-hero h1{font-size:26px}
+    .contact-layout{padding-top:14px}
+    .contact-card{padding:16px;gap:16px}
+    .contact-title{font-size:24px}
+    .contact-desc{font-size:15px;line-height:1.6}
+    .form-group input,.form-group textarea{font-size:13px}
+    .btn-submit{width:100%;padding:11px 16px}
+    .map-wrap iframe{height:260px}
+    .map-actions{justify-content:flex-start}
+    .footer-content{grid-template-columns:1fr}
+    .footer-bottom__content{flex-direction:column;align-items:flex-start}
+  }
 </style>
 
 <div class="catalogo-page">
