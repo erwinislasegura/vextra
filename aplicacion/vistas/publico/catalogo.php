@@ -385,46 +385,23 @@ $renderIconoRed = static function (string $id): string {
     <div class="cart-items" id="cartItems"><div class="empty-state">Aún no has agregado productos.</div></div>
     <div class="cart-footer">
       <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+      <div class="summary-row"><span>Descuentos</span><span id="cartDiscount">$0</span></div>
       <div class="summary-row"><span>Total</span><span id="cartTotal">$0</span></div>
       <button class="btn-primary-custom" type="button" id="openCheckout">Finalizar compra</button>
       <button class="btn-outline" type="button" id="clearCart">Vaciar carrito</button>
     </div>
   </aside>
 
+  <form id="checkoutPrepareForm" method="POST" action="<?= e(url('/catalogo/' . (int) $empresa['id'] . '/checkout/formulario')) ?>" class="d-none">
+    <?= csrf_campo() ?>
+    <input type="hidden" name="carrito_json" id="checkoutPrepareCarrito" value="[]">
+  </form>
+
   <?php
     $catalogoFooterInicioUrl = '#catalogoProductos';
     $catalogoFooterProductosUrl = '#catalogoProductos';
     require __DIR__ . '/partials/catalogo_footer.php';
   ?>
-</div>
-
-<div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
-    <form method="POST" action="<?= e(url('/catalogo/' . (int) $empresa['id'] . '/checkout')) ?>" class="catalogo-checkout">
-      <?= csrf_campo() ?>
-      <div class="modal-header"><h5 class="modal-title">Checkout seguro</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
-      <div class="modal-body">
-        <div class="catalogo-checkout__block mb-3 bg-light-subtle"><div class="catalogo-checkout__title">Resumen de compra</div><div id="carritoVistaCheckout" class="small text-muted">Tu carrito está vacío.</div></div>
-        <input type="hidden" name="carrito_json" id="carrito_json" value="[]">
-        <div class="catalogo-checkout__block mb-3"><div class="catalogo-checkout__title">Datos del comprador</div><div class="row g-2">
-          <div class="col-md-6"><label class="form-label">Nombre y apellido *</label><input class="form-control" name="nombre" required></div>
-          <div class="col-md-6"><label class="form-label">Correo electrónico *</label><input type="email" class="form-control" name="correo" required></div>
-          <div class="col-md-6"><label class="form-label">Teléfono / WhatsApp *</label><input class="form-control" name="telefono" placeholder="+56912345678" required></div>
-          <div class="col-md-6"><label class="form-label">RUT o documento</label><input class="form-control" name="documento" placeholder="12.345.678-9"></div>
-          <div class="col-12"><label class="form-label">Empresa (opcional)</label><input class="form-control" name="empresa"></div>
-        </div></div>
-        <div class="catalogo-checkout__block"><div class="catalogo-checkout__title">Dirección de envío y facturación</div><div class="row g-2">
-          <div class="col-12"><label class="form-label">Dirección *</label><input class="form-control" name="direccion" required></div>
-          <div class="col-md-6"><label class="form-label">Comuna *</label><input class="form-control" name="comuna" required></div>
-          <div class="col-md-6"><label class="form-label">Ciudad *</label><input class="form-control" name="ciudad" required></div>
-          <div class="col-md-6"><label class="form-label">Región *</label><input class="form-control" name="region" required></div>
-          <div class="col-md-6"><label class="form-label">Referencia de entrega</label><input class="form-control" name="referencia"></div>
-        </div></div>
-        <div class="form-check mt-3"><input class="form-check-input" type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" required><label class="form-check-label small" for="acepta_terminos">Confirmo que los datos ingresados son correctos y acepto continuar con el pago.</label></div>
-      </div>
-      <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Seguir comprando</button><button class="btn btn-primary" type="submit">Pagar ahora</button></div>
-    </form>
-  </div></div>
 </div>
 
 <div class="modal fade" id="modalProductoDetalle" tabindex="-1" aria-hidden="true">
@@ -463,6 +440,7 @@ $renderIconoRed = static function (string $id): string {
 
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
+  cart = Array.isArray(cart) ? cart.map((item) => ({ ...item, oldPrice: Number(item.oldPrice || 0) })) : [];
 
   let selectedCategory = 'all';
   let onlyOffers = false;
@@ -481,11 +459,9 @@ $renderIconoRed = static function (string $id): string {
   const cartItems = $('#cartItems');
   const cartCount = $('#cartCount');
   const cartSubtotal = $('#cartSubtotal');
+  const cartDiscount = $('#cartDiscount');
   const cartTotal = $('#cartTotal');
-  const carritoVistaCheckout = $('#carritoVistaCheckout');
-  const carritoJson = $('#carrito_json');
-
-  const modalCheckout = window.bootstrap ? new bootstrap.Modal($('#modalCheckout')) : null;
+  const checkoutPrepareCarrito = $('#checkoutPrepareCarrito');
   const getModalProductoDetalle = () => {
     if (!window.bootstrap) return null;
     const modalEl = $('#modalProductoDetalle');
@@ -551,14 +527,24 @@ $renderIconoRed = static function (string $id): string {
   const renderCart = () => {
     const totalItems = cart.reduce((sum, i) => sum + Number(i.quantity || 0), 0);
     const subtotal = cart.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
+    const descuentoTotal = cart.reduce((sum, i) => {
+      const oldPrice = Number(i.oldPrice || 0);
+      const price = Number(i.price || 0);
+      const qty = Number(i.quantity || 0);
+      if (oldPrice > price) {
+        return sum + ((oldPrice - price) * qty);
+      }
+      return sum;
+    }, 0);
     cartCount.textContent = String(totalItems);
     cartSubtotal.textContent = money(subtotal);
+    if (cartDiscount) cartDiscount.textContent = `-${money(descuentoTotal)}`;
     cartTotal.textContent = money(subtotal);
 
     if (!cart.length) {
       cartItems.innerHTML = '<div class="empty-state">Aún no has agregado productos.</div>';
-      carritoVistaCheckout.innerHTML = 'Tu carrito está vacío.';
-      carritoJson.value = '[]';
+      if (checkoutPrepareCarrito) checkoutPrepareCarrito.value = '[]';
+      if (cartDiscount) cartDiscount.textContent = '$0';
       saveCart();
       return;
     }
@@ -568,7 +554,7 @@ $renderIconoRed = static function (string $id): string {
         <img src="${item.image}" alt="${item.name}">
         <div>
           <h4>${item.name}</h4>
-          <p>${money(item.price)} c/u</p>
+          <p>${money(item.price)} c/u ${Number(item.oldPrice || 0) > Number(item.price || 0) ? `<span class="text-decoration-line-through text-muted">${money(item.oldPrice)}</span>` : ''}</p>
           <div class="cart-item__desc">${resumenTexto(item.description || 'Producto seleccionado')}</div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
@@ -580,8 +566,7 @@ $renderIconoRed = static function (string $id): string {
       </div>
     `).join('');
 
-    carritoVistaCheckout.innerHTML = cart.map((item) => `<div class="d-flex justify-content-between border-bottom py-2"><span>${item.name} x${item.quantity}</span><strong>${money(item.price * item.quantity)}</strong></div>`).join('') + `<div class="fw-bold text-end mt-2">Total: ${money(subtotal)}</div>`;
-    carritoJson.value = JSON.stringify(cart.map((i) => ({ producto_id: Number(i.id), cantidad: Number(i.quantity) })));
+    if (checkoutPrepareCarrito) checkoutPrepareCarrito.value = JSON.stringify(cart.map((i) => ({ producto_id: Number(i.id), cantidad: Number(i.quantity) })));
     saveCart();
   };
 
@@ -593,7 +578,7 @@ $renderIconoRed = static function (string $id): string {
     if (!product) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
-    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, quantity: 1 });
+    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1 });
     renderCart();
     openCart();
   };
@@ -688,11 +673,11 @@ $renderIconoRed = static function (string $id): string {
   $('#scrollTopBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   $('#openCheckout').addEventListener('click', () => {
     if (!cart.length) return;
-    if (!modalCheckout) {
-      alert('No fue posible abrir el checkout en este navegador.');
-      return;
+    if (checkoutPrepareCarrito) {
+      checkoutPrepareCarrito.value = JSON.stringify(cart.map((i) => ({ producto_id: Number(i.id), cantidad: Number(i.quantity) })));
     }
-    modalCheckout.show();
+    const form = $('#checkoutPrepareForm');
+    if (form) form.submit();
   });
 
   renderCategories();

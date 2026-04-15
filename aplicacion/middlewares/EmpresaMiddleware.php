@@ -72,6 +72,7 @@ class EmpresaMiddleware
             '/app/categorias' => 'modulo_categorias',
             '/app/listas-precios' => 'modulo_listas_precios',
             '/app/catalogo-en-linea' => 'modulo_catalogo_en_linea',
+            '/app/compras-catalogo' => 'modulo_compras_catalogo',
             '/app/seguimiento' => 'modulo_seguimiento',
             '/app/aprobaciones' => 'modulo_aprobaciones',
             '/app/documentos' => 'modulo_documentos',
