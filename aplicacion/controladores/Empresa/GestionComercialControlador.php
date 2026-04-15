@@ -474,7 +474,6 @@ class GestionComercialControlador extends Controlador
         $contactoFormBajada = trim((string) ($_POST['catalogo_contacto_form_bajada'] ?? ''));
         $contactoFormCorreoDestino = trim((string) ($_POST['catalogo_contacto_form_correo_destino'] ?? ''));
         $contactoFormTextoBoton = trim((string) ($_POST['catalogo_contacto_form_texto_boton'] ?? ''));
-        $contactoMapaUrl = trim((string) ($_POST['catalogo_contacto_mapa_url'] ?? ''));
         $contactoMapaActivo = isset($_POST['catalogo_contacto_mapa_activo']) ? '1' : '0';
         $camposFormulario = array_values(array_unique(array_filter(array_map(static fn($valor): string => trim((string) $valor), (array) ($_POST['catalogo_contacto_form_campos'] ?? [])))));
         $sociales = [
@@ -513,10 +512,6 @@ class GestionComercialControlador extends Controlador
             flash('danger', 'El correo destino del formulario de contacto no es válido.');
             $this->redirigir('/app/catalogo-en-linea');
         }
-        if ($contactoMapaUrl !== '' && filter_var($contactoMapaUrl, FILTER_VALIDATE_URL) === false) {
-            flash('danger', 'La URL del mapa no es válida.');
-            $this->redirigir('/app/catalogo-en-linea');
-        }
         if ($colorPrimario === null || $colorAcento === null) {
             flash('danger', 'El color del catálogo no es válido. Usa formato hexadecimal, por ejemplo: #4632A8');
             $this->redirigir('/app/catalogo-en-linea');
@@ -543,7 +538,7 @@ class GestionComercialControlador extends Controlador
             'catalogo_contacto_form_correo_destino' => mb_substr($contactoFormCorreoDestino, 0, 180),
             'catalogo_contacto_form_campos' => json_encode($camposFormulario, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'catalogo_contacto_form_texto_boton' => mb_substr($contactoFormTextoBoton, 0, 60),
-            'catalogo_contacto_mapa_url' => mb_substr($contactoMapaUrl, 0, 500),
+            'catalogo_contacto_mapa_url' => '',
             'catalogo_contacto_mapa_activo' => $contactoMapaActivo,
             'catalogo_social_facebook' => mb_substr((string) $sociales['catalogo_social_facebook'], 0, 255),
             'catalogo_social_instagram' => mb_substr((string) $sociales['catalogo_social_instagram'], 0, 255),

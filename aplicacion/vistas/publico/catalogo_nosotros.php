@@ -55,34 +55,60 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
   .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
+  .nav-actions{display:flex;gap:10px;align-items:center}
   .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
   .menu-link:hover{color:var(--accent)}
-  .btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;text-decoration:none}
+  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
+  .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .nosotros-wrap{padding:30px 0 42px}
   .nosotros-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
   .nosotros-card img{width:100%;max-height:420px;object-fit:cover;border-radius:16px;background:#f8fafc}
   .nosotros-card h1{font-size:32px;color:var(--primary);margin-bottom:10px}
   .nosotros-card p{color:var(--muted);line-height:1.6}
-  .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:24px}
+  .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
   .footer-brand img{width:128px;height:60px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
   .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:13px;color:rgba(255,255,255,.92);margin:0}
+  .footer-contact{display:grid;gap:8px}
+  .footer-contact p{display:flex;align-items:center;gap:8px}
+  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center}
+  .footer-contact p .dot svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .footer-menu{display:grid;gap:8px}
-  .footer-menu a{color:#fff;text-decoration:none}
+  .footer-menu a,.footer-menu a:link,.footer-menu a:visited{color:#fff !important;text-decoration:none}
+  .footer-menu a:hover{text-decoration:underline}
+  .footer-follow{display:grid;gap:10px}
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
+  .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
+  .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
+  .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
+  .footer-bottom__content a:hover{text-decoration:underline}
+  body.public-page > footer.border-top.bg-white.mt-5{display:none}
   @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}}
+  @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 <div class="catalogo-page">
-  <div class="catalogo-topbar"><div class="catalogo-container catalogo-topbar__content"><div><?= e($topbarTexto) ?></div><?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div>
-  <header class="catalogo-header"><div class="catalogo-container catalogo-navbar"><a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a><form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>"><input type="text" name="q" placeholder="Buscar productos, categorías o marcas..."><button type="submit">Buscar</button></form><div class="d-flex gap-2 flex-wrap"><a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a><a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a></div><a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a></div></header>
+  <?php
+    $catalogoHeaderSearchAction = $catalogoBaseUrl;
+    $catalogoHeaderSearchMethod = 'GET';
+    $catalogoHeaderSearchName = 'q';
+    $catalogoHeaderSearchValue = '';
+    $catalogoHeaderCartAsButton = false;
+    $catalogoHeaderCartHref = $catalogoBaseUrl;
+    require __DIR__ . '/partials/catalogo_header.php';
+  ?>
   <section class="nosotros-wrap"><div class="catalogo-container"><article class="nosotros-card"><img src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros"><div><h1><?= e($nosotrosTitulo) ?></h1><p><?= nl2br(e($nosotrosDescripcion)) ?></p></div></article></div></section>
-  <footer class="footer"><div class="catalogo-container footer-content"><div class="footer-brand footer-col"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"><p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p></div><div class="footer-col"><h4>Accesos rápidos</h4><nav class="footer-menu mt-2"><a href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a href="<?= e($catalogoBaseUrl) ?>/nosotros">Nosotros</a><a href="<?= e($catalogoBaseUrl) ?>/contacto">Contacto</a></nav></div><div class="footer-contact footer-col"><h4>Datos de contacto</h4><p><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p></div><div class="footer-follow footer-col"><h4>Síguenos</h4><p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p><?php if ($socialesTopbar !== []): ?><div class="footer-sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div></footer>
+  <?php
+    $catalogoFooterInicioUrl = $catalogoBaseUrl . '#catalogoProductos';
+    $catalogoFooterProductosUrl = $catalogoBaseUrl . '#catalogoProductos';
+    require __DIR__ . '/partials/catalogo_footer.php';
+  ?>
 </div>

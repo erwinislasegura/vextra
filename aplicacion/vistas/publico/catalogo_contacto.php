@@ -39,22 +39,12 @@ if ($sliderImagen === '') {
 }
 
 $mapaActivo = (string) ($catalogoTopbar['contacto_mapa_activo'] ?? '1') !== '0';
-$mapaUrl = trim((string) ($catalogoTopbar['contacto_mapa_url'] ?? ''));
-if ($mapaUrl === '') {
-    $direccionMapa = trim((string) (($empresa['direccion'] ?? '') . ' ' . ($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')));
-    if ($direccionMapa === '') {
-        $direccionMapa = 'Santiago Chile';
-    }
-    $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed';
+$direccionMapa = trim((string) (($empresa['direccion'] ?? '') . ' ' . ($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')));
+if ($direccionMapa === '') {
+    $direccionMapa = 'Santiago Chile';
 }
-if (!str_contains($mapaUrl, 'output=embed') && str_contains($mapaUrl, 'maps.google.')) {
-    if (str_contains($mapaUrl, '/maps?q=')) {
-        $mapaUrl .= (str_contains($mapaUrl, '?') ? '&' : '?') . 'output=embed';
-    } elseif (str_contains($mapaUrl, '/place/')) {
-        $q = rawurlencode((string) preg_replace('#^.*?/place/#', '', $mapaUrl));
-        $mapaUrl = 'https://maps.google.com/maps?q=' . $q . '&output=embed';
-    }
-}
+$mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed';
+$mapaLinkExterno = 'https://maps.google.com/?q=' . rawurlencode($direccionMapa);
 
 $camposPermitidos = [
     'nombre' => ['label' => 'Nombre', 'placeholder' => 'Nombre', 'type' => 'text', 'required' => true],
@@ -108,74 +98,83 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain}
+  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
+  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .nav-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+  .nav-actions{display:flex;gap:10px;align-items:center}
   .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
   .menu-link:hover{color:var(--accent)}
-  .btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
+  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
+  .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
   .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
 
-  .contact-layout{padding:18px 0 24px}
-  .contact-card{background:#f8fafc;border:1px solid #d7dee9;border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .contact-layout{padding:20px 0 18px}
+  .contact-card{background:#fff;border:1px solid #d7dee9;border-radius:18px;box-shadow:0 6px 20px rgba(15,23,42,.08);padding:26px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px}
   .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:14px;color:var(--primary);margin-bottom:6px}
-  .contact-title{font-size:32px;line-height:1.15;margin-bottom:10px;color:#1f2937;font-weight:700}
-  .contact-desc{font-size:14px;line-height:1.7;color:#596780}
+  .contact-title{font-size:44px;line-height:1.1;margin-bottom:14px;color:#1f2937;font-weight:700}
+  .contact-desc{font-size:16px;line-height:1.7;color:#596780;max-width:560px}
   .contact-follow{margin-top:20px}.contact-follow h4{font-size:16px;margin-bottom:10px;color:#243447}
-  .contact-icons{display:flex;gap:10px}.contact-icons a{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff}
+  .contact-icons{display:flex;gap:10px;flex-wrap:wrap}
+  .contact-icons a{width:40px;height:40px;border:1px solid #cfd8e6;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;transition:all .2s ease}
+  .contact-icons a svg{width:21px;height:21px;fill:currentColor}
+  .contact-icons a:hover{background:var(--primary);border-color:var(--primary);color:#fff}
 
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .form-group label{display:block;font-weight:700;color:#2f3f57;margin-bottom:5px;font-size:13px}
-  .form-group input,.form-group textarea{width:100%;border:1px solid #c6d0de;padding:10px 12px;font-size:14px;border-radius:8px;background:#fff}
-  .form-group textarea{min-height:150px;resize:vertical}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}
+  .form-group label{display:block;font-weight:700;color:#2f3f57;margin-bottom:6px;font-size:13px}
+  .form-group input,.form-group textarea{width:100%;border:1px solid #b7c3d6;padding:8px 12px;font-size:14px;border-radius:8px;background:#fff;line-height:1.35}
+  .form-group input{min-height:40px}
+  .form-group textarea{min-height:132px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
-  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.2px}
+  .btn-submit{margin-top:8px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:22px;font-weight:700;letter-spacing:.2px}
 
-  .map-wrap{margin:14px 0 0}
+  .map-wrap{width:min(1280px,92%);margin:8px auto 0;padding-bottom:18px}
   .map-card{background:#fff;border:1px solid #d7dee9;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.06)}
-  .map-wrap iframe{width:100%;height:300px;border:0;display:block}
+  .map-wrap iframe{width:100%;height:320px;border:0;display:block}
+  .map-actions{display:flex;justify-content:flex-end;padding:10px 2px 0}
+  .map-actions a{font-size:13px;color:var(--primary);font-weight:600;text-decoration:none}
 
-  .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:18px}
+  .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
   .footer-brand img{width:128px;height:60px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
   .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:13px;color:rgba(255,255,255,.92);margin:0}
-  .footer-menu{display:grid;gap:8px}.footer-menu a{color:#fff;text-decoration:none}
+  .footer-contact{display:grid;gap:8px}
+  .footer-contact p{display:flex;align-items:center;gap:8px}
+  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center}
+  .footer-contact p .dot svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .footer-menu{display:grid;gap:8px}
+  .footer-menu a,.footer-menu a:link,.footer-menu a:visited{color:#fff !important;text-decoration:none}
+  .footer-menu a:hover{text-decoration:underline}
+  .footer-follow{display:grid;gap:10px}
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
-  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:28px}.nav-actions{justify-content:flex-start}}
+  .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
+  .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
+  .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
+  .footer-bottom__content a:hover{text-decoration:underline}
+  body.public-page > footer.border-top.bg-white.mt-5{display:none}
+  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:32px}.nav-actions{justify-content:flex-start}}
+  @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 
 <div class="catalogo-page">
-  <div class="catalogo-topbar">
-    <div class="catalogo-container catalogo-topbar__content">
-      <div><?= e($topbarTexto) ?></div>
-      <?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?>
-    </div>
-  </div>
-
-  <header class="catalogo-header">
-    <div class="catalogo-container catalogo-navbar">
-      <a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a>
-      <form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>">
-        <input type="text" name="q" placeholder="Buscar productos, categorías o marcas...">
-        <button type="submit">Buscar</button>
-      </form>
-      <nav class="nav-actions" aria-label="Menú superior catálogo">
-        <a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
-        <a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-        <a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
-      </nav>
-      <a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a>
-    </div>
-  </header>
+  <?php
+    $catalogoHeaderSearchAction = $catalogoBaseUrl;
+    $catalogoHeaderSearchMethod = 'GET';
+    $catalogoHeaderSearchName = 'q';
+    $catalogoHeaderSearchValue = '';
+    $catalogoHeaderCartAsButton = false;
+    $catalogoHeaderCartHref = $catalogoBaseUrl;
+    require __DIR__ . '/partials/catalogo_header.php';
+  ?>
 
   <section class="catalogo-container"><div class="contact-hero" style="background-image:url('<?= e($sliderImagen) ?>')"><h1>Contacto</h1></div></section>
 
@@ -206,19 +205,17 @@ $renderIconoRed = static function (string $id): string {
   </section>
 
   <?php if ($mapaActivo): ?>
-    <div class="catalogo-container map-wrap">
+    <div class="map-wrap">
       <div class="map-card">
         <iframe src="<?= e($mapaUrl) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe>
       </div>
+      <div class="map-actions"><a href="<?= e($mapaLinkExterno) ?>" target="_blank" rel="noopener noreferrer">Abrir mapa en Google Maps</a></div>
     </div>
   <?php endif; ?>
 
-  <footer class="footer">
-    <div class="catalogo-container footer-content">
-      <div class="footer-brand footer-col"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"><p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p></div>
-      <div class="footer-col"><h4>Accesos rápidos</h4><nav class="footer-menu mt-2"><a href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a href="<?= e($catalogoBaseUrl) ?>/nosotros">Nosotros</a><a href="<?= e($catalogoBaseUrl) ?>/contacto">Contacto</a></nav></div>
-      <div class="footer-contact footer-col"><h4>Datos de contacto</h4><p><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p></div>
-      <div class="footer-follow footer-col"><h4>Síguenos</h4><p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p><?php if ($socialesTopbar !== []): ?><div class="footer-sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div>
-    </div>
-  </footer>
+  <?php
+    $catalogoFooterInicioUrl = $catalogoBaseUrl . '#catalogoProductos';
+    $catalogoFooterProductosUrl = $catalogoBaseUrl . '#catalogoProductos';
+    require __DIR__ . '/partials/catalogo_footer.php';
+  ?>
 </div>
