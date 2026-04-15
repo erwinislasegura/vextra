@@ -144,8 +144,8 @@ $renderIconoRed = static function (string $id): string {
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
   .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
   .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
-  .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:999px;padding:14px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-weight:700;border:none}
-  .cart-count{background:var(--accent);min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:13px}
+  .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;border:none}
+  .cart-count{background:var(--accent);min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:12px}
   .cart-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-10px 0 30px rgba(15,23,42,.12);z-index:90;transition:right .3s ease;display:flex;flex-direction:column}
   .cart-panel.open{right:0}.cart-header,.cart-footer{padding:20px}.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
   .cart-items{flex:1;overflow:auto;padding:14px;display:grid;gap:10px}.cart-item{display:grid;grid-template-columns:60px 1fr auto;gap:8px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:8px}
@@ -158,12 +158,24 @@ $renderIconoRed = static function (string $id): string {
   .cart-item .btn-danger-soft{font-size:13px;font-weight:500;padding:6px 9px}
   .cart-footer{border-top:1px solid var(--border);display:grid;gap:10px}.summary-row{display:flex;justify-content:space-between;font-size:14px;font-weight:500}
   .empty-state{text-align:center;color:var(--muted);padding:40px 10px}.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;visibility:hidden;transition:.25s;z-index:80}.overlay.show{opacity:1;visibility:visible}
-  .footer{background:var(--primary);color:#fff;padding:28px 0;margin-top:20px}.footer-content{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .footer{background:var(--primary);color:#fff;padding:28px 0 24px;margin-top:20px}
+  .footer-content{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:20px}
+  .footer-brand img{width:120px;height:56px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
+  .footer-brand p,.footer-contact p,.footer-menu a{font-size:13px;color:rgba(255,255,255,.9);margin:0}
+  .footer-contact{display:grid;gap:6px}
+  .footer-menu{display:grid;gap:7px}
+  .footer-menu a{color:#fff;text-decoration:none}
+  .footer-menu a:hover{text-decoration:underline}
+  .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
+  .footer-sociales a svg{width:14px;height:14px;fill:#fff}
+  .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
+  .footer-bottom__content{display:flex;justify-content:center;align-items:center;color:#4b5563;font-size:13px;font-weight:500}
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
   @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.footer-content,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
+  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
 </style>
 
 <div class="catalogo-page">
@@ -334,7 +346,47 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </aside>
 
-  <footer class="footer" id="contacto"><div class="catalogo-container footer-content"><div><strong><?= e((string) ($empresa['nombre_comercial'] ?? 'CatálogoPro')) ?></strong><p class="mb-0">Diseño profesional para mostrar y vender productos online.</p></div><div><p class="mb-0">© <?= date('Y') ?> • Todos los derechos reservados</p></div></div></footer>
+  <footer class="footer" id="contacto">
+    <div class="catalogo-container footer-content">
+      <div class="footer-brand">
+        <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
+        <strong><?= e((string) ($empresa['nombre_comercial'] ?? 'CatálogoPro')) ?></strong>
+        <p>Diseño profesional para mostrar y vender productos online.</p>
+        <?php if ($socialesTopbar !== []): ?>
+          <div class="footer-sociales" aria-label="Redes sociales del catálogo">
+            <?php foreach ($socialesTopbar as $red): ?>
+              <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) $red['label']) ?>">
+                <?= $renderIconoRed((string) ($red['id'] ?? '')) ?>
+              </a>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div>
+        <strong>Menú</strong>
+        <nav class="footer-menu mt-2">
+          <a href="#catalogoProductos">Inicio</a>
+          <a href="#catalogoProductos">Nosotros</a>
+          <a href="#contacto">Contacto</a>
+          <a href="#catalogoProductos" id="showFeaturedBtnTop">Productos destacados</a>
+          <a href="#catalogoProductos" id="showOffersBtnTop">Ofertas</a>
+        </nav>
+      </div>
+      <div class="footer-contact">
+        <strong>Contacto</strong>
+        <p>Correo: <?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
+        <p>Teléfono: <?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
+        <p>Dirección: <?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
+        <p><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
+        <p>© <?= date('Y') ?> • Todos los derechos reservados</p>
+      </div>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <div class="catalogo-container footer-bottom__content">
+      Catálogo construido con tecnología de Vextra.cl
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">
@@ -600,7 +652,8 @@ $renderIconoRed = static function (string $id): string {
   $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; applyFilters(); });
   $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; applyFilters(); });
   $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; applyFilters(); });
-  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', () => { onlyOffers = true; applyFilters(); });
+  const featuredTop = $('#showFeaturedBtnTop'); if (featuredTop) featuredTop.addEventListener('click', (e) => { e.preventDefault(); sortFilter.value = 'featured'; onlyOffers = false; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
+  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', (e) => { e.preventDefault(); onlyOffers = true; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
   const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; applyFilters(); });
 
   searchInput.addEventListener('input', applyFilters);
