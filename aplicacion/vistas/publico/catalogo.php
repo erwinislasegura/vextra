@@ -133,6 +133,7 @@ $renderIconoRed = static function (string $id): string {
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
   .badge-mini.sale{background:#fff7ed;color:#ea580c}
+  .badge-mini.destacado{left:auto;right:14px;background:#eef2ff;color:#3730a3}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
@@ -274,10 +275,13 @@ $renderIconoRed = static function (string $id): string {
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
               $descripcionProducto = (string) ($producto['descripcion'] ?? 'Sin descripción');
               $stock = (int) ($producto['stock_actual'] ?? rand(3, 40));
-              $onSale = ((int) ($producto['id'] ?? 0) % 2) === 0;
-              $oldPrice = $onSale ? ($precio * 1.18) : 0;
+              $destacado = (int) ($producto['destacado_catalogo'] ?? 0) === 1;
+              $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
+              $onSale = $precioOferta > 0 && $precioOferta < $precio;
+              $precioMostrar = $onSale ? $precioOferta : $precio;
+              $oldPrice = $onSale ? $precio : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
               <div class="product-image">
                 <img
                   src="<?= e($imagenProductoUrl) ?>"
@@ -286,16 +290,21 @@ $renderIconoRed = static function (string $id): string {
                   onerror="if(this.dataset.fallback && this.src !== this.dataset.fallback){this.src=this.dataset.fallback;return;}this.onerror=null;this.src='<?= e($placeholderProductoUrl) ?>';"
                   data-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>"
                 >
-                <span class="badge-mini <?= $onSale ? 'sale' : '' ?>"><?= $onSale ? 'Oferta' : 'Destacado' ?></span>
+                <?php if ($onSale): ?>
+                  <span class="badge-mini sale">Oferta</span>
+                <?php endif; ?>
+                <?php if ($destacado): ?>
+                  <span class="badge-mini destacado">Destacado</span>
+                <?php endif; ?>
               </div>
               <div class="product-body">
                 <span class="category-tag"><?= e($categoria) ?></span>
                 <h3 class="product-title"><?= e($nombreProducto) ?></h3>
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
                 <div class="stock-line">Stock: <?= $stock ?></div>
-                <div class="price-wrap"><div class="price"><?= e($fmon($precio)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
+                <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
-                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>">¡Lo quiero!</button>
+                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">¡Lo quiero!</button>
                   <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>

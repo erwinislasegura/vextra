@@ -38,12 +38,12 @@
     <table class="table table-hover table-sm mb-0 tabla-admin">
       <thead class="table-light">
         <tr>
-          <th>Código</th><th>SKU</th><th>Nombre</th><th>Tipo</th><th>Categoría</th><th>Precio</th><th>Stock actual</th><th>Stock mín.</th><th>Stock crítico</th><th>Estado stock</th><th>Estado</th><th class="text-end">Acciones</th>
+          <th>Código</th><th>SKU</th><th>Nombre</th><th>Tipo</th><th>Categoría</th><th>Precio</th><th>Oferta</th><th>Destacado</th><th>Stock actual</th><th>Stock mín.</th><th>Stock crítico</th><th>Estado stock</th><th>Estado</th><th class="text-end">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <?php if (empty($productos)): ?>
-          <tr><td colspan="12" class="text-center py-4 text-muted">No hay productos registrados con este criterio.</td></tr>
+          <tr><td colspan="14" class="text-center py-4 text-muted">No hay productos registrados con este criterio.</td></tr>
         <?php else: ?>
           <?php foreach($productos as $p): ?>
             <tr>
@@ -53,6 +53,8 @@
               <td><?= e($p['tipo'] ?? 'producto') ?></td>
               <td><?= e($p['categoria'] ?? '-') ?></td>
               <td>$<?= number_format((float)$p['precio'],2) ?></td>
+              <td><?php if ((float) ($p['precio_oferta'] ?? 0) > 0): ?>$<?= number_format((float) $p['precio_oferta'], 2) ?><?php else: ?>-<?php endif; ?></td>
+              <td><?php if ((int) ($p['destacado_catalogo'] ?? 0) === 1): ?><span class="badge text-bg-primary">Sí</span><?php else: ?><span class="text-muted">No</span><?php endif; ?></td>
               <?php $stockActual = (float)($p['stock_actual'] ?? 0); $stockMin = (float)($p['stock_minimo'] ?? 0); $stockCrit = (float)($p['stock_critico'] ?? $p['stock_aviso'] ?? 0); $estadoStock = $stockActual <= $stockCrit ? 'crítico' : ($stockActual <= $stockMin ? 'bajo' : 'normal'); $badgeStock = $estadoStock === 'crítico' ? 'text-bg-danger' : ($estadoStock === 'bajo' ? 'text-bg-warning' : 'text-bg-success'); ?>
               <td><strong><?= number_format($stockActual, 2) ?></strong></td>
               <td><?= number_format($stockMin, 2) ?></td>
