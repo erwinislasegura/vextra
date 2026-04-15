@@ -38,6 +38,9 @@ if ($bloquesDescripcion === []) {
 $descripcionPrincipal = (string) ($bloquesDescripcion[0] ?? $nosotrosDescripcion);
 $descripcionSecundaria = trim(implode("\n\n", array_slice($bloquesDescripcion, 1)));
 $tituloSecundario = 'Nuestra historia';
+if ($descripcionSecundaria === '') {
+    $descripcionSecundaria = $nosotrosDescripcion;
+}
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
     ['id' => 'instagram', 'url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'label' => 'Instagram'],
@@ -87,6 +90,10 @@ $renderIconoRed = static function (string $id): string {
   .nosotros-card img{width:100%;max-height:520px;object-fit:cover;border-radius:16px;background:#f8fafc}
   .nosotros-texto h2{font-size:38px;line-height:1.1;color:#1f2937;font-weight:700;margin:0 0 14px}
   .nosotros-texto p{color:#596780;line-height:1.7;font-size:18px;margin:0}
+  .nosotros-sociales{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+  .nosotros-sociales a{width:40px;height:40px;border:1px solid #cfd8e6;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;text-decoration:none;transition:all .2s ease}
+  .nosotros-sociales a svg{width:21px;height:21px;fill:currentColor}
+  .nosotros-sociales a:hover{background:var(--primary);border-color:var(--primary);color:#fff}
   .nosotros-extra{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px}
   .nosotros-extra h3{font-size:30px;color:var(--primary);margin:0 0 12px}
   .nosotros-extra p{color:#4b5563;line-height:1.8;font-size:18px;margin:0}
@@ -136,14 +143,19 @@ $renderIconoRed = static function (string $id): string {
         <div class="nosotros-texto">
           <h2><?= e($nosotrosTitulo) ?></h2>
           <p><?= nl2br(e($descripcionPrincipal)) ?></p>
+          <?php if ($socialesTopbar !== []): ?>
+            <div class="nosotros-sociales">
+              <?php foreach ($socialesTopbar as $red): ?>
+                <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) ($red['label'] ?? 'Red social')) ?>"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
         </div>
       </article>
-      <?php if ($descripcionSecundaria !== ''): ?>
-        <article class="nosotros-extra">
-          <h3><?= e($tituloSecundario) ?></h3>
-          <p><?= nl2br(e($descripcionSecundaria)) ?></p>
-        </article>
-      <?php endif; ?>
+      <article class="nosotros-extra">
+        <h3><?= e($tituloSecundario) ?></h3>
+        <p><?= nl2br(e($descripcionSecundaria)) ?></p>
+      </article>
     </div>
   </section>
   <?php
