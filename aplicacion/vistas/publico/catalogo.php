@@ -174,7 +174,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
   .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
-  .footer-bottom__content{display:flex;justify-content:center;align-items:center;color:#4b5563;font-size:13px;font-weight:500}
+  .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
   body.public-page > footer.border-top.bg-white.mt-5{display:none}
@@ -182,7 +182,7 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
   @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
+  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
 </style>
 
 <div class="catalogo-page">
@@ -357,7 +357,7 @@ $renderIconoRed = static function (string $id): string {
     <div class="catalogo-container footer-content">
       <div class="footer-brand footer-col">
         <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
-        <p>Diseño profesional para mostrar y vender productos online.</p>
+        <p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p>
       </div>
       <div class="footer-col">
         <h4>Accesos rápidos</h4>
@@ -375,7 +375,6 @@ $renderIconoRed = static function (string $id): string {
         <p><span class="dot">✉</span><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
         <p><span class="dot">⌖</span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
         <p><span class="dot">⌂</span><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
-        <p>© <?= date('Y') ?> • Todos los derechos reservados</p>
       </div>
       <div class="footer-follow footer-col">
         <h4>Síguenos</h4>
@@ -394,7 +393,8 @@ $renderIconoRed = static function (string $id): string {
   </footer>
   <div class="footer-bottom">
     <div class="catalogo-container footer-bottom__content">
-      Catálogo construido con tecnología de <a href="https://vextra.cl" target="_blank" rel="noopener noreferrer">Vextra.cl</a>
+      <span>© <?= date('Y') ?> • Todos los derechos reservados</span>
+      <span>Catálogo construido con tecnología de <a href="https://vextra.cl" target="_blank" rel="noopener noreferrer">Vextra.cl</a></span>
     </div>
   </div>
 </div>
