@@ -43,34 +43,8 @@ $direccionMapa = trim((string) (($empresa['direccion'] ?? '') . ' ' . ($empresa[
 if ($direccionMapa === '') {
     $direccionMapa = 'Santiago Chile';
 }
-$mapaUrlOriginal = trim((string) ($catalogoTopbar['contacto_mapa_url'] ?? ''));
-$mapaUrl = $mapaUrlOriginal !== '' ? $mapaUrlOriginal : ('https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed');
-$mapaLinkExterno = $mapaUrlOriginal !== '' ? $mapaUrlOriginal : ('https://maps.google.com/?q=' . rawurlencode($direccionMapa));
-if (!str_contains($mapaUrl, 'output=embed') && !str_contains($mapaUrl, '/maps/embed') && (str_contains($mapaUrl, 'maps.google.') || str_contains($mapaUrl, 'google.com/maps') || str_contains($mapaUrl, 'maps.app.goo.gl'))) {
-    $partesMapa = parse_url((string) $mapaUrl);
-    $queryMapa = [];
-    if (isset($partesMapa['query'])) {
-        parse_str((string) $partesMapa['query'], $queryMapa);
-    }
-    $consultaMapa = '';
-    if (isset($queryMapa['q']) && trim((string) $queryMapa['q']) !== '') {
-        $consultaMapa = trim((string) $queryMapa['q']);
-    } elseif (isset($queryMapa['ll']) && trim((string) $queryMapa['ll']) !== '') {
-        $consultaMapa = trim((string) $queryMapa['ll']);
-    } elseif (str_contains($mapaUrl, '/maps?q=')) {
-        $consultaMapa = (string) preg_replace('#^.*?/maps\?q=#', '', $mapaUrl);
-    } elseif (str_contains($mapaUrl, '/place/')) {
-        $ruta = (string) ($partesMapa['path'] ?? '');
-        $consultaMapa = (string) preg_replace('#^.*?/place/#', '', $ruta);
-    } elseif (preg_match('/@(-?[0-9]+\.[0-9]+),(-?[0-9]+\.[0-9]+)/', $mapaUrl, $coordenadas) === 1) {
-        $consultaMapa = $coordenadas[1] . ',' . $coordenadas[2];
-    }
-    $consultaMapa = trim((string) urldecode($consultaMapa));
-    if ($consultaMapa === '') {
-        $consultaMapa = $direccionMapa;
-    }
-    $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($consultaMapa) . '&output=embed';
-}
+$mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed';
+$mapaLinkExterno = 'https://maps.google.com/?q=' . rawurlencode($direccionMapa);
 
 $camposPermitidos = [
     'nombre' => ['label' => 'Nombre', 'placeholder' => 'Nombre', 'type' => 'text', 'required' => true],
@@ -135,7 +109,7 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
-  .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important}
+  .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
