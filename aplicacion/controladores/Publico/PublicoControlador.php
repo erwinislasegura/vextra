@@ -884,8 +884,119 @@ class PublicoControlador extends Controlador
                 'items' => $modeloCompras->listarItems((int) ($compra['id'] ?? 0)),
             ];
         }
+                if ($token !== '' && is_array($orden)) {
+            $this->enviarCorreoResumenCheckoutCatalogo($empresa, $token, $estado, $orden);
+        }
+
+        if (in_array($estado, ['rechazado', 'anulado'], true)) {
+            if ($token !== '' && is_array($orden)) {
+                $_SESSION['catalogo_checkout_rechazado_' . $token] = $orden;
+            }
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout/rechazado' . ($token !== '' ? '?token=' . rawurlencode($token) : ''));
+        }
+
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+
+    public function rechazoCheckoutCatalogo(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $token = trim((string) ($_GET['token'] ?? ($_POST['token'] ?? ($_GET['token_ws'] ?? $_POST['token_ws'] ?? ''))));
+        $orden = $token !== '' ? ($_SESSION['catalogo_checkout_rechazado_' . $token] ?? $_SESSION['catalogo_checkout_' . $token] ?? null) : null;
+        if (!is_array($orden) && $token !== '') {
+            $compra = (new CatalogoCompra())->buscarPorToken($token);
+            if (is_array($compra)) {
+                $orden = [
+                    'comprador' => [
+                        'nombre' => (string) ($compra['comprador_nombre'] ?? ''),
+                        'correo' => (string) ($compra['comprador_correo'] ?? ''),
+                        'telefono' => (string) ($compra['comprador_telefono'] ?? ''),
+                        'documento' => (string) ($compra['comprador_documento'] ?? ''),
+                        'empresa' => (string) ($compra['comprador_empresa'] ?? ''),
+                        'envio_metodo' => (string) ($compra['envio_metodo'] ?? 'starken'),
+                        'direccion' => (string) ($compra['envio_direccion'] ?? ''),
+                        'referencia' => (string) ($compra['envio_referencia'] ?? ''),
+                        'comuna' => (string) ($compra['envio_comuna'] ?? ''),
+                        'ciudad' => (string) ($compra['envio_ciudad'] ?? ''),
+                        'region' => (string) ($compra['envio_region'] ?? ''),
+                    ],
+                    'total' => (float) ($compra['total'] ?? 0),
+                    'items' => (new CatalogoCompra())->listarItems((int) ($compra['id'] ?? 0)),
+                ];
+            }
+        }
+
+        if ($token !== '' && is_array($orden)) {
+            $this->enviarCorreoResumenCheckoutCatalogo($empresa, $token, 'rechazado', $orden);
+        }
+
+        $estado = 'rechazado';
+        $ocultarNavbarPublico = true;
+        $this->vistaPublica('publico/catalogo_checkout_rechazado', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    private function enviarCorreoResumenCheckoutCatalogo(array $empresa, string $token, string $estado, array $orden): void
+    {
+        $sessionKey = 'catalogo_checkout_correo_' . md5($token . '|' . $estado);
+        if (isset($_SESSION[$sessionKey])) {
+            return;
+        }
+
+        $comprador = is_array($orden['comprador'] ?? null) ? $orden['comprador'] : [];
+        $correo = trim((string) ($comprador['correo'] ?? ''));
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            return;
+        }
+
+        $estadoTitulo = match ($estado) {
+            'aprobado' => 'Pago aprobado',
+            'rechazado', 'anulado' => 'Pago no aprobado',
+            default => 'Pago en revisión',
+        };
+
+        $filas = '';
+        foreach ((array) ($orden['items'] ?? []) as $item) {
+            $filas .= '<tr><td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">' . htmlspecialchars((string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto')) . ' x' . (int) ($item['cantidad'] ?? 1) . '</td><td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;">$' . number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . '</td></tr>';
+        }
+
+        $envioCondicion = 'Envío por pagar con plazo máximo de 48 horas hábiles desde la confirmación del pago.';
+        $html = '<div style="font-family:Arial,sans-serif;color:#1f2937">'
+            . '<h2 style="margin-bottom:8px;">' . htmlspecialchars($estadoTitulo) . ' - ' . htmlspecialchars((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) . '</h2>'
+            . '<p>Token Flow: <strong>' . htmlspecialchars($token) . '</strong></p>'
+            . '<h3>Datos personales</h3>'
+            . '<p><strong>Nombre:</strong> ' . htmlspecialchars((string) ($comprador['nombre'] ?? '-')) . '<br>'
+            . '<strong>Correo:</strong> ' . htmlspecialchars($correo) . '<br>'
+            . '<strong>Teléfono:</strong> ' . htmlspecialchars((string) ($comprador['telefono'] ?? '-')) . '<br>'
+            . '<strong>Documento:</strong> ' . htmlspecialchars((string) ($comprador['documento'] ?? '-')) . '<br>'
+            . '<strong>Empresa:</strong> ' . htmlspecialchars((string) ($comprador['empresa'] ?? '-')) . '</p>'
+            . '<h3>Datos de envío</h3>'
+            . '<p><strong>Método:</strong> ' . htmlspecialchars((string) ($comprador['envio_metodo'] ?? 'starken')) . '<br>'
+            . '<strong>Dirección:</strong> ' . htmlspecialchars((string) ($comprador['direccion'] ?? '-')) . '<br>'
+            . '<strong>Comuna/Ciudad:</strong> ' . htmlspecialchars(trim((string) (($comprador['comuna'] ?? '') . ' / ' . ($comprador['ciudad'] ?? '')), ' /')) . '<br>'
+            . '<strong>Región:</strong> ' . htmlspecialchars((string) ($comprador['region'] ?? '-')) . '<br>'
+            . '<strong>Referencia:</strong> ' . htmlspecialchars((string) ($comprador['referencia'] ?? '-')) . '</p>'
+            . '<p><em>' . htmlspecialchars($envioCondicion) . '</em></p>'
+            . '<h3>Detalle de compra</h3>'
+            . '<table style="width:100%;border-collapse:collapse;">' . $filas . '</table>'
+            . '<p style="text-align:right;margin-top:8px;"><strong>Total: $' . number_format((float) ($orden['total'] ?? 0), 0, ',', '.') . '</strong></p>'
+            . '</div>';
+
+        (new ServicioCorreo())->enviarNotificacionCliente(
+            $correo,
+            'Resumen de compra catálogo - ' . (string) ($empresa['nombre_comercial'] ?? 'Vextra'),
+            'catalogo_checkout_resumen',
+            ['html' => $html]
+        );
+
+        $_SESSION[$sessionKey] = 1;
     }
 
 

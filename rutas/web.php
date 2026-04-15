@@ -37,6 +37,8 @@ $enrutador->agregar('GET', '/catalogo/{empresaId}/checkout/exito', [PublicoContr
 $enrutador->agregar('POST', '/catalogo/{empresaId}/checkout/exito', [PublicoControlador::class, 'exitoCheckoutCatalogo']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}/checkout/exito/', [PublicoControlador::class, 'exitoCheckoutCatalogo']);
 $enrutador->agregar('POST', '/catalogo/{empresaId}/checkout/exito/', [PublicoControlador::class, 'exitoCheckoutCatalogo']);
+$enrutador->agregar('GET', '/catalogo/{empresaId}/checkout/rechazado', [PublicoControlador::class, 'rechazoCheckoutCatalogo']);
+$enrutador->agregar('POST', '/catalogo/{empresaId}/checkout/rechazado', [PublicoControlador::class, 'rechazoCheckoutCatalogo']);
 
 $enrutador->agregar('POST', '/flow/webhook/payment-confirmation', [FlowWebhookControlador::class, 'confirmacionPago']);
 $enrutador->agregar('POST', '/flow/webhook/subscription', [FlowWebhookControlador::class, 'callbackSuscripcion']);
