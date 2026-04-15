@@ -85,18 +85,18 @@ $renderIconoRed = static function (string $id): string {
   .hero-nosotros{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .hero-nosotros::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
   .hero-nosotros h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
-  .nosotros-wrap{padding:20px 0 42px}
-  .nosotros-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:24px;align-items:start}
-  .nosotros-card img{width:100%;max-height:520px;object-fit:cover;border-radius:16px;background:#f8fafc}
-  .nosotros-texto h2{font-size:38px;line-height:1.1;color:#1f2937;font-weight:700;margin:0 0 14px}
-  .nosotros-texto p{color:#596780;line-height:1.7;font-size:18px;margin:0}
-  .nosotros-sociales{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
-  .nosotros-sociales a{width:40px;height:40px;border:1px solid #cfd8e6;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;text-decoration:none;transition:all .2s ease}
-  .nosotros-sociales a svg{width:21px;height:21px;fill:currentColor}
+  .nosotros-wrap{padding:28px 0 46px}
+  .nosotros-card{padding:8px 2px 24px;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:34px;align-items:center}
+  .nosotros-card img{width:100%;max-height:500px;object-fit:cover;border-radius:14px;background:#f8fafc}
+  .nosotros-texto h2{font-size:24px;line-height:1.2;color:var(--primary);font-weight:700;margin:0 0 12px}
+  .nosotros-texto p{color:var(--muted);line-height:1.7;font-size:16px;margin:0}
+  .nosotros-sociales{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .nosotros-sociales a{width:36px;height:36px;border:1px solid var(--border);border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;text-decoration:none;transition:all .2s ease}
+  .nosotros-sociales a svg{width:17px;height:17px;fill:currentColor}
   .nosotros-sociales a:hover{background:var(--primary);border-color:var(--primary);color:#fff}
-  .nosotros-extra{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px}
-  .nosotros-extra h3{font-size:30px;color:var(--primary);margin:0 0 12px}
-  .nosotros-extra p{color:#4b5563;line-height:1.8;font-size:18px;margin:0}
+  .nosotros-extra{margin-top:4px;padding:26px 2px 0;border-top:1px solid var(--border)}
+  .nosotros-extra h3{font-size:22px;color:var(--primary);margin:0 0 10px;font-weight:700}
+  .nosotros-extra p{color:var(--muted);line-height:1.75;font-size:16px;margin:0;max-width:1100px}
   .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
@@ -118,7 +118,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
   body.public-page > footer.border-top.bg-white.mt-5{display:none}
-  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}.nosotros-texto h2{font-size:32px}.nosotros-extra h3{font-size:26px}}
+  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}.nosotros-card{gap:20px}.nosotros-texto h2{font-size:22px}.nosotros-extra h3{font-size:20px}}
   @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 <div class="catalogo-page">
