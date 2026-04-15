@@ -19,6 +19,9 @@ $catalogoHeaderCartButtonId = (string) ($catalogoHeaderCartButtonId ?? '');
 <header class="catalogo-header">
   <div class="catalogo-container catalogo-navbar">
     <a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a>
+    <button class="catalogo-mobile-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
     <form class="search-box" method="<?= e($catalogoHeaderSearchMethod) ?>" action="<?= e($catalogoHeaderSearchAction) ?>">
       <input type="text" name="<?= e($catalogoHeaderSearchName) ?>"<?= $catalogoHeaderSearchInputId !== '' ? ' id="' . e($catalogoHeaderSearchInputId) . '"' : '' ?> value="<?= e($catalogoHeaderSearchValue) ?>" placeholder="Buscar productos, categorías o marcas...">
       <button type="submit"<?= $catalogoHeaderSearchButtonId !== '' ? ' id="' . e($catalogoHeaderSearchButtonId) . '"' : '' ?>>Buscar</button>
@@ -35,3 +38,22 @@ $catalogoHeaderCartButtonId = (string) ($catalogoHeaderCartButtonId ?? '');
     <?php endif; ?>
   </div>
 </header>
+<script>
+  (() => {
+    const header = document.currentScript?.previousElementSibling;
+    if (!header || !header.classList.contains('catalogo-header')) return;
+    const toggle = header.querySelector('.catalogo-mobile-toggle');
+    if (!toggle) return;
+    const setState = (open) => {
+      header.classList.toggle('is-mobile-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    };
+    toggle.addEventListener('click', () => setState(!header.classList.contains('is-mobile-open')));
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 720) {
+        setState(false);
+      }
+    });
+  })();
+</script>

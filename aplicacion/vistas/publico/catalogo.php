@@ -101,6 +101,11 @@ $renderIconoRed = static function (string $id): string {
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
+  .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--primary)}
+  .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
+  .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(2){opacity:0}
+  .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
   .btn-soft{background:#eff6ff;color:var(--accent)}
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
   .hero{padding:26px 0 22px}
@@ -215,9 +220,14 @@ $renderIconoRed = static function (string $id): string {
     .products-grid{grid-template-columns:1fr}
     .feature-list{display:grid;grid-template-columns:1fr}
     .catalogo-topbar__content,.section-head{display:flex;flex-direction:column;align-items:flex-start}
-    .catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}
-    .catalogo-logo{justify-content:center}
+    .catalogo-navbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+    .catalogo-logo{justify-content:flex-start}
     .catalogo-logo img{width:110px;height:56px}
+    .catalogo-mobile-toggle{display:inline-flex}
+    .search-box,.nav-actions,.catalogo-navbar > .btn-primary-custom{display:none}
+    .catalogo-header.is-mobile-open .search-box{display:flex;grid-column:1/-1}
+    .catalogo-header.is-mobile-open .nav-actions{display:flex;grid-column:1/-1}
+    .catalogo-header.is-mobile-open .catalogo-navbar > .btn-primary-custom{display:flex;grid-column:1/-1}
     .search-box{border-radius:14px}
     .search-box input,.search-box button{font-size:13px}
     .search-box button{padding:10px 14px}
