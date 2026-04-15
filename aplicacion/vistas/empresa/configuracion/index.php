@@ -28,6 +28,11 @@
           <label class="form-label">Identificador fiscal</label>
           <input name="identificador_fiscal" class="form-control" value="<?= e($empresa['identificador_fiscal'] ?? '') ?>" required>
         </div>
+        <div class="col-12">
+          <label class="form-label">Descripción para catálogo público</label>
+          <textarea name="descripcion" class="form-control" rows="2" maxlength="280" placeholder="Describe brevemente tu empresa para mostrarla en el footer del catálogo."><?= e((string) ($empresa['descripcion'] ?? '')) ?></textarea>
+          <div class="form-text">Este texto reemplaza la frase fija del footer del catálogo público.</div>
+        </div>
         <div class="col-md-4">
           <label class="form-label">Correo principal</label>
           <input type="email" name="correo" class="form-control" value="<?= e($empresa['correo'] ?? '') ?>" required>

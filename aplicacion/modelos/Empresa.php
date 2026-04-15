@@ -347,46 +347,45 @@ class Empresa extends Modelo
 
     public function actualizarConfiguracion(int $empresaId, array $data): void
     {
-        $sql = 'UPDATE empresas
-            SET
-                razon_social = :razon_social,
-                nombre_comercial = :nombre_comercial,
-                identificador_fiscal = :identificador_fiscal,
-                correo = :correo,
-                telefono = :telefono,
-                direccion = :direccion,
-                ciudad = :ciudad,
-                pais = :pais,
-                logo = :logo,
-                imap_host = :imap_host,
-                imap_port = :imap_port,
-                imap_encryption = :imap_encryption,
-                imap_usuario = :imap_usuario,
-                imap_password = :imap_password,
-                imap_remitente_correo = :imap_remitente_correo,
-                imap_remitente_nombre = :imap_remitente_nombre,
-                fecha_actualizacion = NOW()
-            WHERE id = :empresa_id AND fecha_eliminacion IS NULL';
+        $columnasValores = [
+            'razon_social' => $data['razon_social'] ?? '',
+            'nombre_comercial' => $data['nombre_comercial'] ?? '',
+            'identificador_fiscal' => $data['identificador_fiscal'] ?? '',
+            'correo' => $data['correo'] ?? '',
+            'telefono' => $data['telefono'] ?? '',
+            'direccion' => $data['direccion'] ?? '',
+            'ciudad' => $data['ciudad'] ?? '',
+            'pais' => $data['pais'] ?? '',
+            'descripcion' => $data['descripcion'] ?? '',
+            'logo' => $data['logo'] ?? '',
+            'imap_host' => $data['imap_host'] ?? '',
+            'imap_port' => $data['imap_port'] ?? null,
+            'imap_encryption' => $data['imap_encryption'] ?? '',
+            'imap_usuario' => $data['imap_usuario'] ?? '',
+            'imap_password' => $data['imap_password'] ?? '',
+            'imap_remitente_correo' => $data['imap_remitente_correo'] ?? '',
+            'imap_remitente_nombre' => $data['imap_remitente_nombre'] ?? '',
+        ];
 
-        $this->db->prepare($sql)->execute([
-            'empresa_id' => $empresaId,
-            'razon_social' => $data['razon_social'],
-            'nombre_comercial' => $data['nombre_comercial'],
-            'identificador_fiscal' => $data['identificador_fiscal'],
-            'correo' => $data['correo'],
-            'telefono' => $data['telefono'],
-            'direccion' => $data['direccion'],
-            'ciudad' => $data['ciudad'],
-            'pais' => $data['pais'],
-            'logo' => $data['logo'],
-            'imap_host' => $data['imap_host'],
-            'imap_port' => $data['imap_port'],
-            'imap_encryption' => $data['imap_encryption'],
-            'imap_usuario' => $data['imap_usuario'],
-            'imap_password' => $data['imap_password'],
-            'imap_remitente_correo' => $data['imap_remitente_correo'],
-            'imap_remitente_nombre' => $data['imap_remitente_nombre'],
-        ]);
+        $sets = [];
+        $params = ['empresa_id' => $empresaId];
+        foreach ($columnasValores as $columna => $valor) {
+            if (!$this->columnaExisteEnEmpresas($columna)) {
+                continue;
+            }
+            $sets[] = $columna . ' = :' . $columna;
+            $params[$columna] = $valor;
+        }
+
+        if ($this->columnaExisteEnEmpresas('fecha_actualizacion')) {
+            $sets[] = 'fecha_actualizacion = NOW()';
+        }
+        if ($sets === []) {
+            return;
+        }
+
+        $sql = 'UPDATE empresas SET ' . implode(', ', $sets) . ' WHERE id = :empresa_id AND fecha_eliminacion IS NULL';
+        $this->db->prepare($sql)->execute($params);
     }
 
     public function obtenerConfiguracionCatalogoEnLinea(int $empresaId): array
@@ -406,6 +405,7 @@ class Empresa extends Modelo
             'catalogo_social_youtube' => '',
             'catalogo_color_primario' => '',
             'catalogo_color_acento' => '',
+            'catalogo_columnas_productos' => '3',
         ];
 
         $columnas = array_keys($config);
@@ -447,6 +447,7 @@ class Empresa extends Modelo
             'catalogo_social_youtube',
             'catalogo_color_primario',
             'catalogo_color_acento',
+            'catalogo_columnas_productos',
         ];
         $sets = [];
         $params = ['empresa_id' => $empresaId];
