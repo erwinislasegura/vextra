@@ -48,6 +48,10 @@ $colorAcento = trim((string) ($catalogoTopbar['color_acento'] ?? ''));
 if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorAcento) !== 1) {
     $colorAcento = '#5415B0';
 }
+$columnasProductos = (int) ($catalogoTopbar['columnas_productos'] ?? 3);
+if ($columnasProductos < 2 || $columnasProductos > 5) {
+    $columnasProductos = 3;
+}
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
     ['id' => 'instagram', 'url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'label' => 'Instagram'],
@@ -120,7 +124,7 @@ $renderIconoRed = static function (string $id): string {
   .category-list button.active{background:#eff6ff;color:var(--accent);border-color:#bfdbfe}
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
-  .products-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
   .product-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
@@ -128,12 +132,13 @@ $renderIconoRed = static function (string $id): string {
   .badge-mini.sale{background:#fff7ed;color:#ea580c}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.3px;text-transform:uppercase}
-  .product-title{font-size:34px;font-weight:800;color:var(--primary);line-height:1.15;margin:0}
-  .product-desc{color:var(--muted);font-size:14px;min-height:42px}
-  .rating-stock{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
-  .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:42px;font-weight:800;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:700}
+  .product-title{font-size:22px;font-weight:700;color:var(--primary);line-height:1.25;margin:0}
+  .product-desc{color:var(--muted);font-size:13px;line-height:1.45;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .stock-line{font-size:13px;color:var(--muted);font-weight:600}
+  .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:30px;font-weight:700;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:600}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
-  .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);font-size:20px}
+  .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
+  .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
   .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:999px;padding:14px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-weight:700;border:none}
   .cart-count{background:var(--accent);min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:13px}
   .cart-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-10px 0 30px rgba(15,23,42,.12);z-index:90;transition:right .3s ease;display:flex;flex-direction:column}
@@ -258,11 +263,10 @@ $renderIconoRed = static function (string $id): string {
               $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
               $descripcionProducto = (string) ($producto['descripcion'] ?? 'Sin descripción');
               $stock = (int) ($producto['stock_actual'] ?? rand(3, 40));
-              $rating = number_format(4 + (($producto['id'] ?? 1) % 10) / 10, 1);
               $onSale = ((int) ($producto['id'] ?? 0) % 2) === 0;
               $oldPrice = $onSale ? ($precio * 1.18) : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-rating="<?= e((string) $rating) ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
               <div class="product-image">
                 <img
                   src="<?= e($imagenProductoUrl) ?>"
@@ -277,11 +281,16 @@ $renderIconoRed = static function (string $id): string {
                 <span class="category-tag"><?= e($categoria) ?></span>
                 <h3 class="product-title"><?= e($nombreProducto) ?></h3>
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
-                <div class="rating-stock"><span>⭐<?= e((string) $rating) ?></span><span>Stock: <?= $stock ?></span></div>
+                <div class="stock-line">Stock: <?= $stock ?></div>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precio)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
                   <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precio ?>">Agregar al carrito</button>
-                  <button class="icon-btn" type="button" data-view-product aria-label="Ver producto">👁</button>
+                  <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>
+                      <circle cx="12" cy="11.5" r="2.8"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </article>
@@ -360,7 +369,6 @@ $renderIconoRed = static function (string $id): string {
     description: String(card.dataset.description || ''),
     image: String(card.dataset.image || ''),
     stock: Number(card.dataset.stock || 0),
-    rating: Number(card.dataset.rating || 0),
     onSale: String(card.dataset.onsale || '0') === '1',
     featured: String(card.dataset.onsale || '0') !== '1',
     oldPrice: Number(card.dataset.oldprice || 0),
@@ -391,7 +399,12 @@ $renderIconoRed = static function (string $id): string {
   const carritoJson = $('#carrito_json');
 
   const modalCheckout = window.bootstrap ? new bootstrap.Modal($('#modalCheckout')) : null;
-  const modalProductoDetalle = window.bootstrap ? new bootstrap.Modal($('#modalProductoDetalle')) : null;
+  const getModalProductoDetalle = () => {
+    if (!window.bootstrap) return null;
+    const modalEl = $('#modalProductoDetalle');
+    if (!modalEl) return null;
+    return bootstrap.Modal.getOrCreateInstance(modalEl);
+  };
   const detalleNombre = $('#detalleProductoNombre');
   const detalleDescripcion = $('#detalleProductoDescripcion');
   const detalleCategoria = $('#detalleProductoCategoria');
@@ -507,6 +520,7 @@ $renderIconoRed = static function (string $id): string {
     addBtn && addBtn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(Number(card.dataset.id || 0)); });
     const openDetail = () => {
       productoSeleccionado = products.find((p) => p.id === Number(card.dataset.id || 0)) || null;
+      const modalProductoDetalle = getModalProductoDetalle();
       if (!productoSeleccionado || !modalProductoDetalle) return;
       detalleNombre.textContent = productoSeleccionado.name;
       detalleDescripcion.textContent = productoSeleccionado.description;
@@ -516,13 +530,13 @@ $renderIconoRed = static function (string $id): string {
       detalleImagen.alt = productoSeleccionado.name;
       modalProductoDetalle.show();
     };
-    card.addEventListener('click', openDetail);
     viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetail(); });
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
     addToCart(Number(productoSeleccionado.id));
+    const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
 
