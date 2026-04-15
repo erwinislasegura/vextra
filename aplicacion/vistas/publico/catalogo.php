@@ -148,13 +148,14 @@ $renderIconoRed = static function (string $id): string {
   .cart-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-10px 0 30px rgba(15,23,42,.12);z-index:90;transition:right .3s ease;display:flex;flex-direction:column}
   .cart-panel.open{right:0}.cart-header,.cart-footer{padding:20px}.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
   .cart-items{flex:1;overflow:auto;padding:18px;display:grid;gap:12px}.cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:10px}
-  .cart-header h3{font-size:20px;font-weight:600;margin:0;color:var(--primary)}
-  .cart-item h4{font-size:16px;font-weight:600;line-height:1.25;margin:0 0 4px;color:#243447}
-  .cart-item p{font-size:13px;font-weight:500;margin:0;color:var(--text)}
-  .cart-item img{width:74px;height:74px;object-fit:cover;border-radius:10px}.qty-controls{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px}
-  .qty-controls button{width:26px;height:26px;border-radius:8px;background:#f1f5f9;border:1px solid var(--border);font-size:14px;font-weight:600;line-height:1}
-  .cart-item .btn-danger-soft{font-size:14px;font-weight:600;padding:7px 10px}
-  .cart-footer{border-top:1px solid var(--border);display:grid;gap:12px}.summary-row{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
+  .cart-header h3{font-size:18px;font-weight:500;margin:0;color:var(--primary)}
+  .cart-item h4{font-size:14px;font-weight:600;line-height:1.2;margin:0 0 2px;color:#243447}
+  .cart-item p{font-size:12px;font-weight:500;margin:0;color:var(--text)}
+  .cart-item__desc{font-size:11px;font-weight:400;line-height:1.35;color:var(--muted);margin-top:3px}
+  .cart-item img{width:68px;height:68px;object-fit:cover;border-radius:10px}.qty-controls{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:12px}
+  .qty-controls button{width:24px;height:24px;border-radius:7px;background:#f1f5f9;border:1px solid var(--border);font-size:13px;font-weight:500;line-height:1}
+  .cart-item .btn-danger-soft{font-size:13px;font-weight:500;padding:6px 9px}
+  .cart-footer{border-top:1px solid var(--border);display:grid;gap:10px}.summary-row{display:flex;justify-content:space-between;font-size:14px;font-weight:500}
   .empty-state{text-align:center;color:var(--muted);padding:40px 10px}.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;visibility:hidden;transition:.25s;z-index:80}.overlay.show{opacity:1;visibility:visible}
   .footer{background:var(--primary);color:#fff;padding:28px 0;margin-top:20px}.footer-content{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
@@ -368,6 +369,11 @@ $renderIconoRed = static function (string $id): string {
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const money = (v) => `$${Math.round(Number(v || 0)).toLocaleString('es-CL')}`;
+  const resumenTexto = (txt, max = 68) => {
+    const limpio = String(txt || '').replace(/\s+/g, ' ').trim();
+    if (limpio.length <= max) return limpio;
+    return `${limpio.slice(0, max).trimEnd()}…`;
+  };
   const storageKey = 'vextra_catalogo_carrito_<?= (int) $empresa['id'] ?>';
 
   const cards = $$('.product-card');
@@ -485,6 +491,7 @@ $renderIconoRed = static function (string $id): string {
         <div>
           <h4>${item.name}</h4>
           <p>${money(item.price)} c/u</p>
+          <div class="cart-item__desc">${resumenTexto(item.description || 'Producto seleccionado')}</div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
             <span>${item.quantity}</span>
@@ -508,7 +515,7 @@ $renderIconoRed = static function (string $id): string {
     if (!product) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
-    else cart.push({ id: product.id, name: product.name, image: product.image, price: product.price, quantity: 1 });
+    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, quantity: 1 });
     renderCart();
     openCart();
   };
