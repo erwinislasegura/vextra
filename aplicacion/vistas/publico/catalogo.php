@@ -93,20 +93,21 @@ $renderIconoContacto = static function (string $tipo): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none;transition:all .2s ease}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
   .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
-  .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-header{position:sticky;top:0;z-index:45;background:#ececf0;border-bottom:1px solid #d7d9e3}
+  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:14px;align-items:center;padding:12px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
+  .catalogo-logo img{width:170px;height:36px;object-fit:contain;background:transparent}
   .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
-  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-  .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
-  .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .nav-actions{display:flex;gap:10px;align-items:center}
-  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
-  .menu-link:hover{color:var(--accent)}
-  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
-  .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .search-box{display:flex;align-items:center;background:#f5f6fa;border:1px solid #cfd3e2;border-radius:999px;overflow:hidden;min-height:46px}
+  .search-box input{width:100%;padding:11px 18px;border:none;outline:none;background:transparent;font-size:18px;line-height:1.2;color:#444;font-weight:500}
+  .search-box input::placeholder{color:#7d8395}
+  .search-box button{background:#48248b;color:#fff;padding:11px 28px;font-weight:700;border:none;border-radius:999px}
+  .nav-actions{display:flex;gap:24px;align-items:center;justify-content:center;white-space:nowrap}
+  .menu-link{padding:0;font-weight:700;font-size:18px;color:#48248b;text-decoration:none;border:none;background:transparent}
+  .menu-link:hover{color:#5b33a6}
+  .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:11px 18px;border-radius:12px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
+  .btn-primary-custom{background:#48248b;border-color:#48248b;color:#fff}
   .btn-soft{background:#eff6ff;color:var(--accent)}
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
   .hero{padding:26px 0 22px}

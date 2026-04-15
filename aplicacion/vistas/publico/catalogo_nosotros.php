@@ -54,15 +54,17 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales{display:flex;align-items:center;gap:10px}
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
-  .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
-  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-  .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
-  .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
-  .menu-link:hover{color:var(--accent)}
-  .btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;text-decoration:none}
+  .catalogo-header{position:sticky;top:0;z-index:45;background:#ececf0;border-bottom:1px solid #d7d9e3}
+  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:14px;align-items:center;padding:12px 0}
+  .catalogo-logo img{width:170px;height:36px;object-fit:contain;background:transparent}
+  .search-box{display:flex;align-items:center;background:#f5f6fa;border:1px solid #cfd3e2;border-radius:999px;overflow:hidden;min-height:46px}
+  .search-box input{width:100%;padding:11px 18px;border:none;outline:none;background:transparent;font-size:18px;line-height:1.2;color:#444;font-weight:500}
+  .search-box input::placeholder{color:#7d8395}
+  .search-box button{background:#48248b;color:#fff;padding:11px 28px;font-weight:700;border:none;border-radius:999px}
+  .nav-actions{display:flex;justify-content:center;align-items:center;gap:24px;white-space:nowrap}
+  .menu-link{padding:0;font-weight:700;font-size:18px;color:#48248b;text-decoration:none;border:none;background:transparent}
+  .menu-link:hover{color:#5b33a6}
+  .btn-primary-custom{padding:11px 18px;border-radius:12px;font-weight:700;border:1px solid #48248b;background:#48248b;color:#fff;text-decoration:none}
   .nosotros-wrap{padding:30px 0 42px}
   .nosotros-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
   .nosotros-card img{width:100%;max-height:420px;object-fit:cover;border-radius:16px;background:#f8fafc}
@@ -78,11 +80,11 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
-  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}}
+  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}.nav-actions{justify-content:flex-start;gap:12px}}
 </style>
 <div class="catalogo-page">
   <div class="catalogo-topbar"><div class="catalogo-container catalogo-topbar__content"><div><?= e($topbarTexto) ?></div><?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div>
-  <header class="catalogo-header"><div class="catalogo-container catalogo-navbar"><a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a><form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>"><input type="text" name="q" placeholder="Buscar productos, categorías o marcas..."><button type="submit">Buscar</button></form><div class="d-flex gap-2 flex-wrap"><a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a><a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a></div><a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a></div></header>
+  <header class="catalogo-header"><div class="catalogo-container catalogo-navbar"><a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a><form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>"><input type="text" name="q" placeholder="Buscar productos, categorías o marcas..."><button type="submit">Buscar</button></form><nav class="nav-actions" aria-label="Menú superior catálogo"><a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a><a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a></nav><a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a></div></header>
   <section class="nosotros-wrap"><div class="catalogo-container"><article class="nosotros-card"><img src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros"><div><h1><?= e($nosotrosTitulo) ?></h1><p><?= nl2br(e($nosotrosDescripcion)) ?></p></div></article></div></section>
   <footer class="footer"><div class="catalogo-container footer-content"><div class="footer-brand footer-col"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"><p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p></div><div class="footer-col"><h4>Accesos rápidos</h4><nav class="footer-menu mt-2"><a href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a href="<?= e($catalogoBaseUrl) ?>/nosotros">Nosotros</a><a href="<?= e($catalogoBaseUrl) ?>/contacto">Contacto</a></nav></div><div class="footer-contact footer-col"><h4>Datos de contacto</h4><p><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p></div><div class="footer-follow footer-col"><h4>Síguenos</h4><p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p><?php if ($socialesTopbar !== []): ?><div class="footer-sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div></footer>
 </div>
