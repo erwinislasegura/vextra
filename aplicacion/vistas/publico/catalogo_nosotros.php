@@ -26,6 +26,21 @@ if ($nosotrosDescripcion === '') {
     $nosotrosDescripcion = 'Somos un equipo enfocado en entregar una experiencia de compra clara, rápida y confiable para cada cliente.';
 }
 $nosotrosImagen = (string) ($catalogoTopbar['nosotros_imagen'] ?? url('/img/placeholder-producto.svg'));
+$sliderImagen = trim((string) ($sliderCatalogo['imagen'] ?? ''));
+if ($sliderImagen === '') {
+    $sliderImagen = url('/img/placeholder-producto.svg');
+}
+$bloquesDescripcion = preg_split('/\R{2,}/u', $nosotrosDescripcion) ?: [];
+$bloquesDescripcion = array_values(array_filter(array_map(static fn($bloque): string => trim((string) $bloque), $bloquesDescripcion), static fn(string $bloque): bool => $bloque !== ''));
+if ($bloquesDescripcion === []) {
+    $bloquesDescripcion = [$nosotrosDescripcion];
+}
+$descripcionPrincipal = (string) ($bloquesDescripcion[0] ?? $nosotrosDescripcion);
+$descripcionSecundaria = trim(implode("\n\n", array_slice($bloquesDescripcion, 1)));
+$tituloSecundario = 'Nuestra historia';
+if ($descripcionSecundaria === '') {
+    $descripcionSecundaria = $nosotrosDescripcion;
+}
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
     ['id' => 'instagram', 'url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'label' => 'Instagram'],
@@ -67,11 +82,21 @@ $renderIconoRed = static function (string $id): string {
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
-  .nosotros-wrap{padding:30px 0 42px}
-  .nosotros-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-  .nosotros-card img{width:100%;max-height:420px;object-fit:cover;border-radius:16px;background:#f8fafc}
-  .nosotros-card h1{font-size:32px;color:var(--primary);margin-bottom:10px}
-  .nosotros-card p{color:var(--muted);line-height:1.6}
+  .hero-nosotros{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .hero-nosotros::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
+  .hero-nosotros h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
+  .nosotros-wrap{padding:20px 0 42px}
+  .nosotros-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:24px;align-items:start}
+  .nosotros-card img{width:100%;max-height:520px;object-fit:cover;border-radius:16px;background:#f8fafc}
+  .nosotros-texto h2{font-size:38px;line-height:1.1;color:#1f2937;font-weight:700;margin:0 0 14px}
+  .nosotros-texto p{color:#596780;line-height:1.7;font-size:18px;margin:0}
+  .nosotros-sociales{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+  .nosotros-sociales a{width:40px;height:40px;border:1px solid #cfd8e6;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;text-decoration:none;transition:all .2s ease}
+  .nosotros-sociales a svg{width:21px;height:21px;fill:currentColor}
+  .nosotros-sociales a:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+  .nosotros-extra{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px}
+  .nosotros-extra h3{font-size:30px;color:var(--primary);margin:0 0 12px}
+  .nosotros-extra p{color:#4b5563;line-height:1.8;font-size:18px;margin:0}
   .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
@@ -93,7 +118,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
   body.public-page > footer.border-top.bg-white.mt-5{display:none}
-  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}}
+  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}.nosotros-texto h2{font-size:32px}.nosotros-extra h3{font-size:26px}}
   @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 <div class="catalogo-page">
@@ -106,7 +131,33 @@ $renderIconoRed = static function (string $id): string {
     $catalogoHeaderCartHref = $catalogoBaseUrl;
     require __DIR__ . '/partials/catalogo_header.php';
   ?>
-  <section class="nosotros-wrap"><div class="catalogo-container"><article class="nosotros-card"><img src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros"><div><h1><?= e($nosotrosTitulo) ?></h1><p><?= nl2br(e($nosotrosDescripcion)) ?></p></div></article></div></section>
+  <section class="catalogo-container">
+    <div class="hero-nosotros" style="background-image:url('<?= e($sliderImagen) ?>')">
+      <h1>Nosotros</h1>
+    </div>
+  </section>
+  <section class="nosotros-wrap">
+    <div class="catalogo-container">
+      <article class="nosotros-card">
+        <img src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros">
+        <div class="nosotros-texto">
+          <h2><?= e($nosotrosTitulo) ?></h2>
+          <p><?= nl2br(e($descripcionPrincipal)) ?></p>
+          <?php if ($socialesTopbar !== []): ?>
+            <div class="nosotros-sociales">
+              <?php foreach ($socialesTopbar as $red): ?>
+                <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) ($red['label'] ?? 'Red social')) ?>"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+        </div>
+      </article>
+      <article class="nosotros-extra">
+        <h3><?= e($tituloSecundario) ?></h3>
+        <p><?= nl2br(e($descripcionSecundaria)) ?></p>
+      </article>
+    </div>
+  </section>
   <?php
     $catalogoFooterInicioUrl = $catalogoBaseUrl . '#catalogoProductos';
     $catalogoFooterProductosUrl = $catalogoBaseUrl . '#catalogoProductos';
