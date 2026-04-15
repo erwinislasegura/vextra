@@ -115,24 +115,24 @@ $renderIconoRed = static function (string $id): string {
   .btn-outline,.btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
 
-  .contact-hero{margin-top:10px;border-radius:18px;min-height:210px;display:flex;align-items:flex-end;padding:24px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
-  .contact-hero h1{position:relative;color:#fff;font-size:42px;font-weight:800;margin:0}
+  .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
 
   .contact-layout{padding:18px 0 24px}
-  .contact-card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:3fr 2fr;gap:28px}
-  .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--primary);margin-bottom:8px}
-  .contact-title{font-size:56px;line-height:1.05;margin-bottom:12px;color:#312d34;font-weight:800}
-  .contact-desc{font-size:18px;line-height:1.6;color:var(--muted)}
-  .contact-follow{margin-top:24px}.contact-follow h4{font-size:20px;margin-bottom:10px}
+  .contact-card{background:#f8fafc;border:1px solid #d7dee9;border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:24px;display:grid;grid-template-columns:3fr 2fr;gap:24px}
+  .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:14px;color:var(--primary);margin-bottom:6px}
+  .contact-title{font-size:32px;line-height:1.15;margin-bottom:10px;color:#1f2937;font-weight:700}
+  .contact-desc{font-size:14px;line-height:1.7;color:#596780}
+  .contact-follow{margin-top:20px}.contact-follow h4{font-size:16px;margin-bottom:10px;color:#243447}
   .contact-icons{display:flex;gap:10px}.contact-icons a{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff}
 
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .form-group label{display:block;font-weight:700;color:#334155;margin-bottom:5px}
-  .form-group input,.form-group textarea{width:100%;border:1px solid var(--border);padding:10px 12px;font-size:14px;border-radius:8px;background:#fff}
+  .form-group label{display:block;font-weight:700;color:#2f3f57;margin-bottom:5px;font-size:13px}
+  .form-group input,.form-group textarea{width:100%;border:1px solid #c6d0de;padding:10px 12px;font-size:14px;border-radius:8px;background:#fff}
   .form-group textarea{min-height:190px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
-  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-transform:uppercase}
+  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.2px}
 
   .map-wrap{margin:6px 0 0}.map-wrap iframe{width:100%;height:350px;border:0;display:block}
 
@@ -145,7 +145,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
-  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:42px}}
+  @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:28px}}
 </style>
 
 <div class="catalogo-page">
