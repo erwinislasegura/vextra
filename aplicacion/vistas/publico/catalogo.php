@@ -147,9 +147,13 @@ $renderIconoRed = static function (string $id): string {
   .cart-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-10px 0 30px rgba(15,23,42,.12);z-index:90;transition:right .3s ease;display:flex;flex-direction:column}
   .cart-panel.open{right:0}.cart-header,.cart-footer{padding:20px}.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
   .cart-items{flex:1;overflow:auto;padding:18px;display:grid;gap:12px}.cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:10px}
-  .cart-item img{width:74px;height:74px;object-fit:cover;border-radius:10px}.qty-controls{display:flex;align-items:center;gap:8px;margin-top:8px}
-  .qty-controls button{width:28px;height:28px;border-radius:8px;background:#f1f5f9;border:1px solid var(--border);font-weight:700}
-  .cart-footer{border-top:1px solid var(--border);display:grid;gap:12px}.summary-row{display:flex;justify-content:space-between;font-weight:700}
+  .cart-header h3{font-size:20px;font-weight:600;margin:0;color:var(--primary)}
+  .cart-item h4{font-size:16px;font-weight:600;line-height:1.25;margin:0 0 4px;color:#243447}
+  .cart-item p{font-size:13px;font-weight:500;margin:0;color:var(--text)}
+  .cart-item img{width:74px;height:74px;object-fit:cover;border-radius:10px}.qty-controls{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px}
+  .qty-controls button{width:26px;height:26px;border-radius:8px;background:#f1f5f9;border:1px solid var(--border);font-size:14px;font-weight:600;line-height:1}
+  .cart-item .btn-danger-soft{font-size:14px;font-weight:600;padding:7px 10px}
+  .cart-footer{border-top:1px solid var(--border);display:grid;gap:12px}.summary-row{display:flex;justify-content:space-between;font-size:15px;font-weight:600}
   .empty-state{text-align:center;color:var(--muted);padding:40px 10px}.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;visibility:hidden;transition:.25s;z-index:80}.overlay.show{opacity:1;visibility:visible}
   .footer{background:var(--primary);color:#fff;padding:28px 0;margin-top:20px}.footer-content{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
