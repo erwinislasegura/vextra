@@ -75,6 +75,8 @@ $camposActivos = array_values(array_filter(array_map(static fn($campo): string =
 if (!in_array('nombre', $camposActivos, true)) $camposActivos[] = 'nombre';
 if (!in_array('email', $camposActivos, true)) $camposActivos[] = 'email';
 if (!in_array('mensaje', $camposActivos, true)) $camposActivos[] = 'mensaje';
+$camposSinMensaje = array_values(array_filter($camposActivos, static fn(string $campo): bool => $campo !== 'mensaje'));
+$camposOrdenados = [...$camposSinMensaje, 'mensaje'];
 
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
@@ -118,19 +120,19 @@ $renderIconoRed = static function (string $id): string {
   .contact-hero h1{position:relative;color:#fff;font-size:42px;font-weight:800;margin:0}
 
   .contact-layout{padding:18px 0 24px}
-  .contact-card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:360px 1fr;gap:30px}
+  .contact-card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:3fr 2fr;gap:28px}
   .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--primary);margin-bottom:8px}
   .contact-title{font-size:56px;line-height:1.05;margin-bottom:12px;color:#312d34;font-weight:800}
   .contact-desc{font-size:18px;line-height:1.6;color:var(--muted)}
   .contact-follow{margin-top:24px}.contact-follow h4{font-size:20px;margin-bottom:10px}
   .contact-icons{display:flex;gap:10px}.contact-icons a{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff}
 
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .form-group label{display:block;font-weight:700;color:#334155;margin-bottom:5px}
-  .form-group input,.form-group textarea{width:100%;border:1px solid var(--border);padding:12px 14px;font-size:16px;border-radius:8px;background:#fff}
+  .form-group input,.form-group textarea{width:100%;border:1px solid var(--border);padding:10px 12px;font-size:14px;border-radius:8px;background:#fff}
   .form-group textarea{min-height:190px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
-  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:14px 30px;border-radius:10px;font-size:20px;font-weight:800;text-transform:uppercase}
+  .btn-submit{margin-top:14px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;text-transform:uppercase}
 
   .map-wrap{margin:6px 0 0}.map-wrap iframe{width:100%;height:350px;border:0;display:block}
 
@@ -177,7 +179,7 @@ $renderIconoRed = static function (string $id): string {
         <form method="POST" action="<?= e($accionFormulario) ?>">
           <?= csrf_campo() ?>
           <div class="form-grid">
-            <?php foreach ($camposActivos as $campoClave): $cfg = $camposPermitidos[$campoClave] ?? null; if ($cfg === null) continue; $esTextarea = $cfg['type'] === 'textarea'; ?>
+            <?php foreach ($camposOrdenados as $campoClave): $cfg = $camposPermitidos[$campoClave] ?? null; if ($cfg === null) continue; $esTextarea = $cfg['type'] === 'textarea'; ?>
               <div class="form-group <?= $esTextarea ? 'full' : '' ?>">
                 <label for="campo_<?= e($campoClave) ?>"><?= e((string) $cfg['label']) ?><?= !empty($cfg['required']) ? ' *' : '' ?></label>
                 <?php if ($esTextarea): ?><textarea id="campo_<?= e($campoClave) ?>" name="<?= e($campoClave) ?>" placeholder="<?= e((string) $cfg['placeholder']) ?>" <?= !empty($cfg['required']) ? 'required' : '' ?>></textarea>
