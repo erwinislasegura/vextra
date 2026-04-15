@@ -123,8 +123,8 @@ $renderIconoRed = static function (string $id): string {
   .category-list,.feature-list{list-style:none;display:grid;gap:4px;margin-top:8px}
   .category-list{max-height:320px;overflow:auto;padding-right:4px}
   .feature-list{grid-template-columns:1fr 1fr}
-  .category-list button,.feature-list button{width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid #e6edf6;border-radius:0;padding:8px 4px;font-weight:500;font-size:14px;color:var(--primary-soft)}
-  .category-list button.active{color:var(--accent);font-weight:700}
+  .category-list button,.feature-list button{width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid #e6edf6;border-radius:0;padding:8px 4px;font-weight:400;font-size:14px;color:var(--primary-soft)}
+  .category-list button.active{color:var(--accent);font-weight:600}
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
   .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
@@ -147,12 +147,12 @@ $renderIconoRed = static function (string $id): string {
   .cart-count{background:var(--accent);min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:13px}
   .cart-panel{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;background:#fff;border-left:1px solid var(--border);box-shadow:-10px 0 30px rgba(15,23,42,.12);z-index:90;transition:right .3s ease;display:flex;flex-direction:column}
   .cart-panel.open{right:0}.cart-header,.cart-footer{padding:20px}.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
-  .cart-items{flex:1;overflow:auto;padding:18px;display:grid;gap:12px}.cart-item{display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:10px}
+  .cart-items{flex:1;overflow:auto;padding:14px;display:grid;gap:10px}.cart-item{display:grid;grid-template-columns:60px 1fr auto;gap:8px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:8px}
   .cart-header h3{font-size:18px;font-weight:500;margin:0;color:var(--primary)}
   .cart-item h4{font-size:14px;font-weight:600;line-height:1.2;margin:0 0 2px;color:#243447}
   .cart-item p{font-size:12px;font-weight:500;margin:0;color:var(--text)}
   .cart-item__desc{font-size:11px;font-weight:400;line-height:1.35;color:var(--muted);margin-top:3px}
-  .cart-item img{width:68px;height:68px;object-fit:cover;border-radius:10px}.qty-controls{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:12px}
+  .cart-item img{width:60px;height:60px;object-fit:cover;border-radius:9px}.qty-controls{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:12px}
   .qty-controls button{width:24px;height:24px;border-radius:7px;background:#f1f5f9;border:1px solid var(--border);font-size:13px;font-weight:500;line-height:1}
   .cart-item .btn-danger-soft{font-size:13px;font-weight:500;padding:6px 9px}
   .cart-footer{border-top:1px solid var(--border);display:grid;gap:10px}.summary-row{display:flex;justify-content:space-between;font-size:14px;font-weight:500}
@@ -405,6 +405,7 @@ $renderIconoRed = static function (string $id): string {
   const priceFilter = $('#priceFilter');
   const sortFilter = $('#sortFilter');
   const resultsInfo = $('#resultsInfo');
+  const productsGrid = $('#productsGrid');
   const cartPanel = $('#cartPanel');
   const overlay = $('#overlay');
   const cartItems = $('#cartItems');
@@ -429,10 +430,14 @@ $renderIconoRed = static function (string $id): string {
   let productoSeleccionado = null;
 
   const categories = ['all', ...new Set(products.map((p) => p.category))];
+  const categoriesSidebar = ['all', ...categories.filter((c) => c !== 'all').slice(0, 10)];
   const renderCategories = () => {
     categoryFilter.innerHTML = categories.map((c) => `<option value="${c}">${c === 'all' ? 'Todas' : c}</option>`).join('');
     categoryFilter.value = selectedCategory;
-    categoryButtons.innerHTML = categories.map((c) => `<button type="button" class="${selectedCategory === c ? 'active' : ''}" data-category="${c}">${c === 'all' ? 'Todas las categorías' : c}</button>`).join('');
+    const categoriasSidebarRender = categoriesSidebar.includes(selectedCategory) || selectedCategory === 'all'
+      ? categoriesSidebar
+      : [...categoriesSidebar, selectedCategory];
+    categoryButtons.innerHTML = categoriasSidebarRender.map((c) => `<button type="button" class="${selectedCategory === c ? 'active' : ''}" data-category="${c}">${c === 'all' ? 'Todas las categorías' : c}</button>`).join('');
     $$('button[data-category]', categoryButtons).forEach((btn) => {
       btn.addEventListener('click', () => {
         selectedCategory = btn.dataset.category || 'all';
@@ -465,7 +470,10 @@ $renderIconoRed = static function (string $id): string {
     else visible.sort((a, b) => Number(b.featured) - Number(a.featured));
 
     products.forEach((p) => { p.el.style.display = 'none'; });
-    visible.forEach((p) => { p.el.style.display = ''; p.el.parentElement && (p.el.parentElement.style.display = ''); });
+    visible.forEach((p) => {
+      p.el.style.display = '';
+      productsGrid && productsGrid.appendChild(p.el);
+    });
     resultsInfo.textContent = visible.length ? `Mostrando ${visible.length} producto(s) disponibles.` : 'No hay resultados con los filtros actuales.';
   };
 
@@ -581,8 +589,8 @@ $renderIconoRed = static function (string $id): string {
   $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; applyFilters(); });
   $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; applyFilters(); });
   $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; applyFilters(); });
-  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; applyFilters(); });
-  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; applyFilters(); });
+  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; applyFilters(); });
+  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; applyFilters(); });
   const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', () => { onlyOffers = true; applyFilters(); });
   const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; applyFilters(); });
 
