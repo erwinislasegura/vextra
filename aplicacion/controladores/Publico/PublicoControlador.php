@@ -11,6 +11,7 @@ use Aplicacion\Modelos\ProductoImagen;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PlanFuncionalidad;
+use Aplicacion\Modelos\CatalogoCompra;
 use Aplicacion\Servicios\ServicioCorreo;
 use Aplicacion\Servicios\FlowApiService;
 
@@ -591,7 +592,8 @@ class PublicoControlador extends Controlador
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
-    public function checkoutCatalogo(int $empresaId): void
+
+    public function prepararCheckoutCatalogo(int $empresaId): void
     {
         validar_csrf();
 
@@ -608,17 +610,104 @@ class PublicoControlador extends Controlador
             $this->redirigir('/catalogo/' . $empresaId);
         }
 
+        $_SESSION['catalogo_checkout_preparado_' . $empresaId] = [
+            'carrito' => $carrito,
+            'fecha' => date('c'),
+        ];
+
+        $this->redirigir('/catalogo/' . $empresaId . '/checkout');
+    }
+
+    public function formularioCheckoutCatalogo(int $empresaId): void
+    {
+        $contexto = $this->obtenerContextoCatalogo($empresaId);
+        if (!$contexto) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $empresa = $contexto['empresa'];
+        $checkout = $_SESSION['catalogo_checkout_preparado_' . $empresaId] ?? null;
+        if (!is_array($checkout) || !is_array($checkout['carrito'] ?? null) || $checkout['carrito'] === []) {
+            flash('danger', 'No encontramos un carrito preparado para checkout.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $itemsCatalogo = [];
+        foreach ((new Producto())->listarParaCatalogoPublico($empresaId) as $producto) {
+            $itemsCatalogo[(int) $producto['id']] = $producto;
+        }
+
+        $total = 0.0;
+        $resumen = [];
+        foreach ((array) $checkout['carrito'] as $fila) {
+            $productoId = (int) ($fila['producto_id'] ?? 0);
+            $cantidad = max(1, (int) ($fila['cantidad'] ?? 1));
+            if (!isset($itemsCatalogo[$productoId])) {
+                continue;
+            }
+            $producto = $itemsCatalogo[$productoId];
+            $precio = (float) ($producto['precio'] ?? 0);
+            $subtotal = $precio * $cantidad;
+            $total += $subtotal;
+            $resumen[] = [
+                'id' => $productoId,
+                'nombre' => (string) $producto['nombre'],
+                'descripcion' => (string) ($producto['descripcion'] ?? ''),
+                'imagen' => url('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
+                'cantidad' => $cantidad,
+                'precio' => $precio,
+                'subtotal' => $subtotal,
+            ];
+        }
+
+        if ($resumen === [] || $total <= 0) {
+            flash('danger', 'No fue posible reconstruir tu carrito para el checkout.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $ocultarNavbarPublico = true;
+        $metodosEnvio = [
+            'starken' => 'Starken',
+            'blue_express' => 'Blue Express',
+            'chile_express' => 'Chile Express',
+        ];
+        $this->vistaPublica('publico/catalogo_checkout_formulario', compact('empresa', 'resumen', 'total', 'metodosEnvio', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    public function checkoutCatalogo(int $empresaId): void
+    {
+        validar_csrf();
+
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $carrito = json_decode((string) ($_POST['carrito_json'] ?? '[]'), true);
+        if (!is_array($carrito) || $carrito === []) {
+            flash('danger', 'Tu carrito está vacío. Agrega productos para continuar.');
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
+        }
+
         $correo = mb_strtolower(trim((string) ($_POST['correo'] ?? '')));
         $nombre = trim((string) ($_POST['nombre'] ?? ''));
         $telefono = trim((string) ($_POST['telefono'] ?? ''));
         $documento = trim((string) ($_POST['documento'] ?? ''));
         $empresaComprador = trim((string) ($_POST['empresa'] ?? ''));
         $direccion = trim((string) ($_POST['direccion'] ?? ''));
+        $envioMetodo = (string) ($_POST['envio_metodo'] ?? 'starken');
         $referencia = trim((string) ($_POST['referencia'] ?? ''));
         $comuna = trim((string) ($_POST['comuna'] ?? ''));
         $ciudad = trim((string) ($_POST['ciudad'] ?? ''));
         $region = trim((string) ($_POST['region'] ?? ''));
         $acepta = isset($_POST['acepta_terminos']) && (string) $_POST['acepta_terminos'] === '1';
+        if (!in_array($envioMetodo, ['starken', 'blue_express', 'chile_express'], true)) {
+            $envioMetodo = 'starken';
+        }
 
         $telefonoNormalizado = preg_replace('/\s+/', '', $telefono) ?? '';
         $telefonoValido = preg_match('/^\+?[0-9]{8,15}$/', $telefonoNormalizado) === 1;
@@ -633,8 +722,8 @@ class PublicoControlador extends Controlador
             || !$telefonoValido
             || !$acepta
         ) {
-            flash('danger', 'Completa los datos de facturación y envío (nombre, correo, teléfono, dirección, comuna, ciudad, región y aceptación de términos).');
-            $this->redirigir('/catalogo/' . $empresaId);
+            flash('danger', 'Completa los datos personales y de envío (nombre, correo, teléfono, dirección, comuna, ciudad, región y aceptación de términos).');
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
 
         $itemsCatalogo = [];
@@ -654,12 +743,20 @@ class PublicoControlador extends Controlador
             $precio = (float) ($producto['precio'] ?? 0);
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
-            $resumen[] = ['id' => $productoId, 'nombre' => (string) $producto['nombre'], 'cantidad' => $cantidad, 'precio' => $precio, 'subtotal' => $subtotal];
+            $resumen[] = [
+                'id' => $productoId,
+                'nombre' => (string) $producto['nombre'],
+                'descripcion' => (string) ($producto['descripcion'] ?? ''),
+                'imagen' => url('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
+                'cantidad' => $cantidad,
+                'precio' => $precio,
+                'subtotal' => $subtotal,
+            ];
         }
 
         if ($total <= 0 || $resumen === []) {
             flash('danger', 'No fue posible validar los productos del carrito.');
-            $this->redirigir('/catalogo/' . $empresaId);
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
 
         $commerceOrder = 'CAT-' . $empresaId . '-' . strtoupper(substr(sha1((string) microtime(true)), 0, 10));
@@ -678,13 +775,37 @@ class PublicoControlador extends Controlador
             ]);
         } catch (\Throwable $e) {
             flash('danger', 'No fue posible iniciar el pago en Flow: ' . $e->getMessage());
-            $this->redirigir('/catalogo/' . $empresaId);
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
 
         if (!isset($respuesta['url'], $respuesta['token'])) {
             flash('danger', 'Flow no devolvió URL de pago.');
-            $this->redirigir('/catalogo/' . $empresaId);
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
+
+
+        $compraId = (new CatalogoCompra())->crear([
+            'empresa_id' => $empresaId,
+            'flow_token' => (string) $respuesta['token'],
+            'commerce_order' => $commerceOrder,
+            'estado_pago' => 'pendiente',
+            'estado_envio' => 'pendiente',
+            'comprador_nombre' => $nombre,
+            'comprador_correo' => $correo,
+            'comprador_telefono' => $telefonoNormalizado !== '' ? $telefonoNormalizado : $telefono,
+            'comprador_documento' => $documento !== '' ? $documento : null,
+            'comprador_empresa' => $empresaComprador !== '' ? $empresaComprador : null,
+            'envio_metodo' => $envioMetodo,
+            'envio_direccion' => $direccion,
+            'envio_referencia' => $referencia !== '' ? $referencia : null,
+            'envio_comuna' => $comuna,
+            'envio_ciudad' => $ciudad,
+            'envio_region' => $region,
+            'total' => $total,
+            'moneda' => 'CLP',
+            'payload_flow' => json_encode($respuesta, JSON_UNESCAPED_UNICODE),
+        ]);
+        (new CatalogoCompra())->guardarItems($compraId, $resumen);
 
         $_SESSION['catalogo_checkout_' . $respuesta['token']] = [
             'empresa_id' => $empresaId,
@@ -694,6 +815,7 @@ class PublicoControlador extends Controlador
                 'telefono' => $telefono,
                 'documento' => $documento,
                 'empresa' => $empresaComprador,
+                'envio_metodo' => $envioMetodo,
                 'direccion' => $direccion,
                 'referencia' => $referencia,
                 'comuna' => $comuna,
@@ -717,8 +839,22 @@ class PublicoControlador extends Controlador
             return;
         }
 
-        $token = trim((string) ($_GET['token'] ?? ''));
+        $token = trim((string) ($_GET['token'] ?? ($_POST['token'] ?? ($_GET['token_ws'] ?? $_POST['token_ws'] ?? ''))));
         $estado = 'pendiente';
+
+        $modeloCompras = new CatalogoCompra();
+        $compra = $token !== '' ? $modeloCompras->buscarPorToken($token) : null;
+        if (!is_array($compra) && $token !== '') {
+            $ordenSesion = $_SESSION['catalogo_checkout_' . $token] ?? null;
+            if (is_array($ordenSesion)) {
+                $this->registrarCompraCatalogoDesdeSesionSiFalta($empresaId, $token, $ordenSesion);
+                $compra = $modeloCompras->buscarPorToken($token);
+            }
+        }
+        if (is_array($compra)) {
+            $estado = (string) ($compra['estado_pago'] ?? 'pendiente');
+        }
+
         if ($token !== '') {
             try {
                 $status = (new FlowApiService())->getParaEmpresa($empresaId, 'payment/getStatus', ['token' => $token]);
@@ -728,14 +864,249 @@ class PublicoControlador extends Controlador
                     4 => 'anulado',
                     default => 'pendiente',
                 };
+                $modeloCompras->actualizarEstadoPorToken($token, $estado, $status);
+                if ($estado === 'aprobado') {
+                    $modeloCompras->descontarStockPorCompraToken($token);
+                    unset($_SESSION['catalogo_checkout_' . $token]);
+                    unset($_SESSION['catalogo_checkout_preparado_' . $empresaId]);
+                }
             } catch (\Throwable $e) {
-                $estado = 'pendiente';
+                // Mantenemos el estado persistido en BD (si existe) para no mostrar falso pendiente.
             }
         }
 
         $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
+        if (!is_array($orden) && is_array($compra)) {
+            $orden = [
+                'comprador' => [
+                    'nombre' => (string) ($compra['comprador_nombre'] ?? ''),
+                    'correo' => (string) ($compra['comprador_correo'] ?? ''),
+                    'telefono' => (string) ($compra['comprador_telefono'] ?? ''),
+                    'envio_metodo' => (string) ($compra['envio_metodo'] ?? 'starken'),
+                    'direccion' => (string) ($compra['envio_direccion'] ?? ''),
+                    'comuna' => (string) ($compra['envio_comuna'] ?? ''),
+                    'ciudad' => (string) ($compra['envio_ciudad'] ?? ''),
+                    'region' => (string) ($compra['envio_region'] ?? ''),
+                ],
+                'total' => (float) ($compra['total'] ?? 0),
+                'items' => $modeloCompras->listarItems((int) ($compra['id'] ?? 0)),
+            ];
+        }
+                if ($token !== '' && is_array($orden)) {
+            $this->enviarCorreoResumenCheckoutCatalogo($empresa, $token, $estado, $orden);
+        }
+
+        if (in_array($estado, ['rechazado', 'anulado'], true)) {
+            if ($token !== '' && is_array($orden)) {
+                $_SESSION['catalogo_checkout_rechazado_' . $token] = $orden;
+            }
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout/rechazado' . ($token !== '' ? '?token=' . rawurlencode($token) : ''));
+        }
+
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+
+    public function rechazoCheckoutCatalogo(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $token = trim((string) ($_GET['token'] ?? ($_POST['token'] ?? ($_GET['token_ws'] ?? $_POST['token_ws'] ?? ''))));
+        $orden = $token !== '' ? ($_SESSION['catalogo_checkout_rechazado_' . $token] ?? $_SESSION['catalogo_checkout_' . $token] ?? null) : null;
+        if (!is_array($orden) && $token !== '') {
+            $compra = (new CatalogoCompra())->buscarPorToken($token);
+            if (is_array($compra)) {
+                $orden = [
+                    'comprador' => [
+                        'nombre' => (string) ($compra['comprador_nombre'] ?? ''),
+                        'correo' => (string) ($compra['comprador_correo'] ?? ''),
+                        'telefono' => (string) ($compra['comprador_telefono'] ?? ''),
+                        'documento' => (string) ($compra['comprador_documento'] ?? ''),
+                        'empresa' => (string) ($compra['comprador_empresa'] ?? ''),
+                        'envio_metodo' => (string) ($compra['envio_metodo'] ?? 'starken'),
+                        'direccion' => (string) ($compra['envio_direccion'] ?? ''),
+                        'referencia' => (string) ($compra['envio_referencia'] ?? ''),
+                        'comuna' => (string) ($compra['envio_comuna'] ?? ''),
+                        'ciudad' => (string) ($compra['envio_ciudad'] ?? ''),
+                        'region' => (string) ($compra['envio_region'] ?? ''),
+                    ],
+                    'total' => (float) ($compra['total'] ?? 0),
+                    'items' => (new CatalogoCompra())->listarItems((int) ($compra['id'] ?? 0)),
+                ];
+            }
+        }
+
+        if ($token !== '' && is_array($orden)) {
+            $this->enviarCorreoResumenCheckoutCatalogo($empresa, $token, 'rechazado', $orden);
+        }
+
+        $estado = 'rechazado';
+        $ocultarNavbarPublico = true;
+        $this->vistaPublica('publico/catalogo_checkout_rechazado', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    private function enviarCorreoResumenCheckoutCatalogo(array $empresa, string $token, string $estado, array $orden): void
+    {
+        $sessionKey = 'catalogo_checkout_correo_' . md5($token . '|' . $estado);
+        if (isset($_SESSION[$sessionKey])) {
+            return;
+        }
+
+        $comprador = is_array($orden['comprador'] ?? null) ? $orden['comprador'] : [];
+        $correo = trim((string) ($comprador['correo'] ?? ''));
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            return;
+        }
+
+        $estadoTitulo = match ($estado) {
+            'aprobado' => 'Pago aprobado',
+            'rechazado', 'anulado' => 'Pago no aprobado',
+            default => 'Pago en revisión',
+        };
+
+        $metodoEnvio = match ((string) ($comprador['envio_metodo'] ?? 'starken')) {
+            'blue_express' => 'Blue Express',
+            'chile_express' => 'Chile Express',
+            default => 'Starken',
+        };
+
+        $filas = '';
+        foreach ((array) ($orden['items'] ?? []) as $item) {
+            $nombreItem = (string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto');
+            $descripcionItem = trim((string) ($item['descripcion'] ?? $item['detalle'] ?? ''));
+            if ($descripcionItem === '' && isset($item['metadata'])) {
+                $meta = json_decode((string) $item['metadata'], true);
+                if (is_array($meta)) {
+                    $descripcionItem = trim((string) ($meta['descripcion'] ?? ''));
+                }
+            }
+            if ($descripcionItem !== '' && mb_strlen($descripcionItem) > 120) {
+                $descripcionItem = rtrim(mb_substr($descripcionItem, 0, 119)) . '…';
+            }
+            $imagenItem = trim((string) ($item['imagen'] ?? ''));
+            if ($imagenItem === '' && isset($item['metadata'])) {
+                $meta = json_decode((string) $item['metadata'], true);
+                if (is_array($meta)) {
+                    $imagenItem = trim((string) ($meta['imagen'] ?? ''));
+                }
+            }
+            if ($imagenItem === '') {
+                $imagenItem = url('/img/placeholder-producto.svg');
+            }
+
+            $filas .= '<tr>'
+                . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;width:64px;"><img src="' . htmlspecialchars($imagenItem) . '" alt="' . htmlspecialchars($nombreItem) . '" style="width:52px;height:52px;border-radius:8px;object-fit:cover;background:#f3f4f6"></td>'
+                . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;">'
+                . '<div style="font-weight:600;color:#111827;">' . htmlspecialchars($nombreItem) . ' x' . (int) ($item['cantidad'] ?? 1) . '</div>'
+                . ($descripcionItem !== '' ? '<div style="font-size:12px;color:#6b7280;margin-top:2px;">' . htmlspecialchars($descripcionItem) . '</div>' : '')
+                . '</td>'
+                . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;">$' . number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . '</td>'
+                . '</tr>';
+        }
+
+        $envioCondicion = 'Envío por pagar con plazo máximo de 48 horas hábiles desde la confirmación del pago.';
+        $html = '<div style="font-family:Arial,sans-serif;background:#f4f6fb;padding:20px 0;">'
+            . '<table role="presentation" style="width:100%;max-width:700px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">'
+            . '<tr><td style="background:#4632a8;color:#fff;padding:18px 24px;">'
+            . '<h2 style="margin:0;font-size:22px;">' . htmlspecialchars($estadoTitulo) . '</h2>'
+            . '<div style="margin-top:6px;font-size:13px;opacity:.95;">' . htmlspecialchars((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) . '</div>'
+            . '</td></tr>'
+            . '<tr><td style="padding:20px 24px;color:#1f2937;">'
+            . '<p style="margin:0 0 10px;"><strong>Token Flow:</strong> ' . htmlspecialchars($token) . '</p>'
+            . '<h3 style="margin:14px 0 8px;font-size:16px;">Datos personales</h3>'
+            . '<table style="width:100%;border-collapse:collapse;font-size:14px;">'
+            . '<tr><td style="padding:5px 0;"><strong>Nombre:</strong> ' . htmlspecialchars((string) ($comprador['nombre'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Correo:</strong> ' . htmlspecialchars($correo) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Teléfono:</strong> ' . htmlspecialchars((string) ($comprador['telefono'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Documento:</strong> ' . htmlspecialchars((string) ($comprador['documento'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Empresa:</strong> ' . htmlspecialchars((string) ($comprador['empresa'] ?? '-')) . '</td></tr>'
+            . '</table>'
+            . '<h3 style="margin:16px 0 8px;font-size:16px;">Datos de envío</h3>'
+            . '<table style="width:100%;border-collapse:collapse;font-size:14px;">'
+            . '<tr><td style="padding:5px 0;"><strong>Método:</strong> ' . htmlspecialchars($metodoEnvio) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Dirección:</strong> ' . htmlspecialchars((string) ($comprador['direccion'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Comuna/Ciudad:</strong> ' . htmlspecialchars(trim((string) (($comprador['comuna'] ?? '') . ' / ' . ($comprador['ciudad'] ?? '')), ' /')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Región:</strong> ' . htmlspecialchars((string) ($comprador['region'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Referencia:</strong> ' . htmlspecialchars((string) ($comprador['referencia'] ?? '-')) . '</td></tr>'
+            . '</table>'
+            . '<p style="margin:10px 0 0;font-size:12px;color:#6b7280;"><em>' . htmlspecialchars($envioCondicion) . '</em></p>'
+            . '<h3 style="margin:18px 0 8px;font-size:16px;">Detalle de compra</h3>'
+            . '<table style="width:100%;border-collapse:collapse;">' . $filas . '</table>'
+            . '<p style="text-align:right;margin:10px 0 0;"><strong>Total: $' . number_format((float) ($orden['total'] ?? 0), 0, ',', '.') . '</strong></p>'
+            . '</td></tr>'
+            . '</table>'
+            . '</div>';
+
+        (new ServicioCorreo())->enviarNotificacionCliente(
+            $correo,
+            'Resumen de compra catálogo - ' . (string) ($empresa['nombre_comercial'] ?? 'Vextra'),
+            'catalogo_checkout_resumen',
+            ['html' => $html]
+        );
+
+        $_SESSION[$sessionKey] = 1;
+    }
+
+
+    private function registrarCompraCatalogoDesdeSesionSiFalta(int $empresaId, string $token, array $orden): void
+    {
+        if ($empresaId <= 0 || $token === '') {
+            return;
+        }
+
+        $modelo = new CatalogoCompra();
+        if ($modelo->buscarPorToken($token)) {
+            return;
+        }
+
+        $comprador = is_array($orden['comprador'] ?? null) ? $orden['comprador'] : [];
+        $items = is_array($orden['items'] ?? null) ? $orden['items'] : [];
+        if ($items === []) {
+            return;
+        }
+
+        $compraId = $modelo->crear([
+            'empresa_id' => $empresaId,
+            'flow_token' => $token,
+            'commerce_order' => (string) ($orden['commerce_order'] ?? ('CAT-' . $empresaId . '-RETORNO')),
+            'estado_pago' => 'pendiente',
+            'estado_envio' => 'pendiente',
+            'comprador_nombre' => (string) ($comprador['nombre'] ?? 'Cliente catálogo'),
+            'comprador_correo' => (string) ($comprador['correo'] ?? 'no-informado@local'),
+            'comprador_telefono' => (string) ($comprador['telefono'] ?? ''),
+            'comprador_documento' => (string) (($comprador['documento'] ?? '') !== '' ? $comprador['documento'] : null),
+            'comprador_empresa' => (string) (($comprador['empresa'] ?? '') !== '' ? $comprador['empresa'] : null),
+            'envio_metodo' => in_array((string) ($comprador['envio_metodo'] ?? 'starken'), ['starken', 'blue_express', 'chile_express'], true)
+                ? (string) $comprador['envio_metodo']
+                : 'starken',
+            'envio_direccion' => (string) ($comprador['direccion'] ?? ''),
+            'envio_referencia' => (string) (($comprador['referencia'] ?? '') !== '' ? $comprador['referencia'] : null),
+            'envio_comuna' => (string) ($comprador['comuna'] ?? ''),
+            'envio_ciudad' => (string) ($comprador['ciudad'] ?? ''),
+            'envio_region' => (string) ($comprador['region'] ?? ''),
+            'total' => (float) ($orden['total'] ?? 0),
+            'moneda' => 'CLP',
+            'payload_flow' => null,
+        ]);
+
+        $itemsGuardar = [];
+        foreach ($items as $item) {
+            $itemsGuardar[] = [
+                'id' => (int) ($item['id'] ?? $item['producto_id'] ?? 0),
+                'nombre' => (string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto catálogo'),
+                'cantidad' => (int) ($item['cantidad'] ?? 1),
+                'precio' => (float) ($item['precio'] ?? $item['precio_unitario'] ?? 0),
+                'subtotal' => (float) ($item['subtotal'] ?? 0),
+            ];
+        }
+
+        $modelo->guardarItems($compraId, $itemsGuardar);
     }
 
     private function obtenerContextoCatalogo(int $empresaId): ?array
