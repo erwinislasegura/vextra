@@ -395,7 +395,12 @@ $renderIconoRed = static function (string $id): string {
   const carritoJson = $('#carrito_json');
 
   const modalCheckout = window.bootstrap ? new bootstrap.Modal($('#modalCheckout')) : null;
-  const modalProductoDetalle = window.bootstrap ? new bootstrap.Modal($('#modalProductoDetalle')) : null;
+  const getModalProductoDetalle = () => {
+    if (!window.bootstrap) return null;
+    const modalEl = $('#modalProductoDetalle');
+    if (!modalEl) return null;
+    return bootstrap.Modal.getOrCreateInstance(modalEl);
+  };
   const detalleNombre = $('#detalleProductoNombre');
   const detalleDescripcion = $('#detalleProductoDescripcion');
   const detalleCategoria = $('#detalleProductoCategoria');
@@ -511,6 +516,7 @@ $renderIconoRed = static function (string $id): string {
     addBtn && addBtn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(Number(card.dataset.id || 0)); });
     const openDetail = () => {
       productoSeleccionado = products.find((p) => p.id === Number(card.dataset.id || 0)) || null;
+      const modalProductoDetalle = getModalProductoDetalle();
       if (!productoSeleccionado || !modalProductoDetalle) return;
       detalleNombre.textContent = productoSeleccionado.name;
       detalleDescripcion.textContent = productoSeleccionado.description;
@@ -526,6 +532,7 @@ $renderIconoRed = static function (string $id): string {
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
     addToCart(Number(productoSeleccionado.id));
+    const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
 
