@@ -406,6 +406,7 @@ class Empresa extends Modelo
             'catalogo_social_youtube' => '',
             'catalogo_color_primario' => '',
             'catalogo_color_acento' => '',
+            'catalogo_columnas_productos' => '3',
         ];
 
         $columnas = array_keys($config);
@@ -447,6 +448,7 @@ class Empresa extends Modelo
             'catalogo_social_youtube',
             'catalogo_color_primario',
             'catalogo_color_acento',
+            'catalogo_columnas_productos',
         ];
         $sets = [];
         $params = ['empresa_id' => $empresaId];
