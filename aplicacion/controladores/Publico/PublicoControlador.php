@@ -743,7 +743,15 @@ class PublicoControlador extends Controlador
             $precio = (float) ($producto['precio'] ?? 0);
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
-            $resumen[] = ['id' => $productoId, 'nombre' => (string) $producto['nombre'], 'cantidad' => $cantidad, 'precio' => $precio, 'subtotal' => $subtotal];
+            $resumen[] = [
+                'id' => $productoId,
+                'nombre' => (string) $producto['nombre'],
+                'descripcion' => (string) ($producto['descripcion'] ?? ''),
+                'imagen' => url('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
+                'cantidad' => $cantidad,
+                'precio' => $precio,
+                'subtotal' => $subtotal,
+            ];
         }
 
         if ($total <= 0 || $resumen === []) {
@@ -962,31 +970,77 @@ class PublicoControlador extends Controlador
             default => 'Pago en revisión',
         };
 
+        $metodoEnvio = match ((string) ($comprador['envio_metodo'] ?? 'starken')) {
+            'blue_express' => 'Blue Express',
+            'chile_express' => 'Chile Express',
+            default => 'Starken',
+        };
+
         $filas = '';
         foreach ((array) ($orden['items'] ?? []) as $item) {
-            $filas .= '<tr><td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">' . htmlspecialchars((string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto')) . ' x' . (int) ($item['cantidad'] ?? 1) . '</td><td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:right;">$' . number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . '</td></tr>';
+            $nombreItem = (string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto');
+            $descripcionItem = trim((string) ($item['descripcion'] ?? $item['detalle'] ?? ''));
+            if ($descripcionItem === '' && isset($item['metadata'])) {
+                $meta = json_decode((string) $item['metadata'], true);
+                if (is_array($meta)) {
+                    $descripcionItem = trim((string) ($meta['descripcion'] ?? ''));
+                }
+            }
+            if ($descripcionItem !== '' && mb_strlen($descripcionItem) > 120) {
+                $descripcionItem = rtrim(mb_substr($descripcionItem, 0, 119)) . '…';
+            }
+            $imagenItem = trim((string) ($item['imagen'] ?? ''));
+            if ($imagenItem === '' && isset($item['metadata'])) {
+                $meta = json_decode((string) $item['metadata'], true);
+                if (is_array($meta)) {
+                    $imagenItem = trim((string) ($meta['imagen'] ?? ''));
+                }
+            }
+            if ($imagenItem === '') {
+                $imagenItem = url('/img/placeholder-producto.svg');
+            }
+
+            $filas .= '<tr>'
+                . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;width:64px;"><img src="' . htmlspecialchars($imagenItem) . '" alt="' . htmlspecialchars($nombreItem) . '" style="width:52px;height:52px;border-radius:8px;object-fit:cover;background:#f3f4f6"></td>'
+                . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;">'
+                . '<div style="font-weight:600;color:#111827;">' . htmlspecialchars($nombreItem) . ' x' . (int) ($item['cantidad'] ?? 1) . '</div>'
+                . ($descripcionItem !== '' ? '<div style="font-size:12px;color:#6b7280;margin-top:2px;">' . htmlspecialchars($descripcionItem) . '</div>' : '')
+                . '</td>'
+                . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;">$' . number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . '</td>'
+                . '</tr>';
         }
 
         $envioCondicion = 'Envío por pagar con plazo máximo de 48 horas hábiles desde la confirmación del pago.';
-        $html = '<div style="font-family:Arial,sans-serif;color:#1f2937">'
-            . '<h2 style="margin-bottom:8px;">' . htmlspecialchars($estadoTitulo) . ' - ' . htmlspecialchars((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) . '</h2>'
-            . '<p>Token Flow: <strong>' . htmlspecialchars($token) . '</strong></p>'
-            . '<h3>Datos personales</h3>'
-            . '<p><strong>Nombre:</strong> ' . htmlspecialchars((string) ($comprador['nombre'] ?? '-')) . '<br>'
-            . '<strong>Correo:</strong> ' . htmlspecialchars($correo) . '<br>'
-            . '<strong>Teléfono:</strong> ' . htmlspecialchars((string) ($comprador['telefono'] ?? '-')) . '<br>'
-            . '<strong>Documento:</strong> ' . htmlspecialchars((string) ($comprador['documento'] ?? '-')) . '<br>'
-            . '<strong>Empresa:</strong> ' . htmlspecialchars((string) ($comprador['empresa'] ?? '-')) . '</p>'
-            . '<h3>Datos de envío</h3>'
-            . '<p><strong>Método:</strong> ' . htmlspecialchars((string) ($comprador['envio_metodo'] ?? 'starken')) . '<br>'
-            . '<strong>Dirección:</strong> ' . htmlspecialchars((string) ($comprador['direccion'] ?? '-')) . '<br>'
-            . '<strong>Comuna/Ciudad:</strong> ' . htmlspecialchars(trim((string) (($comprador['comuna'] ?? '') . ' / ' . ($comprador['ciudad'] ?? '')), ' /')) . '<br>'
-            . '<strong>Región:</strong> ' . htmlspecialchars((string) ($comprador['region'] ?? '-')) . '<br>'
-            . '<strong>Referencia:</strong> ' . htmlspecialchars((string) ($comprador['referencia'] ?? '-')) . '</p>'
-            . '<p><em>' . htmlspecialchars($envioCondicion) . '</em></p>'
-            . '<h3>Detalle de compra</h3>'
+        $html = '<div style="font-family:Arial,sans-serif;background:#f4f6fb;padding:20px 0;">'
+            . '<table role="presentation" style="width:100%;max-width:700px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">'
+            . '<tr><td style="background:#4632a8;color:#fff;padding:18px 24px;">'
+            . '<h2 style="margin:0;font-size:22px;">' . htmlspecialchars($estadoTitulo) . '</h2>'
+            . '<div style="margin-top:6px;font-size:13px;opacity:.95;">' . htmlspecialchars((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) . '</div>'
+            . '</td></tr>'
+            . '<tr><td style="padding:20px 24px;color:#1f2937;">'
+            . '<p style="margin:0 0 10px;"><strong>Token Flow:</strong> ' . htmlspecialchars($token) . '</p>'
+            . '<h3 style="margin:14px 0 8px;font-size:16px;">Datos personales</h3>'
+            . '<table style="width:100%;border-collapse:collapse;font-size:14px;">'
+            . '<tr><td style="padding:5px 0;"><strong>Nombre:</strong> ' . htmlspecialchars((string) ($comprador['nombre'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Correo:</strong> ' . htmlspecialchars($correo) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Teléfono:</strong> ' . htmlspecialchars((string) ($comprador['telefono'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Documento:</strong> ' . htmlspecialchars((string) ($comprador['documento'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Empresa:</strong> ' . htmlspecialchars((string) ($comprador['empresa'] ?? '-')) . '</td></tr>'
+            . '</table>'
+            . '<h3 style="margin:16px 0 8px;font-size:16px;">Datos de envío</h3>'
+            . '<table style="width:100%;border-collapse:collapse;font-size:14px;">'
+            . '<tr><td style="padding:5px 0;"><strong>Método:</strong> ' . htmlspecialchars($metodoEnvio) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Dirección:</strong> ' . htmlspecialchars((string) ($comprador['direccion'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Comuna/Ciudad:</strong> ' . htmlspecialchars(trim((string) (($comprador['comuna'] ?? '') . ' / ' . ($comprador['ciudad'] ?? '')), ' /')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Región:</strong> ' . htmlspecialchars((string) ($comprador['region'] ?? '-')) . '</td></tr>'
+            . '<tr><td style="padding:5px 0;"><strong>Referencia:</strong> ' . htmlspecialchars((string) ($comprador['referencia'] ?? '-')) . '</td></tr>'
+            . '</table>'
+            . '<p style="margin:10px 0 0;font-size:12px;color:#6b7280;"><em>' . htmlspecialchars($envioCondicion) . '</em></p>'
+            . '<h3 style="margin:18px 0 8px;font-size:16px;">Detalle de compra</h3>'
             . '<table style="width:100%;border-collapse:collapse;">' . $filas . '</table>'
-            . '<p style="text-align:right;margin-top:8px;"><strong>Total: $' . number_format((float) ($orden['total'] ?? 0), 0, ',', '.') . '</strong></p>'
+            . '<p style="text-align:right;margin:10px 0 0;"><strong>Total: $' . number_format((float) ($orden['total'] ?? 0), 0, ',', '.') . '</strong></p>'
+            . '</td></tr>'
+            . '</table>'
             . '</div>';
 
         (new ServicioCorreo())->enviarNotificacionCliente(
