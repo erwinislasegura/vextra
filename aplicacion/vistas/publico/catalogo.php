@@ -103,6 +103,8 @@ $renderIconoContacto = static function (string $tipo): string {
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
   .nav-actions{display:flex;gap:10px;align-items:center}
+  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
+  .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .btn-soft{background:#eff6ff;color:var(--accent)}
@@ -229,10 +231,11 @@ $renderIconoContacto = static function (string $tipo): string {
         <button type="button" id="searchBtn">Buscar</button>
       </div>
       <div class="nav-actions">
-        <a class="btn-outline text-decoration-none" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-        <a class="btn-outline text-decoration-none" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
+        <a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
+        <a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+        <a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
       </div>
-      <button class="btn-primary-custom" type="button" id="openCartHeader">Ver carrito</button>
+      <button class="btn-primary-custom d-inline-flex align-items-center gap-2" type="button" id="openCartHeader"><span aria-hidden="true">🛒</span><span>Ver carrito</span></button>
     </div>
   </header>
 

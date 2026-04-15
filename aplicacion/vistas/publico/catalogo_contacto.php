@@ -114,8 +114,9 @@ $renderIconoRed = static function (string $id): string {
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
   .nav-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-  .btn-outline,.btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
-  .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
+  .menu-link:hover{color:var(--accent)}
+  .btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
@@ -168,11 +169,11 @@ $renderIconoRed = static function (string $id): string {
         <button type="submit">Buscar</button>
       </form>
       <nav class="nav-actions" aria-label="Menú superior catálogo">
-        <a class="btn-outline" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
-        <a class="btn-outline" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-        <a class="btn-outline" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
+        <a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
+        <a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
+        <a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
       </nav>
-      <a class="btn-primary-custom" href="<?= e($catalogoBaseUrl) ?>">Ver carrito</a>
+      <a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a>
     </div>
   </header>
 
