@@ -73,6 +73,13 @@ $renderIconoRed = static function (string $id): string {
         default => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>',
     };
 };
+$renderIconoContacto = static function (string $tipo): string {
+    return match ($tipo) {
+        'telefono' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.8 3.5h3l1.1 4.2-2 1.1a14 14 0 0 0 6.1 6.1l1.1-2 4.2 1.1v3c0 .5-.4.9-.9 1C10.5 21 3 13.5 3 4.4c0-.5.4-.9.9-.9z"/></svg>',
+        'correo' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="m4 8 8 6 8-6"/></svg>',
+        default => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.6 6-10a6 6 0 1 0-12 0c0 4.4 6 10 6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>',
+    };
+};
 ?>
 <style>
   :root{--primary:<?= e($colorPrimario) ?>;--primary-soft:<?= e($colorPrimario) ?>;--accent:<?= e($colorAcento) ?>;--accent-hover:<?= e($colorPrimario) ?>;--danger:#dc2626;--bg:#eef2f7;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#dbe3ee;--shadow:0 10px 25px rgba(15,23,42,.08);--radius:18px}
@@ -165,9 +172,10 @@ $renderIconoRed = static function (string $id): string {
   .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:13px;color:rgba(255,255,255,.92);margin:0}
   .footer-contact{display:grid;gap:8px}
   .footer-contact p{display:flex;align-items:center;gap:8px}
-  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center}
+  .footer-contact p .dot svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .footer-menu{display:grid;gap:8px}
-  .footer-menu a{color:#fff;text-decoration:none}
+  .footer-menu a,.footer-menu a:link,.footer-menu a:visited{color:#fff !important;text-decoration:none}
   .footer-menu a:hover{text-decoration:underline}
   .footer-follow{display:grid;gap:10px}
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -371,10 +379,10 @@ $renderIconoRed = static function (string $id): string {
       </div>
       <div class="footer-contact footer-col">
         <h4>Datos de contacto</h4>
-        <p><span class="dot">☎</span><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
-        <p><span class="dot">✉</span><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
-        <p><span class="dot">⌖</span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
-        <p><span class="dot">⌂</span><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
+        <p><span class="dot"><?= $renderIconoContacto('telefono') ?></span><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
+        <p><span class="dot"><?= $renderIconoContacto('correo') ?></span><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
+        <p><span class="dot"><?= $renderIconoContacto('direccion') ?></span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
+        <p><span class="dot"><?= $renderIconoContacto('direccion') ?></span><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
       </div>
       <div class="footer-follow footer-col">
         <h4>Síguenos</h4>

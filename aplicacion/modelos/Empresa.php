@@ -347,29 +347,27 @@ class Empresa extends Modelo
 
     public function actualizarConfiguracion(int $empresaId, array $data): void
     {
-        $sql = 'UPDATE empresas
-            SET
-                razon_social = :razon_social,
-                nombre_comercial = :nombre_comercial,
-                identificador_fiscal = :identificador_fiscal,
-                correo = :correo,
-                telefono = :telefono,
-                direccion = :direccion,
-                ciudad = :ciudad,
-                pais = :pais,
-                descripcion = :descripcion,
-                logo = :logo,
-                imap_host = :imap_host,
-                imap_port = :imap_port,
-                imap_encryption = :imap_encryption,
-                imap_usuario = :imap_usuario,
-                imap_password = :imap_password,
-                imap_remitente_correo = :imap_remitente_correo,
-                imap_remitente_nombre = :imap_remitente_nombre,
-                fecha_actualizacion = NOW()
-            WHERE id = :empresa_id AND fecha_eliminacion IS NULL';
+        $sets = [
+            'razon_social = :razon_social',
+            'nombre_comercial = :nombre_comercial',
+            'identificador_fiscal = :identificador_fiscal',
+            'correo = :correo',
+            'telefono = :telefono',
+            'direccion = :direccion',
+            'ciudad = :ciudad',
+            'pais = :pais',
+            'logo = :logo',
+            'imap_host = :imap_host',
+            'imap_port = :imap_port',
+            'imap_encryption = :imap_encryption',
+            'imap_usuario = :imap_usuario',
+            'imap_password = :imap_password',
+            'imap_remitente_correo = :imap_remitente_correo',
+            'imap_remitente_nombre = :imap_remitente_nombre',
+            'fecha_actualizacion = NOW()',
+        ];
 
-        $this->db->prepare($sql)->execute([
+        $params = [
             'empresa_id' => $empresaId,
             'razon_social' => $data['razon_social'],
             'nombre_comercial' => $data['nombre_comercial'],
@@ -388,7 +386,15 @@ class Empresa extends Modelo
             'imap_password' => $data['imap_password'],
             'imap_remitente_correo' => $data['imap_remitente_correo'],
             'imap_remitente_nombre' => $data['imap_remitente_nombre'],
-        ]);
+        ];
+
+        if ($this->columnaExisteEnEmpresas('descripcion')) {
+            $sets[] = 'descripcion = :descripcion';
+            $params['descripcion'] = (string) ($data['descripcion'] ?? '');
+        }
+
+        $sql = 'UPDATE empresas SET ' . implode(', ', $sets) . ' WHERE id = :empresa_id AND fecha_eliminacion IS NULL';
+        $this->db->prepare($sql)->execute($params);
     }
 
     public function obtenerConfiguracionCatalogoEnLinea(int $empresaId): array
