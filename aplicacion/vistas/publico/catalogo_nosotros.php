@@ -91,21 +91,23 @@ $renderIconoRed = static function (string $id): string {
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
-  .hero-nosotros{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
-  .hero-nosotros::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
-  .hero-nosotros h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
+  .hero-nosotros{margin-top:12px;border-radius:20px;min-height:190px;display:flex;align-items:flex-end;padding:24px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:0 18px 34px rgba(15,23,42,.16)}
+  .hero-nosotros::before{content:"";position:absolute;inset:0;background:linear-gradient(95deg,color-mix(in srgb,var(--primary) 82%,#000 18%),rgba(15,23,42,.35))}
+  .hero-nosotros::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 28%,color-mix(in srgb,var(--accent) 35%,transparent),transparent 40%)}
+  .hero-nosotros h1{position:relative;color:#fff;font-size:34px;font-weight:800;letter-spacing:.2px;margin:0}
   .nosotros-wrap{padding:28px 0 46px}
-  .nosotros-card{padding:8px 2px 24px;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:34px;align-items:center}
-  .nosotros-card img{width:100%;max-height:500px;object-fit:cover;border-radius:14px;background:#f8fafc}
-  .nosotros-texto h2{font-size:24px;line-height:1.2;color:var(--primary);font-weight:700;margin:0 0 12px}
-  .nosotros-texto p{color:var(--muted);line-height:1.7;font-size:16px;margin:0}
+  .nosotros-card{padding:22px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:34px;align-items:center}
+  .nosotros-card img{width:100%;max-height:500px;object-fit:cover;border-radius:14px;background:#f8fafc;box-shadow:0 12px 22px rgba(15,23,42,.12)}
+  .nosotros-texto h2{font-size:24px;line-height:1.2;color:var(--primary);font-weight:800;margin:0 0 12px}
+  .nosotros-texto p{color:var(--muted);line-height:1.78;font-size:16px;margin:0;text-align:justify;text-wrap:pretty}
   .nosotros-sociales{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-  .nosotros-sociales a{width:36px;height:36px;border:1px solid var(--border);border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:#fff;text-decoration:none;transition:all .2s ease}
+  .nosotros-sociales a{width:38px;height:38px;border:1px solid var(--border);border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:var(--primary);background:linear-gradient(180deg,#fff,#f8fafc);text-decoration:none;transition:all .2s ease}
   .nosotros-sociales a svg{width:17px;height:17px;fill:currentColor}
-  .nosotros-sociales a:hover{background:var(--primary);border-color:var(--primary);color:#fff}
-  .nosotros-extra{margin-top:4px;padding:26px 2px 0;border-top:1px solid var(--border)}
-  .nosotros-extra h3{font-size:22px;color:var(--primary);margin:0 0 10px;font-weight:700}
-  .nosotros-extra p{color:var(--muted);line-height:1.75;font-size:16px;margin:0;max-width:1100px}
+  .nosotros-sociales a:hover{transform:translateY(-2px);background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 10px 16px rgba(70,50,168,.22)}
+  .nosotros-extra{margin-top:16px;padding:24px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .nosotros-extra::before{content:"";position:absolute;top:0;left:0;height:3px;width:100%;background:linear-gradient(90deg,var(--primary),var(--accent))}
+  .nosotros-extra h3{font-size:22px;color:var(--primary);margin:0 0 10px;font-weight:800}
+  .nosotros-extra p{color:var(--muted);line-height:1.78;font-size:16px;margin:0;max-width:1100px;text-align:justify;text-wrap:pretty}
   .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
@@ -127,7 +129,7 @@ $renderIconoRed = static function (string $id): string {
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
   body.public-page > footer.border-top.bg-white.mt-5{display:none}
-  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}.nosotros-card{gap:20px}.nosotros-texto h2{font-size:22px}.nosotros-extra h3{font-size:20px}}
+  @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}.nosotros-card{gap:20px}.hero-nosotros{min-height:170px}.hero-nosotros h1{font-size:30px}.nosotros-texto h2{font-size:22px}.nosotros-extra h3{font-size:20px}}
   @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 <div class="catalogo-page">
