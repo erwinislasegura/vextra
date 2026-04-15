@@ -116,9 +116,10 @@ $renderIconoRed = static function (string $id): string {
   .contact-hero h1{position:relative;color:#fff;font-size:32px;font-weight:700;margin:0}
 
   .contact-layout{padding:20px 0 18px}
-  .contact-card{background:#fff;border:1px solid #d7dee9;border-radius:18px;box-shadow:0 6px 20px rgba(15,23,42,.08);padding:26px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px}
+  .contact-card{background:#fff;border:1px solid #d7dee9;border-radius:18px;box-shadow:0 6px 20px rgba(15,23,42,.08);padding:26px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px;align-items:stretch}
+  .contact-card > div:first-child{display:flex;flex-direction:column;justify-content:center}
   .contact-subtitle{font-family:Georgia,serif;font-style:italic;font-size:14px;color:var(--primary);margin-bottom:6px}
-  .contact-title{font-size:44px;line-height:1.1;margin-bottom:14px;color:#1f2937;font-weight:700}
+  .contact-title{font-size:34px;line-height:1.18;margin-bottom:12px;color:#1f2937;font-weight:600;font-family:"Inter","Segoe UI",Roboto,Arial,sans-serif}
   .contact-desc{font-size:16px;line-height:1.7;color:#596780;max-width:560px}
   .contact-follow{margin-top:20px}.contact-follow h4{font-size:16px;margin-bottom:10px;color:#243447}
   .contact-icons{display:flex;gap:10px;flex-wrap:wrap}
@@ -132,7 +133,7 @@ $renderIconoRed = static function (string $id): string {
   .form-group input{min-height:40px}
   .form-group textarea{min-height:132px;resize:vertical}
   .form-group.full{grid-column:1 / -1}
-  .btn-submit{margin-top:8px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:22px;font-weight:700;letter-spacing:.2px}
+  .btn-submit{margin-top:8px;background:var(--accent);border:none;color:#fff;padding:11px 22px;border-radius:10px;font-size:16px;font-weight:600;letter-spacing:.1px}
 
   .map-wrap{width:min(1280px,92%);margin:8px auto 0;padding-bottom:18px}
   .map-card{background:#fff;border:1px solid #d7dee9;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.06)}
