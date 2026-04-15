@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS catalogo_compras (
   comprador_telefono VARCHAR(80) NOT NULL,
   comprador_documento VARCHAR(80) NULL,
   comprador_empresa VARCHAR(180) NULL,
-  envio_metodo ENUM('starken','chile_express') NOT NULL DEFAULT 'starken',
+  envio_metodo ENUM('starken','blue_express','chile_express') NOT NULL DEFAULT 'starken',
   envio_direccion VARCHAR(220) NOT NULL,
   envio_referencia VARCHAR(220) NULL,
   envio_comuna VARCHAR(120) NOT NULL,

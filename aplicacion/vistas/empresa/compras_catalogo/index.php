@@ -4,6 +4,7 @@ $estadoActual = (string) ($estado ?? '');
 $estados = ['' => 'Todas', 'pendiente' => 'Pendientes', 'aprobado' => 'Aprobadas', 'rechazado' => 'Rechazadas', 'anulado' => 'Anuladas'];
 $formatearEnvio = static function (string $metodo): string {
     return match ($metodo) {
+        'blue_express' => 'Blue Express',
         'chile_express' => 'Chile Express',
         default => 'Starken',
     };

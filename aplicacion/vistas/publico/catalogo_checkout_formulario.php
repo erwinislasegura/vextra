@@ -39,8 +39,15 @@ $fragmento = static function (string $texto, int $max = 95): string {
         <div class="alert alert-info small mb-3">
           El envío se realiza <strong>por pagar</strong> y con un plazo máximo de <strong>48 horas hábiles</strong> desde la confirmación del pago.
         </div>
-        <input type="hidden" name="envio_metodo" value="starken">
         <div class="row g-2">
+          <div class="col-md-6"><label class="form-label">Método de envío *</label>
+            <select class="form-select" name="envio_metodo" required>
+              <option value="starken">Starken</option>
+              <option value="blue_express">Blue Express</option>
+              <option value="chile_express">Chile Express</option>
+            </select>
+          </div>
+          <div class="col-md-6"></div>
           <div class="col-12"><label class="form-label">Dirección *</label><input class="form-control" name="direccion" required></div>
           <div class="col-md-6"><label class="form-label">Comuna *</label><input class="form-control" name="comuna" required></div>
           <div class="col-md-6"><label class="form-label">Ciudad *</label><input class="form-control" name="ciudad" required></div>
