@@ -33,22 +33,14 @@ if ($sliderImagen === '') {
         $sliderImagen = url('/img/placeholder-producto.svg');
     }
 }
-$bloquesDescripcion = preg_split('/\R{2,}/u', $nosotrosDescripcion) ?: [];
-$bloquesDescripcion = array_values(array_filter(array_map(static fn($bloque): string => trim((string) $bloque), $bloquesDescripcion), static fn(string $bloque): bool => $bloque !== ''));
-if ($bloquesDescripcion === []) {
-    $bloquesDescripcion = [$nosotrosDescripcion];
-}
-$descripcionPrincipal = (string) ($bloquesDescripcion[0] ?? $nosotrosDescripcion);
+$descripcionPrincipal = $nosotrosDescripcion;
 $descripcionSecundaria = trim((string) ($catalogoTopbar['nosotros_bloque_texto'] ?? ''));
 $tituloSecundario = trim((string) ($catalogoTopbar['nosotros_bloque_titulo'] ?? ''));
 if ($tituloSecundario === '') {
     $tituloSecundario = 'Más sobre nosotros';
 }
 if ($descripcionSecundaria === '') {
-    $descripcionSecundaria = trim(implode("\n\n", array_slice($bloquesDescripcion, 1)));
-    if ($descripcionSecundaria === '') {
-        $descripcionSecundaria = $nosotrosDescripcion;
-    }
+    $descripcionSecundaria = $nosotrosDescripcion;
 }
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
