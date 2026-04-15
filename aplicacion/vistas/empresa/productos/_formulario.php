@@ -80,6 +80,11 @@ $imagenesCatalogo = $imagenesCatalogo ?? [];
     <input type="number" step="0.01" min="0" name="precio" class="form-control" value="<?= e((string)($producto['precio'] ?? '')) ?>">
   </div>
   <div class="col-md-2">
+    <label class="form-label">Precio oferta</label>
+    <input type="number" step="0.01" min="0" name="precio_oferta" class="form-control" value="<?= e((string)($producto['precio_oferta'] ?? '')) ?>" placeholder="Opcional">
+    <div class="form-text">Debe ser menor al precio normal.</div>
+  </div>
+  <div class="col-md-2">
     <label class="form-label">Costo</label>
     <input type="number" step="0.01" min="0" name="costo" class="form-control" value="<?= e((string)($producto['costo'] ?? '')) ?>">
   </div>
@@ -117,13 +122,21 @@ $imagenesCatalogo = $imagenesCatalogo ?? [];
     <input type="file" name="imagenes_catalogo[]" class="form-control" accept="image/jpeg,image/png,image/webp" multiple>
     <div class="form-text">Puedes subir JPG, PNG o WEBP. Máximo 3 imágenes por producto.</div>
   </div>
-  <div class="col-md-2 d-flex align-items-end">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="mostrar_catalogo" name="mostrar_catalogo" value="1" <?= (int) ($producto['mostrar_catalogo'] ?? 0) === 1 ? 'checked' : '' ?>>
-      <label class="form-check-label" for="mostrar_catalogo">
-        Mostrar en catálogo en línea
-      </label>
-      <div class="form-text">Activa esta opción para publicar el ítem en la landing del catálogo.</div>
+  <div class="col-md-4 d-flex align-items-end">
+    <div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="mostrar_catalogo" name="mostrar_catalogo" value="1" <?= (int) ($producto['mostrar_catalogo'] ?? 0) === 1 ? 'checked' : '' ?>>
+        <label class="form-check-label" for="mostrar_catalogo">
+          Mostrar en catálogo en línea
+        </label>
+      </div>
+      <div class="form-check mt-1">
+        <input class="form-check-input" type="checkbox" id="destacado_catalogo" name="destacado_catalogo" value="1" <?= (int) ($producto['destacado_catalogo'] ?? 0) === 1 ? 'checked' : '' ?>>
+        <label class="form-check-label" for="destacado_catalogo">
+          Marcar como destacado
+        </label>
+      </div>
+      <div class="form-text">Si activas destacado se mostrará la etiqueta “Destacado” en el catálogo.</div>
     </div>
   </div>
   <?php if (!empty($imagenesCatalogo)): ?>

@@ -391,6 +391,7 @@ class PublicoControlador extends Controlador
             'texto' => trim((string) ($empresa['catalogo_topbar_texto'] ?? '')),
             'color_primario' => trim((string) ($empresa['catalogo_color_primario'] ?? '')),
             'color_acento' => trim((string) ($empresa['catalogo_color_acento'] ?? '')),
+            'columnas_productos' => (int) ($empresa['catalogo_columnas_productos'] ?? 3),
             'sociales' => [
                 'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
                 'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),
