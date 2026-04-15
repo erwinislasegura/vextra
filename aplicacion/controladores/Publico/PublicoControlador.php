@@ -398,10 +398,11 @@ class PublicoControlador extends Controlador
 
         $empresa = $contexto['empresa'];
         $logoCatalogo = $contexto['logoCatalogo'];
+        $sliderCatalogo = $contexto['sliderCatalogo'];
         $catalogoTopbar = $contexto['catalogoTopbar'];
         $ocultarNavbarPublico = true;
 
-        $this->vistaPublica('publico/catalogo_nosotros', compact('empresa', 'logoCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
+        $this->vistaPublica('publico/catalogo_nosotros', compact('empresa', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function catalogoContacto(int $empresaId): void
