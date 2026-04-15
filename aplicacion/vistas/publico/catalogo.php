@@ -268,29 +268,6 @@ $renderIconoContacto = static function (string $tipo): string {
     </div>
   </section>
 
-  <section class="info-section">
-    <div class="catalogo-container info-grid">
-      <article class="info-card" id="nosotros">
-        <img class="nosotros-foto" src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros">
-        <h2><?= e($nosotrosTitulo) ?></h2>
-        <p><?= nl2br(e($nosotrosDescripcion)) ?></p>
-      </article>
-      <article class="info-card" id="contacto">
-        <h2><?= e($contactoTitulo) ?></h2>
-        <p><?= nl2br(e($contactoDescripcion)) ?></p>
-        <div class="contacto-list">
-          <p><strong>Teléfono:</strong> <?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
-          <p><strong>Correo:</strong> <?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
-          <p><strong>Dirección:</strong> <?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
-          <p><strong>Horario:</strong> <?= e($contactoHorario) ?></p>
-          <?php if ($contactoWhatsapp !== ''): ?>
-            <p><strong>WhatsApp:</strong> <?= e($contactoWhatsapp) ?></p>
-          <?php endif; ?>
-        </div>
-      </article>
-    </div>
-  </section>
-
   <section class="filters-section" id="catalogoProductos">
     <div class="catalogo-container filters-wrap">
       <div class="field"><label for="searchInput">Buscar producto</label><input type="text" id="searchInput" placeholder="Ej: audífonos, reloj, mochila..."></div>
