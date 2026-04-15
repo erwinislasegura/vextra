@@ -6,6 +6,7 @@ use Aplicacion\Modelos\FlowPago;
 use Aplicacion\Modelos\Plan;
 use Aplicacion\Modelos\Usuario;
 use Aplicacion\Modelos\FlowWebhook;
+use Aplicacion\Modelos\CatalogoCompra;
 
 class FlowWebhookService
 {
@@ -26,6 +27,7 @@ class FlowWebhookService
 
         try {
             $status = $this->pagos->sincronizarEstadoPorToken($token);
+            $this->sincronizarCompraCatalogo($token, $status);
             $this->enviarCorreoSiPagoAprobado($token, $status);
             (new FlowWebhook())->marcarProcesado($id, 'ok');
             $this->log->info('webhook', 'Webhook pago procesado', $token, null, $status);
@@ -69,6 +71,16 @@ class FlowWebhookService
             (new FlowWebhook())->marcarProcesado($id, 'error', $e->getMessage());
             $this->log->error('webhook', 'Error webhook registro medio pago: ' . $e->getMessage(), $token, null, $payload);
         }
+    }
+
+    private function sincronizarCompraCatalogo(string $token, array $status): void
+    {
+        if ($token === '') {
+            return;
+        }
+
+        $estado = $this->pagos->resolverEstadoPagoDesdeRespuesta($status);
+        (new CatalogoCompra())->actualizarEstadoPorToken($token, $estado, $status);
     }
 
     private function enviarCorreoSiPagoAprobado(string $token, array $status): void

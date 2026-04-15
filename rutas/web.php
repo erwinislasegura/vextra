@@ -30,6 +30,8 @@ $enrutador->agregar('GET', '/catalogo/{empresaId}/slider/{tipo}', [PublicoContro
 $enrutador->agregar('GET', '/catalogo/{empresaId}/nosotros/imagen', [PublicoControlador::class, 'imagenCatalogoNosotros']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}/nosotros/banner', [PublicoControlador::class, 'imagenCatalogoNosotrosBanner']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}/producto/{productoId}/imagen', [PublicoControlador::class, 'imagenCatalogoProducto']);
+$enrutador->agregar('POST', '/catalogo/{empresaId}/checkout/formulario', [PublicoControlador::class, 'prepararCheckoutCatalogo']);
+$enrutador->agregar('GET', '/catalogo/{empresaId}/checkout', [PublicoControlador::class, 'formularioCheckoutCatalogo']);
 $enrutador->agregar('POST', '/catalogo/{empresaId}/checkout', [PublicoControlador::class, 'checkoutCatalogo']);
 $enrutador->agregar('GET', '/catalogo/{empresaId}/checkout/exito', [PublicoControlador::class, 'exitoCheckoutCatalogo']);
 

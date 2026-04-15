@@ -46,3 +46,5 @@ SOURCE base_datos/esquema/actualizar_usuarios_acceso.sql;
 
 -- Datos del panel administrativo (sin clientes/productos/cotizaciones).
 SOURCE base_datos/esquema/datos_admin.sql;
+
+SOURCE base_datos/actualizaciones/actualizacion_catalogo_compras_checkout_flow.sql;

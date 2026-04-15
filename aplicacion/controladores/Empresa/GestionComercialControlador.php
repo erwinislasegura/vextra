@@ -14,6 +14,7 @@ use Aplicacion\Modelos\Suscripcion;
 use Aplicacion\Modelos\Usuario;
 use Aplicacion\Modelos\FlowConfiguracionEmpresa;
 use Aplicacion\Modelos\Empresa;
+use Aplicacion\Modelos\CatalogoCompra;
 use Aplicacion\Servicios\FlowApiService;
 use Aplicacion\Servicios\ExcelExpoFormato;
 use Aplicacion\Servicios\FlowPagosService;
@@ -405,6 +406,24 @@ class GestionComercialControlador extends Controlador
 
         flash('success', 'Estado sincronizado: ' . $estado . '.');
         $this->redirigir('/app/pagos/checkout-flow');
+    }
+
+    public function comprasCatalogo(): void
+    {
+        $empresaId = (int) (empresa_actual_id() ?? 0);
+        $estado = trim((string) ($_GET['estado'] ?? 'pendiente'));
+        if (!in_array($estado, ['', 'pendiente', 'aprobado', 'rechazado', 'anulado'], true)) {
+            $estado = 'pendiente';
+        }
+
+        $modelo = new CatalogoCompra();
+        $compras = $modelo->listarPorEmpresa($empresaId, $estado);
+        foreach ($compras as &$compra) {
+            $compra['items'] = $modelo->listarItems((int) ($compra['id'] ?? 0));
+        }
+        unset($compra);
+
+        $this->vista('empresa/compras_catalogo/index', compact('compras', 'estado'), 'empresa');
     }
 
     public function catalogoEnLinea(): void
