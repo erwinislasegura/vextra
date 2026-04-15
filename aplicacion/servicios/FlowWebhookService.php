@@ -29,6 +29,7 @@ class FlowWebhookService
 
         try {
             $status = $this->pagos->sincronizarEstadoPorToken($token);
+            $this->sincronizarCompraCatalogo($token, $status);
             $this->enviarCorreoSiPagoAprobado($token, $status);
         } catch (\Throwable $e) {
             // Si el token no pertenece a flow_pagos (ej: compra catálogo), seguimos con sincronización catálogo.
