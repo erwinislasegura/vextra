@@ -148,6 +148,27 @@
                 </div>
               </div>
             <?php endif; ?>
+            <hr class="my-3">
+            <div class="mb-2">
+              <label class="form-label">Título bloque inferior</label>
+              <input type="text" name="catalogo_nosotros_bloque_titulo" maxlength="160" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_nosotros_bloque_titulo'] ?? '')) ?>" placeholder="Ejemplo: Presencia de nuestra marca">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Texto bloque inferior</label>
+              <textarea name="catalogo_nosotros_bloque_texto" maxlength="1600" rows="4" class="form-control" placeholder="Texto adicional de la sección inferior de Nosotros."><?= e((string) ($sliderCatalogo['catalogo_nosotros_bloque_texto'] ?? '')) ?></textarea>
+            </div>
+            <label class="form-label">Imagen banner superior de Nosotros (JPG, PNG o WEBP)</label>
+            <input type="file" name="catalogo_nosotros_banner_imagen" accept="image/jpeg,image/png,image/webp" class="form-control">
+            <div class="form-text">Si no cargas una, se usará la imagen principal del slider.</div>
+            <?php if (!empty($sliderCatalogo['catalogo_nosotros_banner_imagen'])): ?>
+              <div class="mt-3">
+                <img src="<?= e(url('/catalogo/' . $empresaId . '/nosotros/banner?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())))) ?>" alt="Banner nosotros" class="img-fluid rounded border" style="max-height:140px;width:auto;object-fit:cover;background:#f8fafc">
+                <div class="form-check mt-2">
+                  <input class="form-check-input" type="checkbox" name="eliminar_catalogo_nosotros_banner_imagen" id="eliminar_catalogo_nosotros_banner_imagen" value="1">
+                  <label class="form-check-label" for="eliminar_catalogo_nosotros_banner_imagen">Eliminar imagen banner actual</label>
+                </div>
+              </div>
+            <?php endif; ?>
           </div>
         </div>
         <div class="col-lg-6">
