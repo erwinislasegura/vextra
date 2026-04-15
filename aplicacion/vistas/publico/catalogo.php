@@ -87,16 +87,16 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
   .catalogo-topbar__sociales a:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.55)}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:340px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
   .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
-  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden;min-width:0}
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .nav-actions{display:flex;gap:10px;align-items:center}
-  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent}
+  .nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .menu-link{padding:9px 6px;font-weight:600;color:var(--primary);text-decoration:none;border:none;background:transparent;white-space:nowrap}
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -195,8 +195,39 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
-  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap,.info-grid{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
+  @media (max-width:1100px){
+    .catalogo-navbar,.hero-grid,.content-grid,.filters-wrap,.info-grid{grid-template-columns:1fr}
+    .catalogo-navbar{gap:12px}
+    .search-box{width:100%}
+    .nav-actions{justify-content:flex-start}
+    .catalogo-navbar .btn-primary-custom{justify-content:center}
+    .sidebar{position:static}
+    .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:720px){
+    .products-grid{grid-template-columns:1fr}
+    .feature-list{grid-template-columns:1fr}
+    .catalogo-topbar__content,.section-head{display:flex;flex-direction:column;align-items:flex-start}
+    .catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}
+    .catalogo-logo{justify-content:center}
+    .catalogo-logo img{width:110px;height:56px}
+    .search-box{border-radius:14px}
+    .search-box input,.search-box button{font-size:13px}
+    .search-box button{padding:10px 14px}
+    .nav-actions{justify-content:space-between;gap:6px}
+    .menu-link{flex:1;text-align:center;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:#fff}
+    .catalogo-navbar .btn-primary-custom{width:100%}
+    .filters-wrap{padding:12px}
+    .field input,.field select{padding:11px 12px}
+    .slide{padding:24px}
+    .slide h2{font-size:32px}
+    .slide-actions .btn-primary-custom{width:100%;min-width:0}
+    .footer-content{grid-template-columns:1fr}
+    .footer-bottom__content{flex-direction:column;align-items:flex-start}
+    .cart-panel{width:100%}
+    .cart-toggle{right:12px;bottom:12px}
+  }
 </style>
 
 <div class="catalogo-page">
