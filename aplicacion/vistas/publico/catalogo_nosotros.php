@@ -91,12 +91,20 @@ $renderIconoRed = static function (string $id): string {
   .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
+  body.public-page > footer.border-top.bg-white.mt-5{display:none}
   @media (max-width:1100px){.catalogo-navbar,.nosotros-card,.footer-content{grid-template-columns:1fr}}
   @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 <div class="catalogo-page">
-  <div class="catalogo-topbar"><div class="catalogo-container catalogo-topbar__content"><div><?= e($topbarTexto) ?></div><?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div>
-  <header class="catalogo-header"><div class="catalogo-container catalogo-navbar"><a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a><form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>"><input type="text" name="q" placeholder="Buscar productos, categorías o marcas..."><button type="submit">Buscar</button></form><div class="nav-actions"><a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a><a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a></div><a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a></div></header>
+  <?php
+    $catalogoHeaderSearchAction = $catalogoBaseUrl;
+    $catalogoHeaderSearchMethod = 'GET';
+    $catalogoHeaderSearchName = 'q';
+    $catalogoHeaderSearchValue = '';
+    $catalogoHeaderCartAsButton = false;
+    $catalogoHeaderCartHref = $catalogoBaseUrl;
+    require __DIR__ . '/partials/catalogo_header.php';
+  ?>
   <section class="nosotros-wrap"><div class="catalogo-container"><article class="nosotros-card"><img src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros"><div><h1><?= e($nosotrosTitulo) ?></h1><p><?= nl2br(e($nosotrosDescripcion)) ?></p></div></article></div></section>
   <?php
     $catalogoFooterInicioUrl = $catalogoBaseUrl . '#catalogoProductos';

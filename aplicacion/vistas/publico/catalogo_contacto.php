@@ -160,33 +160,21 @@ $renderIconoRed = static function (string $id): string {
   .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
   .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
   .footer-bottom__content a:hover{text-decoration:underline}
+  body.public-page > footer.border-top.bg-white.mt-5{display:none}
   @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:32px}.nav-actions{justify-content:flex-start}}
   @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 
 <div class="catalogo-page">
-  <div class="catalogo-topbar">
-    <div class="catalogo-container catalogo-topbar__content">
-      <div><?= e($topbarTexto) ?></div>
-      <?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?>
-    </div>
-  </div>
-
-  <header class="catalogo-header">
-    <div class="catalogo-container catalogo-navbar">
-      <a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a>
-      <form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>">
-        <input type="text" name="q" placeholder="Buscar productos, categorías o marcas...">
-        <button type="submit">Buscar</button>
-      </form>
-      <nav class="nav-actions" aria-label="Menú superior catálogo">
-        <a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
-        <a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-        <a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
-      </nav>
-      <a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.7a2 2 0 0 0 2-1.6L21 7H7" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/></svg><span>Ver carrito</span></a>
-    </div>
-  </header>
+  <?php
+    $catalogoHeaderSearchAction = $catalogoBaseUrl;
+    $catalogoHeaderSearchMethod = 'GET';
+    $catalogoHeaderSearchName = 'q';
+    $catalogoHeaderSearchValue = '';
+    $catalogoHeaderCartAsButton = false;
+    $catalogoHeaderCartHref = $catalogoBaseUrl;
+    require __DIR__ . '/partials/catalogo_header.php';
+  ?>
 
   <section class="catalogo-container"><div class="contact-hero" style="background-image:url('<?= e($sliderImagen) ?>')"><h1>Contacto</h1></div></section>
 

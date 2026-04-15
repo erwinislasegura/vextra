@@ -199,38 +199,17 @@ $renderIconoRed = static function (string $id): string {
 </style>
 
 <div class="catalogo-page">
-  <div class="catalogo-topbar">
-    <div class="catalogo-container catalogo-topbar__content">
-      <div><?= e($topbarTexto) ?></div>
-      <?php if ($socialesTopbar !== []): ?>
-        <div class="catalogo-topbar__sociales" aria-label="Redes sociales del catálogo">
-          <?php foreach ($socialesTopbar as $red): ?>
-            <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) $red['label']) ?>">
-              <?= $renderIconoRed((string) ($red['id'] ?? '')) ?>
-            </a>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
-    </div>
-  </div>
-
-  <header class="catalogo-header">
-    <div class="catalogo-container catalogo-navbar">
-      <a class="catalogo-logo" href="#catalogoProductos">
-        <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
-      </a>
-      <div class="search-box">
-        <input type="text" id="globalSearch" placeholder="Buscar productos, categorías o marcas...">
-        <button type="button" id="searchBtn">Buscar</button>
-      </div>
-      <div class="nav-actions">
-        <a class="menu-link" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
-        <a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-        <a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
-      </div>
-      <button class="btn-primary-custom d-inline-flex align-items-center gap-2" type="button" id="openCartHeader"><span aria-hidden="true">🛒</span><span>Ver carrito</span></button>
-    </div>
-  </header>
+  <?php
+    $catalogoHeaderSearchAction = $catalogoBaseUrl;
+    $catalogoHeaderSearchMethod = 'GET';
+    $catalogoHeaderSearchName = 'q';
+    $catalogoHeaderSearchValue = '';
+    $catalogoHeaderSearchInputId = 'globalSearch';
+    $catalogoHeaderSearchButtonId = 'searchBtn';
+    $catalogoHeaderCartAsButton = true;
+    $catalogoHeaderCartButtonId = 'openCartHeader';
+    require __DIR__ . '/partials/catalogo_header.php';
+  ?>
 
   <section class="hero">
     <div class="catalogo-container hero-grid">
@@ -647,7 +626,11 @@ $renderIconoRed = static function (string $id): string {
     categoryFilter.value = 'all'; priceFilter.value = 'all'; sortFilter.value = 'featured'; renderCategories(); applyFilters();
   });
 
-  $('#searchBtn').addEventListener('click', applyFilters);
+  const searchForm = document.querySelector('.search-box');
+  if (searchForm) {
+    searchForm.addEventListener('submit', (e) => { e.preventDefault(); applyFilters(); });
+  }
+  $('#searchBtn').addEventListener('click', (e) => { e.preventDefault(); applyFilters(); });
   $('#cartToggle').addEventListener('click', openCart);
   $('#openCartHeader').addEventListener('click', openCart);
   $('#closeCart').addEventListener('click', closeCart);
