@@ -110,7 +110,7 @@ $renderIconoRed = static function (string $id): string {
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
-  .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--primary)}
+  .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff}
   .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
   .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(1){transform:translateY(6px) rotate(45deg)}
   .catalogo-header.is-mobile-open .catalogo-mobile-toggle span:nth-child(2){opacity:0}
@@ -189,8 +189,9 @@ $renderIconoRed = static function (string $id): string {
     .search-box input,.search-box button{font-size:13px}
     .search-box button{padding:10px 14px}
     .nav-actions{justify-content:space-between;gap:6px}
-    .menu-link{flex:1;text-align:center;padding:9px 8px;border:1px solid var(--border);border-radius:10px;background:#fff}
-    .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center}
+    .menu-link{flex:1;text-align:center;padding:8px 8px;border:1px solid color-mix(in srgb,var(--primary) 25%,#fff);border-radius:10px;background:#fff;color:var(--primary);font-size:13px;font-weight:500}
+    .catalogo-navbar .btn-primary-custom{width:100%;justify-content:center;font-size:14px;font-weight:600}
+    .catalogo-header.is-mobile-open .catalogo-navbar > .btn-primary-custom{width:100%}
     .contact-hero{min-height:130px;padding:16px}
     .contact-hero h1{font-size:22px;font-weight:600}
     .contact-layout{padding-top:14px}
