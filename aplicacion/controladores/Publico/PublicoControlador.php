@@ -558,6 +558,16 @@ class PublicoControlador extends Controlador
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
+    public function imagenCatalogoNosotrosBanner(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        $ruta = trim((string) ($empresa['catalogo_nosotros_banner_imagen'] ?? ''));
+        if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
+            $ruta = trim((string) ($empresa['slider_imagen'] ?? ''));
+        }
+        $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
+    }
+
     public function imagenCatalogoProducto(int $empresaId, int $productoId): void
     {
         $imagenes = (new ProductoImagen())->listarPorProducto($empresaId, $productoId);
