@@ -8,6 +8,18 @@
     </div>
   </div>
 
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <h2 class="h6 mb-2">Flujo recomendado de configuración</h2>
+      <div class="d-flex flex-wrap gap-2 small">
+        <span class="badge text-bg-light border">1. Publicar productos</span>
+        <span class="badge text-bg-light border">2. Definir identidad y redes</span>
+        <span class="badge text-bg-light border">3. Configurar páginas de contenido</span>
+        <span class="badge text-bg-light border">4. Ajustar slider destacado</span>
+      </div>
+    </div>
+  </div>
+
   <div class="row g-3">
     <div class="col-lg-4">
       <div class="card border-0 shadow-sm h-100">
@@ -47,8 +59,14 @@
       <form method="POST" action="<?= e(url('/app/catalogo-en-linea/configuracion')) ?>" enctype="multipart/form-data" class="row g-3">
         <?= csrf_campo() ?>
         <div class="col-12">
+          <div class="alert alert-light border mb-0">
+            <div class="fw-semibold mb-1">Orden sugerido para completar este formulario</div>
+            <div class="small text-muted">Paso 1: barra superior e identidad visual · Paso 2: vista Nosotros · Paso 3: vista Contacto · Paso 4: slider destacado.</div>
+          </div>
+        </div>
+        <div class="col-12">
           <div class="border rounded-3 p-3">
-            <h3 class="h6 mb-2">Barra superior</h3>
+            <h3 class="h6 mb-2">Paso 1 · Barra superior e identidad visual</h3>
             <div class="row g-2">
               <div class="col-12">
                 <label class="form-label">Texto principal superior</label>
@@ -108,7 +126,7 @@
         </div>
         <div class="col-lg-6">
           <div class="border rounded-3 p-3 h-100">
-            <h3 class="h6 mb-2">Vista "Nosotros"</h3>
+            <h3 class="h6 mb-2">Paso 2 · Vista "Nosotros"</h3>
             <p class="small text-muted mb-3">Estos datos se verán en la sección pública "Nosotros" del catálogo.</p>
             <div class="mb-2">
               <label class="form-label">Título</label>
@@ -134,7 +152,7 @@
         </div>
         <div class="col-lg-6">
           <div class="border rounded-3 p-3 h-100">
-            <h3 class="h6 mb-2">Vista "Contacto"</h3>
+            <h3 class="h6 mb-2">Paso 3 · Vista "Contacto"</h3>
             <p class="small text-muted mb-3">Completa información clave para que tus clientes te contacten.</p>
             <div class="mb-2">
               <label class="form-label">Título</label>
@@ -215,7 +233,7 @@
         </div>
         <div class="col-12">
           <hr class="my-1">
-          <h3 class="h6 mb-2">Slider destacado</h3>
+          <h3 class="h6 mb-2">Paso 4 · Slider destacado</h3>
         </div>
         <div class="col-lg-5">
           <label class="form-label">Imagen principal (JPG, PNG o WEBP)</label>
@@ -265,7 +283,7 @@
           </div>
         </div>
         <div class="col-12">
-          <button class="btn btn-primary" type="submit">Guardar configuración del slider</button>
+          <button class="btn btn-primary" type="submit">Guardar configuración del catálogo</button>
         </div>
       </form>
     </div>
