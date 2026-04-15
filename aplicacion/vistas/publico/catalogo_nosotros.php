@@ -26,9 +26,12 @@ if ($nosotrosDescripcion === '') {
     $nosotrosDescripcion = 'Somos un equipo enfocado en entregar una experiencia de compra clara, rápida y confiable para cada cliente.';
 }
 $nosotrosImagen = (string) ($catalogoTopbar['nosotros_imagen'] ?? url('/img/placeholder-producto.svg'));
-$sliderImagen = trim((string) ($sliderCatalogo['imagen'] ?? ''));
+$sliderImagen = trim((string) ($catalogoTopbar['nosotros_banner_imagen'] ?? ''));
 if ($sliderImagen === '') {
-    $sliderImagen = url('/img/placeholder-producto.svg');
+    $sliderImagen = trim((string) ($sliderCatalogo['imagen'] ?? ''));
+    if ($sliderImagen === '') {
+        $sliderImagen = url('/img/placeholder-producto.svg');
+    }
 }
 $bloquesDescripcion = preg_split('/\R{2,}/u', $nosotrosDescripcion) ?: [];
 $bloquesDescripcion = array_values(array_filter(array_map(static fn($bloque): string => trim((string) $bloque), $bloquesDescripcion), static fn(string $bloque): bool => $bloque !== ''));
@@ -36,10 +39,16 @@ if ($bloquesDescripcion === []) {
     $bloquesDescripcion = [$nosotrosDescripcion];
 }
 $descripcionPrincipal = (string) ($bloquesDescripcion[0] ?? $nosotrosDescripcion);
-$descripcionSecundaria = trim(implode("\n\n", array_slice($bloquesDescripcion, 1)));
-$tituloSecundario = 'Nuestra historia';
+$descripcionSecundaria = trim((string) ($catalogoTopbar['nosotros_bloque_texto'] ?? ''));
+$tituloSecundario = trim((string) ($catalogoTopbar['nosotros_bloque_titulo'] ?? ''));
+if ($tituloSecundario === '') {
+    $tituloSecundario = 'Más sobre nosotros';
+}
 if ($descripcionSecundaria === '') {
-    $descripcionSecundaria = $nosotrosDescripcion;
+    $descripcionSecundaria = trim(implode("\n\n", array_slice($bloquesDescripcion, 1)));
+    if ($descripcionSecundaria === '') {
+        $descripcionSecundaria = $nosotrosDescripcion;
+    }
 }
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
@@ -133,7 +142,7 @@ $renderIconoRed = static function (string $id): string {
   ?>
   <section class="catalogo-container">
     <div class="hero-nosotros" style="background-image:url('<?= e($sliderImagen) ?>')">
-      <h1>Nosotros</h1>
+      <h1><?= e($nosotrosTitulo) ?></h1>
     </div>
   </section>
   <section class="nosotros-wrap">
