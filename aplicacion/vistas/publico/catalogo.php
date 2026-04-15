@@ -109,7 +109,7 @@ $renderIconoRed = static function (string $id): string {
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
-  .section-head h2,.sidebar h3{font-size:20px;color:var(--primary);font-weight:700}
+  .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
   .filters-section{padding:8px 0 24px}
@@ -119,11 +119,12 @@ $renderIconoRed = static function (string $id): string {
   .main-content{padding:0 0 46px}
   .content-grid{display:grid;grid-template-columns:280px 1fr;gap:22px}
   .sidebar{background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(15,23,42,.08);padding:14px;border:1px solid var(--border);height:fit-content;position:sticky;top:96px}
-  .category-list,.feature-list{list-style:none;display:grid;gap:8px;margin-top:10px}
+  .sidebar h3{background:#f3f6fb;border:1px solid var(--border);border-radius:12px;padding:8px 10px}
+  .category-list,.feature-list{list-style:none;display:grid;gap:4px;margin-top:8px}
   .category-list{max-height:320px;overflow:auto;padding-right:4px}
   .feature-list{grid-template-columns:1fr 1fr}
-  .category-list button,.feature-list button{width:100%;text-align:left;background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:9px 11px;font-weight:600;font-size:14px;color:var(--primary-soft)}
-  .category-list button.active{background:#eff6ff;color:var(--accent);border-color:#bfdbfe}
+  .category-list button,.feature-list button{width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid #e6edf6;border-radius:0;padding:8px 4px;font-weight:500;font-size:14px;color:var(--primary-soft)}
+  .category-list button.active{color:var(--accent);font-weight:700}
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
   .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
