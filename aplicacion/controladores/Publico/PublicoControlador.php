@@ -11,6 +11,7 @@ use Aplicacion\Modelos\ProductoImagen;
 use Aplicacion\Modelos\GestionComercial;
 use Aplicacion\Modelos\Inventario;
 use Aplicacion\Modelos\PlanFuncionalidad;
+use Aplicacion\Modelos\CatalogoCompra;
 use Aplicacion\Servicios\ServicioCorreo;
 use Aplicacion\Servicios\FlowApiService;
 
@@ -591,7 +592,8 @@ class PublicoControlador extends Controlador
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
-    public function checkoutCatalogo(int $empresaId): void
+
+    public function prepararCheckoutCatalogo(int $empresaId): void
     {
         validar_csrf();
 
@@ -608,17 +610,95 @@ class PublicoControlador extends Controlador
             $this->redirigir('/catalogo/' . $empresaId);
         }
 
+        $_SESSION['catalogo_checkout_preparado_' . $empresaId] = [
+            'carrito' => $carrito,
+            'fecha' => date('c'),
+        ];
+
+        $this->redirigir('/catalogo/' . $empresaId . '/checkout');
+    }
+
+    public function formularioCheckoutCatalogo(int $empresaId): void
+    {
+        $contexto = $this->obtenerContextoCatalogo($empresaId);
+        if (!$contexto) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $empresa = $contexto['empresa'];
+        $checkout = $_SESSION['catalogo_checkout_preparado_' . $empresaId] ?? null;
+        if (!is_array($checkout) || !is_array($checkout['carrito'] ?? null) || $checkout['carrito'] === []) {
+            flash('danger', 'No encontramos un carrito preparado para checkout.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $itemsCatalogo = [];
+        foreach ((new Producto())->listarParaCatalogoPublico($empresaId) as $producto) {
+            $itemsCatalogo[(int) $producto['id']] = $producto;
+        }
+
+        $total = 0.0;
+        $resumen = [];
+        foreach ((array) $checkout['carrito'] as $fila) {
+            $productoId = (int) ($fila['producto_id'] ?? 0);
+            $cantidad = max(1, (int) ($fila['cantidad'] ?? 1));
+            if (!isset($itemsCatalogo[$productoId])) {
+                continue;
+            }
+            $producto = $itemsCatalogo[$productoId];
+            $precio = (float) ($producto['precio'] ?? 0);
+            $subtotal = $precio * $cantidad;
+            $total += $subtotal;
+            $resumen[] = ['id' => $productoId, 'nombre' => (string) $producto['nombre'], 'cantidad' => $cantidad, 'precio' => $precio, 'subtotal' => $subtotal];
+        }
+
+        if ($resumen === [] || $total <= 0) {
+            flash('danger', 'No fue posible reconstruir tu carrito para el checkout.');
+            $this->redirigir('/catalogo/' . $empresaId);
+        }
+
+        $ocultarNavbarPublico = true;
+        $metodosEnvio = [
+            'starken' => 'Starken',
+            'chile_express' => 'Chile Express',
+        ];
+        $this->vistaPublica('publico/catalogo_checkout_formulario', compact('empresa', 'resumen', 'total', 'metodosEnvio', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+    public function checkoutCatalogo(int $empresaId): void
+    {
+        validar_csrf();
+
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $carrito = json_decode((string) ($_POST['carrito_json'] ?? '[]'), true);
+        if (!is_array($carrito) || $carrito === []) {
+            flash('danger', 'Tu carrito está vacío. Agrega productos para continuar.');
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
+        }
+
         $correo = mb_strtolower(trim((string) ($_POST['correo'] ?? '')));
         $nombre = trim((string) ($_POST['nombre'] ?? ''));
         $telefono = trim((string) ($_POST['telefono'] ?? ''));
         $documento = trim((string) ($_POST['documento'] ?? ''));
         $empresaComprador = trim((string) ($_POST['empresa'] ?? ''));
         $direccion = trim((string) ($_POST['direccion'] ?? ''));
+        $envioMetodo = (string) ($_POST['envio_metodo'] ?? 'starken');
         $referencia = trim((string) ($_POST['referencia'] ?? ''));
         $comuna = trim((string) ($_POST['comuna'] ?? ''));
         $ciudad = trim((string) ($_POST['ciudad'] ?? ''));
         $region = trim((string) ($_POST['region'] ?? ''));
         $acepta = isset($_POST['acepta_terminos']) && (string) $_POST['acepta_terminos'] === '1';
+        if (!in_array($envioMetodo, ['starken', 'chile_express'], true)) {
+            $envioMetodo = 'starken';
+        }
 
         $telefonoNormalizado = preg_replace('/\s+/', '', $telefono) ?? '';
         $telefonoValido = preg_match('/^\+?[0-9]{8,15}$/', $telefonoNormalizado) === 1;
@@ -633,8 +713,8 @@ class PublicoControlador extends Controlador
             || !$telefonoValido
             || !$acepta
         ) {
-            flash('danger', 'Completa los datos de facturación y envío (nombre, correo, teléfono, dirección, comuna, ciudad, región y aceptación de términos).');
-            $this->redirigir('/catalogo/' . $empresaId);
+            flash('danger', 'Completa los datos personales y de envío (nombre, correo, teléfono, dirección, comuna, ciudad, región y aceptación de términos).');
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
 
         $itemsCatalogo = [];
@@ -659,7 +739,7 @@ class PublicoControlador extends Controlador
 
         if ($total <= 0 || $resumen === []) {
             flash('danger', 'No fue posible validar los productos del carrito.');
-            $this->redirigir('/catalogo/' . $empresaId);
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
 
         $commerceOrder = 'CAT-' . $empresaId . '-' . strtoupper(substr(sha1((string) microtime(true)), 0, 10));
@@ -678,13 +758,37 @@ class PublicoControlador extends Controlador
             ]);
         } catch (\Throwable $e) {
             flash('danger', 'No fue posible iniciar el pago en Flow: ' . $e->getMessage());
-            $this->redirigir('/catalogo/' . $empresaId);
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
 
         if (!isset($respuesta['url'], $respuesta['token'])) {
             flash('danger', 'Flow no devolvió URL de pago.');
-            $this->redirigir('/catalogo/' . $empresaId);
+            $this->redirigir('/catalogo/' . $empresaId . '/checkout');
         }
+
+
+        $compraId = (new CatalogoCompra())->crear([
+            'empresa_id' => $empresaId,
+            'flow_token' => (string) $respuesta['token'],
+            'commerce_order' => $commerceOrder,
+            'estado_pago' => 'pendiente',
+            'estado_envio' => 'pendiente',
+            'comprador_nombre' => $nombre,
+            'comprador_correo' => $correo,
+            'comprador_telefono' => $telefonoNormalizado !== '' ? $telefonoNormalizado : $telefono,
+            'comprador_documento' => $documento !== '' ? $documento : null,
+            'comprador_empresa' => $empresaComprador !== '' ? $empresaComprador : null,
+            'envio_metodo' => $envioMetodo,
+            'envio_direccion' => $direccion,
+            'envio_referencia' => $referencia !== '' ? $referencia : null,
+            'envio_comuna' => $comuna,
+            'envio_ciudad' => $ciudad,
+            'envio_region' => $region,
+            'total' => $total,
+            'moneda' => 'CLP',
+            'payload_flow' => json_encode($respuesta, JSON_UNESCAPED_UNICODE),
+        ]);
+        (new CatalogoCompra())->guardarItems($compraId, $resumen);
 
         $_SESSION['catalogo_checkout_' . $respuesta['token']] = [
             'empresa_id' => $empresaId,
@@ -694,6 +798,7 @@ class PublicoControlador extends Controlador
                 'telefono' => $telefono,
                 'documento' => $documento,
                 'empresa' => $empresaComprador,
+                'envio_metodo' => $envioMetodo,
                 'direccion' => $direccion,
                 'referencia' => $referencia,
                 'comuna' => $comuna,
@@ -734,6 +839,25 @@ class PublicoControlador extends Controlador
         }
 
         $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
+        if (!is_array($orden) && $token !== '') {
+            $compra = (new CatalogoCompra())->buscarPorToken($token);
+            if (is_array($compra)) {
+                $orden = [
+                    'comprador' => [
+                        'nombre' => (string) ($compra['comprador_nombre'] ?? ''),
+                        'correo' => (string) ($compra['comprador_correo'] ?? ''),
+                        'telefono' => (string) ($compra['comprador_telefono'] ?? ''),
+                        'envio_metodo' => (string) ($compra['envio_metodo'] ?? 'starken'),
+                        'direccion' => (string) ($compra['envio_direccion'] ?? ''),
+                        'comuna' => (string) ($compra['envio_comuna'] ?? ''),
+                        'ciudad' => (string) ($compra['envio_ciudad'] ?? ''),
+                        'region' => (string) ($compra['envio_region'] ?? ''),
+                    ],
+                    'total' => (float) ($compra['total'] ?? 0),
+                    'items' => (new CatalogoCompra())->listarItems((int) ($compra['id'] ?? 0)),
+                ];
+            }
+        }
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
