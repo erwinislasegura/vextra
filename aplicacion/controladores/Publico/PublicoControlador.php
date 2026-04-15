@@ -655,7 +655,7 @@ class PublicoControlador extends Controlador
                 'id' => $productoId,
                 'nombre' => (string) $producto['nombre'],
                 'descripcion' => (string) ($producto['descripcion'] ?? ''),
-                'imagen' => url('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
+                'imagen' => FlowApiService::construirUrlPublica('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
                 'cantidad' => $cantidad,
                 'precio' => $precio,
                 'subtotal' => $subtotal,
@@ -747,7 +747,7 @@ class PublicoControlador extends Controlador
                 'id' => $productoId,
                 'nombre' => (string) $producto['nombre'],
                 'descripcion' => (string) ($producto['descripcion'] ?? ''),
-                'imagen' => url('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
+                'imagen' => FlowApiService::construirUrlPublica('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
                 'cantidad' => $cantidad,
                 'precio' => $precio,
                 'subtotal' => $subtotal,
@@ -997,7 +997,9 @@ class PublicoControlador extends Controlador
                 }
             }
             if ($imagenItem === '') {
-                $imagenItem = url('/img/placeholder-producto.svg');
+                $imagenItem = FlowApiService::construirUrlPublica('/img/placeholder-producto.svg');
+            } elseif (preg_match('/^https?:\/\//i', $imagenItem) !== 1) {
+                $imagenItem = FlowApiService::construirUrlPublica('/' . ltrim($imagenItem, '/'));
             }
 
             $filas .= '<tr>'
