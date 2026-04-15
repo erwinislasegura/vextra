@@ -25,16 +25,30 @@ class FlowWebhookService
             return;
         }
 
+        $status = [];
+
         try {
             $status = $this->pagos->sincronizarEstadoPorToken($token);
             $this->sincronizarCompraCatalogo($token, $status);
             $this->enviarCorreoSiPagoAprobado($token, $status);
-            (new FlowWebhook())->marcarProcesado($id, 'ok');
-            $this->log->info('webhook', 'Webhook pago procesado', $token, null, $status);
+        } catch (\Throwable $e) {
+            // Si el token no pertenece a flow_pagos (ej: compra catálogo), seguimos con sincronización catálogo.
+            $this->log->warning('webhook', 'Sincronización flow_pagos omitida o con error: ' . $e->getMessage(), $token, null, $payload);
+        }
+
+        try {
+            $statusCatalogo = $this->sincronizarCompraCatalogo($token, $status);
+            if ($statusCatalogo !== []) {
+                $status = $statusCatalogo;
+            }
         } catch (\Throwable $e) {
             (new FlowWebhook())->marcarProcesado($id, 'error', $e->getMessage());
-            $this->log->error('webhook', 'Error al procesar webhook de pago: ' . $e->getMessage(), $token, null, $payload);
+            $this->log->error('webhook', 'Error al sincronizar compra de catálogo: ' . $e->getMessage(), $token, null, $payload);
+            return;
         }
+
+        (new FlowWebhook())->marcarProcesado($id, 'ok');
+        $this->log->info('webhook', 'Webhook pago procesado', $token, null, $status !== [] ? $status : $payload);
     }
 
     public function procesarSuscripcion(array $payload): void
@@ -73,14 +87,29 @@ class FlowWebhookService
         }
     }
 
-    private function sincronizarCompraCatalogo(string $token, array $status): void
+    private function sincronizarCompraCatalogo(string $token, array $status): array
     {
         if ($token === '') {
-            return;
+            return [];
+        }
+
+        $modelo = new CatalogoCompra();
+        $compra = $modelo->buscarPorToken($token);
+        if (!$compra) {
+            return [];
+        }
+
+        if ($status === []) {
+            $empresaId = (int) ($compra['empresa_id'] ?? 0);
+            if ($empresaId <= 0) {
+                return [];
+            }
+            $status = (new FlowApiService())->getParaEmpresa($empresaId, 'payment/getStatus', ['token' => $token]);
         }
 
         $estado = $this->pagos->resolverEstadoPagoDesdeRespuesta($status);
-        (new CatalogoCompra())->actualizarEstadoPorToken($token, $estado, $status);
+        $modelo->actualizarEstadoPorToken($token, $estado, $status);
+        return $status;
     }
 
     private function enviarCorreoSiPagoAprobado(string $token, array $status): void

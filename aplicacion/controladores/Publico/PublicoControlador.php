@@ -822,8 +822,15 @@ class PublicoControlador extends Controlador
             return;
         }
 
-        $token = trim((string) ($_GET['token'] ?? ''));
+        $token = trim((string) ($_GET['token'] ?? ($_POST['token'] ?? ($_GET['token_ws'] ?? $_POST['token_ws'] ?? ''))));
         $estado = 'pendiente';
+
+        $modeloCompras = new CatalogoCompra();
+        $compra = $token !== '' ? $modeloCompras->buscarPorToken($token) : null;
+        if (is_array($compra)) {
+            $estado = (string) ($compra['estado_pago'] ?? 'pendiente');
+        }
+
         if ($token !== '') {
             try {
                 $status = (new FlowApiService())->getParaEmpresa($empresaId, 'payment/getStatus', ['token' => $token]);
@@ -833,30 +840,28 @@ class PublicoControlador extends Controlador
                     4 => 'anulado',
                     default => 'pendiente',
                 };
+                $modeloCompras->actualizarEstadoPorToken($token, $estado, $status);
             } catch (\Throwable $e) {
-                $estado = 'pendiente';
+                // Mantenemos el estado persistido en BD (si existe) para no mostrar falso pendiente.
             }
         }
 
         $orden = $_SESSION['catalogo_checkout_' . $token] ?? null;
-        if (!is_array($orden) && $token !== '') {
-            $compra = (new CatalogoCompra())->buscarPorToken($token);
-            if (is_array($compra)) {
-                $orden = [
-                    'comprador' => [
-                        'nombre' => (string) ($compra['comprador_nombre'] ?? ''),
-                        'correo' => (string) ($compra['comprador_correo'] ?? ''),
-                        'telefono' => (string) ($compra['comprador_telefono'] ?? ''),
-                        'envio_metodo' => (string) ($compra['envio_metodo'] ?? 'starken'),
-                        'direccion' => (string) ($compra['envio_direccion'] ?? ''),
-                        'comuna' => (string) ($compra['envio_comuna'] ?? ''),
-                        'ciudad' => (string) ($compra['envio_ciudad'] ?? ''),
-                        'region' => (string) ($compra['envio_region'] ?? ''),
-                    ],
-                    'total' => (float) ($compra['total'] ?? 0),
-                    'items' => (new CatalogoCompra())->listarItems((int) ($compra['id'] ?? 0)),
-                ];
-            }
+        if (!is_array($orden) && is_array($compra)) {
+            $orden = [
+                'comprador' => [
+                    'nombre' => (string) ($compra['comprador_nombre'] ?? ''),
+                    'correo' => (string) ($compra['comprador_correo'] ?? ''),
+                    'telefono' => (string) ($compra['comprador_telefono'] ?? ''),
+                    'envio_metodo' => (string) ($compra['envio_metodo'] ?? 'starken'),
+                    'direccion' => (string) ($compra['envio_direccion'] ?? ''),
+                    'comuna' => (string) ($compra['envio_comuna'] ?? ''),
+                    'ciudad' => (string) ($compra['envio_ciudad'] ?? ''),
+                    'region' => (string) ($compra['envio_region'] ?? ''),
+                ],
+                'total' => (float) ($compra['total'] ?? 0),
+                'items' => $modeloCompras->listarItems((int) ($compra['id'] ?? 0)),
+            ];
         }
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
