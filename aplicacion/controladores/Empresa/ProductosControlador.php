@@ -39,6 +39,17 @@ class ProductosControlador extends Controlador
             return;
         }
 
+        $precioNormal = (float) ($_POST['precio'] ?? 0);
+        $precioOferta = (float) ($_POST['precio_oferta'] ?? 0);
+        if ($precioOferta < 0) {
+            $precioOferta = 0;
+        }
+        if ($precioOferta > 0 && $precioOferta >= $precioNormal) {
+            flash('danger', 'El precio oferta debe ser menor al precio normal.');
+            $this->redirigir($this->obtenerRutaRetorno('/app/productos'));
+            return;
+        }
+
         $productoId = $modelo->crear([
             'empresa_id' => $empresaId,
             'categoria_id' => (int) ($_POST['categoria_id'] ?? 0) ?: null,
@@ -49,7 +60,8 @@ class ProductosControlador extends Controlador
             'sku' => trim($_POST['sku'] ?? ''),
             'codigo_barras' => trim($_POST['codigo_barras'] ?? ''),
             'unidad' => trim($_POST['unidad'] ?? 'unidad'),
-            'precio' => (float) ($_POST['precio'] ?? 0),
+            'precio' => $precioNormal,
+            'precio_oferta' => $precioOferta,
             'costo' => (float) ($_POST['costo'] ?? 0),
             'impuesto' => (float) ($_POST['impuesto'] ?? 0),
             'descuento_maximo' => (float) ($_POST['descuento_maximo'] ?? 0),
@@ -58,6 +70,7 @@ class ProductosControlador extends Controlador
             'stock_actual' => (float) ($_POST['stock_actual'] ?? 0),
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
             'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
+            'destacado_catalogo' => isset($_POST['destacado_catalogo']) ? 1 : 0,
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
         $this->procesarImagenesCatalogo($empresaId, $productoId);
@@ -527,6 +540,16 @@ class ProductosControlador extends Controlador
     {
         validar_csrf();
         $empresaId = (int) empresa_actual_id();
+        $precioNormal = (float) ($_POST['precio'] ?? 0);
+        $precioOferta = (float) ($_POST['precio_oferta'] ?? 0);
+        if ($precioOferta < 0) {
+            $precioOferta = 0;
+        }
+        if ($precioOferta > 0 && $precioOferta >= $precioNormal) {
+            flash('danger', 'El precio oferta debe ser menor al precio normal.');
+            $this->redirigir('/app/productos/editar/' . $id);
+            return;
+        }
         (new Producto())->actualizar($empresaId, $id, [
             'categoria_id' => (int) ($_POST['categoria_id'] ?? 0) ?: null,
             'tipo' => $_POST['tipo'] ?? 'producto',
@@ -536,7 +559,8 @@ class ProductosControlador extends Controlador
             'sku' => trim($_POST['sku'] ?? ''),
             'codigo_barras' => trim($_POST['codigo_barras'] ?? ''),
             'unidad' => trim($_POST['unidad'] ?? 'unidad'),
-            'precio' => (float) ($_POST['precio'] ?? 0),
+            'precio' => $precioNormal,
+            'precio_oferta' => $precioOferta,
             'costo' => (float) ($_POST['costo'] ?? 0),
             'impuesto' => (float) ($_POST['impuesto'] ?? 0),
             'descuento_maximo' => (float) ($_POST['descuento_maximo'] ?? 0),
@@ -545,6 +569,7 @@ class ProductosControlador extends Controlador
             'stock_actual' => (float) ($_POST['stock_actual'] ?? 0),
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
             'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
+            'destacado_catalogo' => isset($_POST['destacado_catalogo']) ? 1 : 0,
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
         $this->procesarImagenesCatalogo($empresaId, $id);

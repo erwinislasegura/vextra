@@ -470,6 +470,10 @@ class GestionComercialControlador extends Controlador
         if ($colorAcentoInput === '') {
             $colorAcentoInput = trim((string) ($_POST['catalogo_color_acento_picker'] ?? ''));
         }
+        $columnasProductos = (int) ($_POST['catalogo_columnas_productos'] ?? 3);
+        if ($columnasProductos < 2 || $columnasProductos > 5) {
+            $columnasProductos = 3;
+        }
         $colorPrimario = $this->normalizarColorHex($colorPrimarioInput);
         $colorAcento = $this->normalizarColorHex($colorAcentoInput);
 
@@ -503,6 +507,7 @@ class GestionComercialControlador extends Controlador
             'catalogo_social_youtube' => mb_substr((string) $sociales['catalogo_social_youtube'], 0, 255),
             'catalogo_color_primario' => $colorPrimario,
             'catalogo_color_acento' => $colorAcento,
+            'catalogo_columnas_productos' => (string) $columnasProductos,
         ]);
 
         flash('success', 'La configuración del catálogo fue actualizada.');
