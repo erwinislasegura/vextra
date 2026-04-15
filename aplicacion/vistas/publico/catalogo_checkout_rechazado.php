@@ -3,22 +3,16 @@
   <div class="container" style="max-width:760px;">
     <div class="card border-0 shadow-sm">
       <div class="card-body p-4">
-        <h1 class="h4 mb-2">Estado de tu pago</h1>
+        <h1 class="h4 mb-2">Pago no aprobado</h1>
         <p class="text-muted mb-3">Empresa: <strong><?= e((string) ($empresa['nombre_comercial'] ?? '')) ?></strong></p>
-        <?php if ($estado === 'aprobado'): ?>
-          <div class="alert alert-success">✅ Pago aprobado. Tu pedido fue recibido correctamente.</div>
-        <?php elseif ($estado === 'rechazado' || $estado === 'anulado'): ?>
-          <div class="alert alert-danger">⚠️ El pago no fue aprobado. Puedes volver al catálogo e intentarlo nuevamente.</div>
-        <?php else: ?>
-          <div class="alert alert-warning">⏳ Tu pago aún está en estado pendiente de confirmación.</div>
-        <?php endif; ?>
+        <div class="alert alert-danger">⚠️ Tu pago fue rechazado o anulado. Puedes volver al catálogo e intentarlo nuevamente.</div>
 
         <?php if (is_array($orden) && !empty($orden['items'])): ?>
-          <h2 class="h6 mt-4">Resumen</h2>
+          <h2 class="h6 mt-4">Detalle de compra</h2>
           <ul class="list-group mb-3">
             <?php foreach ($orden['items'] as $item): ?>
               <li class="list-group-item d-flex justify-content-between">
-                <span><?= e((string) ($item['nombre'] ?? 'Producto')) ?> x<?= (int) ($item['cantidad'] ?? 1) ?></span>
+                <span><?= e((string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto')) ?> x<?= (int) ($item['cantidad'] ?? 1) ?></span>
                 <strong>$<?= number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') ?></strong>
               </li>
             <?php endforeach; ?>
@@ -27,15 +21,14 @@
         <?php endif; ?>
 
         <?php if ($comprador !== []): ?>
-          <h2 class="h6 mt-4">Datos del comprador</h2>
+          <h2 class="h6 mt-4">Datos personales y de envío</h2>
           <div class="table-responsive mb-3">
             <table class="table table-sm align-middle mb-0">
               <tbody>
                 <tr><th class="text-muted" style="width:34%;">Nombre</th><td><?= e((string) ($comprador['nombre'] ?? '-')) ?></td></tr>
                 <tr><th class="text-muted">Correo</th><td><?= e((string) ($comprador['correo'] ?? '-')) ?></td></tr>
                 <tr><th class="text-muted">Teléfono</th><td><?= e((string) ($comprador['telefono'] ?? '-')) ?></td></tr>
-                <tr><th class="text-muted">Documento</th><td><?= e((string) ($comprador['documento'] ?? '-')) ?></td></tr>
-                <tr><th class="text-muted">Empresa</th><td><?= e((string) ($comprador['empresa'] ?? '-')) ?></td></tr>
+                <tr><th class="text-muted">Método de envío</th><td><?= e((string) ($comprador['envio_metodo'] ?? '-')) ?></td></tr>
                 <tr><th class="text-muted">Dirección</th><td><?= e((string) ($comprador['direccion'] ?? '-')) ?></td></tr>
                 <tr><th class="text-muted">Comuna / Ciudad</th><td><?= e(trim((string) (($comprador['comuna'] ?? '') . ' / ' . ($comprador['ciudad'] ?? '')), ' /')) ?></td></tr>
                 <tr><th class="text-muted">Región</th><td><?= e((string) ($comprador['region'] ?? '-')) ?></td></tr>
@@ -43,6 +36,7 @@
               </tbody>
             </table>
           </div>
+          <div class="alert alert-info small">Condiciones de envío: envío por pagar con plazo máximo de 48 horas hábiles desde la confirmación del pago.</div>
         <?php endif; ?>
 
         <?php if ($token !== ''): ?><div class="small text-muted mb-3">Token Flow: <?= e($token) ?></div><?php endif; ?>
@@ -51,11 +45,3 @@
     </div>
   </div>
 </section>
-
-<script>
-(() => {
-  try {
-    localStorage.removeItem('vextra_catalogo_carrito_<?= (int) ($empresa['id'] ?? 0) ?>');
-  } catch (e) {}
-})();
-</script>
