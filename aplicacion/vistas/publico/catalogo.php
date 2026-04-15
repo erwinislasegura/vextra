@@ -75,13 +75,6 @@ $renderIconoRed = static function (string $id): string {
         default => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>',
     };
 };
-$renderIconoContacto = static function (string $tipo): string {
-    return match ($tipo) {
-        'telefono' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.8 3.5h3l1.1 4.2-2 1.1a14 14 0 0 0 6.1 6.1l1.1-2 4.2 1.1v3c0 .5-.4.9-.9 1C10.5 21 3 13.5 3 4.4c0-.5.4-.9.9-.9z"/></svg>',
-        'correo' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="m4 8 8 6 8-6"/></svg>',
-        default => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.6 6-10a6 6 0 1 0-12 0c0 4.4 6 10 6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>',
-    };
-};
 ?>
 <style>
   :root{--primary:<?= e($colorPrimario) ?>;--primary-soft:<?= e($colorPrimario) ?>;--accent:<?= e($colorAcento) ?>;--accent-hover:<?= e($colorPrimario) ?>;--danger:#dc2626;--bg:#eef2f7;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#dbe3ee;--shadow:0 10px 25px rgba(15,23,42,.08);--radius:18px}
@@ -370,50 +363,11 @@ $renderIconoContacto = static function (string $tipo): string {
     </div>
   </aside>
 
-  <footer class="footer" id="footerCatalogo">
-    <div class="catalogo-container footer-content">
-      <div class="footer-brand footer-col">
-        <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
-        <p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p>
-      </div>
-      <div class="footer-col">
-        <h4>Accesos rápidos</h4>
-        <nav class="footer-menu mt-2">
-          <a href="#catalogoProductos">Inicio</a>
-          <a href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-          <a href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
-          <a href="#catalogoProductos" id="showFeaturedBtnTop">Productos destacados</a>
-          <a href="#catalogoProductos" id="showOffersBtnTop">Ofertas</a>
-        </nav>
-      </div>
-      <div class="footer-contact footer-col">
-        <h4>Datos de contacto</h4>
-        <p><span class="dot"><?= $renderIconoContacto('telefono') ?></span><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
-        <p><span class="dot"><?= $renderIconoContacto('correo') ?></span><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
-        <p><span class="dot"><?= $renderIconoContacto('direccion') ?></span><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
-        <p><span class="dot"><?= $renderIconoContacto('direccion') ?></span><?= e(trim((string) (($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')))) ?></p>
-      </div>
-      <div class="footer-follow footer-col">
-        <h4>Síguenos</h4>
-        <p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p>
-        <?php if ($socialesTopbar !== []): ?>
-          <div class="footer-sociales" aria-label="Redes sociales del catálogo">
-            <?php foreach ($socialesTopbar as $red): ?>
-              <a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= e((string) $red['label']) ?>">
-                <?= $renderIconoRed((string) ($red['id'] ?? '')) ?>
-              </a>
-            <?php endforeach; ?>
-          </div>
-        <?php endif; ?>
-      </div>
-    </div>
-  </footer>
-  <div class="footer-bottom">
-    <div class="catalogo-container footer-bottom__content">
-      <span>© <?= date('Y') ?> • Todos los derechos reservados</span>
-      <span>Catálogo construido con tecnología de <a href="https://vextra.cl" target="_blank" rel="noopener noreferrer">Vextra.cl</a></span>
-    </div>
-  </div>
+  <?php
+    $catalogoFooterInicioUrl = '#catalogoProductos';
+    $catalogoFooterProductosUrl = '#catalogoProductos';
+    require __DIR__ . '/partials/catalogo_footer.php';
+  ?>
 </div>
 
 <div class="modal fade" id="modalCheckout" tabindex="-1" aria-hidden="true">

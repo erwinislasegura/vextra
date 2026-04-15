@@ -140,16 +140,28 @@ $renderIconoRed = static function (string $id): string {
   .map-actions{display:flex;justify-content:flex-end;padding:10px 2px 0}
   .map-actions a{font-size:13px;color:var(--primary);font-weight:600;text-decoration:none}
 
-  .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:18px}
+  .footer{position:relative;color:#fff;padding:30px 0 20px;margin-top:20px;background:linear-gradient(120deg,var(--primary),var(--accent))}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
   .footer-col h4{font-size:18px;font-weight:600;margin:0 0 10px}
   .footer-brand img{width:128px;height:60px;object-fit:contain;background:#fff;border-radius:10px;padding:4px 8px;border:1px solid rgba(255,255,255,.35);margin-bottom:8px}
   .footer-brand p,.footer-contact p,.footer-menu a,.footer-follow p{font-size:13px;color:rgba(255,255,255,.92);margin:0}
-  .footer-menu{display:grid;gap:8px}.footer-menu a{color:#fff;text-decoration:none}
+  .footer-contact{display:grid;gap:8px}
+  .footer-contact p{display:flex;align-items:center;gap:8px}
+  .footer-contact p .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center}
+  .footer-contact p .dot svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .footer-menu{display:grid;gap:8px}
+  .footer-menu a,.footer-menu a:link,.footer-menu a:visited{color:#fff !important;text-decoration:none}
+  .footer-menu a:hover{text-decoration:underline}
+  .footer-follow{display:grid;gap:10px}
   .footer-sociales{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .footer-sociales a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
+  .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
+  .footer-bottom__content{display:flex;justify-content:space-between;align-items:center;color:#4b5563;font-size:13px;font-weight:500;gap:12px}
+  .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
+  .footer-bottom__content a:hover{text-decoration:underline}
   @media (max-width:1100px){.catalogo-navbar,.contact-card,.form-grid,.footer-content{grid-template-columns:1fr}.contact-title{font-size:32px}.nav-actions{justify-content:flex-start}}
+  @media (max-width:720px){.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}}
 </style>
 
 <div class="catalogo-page">
@@ -213,12 +225,9 @@ $renderIconoRed = static function (string $id): string {
     </div>
   <?php endif; ?>
 
-  <footer class="footer">
-    <div class="catalogo-container footer-content">
-      <div class="footer-brand footer-col"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"><p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p></div>
-      <div class="footer-col"><h4>Accesos rápidos</h4><nav class="footer-menu mt-2"><a href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a href="<?= e($catalogoBaseUrl) ?>/nosotros">Nosotros</a><a href="<?= e($catalogoBaseUrl) ?>/contacto">Contacto</a></nav></div>
-      <div class="footer-contact footer-col"><h4>Datos de contacto</h4><p><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p></div>
-      <div class="footer-follow footer-col"><h4>Síguenos</h4><p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p><?php if ($socialesTopbar !== []): ?><div class="footer-sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div>
-    </div>
-  </footer>
+  <?php
+    $catalogoFooterInicioUrl = $catalogoBaseUrl . '#catalogoProductos';
+    $catalogoFooterProductosUrl = $catalogoBaseUrl . '#catalogoProductos';
+    require __DIR__ . '/partials/catalogo_footer.php';
+  ?>
 </div>
