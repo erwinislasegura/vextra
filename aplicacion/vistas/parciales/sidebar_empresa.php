@@ -69,7 +69,7 @@ $soporteNoLeidosCliente = (new SoporteChat())->contarNoLeidosEmpresa((int) (empr
       </div>
     <?php endif; ?>
 
-    <?php if ($tieneModulo('modulo_clientes') || $tieneModulo('modulo_contactos') || $tieneModulo('modulo_vendedores') || $tieneModulo('modulo_cotizaciones') || $tieneModulo('modulo_seguimiento') || $tieneModulo('modulo_aprobaciones') || $tieneModulo('modulo_catalogo_en_linea')): ?>
+    <?php if ($tieneModulo('modulo_clientes') || $tieneModulo('modulo_contactos') || $tieneModulo('modulo_vendedores') || $tieneModulo('modulo_cotizaciones') || $tieneModulo('modulo_seguimiento') || $tieneModulo('modulo_aprobaciones') || $tieneModulo('modulo_catalogo_en_linea') || $tieneModulo('modulo_compras_catalogo')): ?>
       <div class="pt-2 border-top"><div class="text-uppercase text-muted fw-semibold px-2">Gestión comercial</div></div>
     <?php endif; ?>
     <?php if ($tieneModulo('modulo_clientes')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/clientes', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/clientes')) ?>"><i class="bi bi-building mt-1"></i><span>Clientes</span></a><?php endif; ?>
@@ -77,6 +77,7 @@ $soporteNoLeidosCliente = (new SoporteChat())->contarNoLeidosEmpresa((int) (empr
     <?php if ($tieneModulo('modulo_vendedores')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/vendedores', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/vendedores')) ?>"><i class="bi bi-person-badge mt-1"></i><span>Vendedores</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_cotizaciones')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/cotizaciones', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/cotizaciones')) ?>"><i class="bi bi-file-earmark-text mt-1"></i><span>Cotizaciones</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_catalogo_en_linea')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/catalogo-en-linea', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/catalogo-en-linea')) ?>"><i class="bi bi-shop-window mt-1"></i><span>Catálogo en línea</span></a><?php endif; ?>
+    <?php if ($tieneModulo('modulo_compras_catalogo')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/compras-catalogo', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/compras-catalogo')) ?>"><i class="bi bi-bag-check mt-1"></i><span>Compras catálogo</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_seguimiento')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/seguimiento', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/seguimiento')) ?>"><i class="bi bi-graph-up-arrow mt-1"></i><span>Seguimiento comercial</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_aprobaciones')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/aprobaciones', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/aprobaciones')) ?>"><i class="bi bi-check2-square mt-1"></i><span>Aprobaciones</span></a><?php endif; ?>
 
