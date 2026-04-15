@@ -48,6 +48,10 @@ $colorAcento = trim((string) ($catalogoTopbar['color_acento'] ?? ''));
 if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorAcento) !== 1) {
     $colorAcento = '#5415B0';
 }
+$columnasProductos = (int) ($catalogoTopbar['columnas_productos'] ?? 3);
+if ($columnasProductos < 2 || $columnasProductos > 5) {
+    $columnasProductos = 3;
+}
 $socialesTopbar = [
     ['id' => 'facebook', 'url' => trim((string) ($catalogoTopbar['sociales']['facebook'] ?? '')), 'label' => 'Facebook'],
     ['id' => 'instagram', 'url' => trim((string) ($catalogoTopbar['sociales']['instagram'] ?? '')), 'label' => 'Instagram'],
@@ -120,7 +124,7 @@ $renderIconoRed = static function (string $id): string {
   .category-list button.active{background:#eff6ff;color:var(--accent);border-color:#bfdbfe}
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
-  .products-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
   .product-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
