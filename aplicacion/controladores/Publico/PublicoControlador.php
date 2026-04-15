@@ -517,6 +517,9 @@ class PublicoControlador extends Controlador
     public function logoCatalogoEmpresa(int $empresaId): void
     {
         $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            $this->emitirArchivoCatalogo('', '/img/logo/icono.png');
+        }
         $logo = trim((string) ($empresa['logo'] ?? ''));
         $this->emitirArchivoCatalogo($logo, '/img/logo/icono.png');
     }
@@ -524,6 +527,9 @@ class PublicoControlador extends Controlador
     public function sliderCatalogoImagen(int $empresaId, string $tipo): void
     {
         $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            $this->emitirArchivoCatalogo('', '/img/placeholder-producto.svg');
+        }
         $campo = $tipo === 'secundaria' ? 'slider_imagen_secundaria' : 'slider_imagen';
         $ruta = trim((string) ($empresa[$campo] ?? ''));
         if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
@@ -541,6 +547,9 @@ class PublicoControlador extends Controlador
     public function imagenCatalogoNosotros(int $empresaId): void
     {
         $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            $this->emitirArchivoCatalogo('', '/img/placeholder-producto.svg');
+        }
         $ruta = trim((string) ($empresa['catalogo_nosotros_imagen'] ?? ''));
         if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
             $ruta = trim((string) ($empresa['slider_imagen'] ?? ''));
@@ -551,16 +560,9 @@ class PublicoControlador extends Controlador
     public function imagenCatalogoNosotrosBanner(int $empresaId): void
     {
         $empresa = (new Empresa())->buscar($empresaId);
-        $ruta = trim((string) ($empresa['catalogo_nosotros_banner_imagen'] ?? ''));
-        if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
-            $ruta = trim((string) ($empresa['slider_imagen'] ?? ''));
+        if (!$empresa) {
+            $this->emitirArchivoCatalogo('', '/img/placeholder-producto.svg');
         }
-        $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
-    }
-
-    public function imagenCatalogoNosotrosBanner(int $empresaId): void
-    {
-        $empresa = (new Empresa())->buscar($empresaId);
         $ruta = trim((string) ($empresa['catalogo_nosotros_banner_imagen'] ?? ''));
         if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
             $ruta = trim((string) ($empresa['slider_imagen'] ?? ''));
@@ -570,6 +572,10 @@ class PublicoControlador extends Controlador
 
     public function imagenCatalogoProducto(int $empresaId, int $productoId): void
     {
+        $empresa = (new Empresa())->buscar($empresaId);
+        if (!$empresa) {
+            $this->emitirArchivoCatalogo('', '/img/placeholder-producto.svg');
+        }
         $imagenes = (new ProductoImagen())->listarPorProducto($empresaId, $productoId);
         $ruta = '';
         if ($imagenes !== []) {
