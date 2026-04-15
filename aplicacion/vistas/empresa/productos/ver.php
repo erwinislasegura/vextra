@@ -9,6 +9,8 @@
       <dt class="col-sm-3">Tipo</dt><dd class="col-sm-9"><?= e($producto['tipo']) ?></dd>
       <dt class="col-sm-3">Unidad</dt><dd class="col-sm-9"><?= e($producto['unidad'] ?? '-') ?></dd>
       <dt class="col-sm-3">Precio</dt><dd class="col-sm-9">$<?= number_format((float)$producto['precio'],2) ?></dd>
+      <dt class="col-sm-3">Precio oferta</dt><dd class="col-sm-9"><?php if ((float) ($producto['precio_oferta'] ?? 0) > 0): ?>$<?= number_format((float)$producto['precio_oferta'],2) ?><?php else: ?>-<?php endif; ?></dd>
+      <dt class="col-sm-3">Destacado catálogo</dt><dd class="col-sm-9"><?= (int) ($producto['destacado_catalogo'] ?? 0) === 1 ? 'Sí' : 'No' ?></dd>
       <dt class="col-sm-3">Stock mínimo</dt><dd class="col-sm-9"><?= e((string)($producto['stock_minimo'] ?? 0)) ?></dd>
       <dt class="col-sm-3">Stock actual</dt><dd class="col-sm-9"><?= e((string)($producto['stock_actual'] ?? 0)) ?></dd>
       <dt class="col-sm-3">Stock crítico</dt><dd class="col-sm-9"><?= e((string)($producto['stock_critico'] ?? $producto['stock_aviso'] ?? 0)) ?></dd>

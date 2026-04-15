@@ -60,6 +60,7 @@ class ConfiguracionControlador extends Controlador
             'direccion' => trim((string) ($_POST['direccion'] ?? '')),
             'ciudad' => trim((string) ($_POST['ciudad'] ?? '')),
             'pais' => trim((string) ($_POST['pais'] ?? '')),
+            'descripcion' => mb_substr(trim((string) ($_POST['descripcion'] ?? '')), 0, 280),
             'logo' => $logoNuevo,
             'imap_host' => trim((string) ($_POST['imap_host'] ?? '')),
             'imap_port' => (int) ($_POST['imap_port'] ?? 0) ?: null,
