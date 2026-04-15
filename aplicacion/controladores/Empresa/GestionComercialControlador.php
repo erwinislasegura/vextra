@@ -457,6 +457,14 @@ class GestionComercialControlador extends Controlador
         if ($nuevaImagenNosotros !== null) {
             $nosotrosImagen = $nuevaImagenNosotros;
         }
+        $nosotrosBannerImagen = (string) ($actual['catalogo_nosotros_banner_imagen'] ?? '');
+        if (isset($_POST['eliminar_catalogo_nosotros_banner_imagen'])) {
+            $nosotrosBannerImagen = '';
+        }
+        $nuevaImagenNosotrosBanner = $this->guardarImagenSliderCatalogo($empresaId, 'catalogo_nosotros_banner_imagen', 'banner nosotros');
+        if ($nuevaImagenNosotrosBanner !== null) {
+            $nosotrosBannerImagen = $nuevaImagenNosotrosBanner;
+        }
 
         $sliderTitulo = trim((string) ($_POST['slider_titulo'] ?? ''));
         $sliderBajada = trim((string) ($_POST['slider_bajada'] ?? ''));
@@ -465,6 +473,8 @@ class GestionComercialControlador extends Controlador
         $topbarTexto = trim((string) ($_POST['catalogo_topbar_texto'] ?? ''));
         $nosotrosTitulo = trim((string) ($_POST['catalogo_nosotros_titulo'] ?? ''));
         $nosotrosDescripcion = trim((string) ($_POST['catalogo_nosotros_descripcion'] ?? ''));
+        $nosotrosBloqueTitulo = trim((string) ($_POST['catalogo_nosotros_bloque_titulo'] ?? ''));
+        $nosotrosBloqueTexto = trim((string) ($_POST['catalogo_nosotros_bloque_texto'] ?? ''));
         $contactoTitulo = trim((string) ($_POST['catalogo_contacto_titulo'] ?? ''));
         $contactoDescripcion = trim((string) ($_POST['catalogo_contacto_descripcion'] ?? ''));
         $contactoHorario = trim((string) ($_POST['catalogo_contacto_horario'] ?? ''));
@@ -521,6 +531,7 @@ class GestionComercialControlador extends Controlador
             'slider_imagen' => $sliderImagen,
             'slider_imagen_secundaria' => $sliderImagenSecundaria,
             'catalogo_nosotros_imagen' => $nosotrosImagen,
+            'catalogo_nosotros_banner_imagen' => $nosotrosBannerImagen,
             'slider_titulo' => mb_substr($sliderTitulo, 0, 120),
             'slider_bajada' => mb_substr($sliderBajada, 0, 220),
             'slider_boton_texto' => mb_substr($sliderBotonTexto, 0, 60),
@@ -528,6 +539,8 @@ class GestionComercialControlador extends Controlador
             'catalogo_topbar_texto' => mb_substr($topbarTexto, 0, 220),
             'catalogo_nosotros_titulo' => mb_substr($nosotrosTitulo, 0, 120),
             'catalogo_nosotros_descripcion' => mb_substr($nosotrosDescripcion, 0, 900),
+            'catalogo_nosotros_bloque_titulo' => mb_substr($nosotrosBloqueTitulo, 0, 160),
+            'catalogo_nosotros_bloque_texto' => mb_substr($nosotrosBloqueTexto, 0, 1600),
             'catalogo_contacto_titulo' => mb_substr($contactoTitulo, 0, 120),
             'catalogo_contacto_descripcion' => mb_substr($contactoDescripcion, 0, 900),
             'catalogo_contacto_horario' => mb_substr($contactoHorario, 0, 180),

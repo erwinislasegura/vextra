@@ -398,10 +398,11 @@ class PublicoControlador extends Controlador
 
         $empresa = $contexto['empresa'];
         $logoCatalogo = $contexto['logoCatalogo'];
+        $sliderCatalogo = $contexto['sliderCatalogo'];
         $catalogoTopbar = $contexto['catalogoTopbar'];
         $ocultarNavbarPublico = true;
 
-        $this->vistaPublica('publico/catalogo_nosotros', compact('empresa', 'logoCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
+        $this->vistaPublica('publico/catalogo_nosotros', compact('empresa', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
     public function catalogoContacto(int $empresaId): void
@@ -541,6 +542,16 @@ class PublicoControlador extends Controlador
     {
         $empresa = (new Empresa())->buscar($empresaId);
         $ruta = trim((string) ($empresa['catalogo_nosotros_imagen'] ?? ''));
+        $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
+    }
+
+    public function imagenCatalogoNosotrosBanner(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        $ruta = trim((string) ($empresa['catalogo_nosotros_banner_imagen'] ?? ''));
+        if ($ruta === '' || !$this->rutaCatalogoExiste($ruta)) {
+            $ruta = trim((string) ($empresa['slider_imagen'] ?? ''));
+        }
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
@@ -731,6 +742,8 @@ class PublicoControlador extends Controlador
             'columnas_productos' => (int) ($empresa['catalogo_columnas_productos'] ?? 3),
             'nosotros_titulo' => trim((string) ($empresa['catalogo_nosotros_titulo'] ?? '')),
             'nosotros_descripcion' => trim((string) ($empresa['catalogo_nosotros_descripcion'] ?? '')),
+            'nosotros_bloque_titulo' => trim((string) ($empresa['catalogo_nosotros_bloque_titulo'] ?? '')),
+            'nosotros_bloque_texto' => trim((string) ($empresa['catalogo_nosotros_bloque_texto'] ?? '')),
             'contacto_titulo' => trim((string) ($empresa['catalogo_contacto_titulo'] ?? '')),
             'contacto_descripcion' => trim((string) ($empresa['catalogo_contacto_descripcion'] ?? '')),
             'contacto_horario' => trim((string) ($empresa['catalogo_contacto_horario'] ?? '')),
@@ -751,6 +764,7 @@ class PublicoControlador extends Controlador
                 'youtube' => trim((string) ($empresa['catalogo_social_youtube'] ?? '')),
             ],
             'nosotros_imagen' => url('/catalogo/' . $empresaId . '/nosotros/imagen?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
+            'nosotros_banner_imagen' => url('/catalogo/' . $empresaId . '/nosotros/banner?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time()))),
         ];
 
         return [
