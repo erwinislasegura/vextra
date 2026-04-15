@@ -171,6 +171,9 @@ $renderIconoRed = static function (string $id): string {
   .footer-sociales a svg{width:14px;height:14px;fill:#fff}
   .footer-bottom{background:#fff;border-top:1px solid #e5e7eb;padding:10px 0}
   .footer-bottom__content{display:flex;justify-content:center;align-items:center;color:#4b5563;font-size:13px;font-weight:500}
+  .footer-bottom__content a{color:#3f2a84;font-weight:700;text-decoration:none}
+  .footer-bottom__content a:hover{text-decoration:underline}
+  body.public-page > footer.border-top.bg-white.mt-5{display:none}
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
@@ -384,7 +387,7 @@ $renderIconoRed = static function (string $id): string {
   </footer>
   <div class="footer-bottom">
     <div class="catalogo-container footer-bottom__content">
-      Catálogo construido con tecnología de Vextra.cl
+      Catálogo construido con tecnología de <a href="https://vextra.cl" target="_blank" rel="noopener noreferrer">Vextra.cl</a>
     </div>
   </div>
 </div>
