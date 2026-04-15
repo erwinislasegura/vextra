@@ -111,6 +111,14 @@ $renderIconoContacto = static function (string $tipo): string {
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
   .hero{padding:26px 0 22px}
   .hero-grid{display:grid;grid-template-columns:1fr}
+  .info-section{padding:8px 0 24px}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .info-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:20px}
+  .info-card h2{font-size:24px;color:var(--primary);margin-bottom:10px}
+  .info-card p{color:var(--muted);margin:0}
+  .nosotros-foto{width:100%;max-height:280px;object-fit:cover;border-radius:14px;margin-bottom:12px;background:#f8fafc}
+  .contacto-list{display:grid;gap:8px;margin-top:12px}
+  .contacto-list strong{color:var(--primary)}
   .slider{position:relative;min-height:420px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(135deg,#0f172a,#1d4ed8)}
   .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity 1.6s ease-in-out,transform 8s ease-out;transform:scale(1.05);display:flex;align-items:flex-end;padding:40px;color:#fff;background-size:cover;background-position:center}
   .slide::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.78) 0%,rgba(15,23,42,.45) 45%,rgba(15,23,42,.2) 100%)}
@@ -193,7 +201,7 @@ $renderIconoContacto = static function (string $tipo): string {
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
-  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap,.info-grid{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
 </style>
 
@@ -257,6 +265,29 @@ $renderIconoContacto = static function (string $tipo): string {
           </div>
         </article>
       </div>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <div class="catalogo-container info-grid">
+      <article class="info-card" id="nosotros">
+        <img class="nosotros-foto" src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros">
+        <h2><?= e($nosotrosTitulo) ?></h2>
+        <p><?= nl2br(e($nosotrosDescripcion)) ?></p>
+      </article>
+      <article class="info-card" id="contacto">
+        <h2><?= e($contactoTitulo) ?></h2>
+        <p><?= nl2br(e($contactoDescripcion)) ?></p>
+        <div class="contacto-list">
+          <p><strong>Teléfono:</strong> <?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
+          <p><strong>Correo:</strong> <?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
+          <p><strong>Dirección:</strong> <?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
+          <p><strong>Horario:</strong> <?= e($contactoHorario) ?></p>
+          <?php if ($contactoWhatsapp !== ''): ?>
+            <p><strong>WhatsApp:</strong> <?= e($contactoWhatsapp) ?></p>
+          <?php endif; ?>
+        </div>
+      </article>
     </div>
   </section>
 
