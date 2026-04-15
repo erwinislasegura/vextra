@@ -62,6 +62,31 @@ $socialesTopbar = [
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
+$nosotrosTitulo = trim((string) ($catalogoTopbar['nosotros_titulo'] ?? ''));
+if ($nosotrosTitulo === '') {
+    $nosotrosTitulo = 'Nosotros';
+}
+$nosotrosDescripcion = trim((string) ($catalogoTopbar['nosotros_descripcion'] ?? ''));
+if ($nosotrosDescripcion === '') {
+    $nosotrosDescripcion = trim((string) ($empresa['descripcion'] ?? ''));
+}
+if ($nosotrosDescripcion === '') {
+    $nosotrosDescripcion = 'Somos un equipo enfocado en entregar una experiencia de compra clara, rápida y confiable para cada cliente.';
+}
+$nosotrosImagen = (string) ($catalogoTopbar['nosotros_imagen'] ?? url('/img/placeholder-producto.svg'));
+$contactoTitulo = trim((string) ($catalogoTopbar['contacto_titulo'] ?? ''));
+if ($contactoTitulo === '') {
+    $contactoTitulo = 'Contacto';
+}
+$contactoDescripcion = trim((string) ($catalogoTopbar['contacto_descripcion'] ?? ''));
+if ($contactoDescripcion === '') {
+    $contactoDescripcion = 'Estamos disponibles para resolver dudas, cotizaciones y coordinación de entregas.';
+}
+$contactoHorario = trim((string) ($catalogoTopbar['contacto_horario'] ?? ''));
+if ($contactoHorario === '') {
+    $contactoHorario = 'Lunes a viernes de 09:00 a 18:00 hrs.';
+}
+$contactoWhatsapp = trim((string) ($catalogoTopbar['contacto_whatsapp'] ?? ''));
 
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
@@ -94,7 +119,7 @@ $renderIconoContacto = static function (string $tipo): string {
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   .catalogo-navbar{display:grid;grid-template-columns:340px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo{display:flex;align-items:center;gap:.55rem;color:var(--text);font-size:16px;font-weight:800;text-decoration:none;line-height:1.05}
-  .catalogo-logo img{width:120px;height:60px;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;padding:4px 8px}
+  .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .catalogo-logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
   .catalogo-logo span{color:var(--accent)}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
@@ -107,6 +132,14 @@ $renderIconoContacto = static function (string $tipo): string {
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
   .hero{padding:26px 0 22px}
   .hero-grid{display:grid;grid-template-columns:1fr}
+  .info-section{padding:8px 0 24px}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .info-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:20px}
+  .info-card h2{font-size:24px;color:var(--primary);margin-bottom:10px}
+  .info-card p{color:var(--muted);margin:0}
+  .nosotros-foto{width:100%;max-height:280px;object-fit:cover;border-radius:14px;margin-bottom:12px;background:#f8fafc}
+  .contacto-list{display:grid;gap:8px;margin-top:12px}
+  .contacto-list strong{color:var(--primary)}
   .slider{position:relative;min-height:420px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow);background:linear-gradient(135deg,#0f172a,#1d4ed8)}
   .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity 1.6s ease-in-out,transform 8s ease-out;transform:scale(1.05);display:flex;align-items:flex-end;padding:40px;color:#fff;background-size:cover;background-position:center}
   .slide::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.78) 0%,rgba(15,23,42,.45) 45%,rgba(15,23,42,.2) 100%)}
@@ -189,7 +222,7 @@ $renderIconoContacto = static function (string $tipo): string {
   .catalogo-checkout .form-control,.catalogo-checkout .form-select{border-radius:.65rem}
   .catalogo-checkout__block{border:1px solid #edf1f5;border-radius:.95rem;padding:1rem;background:#fff}
   .catalogo-checkout__title{font-weight:700;font-size:.95rem;margin-bottom:.75rem}
-  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:1100px){.catalogo-navbar,.hero-grid,.content-grid,.filters-wrap,.info-grid{grid-template-columns:1fr}.sidebar{position:static}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:720px){.products-grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.catalogo-topbar__content,.section-head,.catalogo-navbar{display:flex;flex-direction:column;align-items:stretch}.footer-content{grid-template-columns:1fr}.footer-bottom__content{flex-direction:column;align-items:flex-start}.slide{padding:24px}.slide h2{font-size:32px}.cart-panel{width:100%}}
 </style>
 
@@ -213,17 +246,13 @@ $renderIconoContacto = static function (string $tipo): string {
     <div class="catalogo-container catalogo-navbar">
       <a class="catalogo-logo" href="#catalogoProductos">
         <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
-        <div>
-          <?= e((string) ($empresa['nombre_comercial'] ?? 'Catálogo')) ?>
-          <small>Catálogo profesional</small>
-        </div>
       </a>
       <div class="search-box">
         <input type="text" id="globalSearch" placeholder="Buscar productos, categorías o marcas...">
         <button type="button" id="searchBtn">Buscar</button>
       </div>
       <div class="nav-actions">
-        <a class="btn-outline text-decoration-none" href="#catalogoProductos">Nosotros</a>
+        <a class="btn-outline text-decoration-none" href="#nosotros">Nosotros</a>
         <a class="btn-outline text-decoration-none" href="#contacto">Contacto</a>
       </div>
       <button class="btn-primary-custom" type="button" id="openCartHeader">Ver carrito</button>
@@ -256,6 +285,29 @@ $renderIconoContacto = static function (string $tipo): string {
           </div>
         </article>
       </div>
+    </div>
+  </section>
+
+  <section class="info-section">
+    <div class="catalogo-container info-grid">
+      <article class="info-card" id="nosotros">
+        <img class="nosotros-foto" src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros">
+        <h2><?= e($nosotrosTitulo) ?></h2>
+        <p><?= nl2br(e($nosotrosDescripcion)) ?></p>
+      </article>
+      <article class="info-card" id="contacto">
+        <h2><?= e($contactoTitulo) ?></h2>
+        <p><?= nl2br(e($contactoDescripcion)) ?></p>
+        <div class="contacto-list">
+          <p><strong>Teléfono:</strong> <?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p>
+          <p><strong>Correo:</strong> <?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p>
+          <p><strong>Dirección:</strong> <?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p>
+          <p><strong>Horario:</strong> <?= e($contactoHorario) ?></p>
+          <?php if ($contactoWhatsapp !== ''): ?>
+            <p><strong>WhatsApp:</strong> <?= e($contactoWhatsapp) ?></p>
+          <?php endif; ?>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -361,7 +413,7 @@ $renderIconoContacto = static function (string $tipo): string {
     </div>
   </aside>
 
-  <footer class="footer" id="contacto">
+  <footer class="footer" id="footerCatalogo">
     <div class="catalogo-container footer-content">
       <div class="footer-brand footer-col">
         <img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa">
@@ -371,7 +423,7 @@ $renderIconoContacto = static function (string $tipo): string {
         <h4>Accesos rápidos</h4>
         <nav class="footer-menu mt-2">
           <a href="#catalogoProductos">Inicio</a>
-          <a href="#catalogoProductos">Nosotros</a>
+          <a href="#nosotros">Nosotros</a>
           <a href="#contacto">Contacto</a>
           <a href="#catalogoProductos" id="showFeaturedBtnTop">Productos destacados</a>
           <a href="#catalogoProductos" id="showOffersBtnTop">Ofertas</a>

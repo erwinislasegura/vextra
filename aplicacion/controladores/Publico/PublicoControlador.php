@@ -392,6 +392,12 @@ class PublicoControlador extends Controlador
             'color_primario' => trim((string) ($empresa['catalogo_color_primario'] ?? '')),
             'color_acento' => trim((string) ($empresa['catalogo_color_acento'] ?? '')),
             'columnas_productos' => (int) ($empresa['catalogo_columnas_productos'] ?? 3),
+            'nosotros_titulo' => trim((string) ($empresa['catalogo_nosotros_titulo'] ?? '')),
+            'nosotros_descripcion' => trim((string) ($empresa['catalogo_nosotros_descripcion'] ?? '')),
+            'contacto_titulo' => trim((string) ($empresa['catalogo_contacto_titulo'] ?? '')),
+            'contacto_descripcion' => trim((string) ($empresa['catalogo_contacto_descripcion'] ?? '')),
+            'contacto_horario' => trim((string) ($empresa['catalogo_contacto_horario'] ?? '')),
+            'contacto_whatsapp' => trim((string) ($empresa['catalogo_contacto_whatsapp'] ?? '')),
             'sociales' => [
                 'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
                 'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),
@@ -400,6 +406,7 @@ class PublicoControlador extends Controlador
                 'youtube' => trim((string) ($empresa['catalogo_social_youtube'] ?? '')),
             ],
         ];
+        $catalogoTopbar['nosotros_imagen'] = url('/catalogo/' . $empresaId . '/nosotros/imagen?v=' . rawurlencode((string) ($empresa['fecha_actualizacion'] ?? time())));
 
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo', compact('empresa', 'productos', 'categorias', 'buscar', 'categoriaId', 'logoCatalogo', 'sliderCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
@@ -426,6 +433,13 @@ class PublicoControlador extends Controlador
                 $ruta = $this->inferirRutaSliderPorEmpresa($empresaId, 'principal');
             }
         }
+        $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
+    }
+
+    public function imagenCatalogoNosotros(int $empresaId): void
+    {
+        $empresa = (new Empresa())->buscar($empresaId);
+        $ruta = trim((string) ($empresa['catalogo_nosotros_imagen'] ?? ''));
         $this->emitirArchivoCatalogo($ruta, '/img/placeholder-producto.svg');
     }
 
