@@ -100,6 +100,7 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
   .btn-soft{background:#eff6ff;color:var(--accent)}
   .btn-danger-soft{background:#fff1f2;color:var(--danger);border-color:#fde2e2}
   .hero{padding:26px 0 22px}
