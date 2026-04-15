@@ -385,6 +385,7 @@ $renderIconoRed = static function (string $id): string {
     <div class="cart-items" id="cartItems"><div class="empty-state">Aún no has agregado productos.</div></div>
     <div class="cart-footer">
       <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+      <div class="summary-row"><span>Descuentos</span><span id="cartDiscount">$0</span></div>
       <div class="summary-row"><span>Total</span><span id="cartTotal">$0</span></div>
       <button class="btn-primary-custom" type="button" id="openCheckout">Finalizar compra</button>
       <button class="btn-outline" type="button" id="clearCart">Vaciar carrito</button>
@@ -439,6 +440,7 @@ $renderIconoRed = static function (string $id): string {
 
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
+  cart = Array.isArray(cart) ? cart.map((item) => ({ ...item, oldPrice: Number(item.oldPrice || 0) })) : [];
 
   let selectedCategory = 'all';
   let onlyOffers = false;
@@ -457,6 +459,7 @@ $renderIconoRed = static function (string $id): string {
   const cartItems = $('#cartItems');
   const cartCount = $('#cartCount');
   const cartSubtotal = $('#cartSubtotal');
+  const cartDiscount = $('#cartDiscount');
   const cartTotal = $('#cartTotal');
   const checkoutPrepareCarrito = $('#checkoutPrepareCarrito');
   const getModalProductoDetalle = () => {
@@ -524,13 +527,24 @@ $renderIconoRed = static function (string $id): string {
   const renderCart = () => {
     const totalItems = cart.reduce((sum, i) => sum + Number(i.quantity || 0), 0);
     const subtotal = cart.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
+    const descuentoTotal = cart.reduce((sum, i) => {
+      const oldPrice = Number(i.oldPrice || 0);
+      const price = Number(i.price || 0);
+      const qty = Number(i.quantity || 0);
+      if (oldPrice > price) {
+        return sum + ((oldPrice - price) * qty);
+      }
+      return sum;
+    }, 0);
     cartCount.textContent = String(totalItems);
     cartSubtotal.textContent = money(subtotal);
+    if (cartDiscount) cartDiscount.textContent = `-${money(descuentoTotal)}`;
     cartTotal.textContent = money(subtotal);
 
     if (!cart.length) {
       cartItems.innerHTML = '<div class="empty-state">Aún no has agregado productos.</div>';
       if (checkoutPrepareCarrito) checkoutPrepareCarrito.value = '[]';
+      if (cartDiscount) cartDiscount.textContent = '$0';
       saveCart();
       return;
     }
@@ -540,7 +554,7 @@ $renderIconoRed = static function (string $id): string {
         <img src="${item.image}" alt="${item.name}">
         <div>
           <h4>${item.name}</h4>
-          <p>${money(item.price)} c/u</p>
+          <p>${money(item.price)} c/u ${Number(item.oldPrice || 0) > Number(item.price || 0) ? `<span class="text-decoration-line-through text-muted">${money(item.oldPrice)}</span>` : ''}</p>
           <div class="cart-item__desc">${resumenTexto(item.description || 'Producto seleccionado')}</div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
@@ -564,7 +578,7 @@ $renderIconoRed = static function (string $id): string {
     if (!product) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
-    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, quantity: 1 });
+    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1 });
     renderCart();
     openCart();
   };

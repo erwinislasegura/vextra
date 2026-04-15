@@ -651,7 +651,15 @@ class PublicoControlador extends Controlador
             $precio = (float) ($producto['precio'] ?? 0);
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
-            $resumen[] = ['id' => $productoId, 'nombre' => (string) $producto['nombre'], 'cantidad' => $cantidad, 'precio' => $precio, 'subtotal' => $subtotal];
+            $resumen[] = [
+                'id' => $productoId,
+                'nombre' => (string) $producto['nombre'],
+                'descripcion' => (string) ($producto['descripcion'] ?? ''),
+                'imagen' => url('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
+                'cantidad' => $cantidad,
+                'precio' => $precio,
+                'subtotal' => $subtotal,
+            ];
         }
 
         if ($resumen === [] || $total <= 0) {
@@ -827,6 +835,13 @@ class PublicoControlador extends Controlador
 
         $modeloCompras = new CatalogoCompra();
         $compra = $token !== '' ? $modeloCompras->buscarPorToken($token) : null;
+        if (!is_array($compra) && $token !== '') {
+            $ordenSesion = $_SESSION['catalogo_checkout_' . $token] ?? null;
+            if (is_array($ordenSesion)) {
+                $this->registrarCompraCatalogoDesdeSesionSiFalta($empresaId, $token, $ordenSesion);
+                $compra = $modeloCompras->buscarPorToken($token);
+            }
+        }
         if (is_array($compra)) {
             $estado = (string) ($compra['estado_pago'] ?? 'pendiente');
         }
@@ -841,6 +856,11 @@ class PublicoControlador extends Controlador
                     default => 'pendiente',
                 };
                 $modeloCompras->actualizarEstadoPorToken($token, $estado, $status);
+                if ($estado === 'aprobado') {
+                    $modeloCompras->descontarStockPorCompraToken($token);
+                    unset($_SESSION['catalogo_checkout_' . $token]);
+                    unset($_SESSION['catalogo_checkout_preparado_' . $empresaId]);
+                }
             } catch (\Throwable $e) {
                 // Mantenemos el estado persistido en BD (si existe) para no mostrar falso pendiente.
             }
@@ -865,6 +885,60 @@ class PublicoControlador extends Controlador
         }
         $ocultarNavbarPublico = true;
         $this->vistaPublica('publico/catalogo_checkout_exito', compact('empresa', 'estado', 'orden', 'token', 'ocultarNavbarPublico'), 'catalogo_publico');
+    }
+
+
+    private function registrarCompraCatalogoDesdeSesionSiFalta(int $empresaId, string $token, array $orden): void
+    {
+        if ($empresaId <= 0 || $token === '') {
+            return;
+        }
+
+        $modelo = new CatalogoCompra();
+        if ($modelo->buscarPorToken($token)) {
+            return;
+        }
+
+        $comprador = is_array($orden['comprador'] ?? null) ? $orden['comprador'] : [];
+        $items = is_array($orden['items'] ?? null) ? $orden['items'] : [];
+        if ($items === []) {
+            return;
+        }
+
+        $compraId = $modelo->crear([
+            'empresa_id' => $empresaId,
+            'flow_token' => $token,
+            'commerce_order' => (string) ($orden['commerce_order'] ?? ('CAT-' . $empresaId . '-RETORNO')),
+            'estado_pago' => 'pendiente',
+            'estado_envio' => 'pendiente',
+            'comprador_nombre' => (string) ($comprador['nombre'] ?? 'Cliente catálogo'),
+            'comprador_correo' => (string) ($comprador['correo'] ?? 'no-informado@local'),
+            'comprador_telefono' => (string) ($comprador['telefono'] ?? ''),
+            'comprador_documento' => (string) (($comprador['documento'] ?? '') !== '' ? $comprador['documento'] : null),
+            'comprador_empresa' => (string) (($comprador['empresa'] ?? '') !== '' ? $comprador['empresa'] : null),
+            'envio_metodo' => (string) (($comprador['envio_metodo'] ?? 'starken') === 'chile_express' ? 'chile_express' : 'starken'),
+            'envio_direccion' => (string) ($comprador['direccion'] ?? ''),
+            'envio_referencia' => (string) (($comprador['referencia'] ?? '') !== '' ? $comprador['referencia'] : null),
+            'envio_comuna' => (string) ($comprador['comuna'] ?? ''),
+            'envio_ciudad' => (string) ($comprador['ciudad'] ?? ''),
+            'envio_region' => (string) ($comprador['region'] ?? ''),
+            'total' => (float) ($orden['total'] ?? 0),
+            'moneda' => 'CLP',
+            'payload_flow' => null,
+        ]);
+
+        $itemsGuardar = [];
+        foreach ($items as $item) {
+            $itemsGuardar[] = [
+                'id' => (int) ($item['id'] ?? $item['producto_id'] ?? 0),
+                'nombre' => (string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto catálogo'),
+                'cantidad' => (int) ($item['cantidad'] ?? 1),
+                'precio' => (float) ($item['precio'] ?? $item['precio_unitario'] ?? 0),
+                'subtotal' => (float) ($item['subtotal'] ?? 0),
+            ];
+        }
+
+        $modelo->guardarItems($compraId, $itemsGuardar);
     }
 
     private function obtenerContextoCatalogo(int $empresaId): ?array

@@ -411,7 +411,7 @@ class GestionComercialControlador extends Controlador
     public function comprasCatalogo(): void
     {
         $empresaId = (int) (empresa_actual_id() ?? 0);
-        $estado = trim((string) ($_GET['estado'] ?? 'pendiente'));
+        $estado = trim((string) ($_GET['estado'] ?? ''));
         if (!in_array($estado, ['', 'pendiente', 'aprobado', 'rechazado', 'anulado'], true)) {
             $estado = 'pendiente';
         }

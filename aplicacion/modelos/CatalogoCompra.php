@@ -70,4 +70,86 @@ class CatalogoCompra extends Modelo
         $stmt->execute(['compra_id' => $compraId]);
         return $stmt->fetchAll();
     }
+
+    public function descontarStockPorCompraToken(string $token): void
+    {
+        $compra = $this->buscarPorToken($token);
+        if (!$compra || (string) ($compra['estado_pago'] ?? '') !== 'aprobado') {
+            return;
+        }
+
+        $compraId = (int) ($compra['id'] ?? 0);
+        $empresaId = (int) ($compra['empresa_id'] ?? 0);
+        if ($compraId <= 0 || $empresaId <= 0) {
+            return;
+        }
+
+        $items = $this->listarItems($compraId);
+        if ($items === []) {
+            return;
+        }
+
+        $this->db->beginTransaction();
+        try {
+            $stmtExisteMov = $this->db->prepare('SELECT id FROM movimientos_inventario WHERE empresa_id = :empresa_id AND producto_id = :producto_id AND modulo_origen = "catalogo_checkout" AND referencia_id = :referencia_id LIMIT 1');
+            $stmtProducto = $this->db->prepare('SELECT COALESCE(stock_actual,0) AS stock_actual FROM productos WHERE id = :producto_id AND empresa_id = :empresa_id AND fecha_eliminacion IS NULL LIMIT 1 FOR UPDATE');
+            $stmtUpdStock = $this->db->prepare('UPDATE productos SET stock_actual = :stock_actual, fecha_actualizacion = NOW() WHERE id = :producto_id AND empresa_id = :empresa_id');
+            $stmtMov = $this->db->prepare('INSERT INTO movimientos_inventario (empresa_id,producto_id,tipo_movimiento,modulo_origen,documento_origen,referencia_id,entrada,salida,saldo_resultante,observacion,usuario_id,fecha_creacion) VALUES (:empresa_id,:producto_id,:tipo_movimiento,:modulo_origen,:documento_origen,:referencia_id,:entrada,:salida,:saldo_resultante,:observacion,:usuario_id,NOW())');
+
+            foreach ($items as $item) {
+                $productoId = (int) ($item['producto_id'] ?? 0);
+                $cantidad = max(0, (float) ($item['cantidad'] ?? 0));
+                if ($productoId <= 0 || $cantidad <= 0) {
+                    continue;
+                }
+
+                $stmtExisteMov->execute([
+                    'empresa_id' => $empresaId,
+                    'producto_id' => $productoId,
+                    'referencia_id' => $compraId,
+                ]);
+                if ($stmtExisteMov->fetch()) {
+                    continue;
+                }
+
+                $stmtProducto->execute([
+                    'producto_id' => $productoId,
+                    'empresa_id' => $empresaId,
+                ]);
+                $producto = $stmtProducto->fetch();
+                if (!$producto) {
+                    continue;
+                }
+
+                $stockAnterior = (float) ($producto['stock_actual'] ?? 0);
+                $stockNuevo = max(0, $stockAnterior - $cantidad);
+                $salidaReal = max(0, $stockAnterior - $stockNuevo);
+
+                $stmtUpdStock->execute([
+                    'stock_actual' => $stockNuevo,
+                    'producto_id' => $productoId,
+                    'empresa_id' => $empresaId,
+                ]);
+
+                $stmtMov->execute([
+                    'empresa_id' => $empresaId,
+                    'producto_id' => $productoId,
+                    'tipo_movimiento' => 'salida_catalogo',
+                    'modulo_origen' => 'catalogo_checkout',
+                    'documento_origen' => 'Compra catálogo #' . $compraId,
+                    'referencia_id' => $compraId,
+                    'entrada' => 0,
+                    'salida' => $salidaReal,
+                    'saldo_resultante' => $stockNuevo,
+                    'observacion' => 'Descuento automático por compra aprobada en catálogo. Token: ' . $token,
+                    'usuario_id' => null,
+                ]);
+            }
+
+            $this->db->commit();
+        } catch (\Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
 }

@@ -109,6 +109,9 @@ class FlowWebhookService
 
         $estado = $this->pagos->resolverEstadoPagoDesdeRespuesta($status);
         $modelo->actualizarEstadoPorToken($token, $estado, $status);
+        if ($estado === 'aprobado') {
+            $modelo->descontarStockPorCompraToken($token);
+        }
         return $status;
     }
 
