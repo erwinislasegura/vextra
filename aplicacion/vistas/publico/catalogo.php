@@ -131,11 +131,11 @@ $renderIconoRed = static function (string $id): string {
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
   .badge-mini.sale{background:#fff7ed;color:#ea580c}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
-  .category-tag{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.3px;text-transform:uppercase}
-  .product-title{font-size:22px;font-weight:700;color:var(--primary);line-height:1.25;margin:0}
+  .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
+  .product-title{font-size:18px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
   .product-desc{color:var(--muted);font-size:13px;line-height:1.45;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .stock-line{font-size:13px;color:var(--muted);font-weight:600}
-  .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:30px;font-weight:700;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:600}
+  .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:24px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
   .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
