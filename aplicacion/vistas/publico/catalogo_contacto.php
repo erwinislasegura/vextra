@@ -39,33 +39,37 @@ if ($sliderImagen === '') {
 }
 
 $mapaActivo = (string) ($catalogoTopbar['contacto_mapa_activo'] ?? '1') !== '0';
-$mapaUrl = trim((string) ($catalogoTopbar['contacto_mapa_url'] ?? ''));
-if ($mapaUrl === '') {
-    $direccionMapa = trim((string) (($empresa['direccion'] ?? '') . ' ' . ($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')));
-    if ($direccionMapa === '') {
-        $direccionMapa = 'Santiago Chile';
-    }
-    $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed';
+$direccionMapa = trim((string) (($empresa['direccion'] ?? '') . ' ' . ($empresa['ciudad'] ?? '') . ' ' . ($empresa['pais'] ?? '')));
+if ($direccionMapa === '') {
+    $direccionMapa = 'Santiago Chile';
 }
-if (!str_contains($mapaUrl, 'output=embed') && (str_contains($mapaUrl, 'maps.google.') || str_contains($mapaUrl, 'google.com/maps'))) {
-    $partesMapa = parse_url($mapaUrl);
+$mapaUrlOriginal = trim((string) ($catalogoTopbar['contacto_mapa_url'] ?? ''));
+$mapaUrl = $mapaUrlOriginal !== '' ? $mapaUrlOriginal : ('https://maps.google.com/maps?q=' . rawurlencode($direccionMapa) . '&output=embed');
+$mapaLinkExterno = $mapaUrlOriginal !== '' ? $mapaUrlOriginal : ('https://maps.google.com/?q=' . rawurlencode($direccionMapa));
+if (!str_contains($mapaUrl, 'output=embed') && !str_contains($mapaUrl, '/maps/embed') && (str_contains($mapaUrl, 'maps.google.') || str_contains($mapaUrl, 'google.com/maps') || str_contains($mapaUrl, 'maps.app.goo.gl'))) {
+    $partesMapa = parse_url((string) $mapaUrl);
     $queryMapa = [];
     if (isset($partesMapa['query'])) {
         parse_str((string) $partesMapa['query'], $queryMapa);
     }
+    $consultaMapa = '';
     if (isset($queryMapa['q']) && trim((string) $queryMapa['q']) !== '') {
-        $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode(trim((string) $queryMapa['q'])) . '&output=embed';
+        $consultaMapa = trim((string) $queryMapa['q']);
     } elseif (isset($queryMapa['ll']) && trim((string) $queryMapa['ll']) !== '') {
-        $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode(trim((string) $queryMapa['ll'])) . '&output=embed';
+        $consultaMapa = trim((string) $queryMapa['ll']);
     } elseif (str_contains($mapaUrl, '/maps?q=')) {
-        $mapaUrl .= (str_contains($mapaUrl, '?') ? '&' : '?') . 'output=embed';
+        $consultaMapa = (string) preg_replace('#^.*?/maps\?q=#', '', $mapaUrl);
     } elseif (str_contains($mapaUrl, '/place/')) {
         $ruta = (string) ($partesMapa['path'] ?? '');
-        $q = rawurlencode((string) preg_replace('#^.*?/place/#', '', $ruta));
-        $mapaUrl = 'https://maps.google.com/maps?q=' . $q . '&output=embed';
+        $consultaMapa = (string) preg_replace('#^.*?/place/#', '', $ruta);
     } elseif (preg_match('/@(-?[0-9]+\.[0-9]+),(-?[0-9]+\.[0-9]+)/', $mapaUrl, $coordenadas) === 1) {
-        $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($coordenadas[1] . ',' . $coordenadas[2]) . '&output=embed';
+        $consultaMapa = $coordenadas[1] . ',' . $coordenadas[2];
     }
+    $consultaMapa = trim((string) urldecode($consultaMapa));
+    if ($consultaMapa === '') {
+        $consultaMapa = $direccionMapa;
+    }
+    $mapaUrl = 'https://maps.google.com/maps?q=' . rawurlencode($consultaMapa) . '&output=embed';
 }
 
 $camposPermitidos = [
@@ -131,6 +135,7 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
   .contact-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,23,42,.65),rgba(15,23,42,.25))}
@@ -155,9 +160,11 @@ $renderIconoRed = static function (string $id): string {
   .form-group.full{grid-column:1 / -1}
   .btn-submit{margin-top:8px;background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-size:22px;font-weight:700;letter-spacing:.2px}
 
-  .map-wrap{margin:4px 0 0;padding-bottom:18px}
+  .map-wrap{width:min(1280px,92%);margin:8px auto 0;padding-bottom:18px}
   .map-card{background:#fff;border:1px solid #d7dee9;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.06)}
   .map-wrap iframe{width:100%;height:320px;border:0;display:block}
+  .map-actions{display:flex;justify-content:flex-end;padding:10px 2px 0}
+  .map-actions a{font-size:13px;color:var(--primary);font-weight:600;text-decoration:none}
 
   .footer{position:relative;color:#fff;padding:30px 0 20px;background:linear-gradient(120deg,var(--primary),var(--accent));margin-top:18px}
   .footer-content{display:grid;grid-template-columns:1.1fr .9fr 1fr .9fr;gap:22px}
@@ -191,7 +198,7 @@ $renderIconoRed = static function (string $id): string {
         <a class="menu-link" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
         <a class="menu-link" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
       </nav>
-      <a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><span aria-hidden="true">🛒</span><span>Ver carrito</span></a>
+      <a class="btn-primary-custom d-inline-flex align-items-center gap-2" href="<?= e($catalogoBaseUrl) ?>"><svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.5h7.7a2 2 0 0 0 2-1.6L21 7H7" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/></svg><span>Ver carrito</span></a>
     </div>
   </header>
 
@@ -224,10 +231,11 @@ $renderIconoRed = static function (string $id): string {
   </section>
 
   <?php if ($mapaActivo): ?>
-    <div class="catalogo-container map-wrap">
+    <div class="map-wrap">
       <div class="map-card">
         <iframe src="<?= e($mapaUrl) ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe>
       </div>
+      <div class="map-actions"><a href="<?= e($mapaLinkExterno) ?>" target="_blank" rel="noopener noreferrer">Abrir mapa en Google Maps</a></div>
     </div>
   <?php endif; ?>
 
