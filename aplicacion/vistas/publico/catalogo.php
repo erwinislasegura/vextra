@@ -109,7 +109,7 @@ $renderIconoRed = static function (string $id): string {
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
-  .section-head h2,.sidebar h3{font-size:24px;color:var(--primary);font-weight:800}
+  .section-head h2,.sidebar h3{font-size:20px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
   .filters-section{padding:8px 0 24px}
@@ -120,7 +120,7 @@ $renderIconoRed = static function (string $id): string {
   .content-grid{display:grid;grid-template-columns:280px 1fr;gap:22px}
   .sidebar{background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:20px;border:1px solid var(--border);height:fit-content;position:sticky;top:106px}
   .category-list,.feature-list{list-style:none;display:grid;gap:10px;margin-top:14px}
-  .category-list button,.feature-list button{width:100%;text-align:left;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px 14px;font-weight:700;color:var(--primary-soft)}
+  .category-list button,.feature-list button{width:100%;text-align:left;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:11px 13px;font-weight:600;font-size:15px;color:var(--primary-soft)}
   .category-list button.active{background:#eff6ff;color:var(--accent);border-color:#bfdbfe}
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
@@ -243,6 +243,8 @@ $renderIconoRed = static function (string $id): string {
           <button type="button" id="showAllBtn">Ver todos los productos</button>
           <button type="button" id="showOffersBtn">Ver ofertas</button>
           <button type="button" id="showStockBtn">Solo con stock</button>
+          <button type="button" id="showCheapestBtn">Más baratos primero</button>
+          <button type="button" id="showExpensiveBtn">Más caros primero</button>
         </div>
       </aside>
 
@@ -565,6 +567,8 @@ $renderIconoRed = static function (string $id): string {
   $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; applyFilters(); });
   $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; applyFilters(); });
   $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; applyFilters(); });
+  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; applyFilters(); });
+  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; applyFilters(); });
   const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', () => { onlyOffers = true; applyFilters(); });
   const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; applyFilters(); });
 
