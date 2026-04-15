@@ -1,5 +1,6 @@
 <?php
 $catalogoBaseUrl = url('/catalogo/' . (int) ($empresa['id'] ?? 0));
+$catalogoContactoUrl = $catalogoBaseUrl . '/contacto';
 $catalogoNosotrosUrl = $catalogoBaseUrl . '/nosotros';
 $accionFormulario = $catalogoBaseUrl . '/contacto';
 
@@ -107,10 +108,13 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo img{width:120px;height:60px;object-fit:contain}
+  .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
+  .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
   .nav-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-  .btn-outline,.btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
+  .btn-outline,.btn-primary-custom{padding:9px 14px;border-radius:10px;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none;box-shadow:0 2px 6px rgba(15,23,42,.04)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
 
   .contact-hero{margin-top:10px;border-radius:18px;min-height:160px;display:flex;align-items:flex-end;padding:20px;background-size:cover;background-position:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
@@ -159,11 +163,16 @@ $renderIconoRed = static function (string $id): string {
   <header class="catalogo-header">
     <div class="catalogo-container catalogo-navbar">
       <a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a>
+      <form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>">
+        <input type="text" name="q" placeholder="Buscar productos, categorías o marcas...">
+        <button type="submit">Buscar</button>
+      </form>
       <nav class="nav-actions" aria-label="Menú superior catálogo">
         <a class="btn-outline" href="<?= e($catalogoBaseUrl) ?>">Inicio</a>
         <a class="btn-outline" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a>
-        <a class="btn-primary-custom" href="<?= e($catalogoBaseUrl . '/contacto') ?>">Contacto</a>
+        <a class="btn-outline" href="<?= e($catalogoContactoUrl) ?>">Contacto</a>
       </nav>
+      <a class="btn-primary-custom" href="<?= e($catalogoBaseUrl) ?>">Ver carrito</a>
     </div>
   </header>
 

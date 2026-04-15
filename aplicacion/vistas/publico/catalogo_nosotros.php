@@ -1,6 +1,7 @@
 <?php
 $catalogoBaseUrl = url('/catalogo/' . (int) ($empresa['id'] ?? 0));
 $catalogoContactoUrl = $catalogoBaseUrl . '/contacto';
+$catalogoNosotrosUrl = $catalogoBaseUrl . '/nosotros';
 $colorPrimario = trim((string) ($catalogoTopbar['color_primario'] ?? ''));
 if (preg_match('/^#([A-Fa-f0-9]{6})$/', $colorPrimario) !== 1) {
     $colorPrimario = '#4632A8';
@@ -54,12 +55,12 @@ $renderIconoRed = static function (string $id): string {
   .catalogo-topbar__sociales a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none}
   .catalogo-topbar__sociales a svg{width:14px;height:14px;fill:#fff;display:block}
   .catalogo-header{position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .catalogo-navbar{display:grid;grid-template-columns:240px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
+  .catalogo-navbar{display:grid;grid-template-columns:220px 1fr auto auto;gap:10px;align-items:center;padding:10px 0}
   .catalogo-logo img{width:120px;height:60px;object-fit:contain;background:transparent}
   .search-box{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;overflow:hidden}
   .search-box input{width:100%;padding:10px 14px;border:none;outline:none;background:transparent;font-size:14px}
   .search-box button{background:var(--accent);color:#fff;padding:10px 18px;font-weight:700;border:none}
-  .btn-outline,.btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none}
+  .btn-outline,.btn-primary-custom{padding:9px 13px;border-radius:10px;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);text-decoration:none}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
   .nosotros-wrap{padding:30px 0 42px}
   .nosotros-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
@@ -80,7 +81,7 @@ $renderIconoRed = static function (string $id): string {
 </style>
 <div class="catalogo-page">
   <div class="catalogo-topbar"><div class="catalogo-container catalogo-topbar__content"><div><?= e($topbarTexto) ?></div><?php if ($socialesTopbar !== []): ?><div class="catalogo-topbar__sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div>
-  <header class="catalogo-header"><div class="catalogo-container catalogo-navbar"><a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a><div class="search-box"><input type="text" placeholder="Ir al catálogo para buscar productos..." disabled><button type="button" onclick="window.location.href='<?= e($catalogoBaseUrl) ?>'">Ir</button></div><a class="btn-outline" href="<?= e($catalogoBaseUrl) ?>">Catálogo</a><a class="btn-primary-custom" href="<?= e($catalogoContactoUrl) ?>">Contacto</a></div></header>
+  <header class="catalogo-header"><div class="catalogo-container catalogo-navbar"><a class="catalogo-logo" href="<?= e($catalogoBaseUrl) ?>"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"></a><form class="search-box" method="GET" action="<?= e($catalogoBaseUrl) ?>"><input type="text" name="q" placeholder="Buscar productos, categorías o marcas..."><button type="submit">Buscar</button></form><div class="d-flex gap-2 flex-wrap"><a class="btn-outline" href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a class="btn-outline" href="<?= e($catalogoNosotrosUrl) ?>">Nosotros</a><a class="btn-outline" href="<?= e($catalogoContactoUrl) ?>">Contacto</a></div><a class="btn-primary-custom" href="<?= e($catalogoBaseUrl) ?>">Ver carrito</a></div></header>
   <section class="nosotros-wrap"><div class="catalogo-container"><article class="nosotros-card"><img src="<?= e($nosotrosImagen) ?>" alt="Foto de nosotros"><div><h1><?= e($nosotrosTitulo) ?></h1><p><?= nl2br(e($nosotrosDescripcion)) ?></p></div></article></div></section>
   <footer class="footer"><div class="catalogo-container footer-content"><div class="footer-brand footer-col"><img src="<?= e((string) ($logoCatalogo ?: url('/img/logo/icono.png'))) ?>" alt="Logo empresa"><p><?= e((string) (($empresa['descripcion'] ?? '') !== '' ? $empresa['descripcion'] : 'Diseño profesional para mostrar y vender productos online.')) ?></p></div><div class="footer-col"><h4>Accesos rápidos</h4><nav class="footer-menu mt-2"><a href="<?= e($catalogoBaseUrl) ?>">Inicio</a><a href="<?= e($catalogoBaseUrl) ?>/nosotros">Nosotros</a><a href="<?= e($catalogoBaseUrl) ?>/contacto">Contacto</a></nav></div><div class="footer-contact footer-col"><h4>Datos de contacto</h4><p><?= e((string) ($empresa['telefono'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['correo'] ?? 'No informado')) ?></p><p><?= e((string) ($empresa['direccion'] ?? 'No informada')) ?></p></div><div class="footer-follow footer-col"><h4>Síguenos</h4><p>Conéctate en redes sociales y conoce ofertas y productos destacados.</p><?php if ($socialesTopbar !== []): ?><div class="footer-sociales"><?php foreach ($socialesTopbar as $red): ?><a href="<?= e((string) $red['url']) ?>" target="_blank" rel="noopener noreferrer"><?= $renderIconoRed((string) ($red['id'] ?? '')) ?></a><?php endforeach; ?></div><?php endif; ?></div></div></footer>
 </div>
