@@ -144,6 +144,30 @@
               <label class="form-label">Descripción</label>
               <textarea name="catalogo_contacto_descripcion" maxlength="900" rows="5" class="form-control" placeholder="Mensaje breve para invitar a contactar a tu equipo."><?= e((string) ($sliderCatalogo['catalogo_contacto_descripcion'] ?? '')) ?></textarea>
             </div>
+            <div class="mb-2">
+              <label class="form-label">Título del bloque formulario</label>
+              <input type="text" name="catalogo_contacto_form_titulo" maxlength="160" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_titulo'] ?? '')) ?>" placeholder="Nos pondremos en contacto a la brevedad">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Subtítulo formulario</label>
+              <input type="text" name="catalogo_contacto_form_subtitulo" maxlength="160" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_subtitulo'] ?? '')) ?>" placeholder="Enviar un mensaje">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Texto de bajada formulario</label>
+              <textarea name="catalogo_contacto_form_bajada" maxlength="1200" rows="4" class="form-control" placeholder="Texto descriptivo del formulario y cómo responderás."><?= e((string) ($sliderCatalogo['catalogo_contacto_form_bajada'] ?? '')) ?></textarea>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Correo destino (donde llegan los mensajes)</label>
+              <input type="email" name="catalogo_contacto_form_correo_destino" maxlength="180" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_correo_destino'] ?? '')) ?>" placeholder="contacto@tuempresa.cl">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Texto botón envío</label>
+              <input type="text" name="catalogo_contacto_form_texto_boton" maxlength="60" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_form_texto_boton'] ?? '')) ?>" placeholder="Enviar mensaje">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">URL mapa (iframe o enlace)</label>
+              <input type="url" name="catalogo_contacto_mapa_url" maxlength="500" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_mapa_url'] ?? '')) ?>" placeholder="https://maps.google.com/maps?q=Santiago&output=embed">
+            </div>
             <div class="row g-2">
               <div class="col-md-6">
                 <label class="form-label">Horario de atención</label>
@@ -154,6 +178,38 @@
                 <input type="text" name="catalogo_contacto_whatsapp" maxlength="60" class="form-control" value="<?= e((string) ($sliderCatalogo['catalogo_contacto_whatsapp'] ?? '')) ?>" placeholder="+56 9 1234 5678">
               </div>
             </div>
+            <hr>
+            <label class="form-label">Campos del formulario de contacto (activar/desactivar)</label>
+            <?php
+              $camposConfigurados = json_decode((string) ($sliderCatalogo['catalogo_contacto_form_campos'] ?? ''), true);
+              if (!is_array($camposConfigurados) || $camposConfigurados === []) {
+                $camposConfigurados = ['nombre', 'telefono', 'email', 'asunto', 'mensaje'];
+              }
+              $catalogoCamposDisponibles = [
+                'nombre' => 'Nombre',
+                'telefono' => 'Teléfono',
+                'email' => 'Email',
+                'asunto' => 'Asunto',
+                'mensaje' => 'Mensaje',
+                'empresa' => 'Empresa',
+                'whatsapp' => 'WhatsApp',
+                'ciudad' => 'Ciudad',
+                'direccion' => 'Dirección',
+                'cargo' => 'Cargo / Rol',
+              ];
+            ?>
+            <div class="row g-2">
+              <?php foreach ($catalogoCamposDisponibles as $campoClave => $campoLabel): ?>
+                <?php $checkedCampo = in_array($campoClave, $camposConfigurados, true) ? 'checked' : ''; ?>
+                <div class="col-md-6">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="catalogo_contacto_form_campos[]" value="<?= e($campoClave) ?>" id="campo_<?= e($campoClave) ?>" <?= $checkedCampo ?>>
+                    <label class="form-check-label" for="campo_<?= e($campoClave) ?>"><?= e($campoLabel) ?></label>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            <div class="form-text">Sugerencia: mantén activos Nombre, Email y Mensaje para asegurar respuestas.</div>
           </div>
         </div>
         <div class="col-12">

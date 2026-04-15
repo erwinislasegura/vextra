@@ -421,6 +421,97 @@ class PublicoControlador extends Controlador
         $this->vistaPublica('publico/catalogo_contacto', compact('empresa', 'logoCatalogo', 'catalogoTopbar', 'ocultarNavbarPublico'), 'catalogo_publico');
     }
 
+    public function enviarContactoCatalogo(int $empresaId): void
+    {
+        validar_csrf();
+
+        $contexto = $this->obtenerContextoCatalogo($empresaId);
+        if ($contexto === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $empresa = $contexto['empresa'];
+        $catalogoTopbar = $contexto['catalogoTopbar'];
+        $camposActivos = $this->normalizarCamposFormularioCatalogo((string) ($catalogoTopbar['contacto_form_campos'] ?? ''));
+
+        $datos = [];
+        foreach ($camposActivos as $campo) {
+            $datos[$campo] = trim((string) ($_POST[$campo] ?? ''));
+        }
+
+        $errores = [];
+        if (in_array('nombre', $camposActivos, true) && ($datos['nombre'] ?? '') === '') {
+            $errores[] = 'Nombre';
+        }
+        if (in_array('email', $camposActivos, true)) {
+            $correo = filter_var((string) ($datos['email'] ?? ''), FILTER_VALIDATE_EMAIL);
+            if (!$correo) {
+                $errores[] = 'Email';
+            } else {
+                $datos['email'] = (string) $correo;
+            }
+        }
+        if (in_array('mensaje', $camposActivos, true) && ($datos['mensaje'] ?? '') === '') {
+            $errores[] = 'Mensaje';
+        }
+
+        if ($errores !== []) {
+            flash('danger', 'Completa correctamente: ' . implode(', ', $errores) . '.');
+            $this->redirigir('/catalogo/' . $empresaId . '/contacto');
+        }
+
+        $correoDestino = trim((string) ($catalogoTopbar['contacto_form_correo_destino'] ?? ''));
+        if ($correoDestino === '' || filter_var($correoDestino, FILTER_VALIDATE_EMAIL) === false) {
+            $correoDestino = trim((string) ($empresa['correo'] ?? 'contacto@vextra.cl'));
+        }
+        if (filter_var($correoDestino, FILTER_VALIDATE_EMAIL) === false) {
+            $correoDestino = 'contacto@vextra.cl';
+        }
+
+        $etiquetas = [
+            'nombre' => 'Nombre',
+            'telefono' => 'Teléfono',
+            'email' => 'Email',
+            'asunto' => 'Asunto',
+            'mensaje' => 'Mensaje',
+            'empresa' => 'Empresa',
+            'whatsapp' => 'WhatsApp',
+            'ciudad' => 'Ciudad',
+            'direccion' => 'Dirección',
+            'cargo' => 'Cargo',
+        ];
+
+        $lineasHtml = '<h2>Nuevo mensaje desde contacto de catálogo</h2>';
+        foreach ($camposActivos as $campo) {
+            $valor = trim((string) ($datos[$campo] ?? ''));
+            if ($valor === '') {
+                continue;
+            }
+            $etiqueta = $etiquetas[$campo] ?? ucfirst($campo);
+            $lineasHtml .= '<p><strong>' . htmlspecialchars($etiqueta, ENT_QUOTES, 'UTF-8') . ':</strong> ' . nl2br(htmlspecialchars($valor, ENT_QUOTES, 'UTF-8')) . '</p>';
+        }
+        $lineasHtml .= '<p><strong>Empresa catálogo:</strong> ' . htmlspecialchars((string) ($empresa['nombre_comercial'] ?? 'Empresa'), ENT_QUOTES, 'UTF-8') . '</p>';
+
+        (new ServicioCorreo())->enviar(
+            $correoDestino,
+            'Nuevo mensaje desde contacto del catálogo',
+            'landing_contacto',
+            [
+                'nombre' => (string) ($datos['nombre'] ?? 'Visitante'),
+                'correo' => (string) ($datos['email'] ?? ''),
+                'telefono' => (string) ($datos['telefono'] ?? ''),
+                'empresa' => (string) ($datos['empresa'] ?? ''),
+                'mensaje' => (string) ($datos['mensaje'] ?? ''),
+                'html' => $lineasHtml,
+            ]
+        );
+
+        flash('success', 'Gracias por tu mensaje. Te responderemos pronto.');
+        $this->redirigir('/catalogo/' . $empresaId . '/contacto');
+    }
+
     public function logoCatalogoEmpresa(int $empresaId): void
     {
         $empresa = (new Empresa())->buscar($empresaId);
@@ -643,6 +734,13 @@ class PublicoControlador extends Controlador
             'contacto_descripcion' => trim((string) ($empresa['catalogo_contacto_descripcion'] ?? '')),
             'contacto_horario' => trim((string) ($empresa['catalogo_contacto_horario'] ?? '')),
             'contacto_whatsapp' => trim((string) ($empresa['catalogo_contacto_whatsapp'] ?? '')),
+            'contacto_form_titulo' => trim((string) ($empresa['catalogo_contacto_form_titulo'] ?? '')),
+            'contacto_form_subtitulo' => trim((string) ($empresa['catalogo_contacto_form_subtitulo'] ?? '')),
+            'contacto_form_bajada' => trim((string) ($empresa['catalogo_contacto_form_bajada'] ?? '')),
+            'contacto_form_correo_destino' => trim((string) ($empresa['catalogo_contacto_form_correo_destino'] ?? '')),
+            'contacto_form_campos' => trim((string) ($empresa['catalogo_contacto_form_campos'] ?? '')),
+            'contacto_form_texto_boton' => trim((string) ($empresa['catalogo_contacto_form_texto_boton'] ?? '')),
+            'contacto_mapa_url' => trim((string) ($empresa['catalogo_contacto_mapa_url'] ?? '')),
             'sociales' => [
                 'facebook' => trim((string) ($empresa['catalogo_social_facebook'] ?? '')),
                 'instagram' => trim((string) ($empresa['catalogo_social_instagram'] ?? '')),
@@ -659,6 +757,28 @@ class PublicoControlador extends Controlador
             'sliderCatalogo' => $sliderCatalogo,
             'catalogoTopbar' => $catalogoTopbar,
         ];
+    }
+
+    private function normalizarCamposFormularioCatalogo(string $jsonCampos): array
+    {
+        $permitidos = ['nombre', 'telefono', 'email', 'asunto', 'mensaje', 'empresa', 'whatsapp', 'ciudad', 'direccion', 'cargo'];
+        $campos = json_decode($jsonCampos, true);
+        if (!is_array($campos)) {
+            $campos = ['nombre', 'telefono', 'email', 'asunto', 'mensaje'];
+        }
+        $campos = array_values(array_unique(array_filter(array_map(static fn($campo): string => trim((string) $campo), $campos))));
+        $campos = array_values(array_filter($campos, static fn($campo): bool => in_array($campo, $permitidos, true)));
+        if (!in_array('nombre', $campos, true)) {
+            array_unshift($campos, 'nombre');
+        }
+        if (!in_array('email', $campos, true)) {
+            $campos[] = 'email';
+        }
+        if (!in_array('mensaje', $campos, true)) {
+            $campos[] = 'mensaje';
+        }
+
+        return $campos;
     }
 
     public function imagenProducto(int $id): void

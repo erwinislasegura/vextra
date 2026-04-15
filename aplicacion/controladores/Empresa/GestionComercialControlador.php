@@ -469,6 +469,13 @@ class GestionComercialControlador extends Controlador
         $contactoDescripcion = trim((string) ($_POST['catalogo_contacto_descripcion'] ?? ''));
         $contactoHorario = trim((string) ($_POST['catalogo_contacto_horario'] ?? ''));
         $contactoWhatsapp = trim((string) ($_POST['catalogo_contacto_whatsapp'] ?? ''));
+        $contactoFormTitulo = trim((string) ($_POST['catalogo_contacto_form_titulo'] ?? ''));
+        $contactoFormSubtitulo = trim((string) ($_POST['catalogo_contacto_form_subtitulo'] ?? ''));
+        $contactoFormBajada = trim((string) ($_POST['catalogo_contacto_form_bajada'] ?? ''));
+        $contactoFormCorreoDestino = trim((string) ($_POST['catalogo_contacto_form_correo_destino'] ?? ''));
+        $contactoFormTextoBoton = trim((string) ($_POST['catalogo_contacto_form_texto_boton'] ?? ''));
+        $contactoMapaUrl = trim((string) ($_POST['catalogo_contacto_mapa_url'] ?? ''));
+        $camposFormulario = array_values(array_unique(array_filter(array_map(static fn($valor): string => trim((string) $valor), (array) ($_POST['catalogo_contacto_form_campos'] ?? [])))));
         $sociales = [
             'catalogo_social_facebook' => trim((string) ($_POST['catalogo_social_facebook'] ?? '')),
             'catalogo_social_instagram' => trim((string) ($_POST['catalogo_social_instagram'] ?? '')),
@@ -501,6 +508,14 @@ class GestionComercialControlador extends Controlador
                 $this->redirigir('/app/catalogo-en-linea');
             }
         }
+        if ($contactoFormCorreoDestino !== '' && filter_var($contactoFormCorreoDestino, FILTER_VALIDATE_EMAIL) === false) {
+            flash('danger', 'El correo destino del formulario de contacto no es válido.');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
+        if ($contactoMapaUrl !== '' && filter_var($contactoMapaUrl, FILTER_VALIDATE_URL) === false) {
+            flash('danger', 'La URL del mapa no es válida.');
+            $this->redirigir('/app/catalogo-en-linea');
+        }
         if ($colorPrimario === null || $colorAcento === null) {
             flash('danger', 'El color del catálogo no es válido. Usa formato hexadecimal, por ejemplo: #4632A8');
             $this->redirigir('/app/catalogo-en-linea');
@@ -521,6 +536,13 @@ class GestionComercialControlador extends Controlador
             'catalogo_contacto_descripcion' => mb_substr($contactoDescripcion, 0, 900),
             'catalogo_contacto_horario' => mb_substr($contactoHorario, 0, 180),
             'catalogo_contacto_whatsapp' => mb_substr($contactoWhatsapp, 0, 60),
+            'catalogo_contacto_form_titulo' => mb_substr($contactoFormTitulo, 0, 160),
+            'catalogo_contacto_form_subtitulo' => mb_substr($contactoFormSubtitulo, 0, 160),
+            'catalogo_contacto_form_bajada' => mb_substr($contactoFormBajada, 0, 1200),
+            'catalogo_contacto_form_correo_destino' => mb_substr($contactoFormCorreoDestino, 0, 180),
+            'catalogo_contacto_form_campos' => json_encode($camposFormulario, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'catalogo_contacto_form_texto_boton' => mb_substr($contactoFormTextoBoton, 0, 60),
+            'catalogo_contacto_mapa_url' => mb_substr($contactoMapaUrl, 0, 500),
             'catalogo_social_facebook' => mb_substr((string) $sociales['catalogo_social_facebook'], 0, 255),
             'catalogo_social_instagram' => mb_substr((string) $sociales['catalogo_social_instagram'], 0, 255),
             'catalogo_social_tiktok' => mb_substr((string) $sociales['catalogo_social_tiktok'], 0, 255),

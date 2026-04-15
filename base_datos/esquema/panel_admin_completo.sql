@@ -38,6 +38,7 @@ SOURCE base_datos/actualizaciones/actualizacion_modulo_checkout_flow.sql;
 SOURCE base_datos/actualizaciones/actualizacion_catalogo_en_linea.sql;
 SOURCE base_datos/actualizaciones/actualizacion_productos_catalogo_imagenes.sql;
 SOURCE base_datos/actualizaciones/actualizacion_catalogo_vistas_contacto_nosotros.sql;
+SOURCE base_datos/actualizaciones/actualizacion_catalogo_contacto_formulario.sql;
 
 -- Usuarios de acceso estandarizados.
 SOURCE base_datos/esquema/actualizar_usuarios_acceso.sql;
