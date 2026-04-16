@@ -35,10 +35,21 @@ class PanelEmpresaControlador extends Controlador
         $chatsSoporte = $soporteChatModel->listarChatsEmpresa($empresaId, 5);
         $chatsSoporteNoLeidos = $soporteChatModel->contarNoLeidosEmpresa($empresaId);
 
-        $resumenStock = $productoModel->contarPorEstadoStock($empresaId);
-        $stockCritico = (int) ($resumenStock['critico'] ?? 0);
-        $stockBajo = (int) ($resumenStock['bajo'] ?? 0);
-        $stockNormal = (int) ($resumenStock['normal'] ?? 0);
+        $productosInventario = $inventarioModel->listarProductos($empresaId);
+
+        $stockBajo = 0;
+        $stockCritico = 0;
+        foreach ($productosInventario as $producto) {
+            $stockActual = (float) ($producto['stock_actual'] ?? 0);
+            $stockMinimo = (float) ($producto['stock_minimo'] ?? 0);
+            $stockCriticoRef = (float) ($producto['stock_critico'] ?? 0);
+            if ($stockMinimo > 0 && $stockActual <= $stockMinimo) {
+                $stockBajo++;
+            }
+            if ($stockCriticoRef > 0 && $stockActual <= $stockCriticoRef) {
+                $stockCritico++;
+            }
+        }
 
         $ordenesPendientes = 0;
         foreach ($ordenesCompra as $ordenCompra) {

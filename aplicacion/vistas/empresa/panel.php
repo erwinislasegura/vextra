@@ -88,41 +88,6 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
     </div>
   </div>
 
-  <div class="card card-dashboard mb-3">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <span>Estado de productos</span>
-      <span class="small text-muted">Haz click para ver detalle</span>
-    </div>
-    <div class="card-body">
-      <div class="row g-2">
-        <div class="col-md-4">
-          <a class="text-decoration-none d-block" href="<?= e(url('/app/productos')) ?>">
-            <div class="border rounded px-3 py-2 bg-danger-subtle d-flex align-items-center justify-content-between">
-              <div class="small text-danger-emphasis fw-semibold">Crítico</div>
-              <div class="h5 mb-0 text-danger-emphasis"><?= $stockCritico ?></div>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a class="text-decoration-none d-block" href="<?= e(url('/app/productos')) ?>">
-            <div class="border rounded px-3 py-2 bg-warning-subtle d-flex align-items-center justify-content-between">
-              <div class="small text-warning-emphasis fw-semibold">Bajo</div>
-              <div class="h5 mb-0 text-warning-emphasis"><?= $stockBajo ?></div>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-4">
-          <a class="text-decoration-none d-block" href="<?= e(url('/app/productos')) ?>">
-            <div class="border rounded px-3 py-2 bg-success-subtle d-flex align-items-center justify-content-between">
-              <div class="small text-success-emphasis fw-semibold">Normal</div>
-              <div class="h5 mb-0 text-success-emphasis"><?= $stockNormal ?></div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="row g-3 mb-3">
     <div class="col-12">
       <div class="card card-dashboard">
