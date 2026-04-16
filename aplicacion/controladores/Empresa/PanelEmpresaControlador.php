@@ -26,7 +26,6 @@ class PanelEmpresaControlador extends Controlador
         $soporteChatModel = new SoporteChat();
         $planEmpresa = (new Plan())->obtenerPlanActivoEmpresa($empresaId);
         $resumenComercial = $gestionComercialModel->estadisticasInicio($empresaId);
-        $productosInventario = $inventarioModel->listarProductos($empresaId);
         $ordenesCompra = $inventarioModel->listarOrdenesCompra($empresaId);
         $ventasPos = $puntoVentaModel->listarVentas($empresaId);
         $seguimientos = $gestionComercialModel->listarSeguimientoCotizaciones($empresaId, '', '', 200);
@@ -35,6 +34,8 @@ class PanelEmpresaControlador extends Controlador
         $historialActividad = $gestionComercialModel->listarTablaEmpresa('historial_actividad', $empresaId, '', 8);
         $chatsSoporte = $soporteChatModel->listarChatsEmpresa($empresaId, 5);
         $chatsSoporteNoLeidos = $soporteChatModel->contarNoLeidosEmpresa($empresaId);
+
+        $productosInventario = $inventarioModel->listarProductos($empresaId);
 
         $stockBajo = 0;
         $stockCritico = 0;
