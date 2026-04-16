@@ -130,14 +130,14 @@ $formatearFecha = static function (?string $valor): string {
           </div>
         </div>
         <div class="card-body">
-          <div class="row g-2">
-            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><div class="panel-inline-stat"><div class="small text-muted">Órdenes de compra pendientes</div><div class="h5 mb-0"><?= (int) ($resumen['ordenes_compra_pendientes'] ?? 0) ?></div></div></div>
-            <div class="col-sm-6 col-xl-3" data-kpi-module="comercial"><div class="panel-inline-stat"><div class="small text-muted">Seguimientos abiertos</div><div class="h5 mb-0"><?= (int) ($resumen['seguimientos_abiertos'] ?? 0) ?></div></div></div>
-            <div class="col-sm-6 col-xl-3" data-kpi-module="comercial"><div class="panel-inline-stat"><div class="small text-muted">Notificaciones por revisar</div><div class="h5 mb-0"><?= (int) ($resumen['notificaciones_pendientes'] ?? 0) ?></div></div></div>
-            <div class="col-sm-6 col-xl-3" data-kpi-module="pos"><article class="metric-card metric-card-sky"><div class="metric-card__icon"><i class="bi bi-receipt"></i></div><div class="metric-card__meta">Ventas POS hoy</div><div class="metric-card__value"><?= (int) ($resumen['ventas_hoy'] ?? 0) ?></div></article></div>
-            <div class="col-sm-6 col-xl-3" data-kpi-module="pos"><article class="metric-card metric-card-green"><div class="metric-card__icon"><i class="bi bi-cash-coin"></i></div><div class="metric-card__meta">Ingresos POS hoy</div><div class="metric-card__value">$<?= number_format((float) ($resumen['monto_ventas_hoy'] ?? 0), 2) ?></div></article></div>
-            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-amber"><div class="metric-card__icon"><i class="bi bi-box-seam"></i></div><div class="metric-card__meta">Stock bajo</div><div class="metric-card__value"><?= (int) ($resumen['stock_bajo'] ?? 0) ?></div></article></div>
-            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-red"><div class="metric-card__icon"><i class="bi bi-exclamation-octagon"></i></div><div class="metric-card__meta">Productos críticos</div><div class="metric-card__value"><?= $stockCritico ?></div></article></div>
+          <div class="row g-2 panel-kpi-grid">
+            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><div class="panel-inline-stat h-100"><div class="small text-muted">Órdenes de compra pendientes</div><div class="h5 mb-0"><?= (int) ($resumen['ordenes_compra_pendientes'] ?? 0) ?></div></div></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="comercial"><div class="panel-inline-stat h-100"><div class="small text-muted">Seguimientos abiertos</div><div class="h5 mb-0"><?= (int) ($resumen['seguimientos_abiertos'] ?? 0) ?></div></div></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="comercial"><div class="panel-inline-stat h-100"><div class="small text-muted">Notificaciones por revisar</div><div class="h5 mb-0"><?= (int) ($resumen['notificaciones_pendientes'] ?? 0) ?></div></div></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="pos"><article class="metric-card metric-card-sky h-100"><div class="metric-card__icon"><i class="bi bi-receipt"></i></div><div class="metric-card__meta">Ventas POS hoy</div><div class="metric-card__value"><?= (int) ($resumen['ventas_hoy'] ?? 0) ?></div></article></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="pos"><article class="metric-card metric-card-green h-100"><div class="metric-card__icon"><i class="bi bi-cash-coin"></i></div><div class="metric-card__meta">Ingresos POS hoy</div><div class="metric-card__value">$<?= number_format((float) ($resumen['monto_ventas_hoy'] ?? 0), 2) ?></div></article></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-amber h-100"><div class="metric-card__icon"><i class="bi bi-box-seam"></i></div><div class="metric-card__meta">Stock bajo</div><div class="metric-card__value"><?= (int) ($resumen['stock_bajo'] ?? 0) ?></div></article></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-red h-100"><div class="metric-card__icon"><i class="bi bi-exclamation-octagon"></i></div><div class="metric-card__meta">Productos críticos</div><div class="metric-card__value"><?= $stockCritico ?></div></article></div>
           </div>
         </div>
       </div>
