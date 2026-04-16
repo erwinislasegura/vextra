@@ -4,6 +4,8 @@ $porcentajeAprobadas = (int) round(((int) ($resumen['aprobadas'] ?? 0) / $totalC
 $porcentajePendientes = (int) round(((int) ($resumen['pendientes'] ?? 0) / $totalCotizaciones) * 100);
 $porcentajeRechazadas = (int) round(((int) ($resumen['rechazadas'] ?? 0) / $totalCotizaciones) * 100);
 $stockCritico = (int) ($resumen['stock_critico'] ?? 0);
+$stockBajo = (int) ($resumen['stock_bajo'] ?? 0);
+$stockNormal = (int) ($resumen['stock_normal'] ?? 0);
 $aprobacionesPendientes = (int) ($resumen['aprobaciones_pendientes'] ?? 0);
 $seguimientosAbiertos = (int) ($resumen['seguimientos_abiertos'] ?? 0);
 $notificacionesPendientes = (int) ($resumen['notificaciones_pendientes'] ?? 0);
@@ -83,6 +85,41 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
       <a class="btn btn-light border text-start" href="<?= e(url('/app/inventario/recepciones')) ?>"><i class="bi bi-box-arrow-in-down me-2 text-success"></i>Registrar recepción</a>
       <a class="btn btn-light border text-start" href="<?= e(url('/app/clientes/crear')) ?>"><i class="bi bi-person-plus me-2 text-info"></i>Nuevo cliente</a>
       <a class="btn btn-light border text-start" href="<?= e(url('/app/seguimiento')) ?>"><i class="bi bi-clipboard-check me-2 text-warning"></i>Gestionar seguimientos</a>
+    </div>
+  </div>
+
+  <div class="card card-dashboard mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>Estado de productos</span>
+      <span class="small text-muted">Haz click para ver detalle</span>
+    </div>
+    <div class="card-body">
+      <div class="row g-2">
+        <div class="col-md-4">
+          <a class="text-decoration-none" href="<?= e(url('/app/productos')) ?>">
+            <div class="border rounded p-3 h-100 bg-danger-subtle">
+              <div class="small text-danger-emphasis">Crítico</div>
+              <div class="h4 mb-0 text-danger-emphasis"><?= $stockCritico ?></div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a class="text-decoration-none" href="<?= e(url('/app/productos')) ?>">
+            <div class="border rounded p-3 h-100 bg-warning-subtle">
+              <div class="small text-warning-emphasis">Bajo</div>
+              <div class="h4 mb-0 text-warning-emphasis"><?= $stockBajo ?></div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a class="text-decoration-none" href="<?= e(url('/app/productos')) ?>">
+            <div class="border rounded p-3 h-100 bg-success-subtle">
+              <div class="small text-success-emphasis">Normal</div>
+              <div class="h4 mb-0 text-success-emphasis"><?= $stockNormal ?></div>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
