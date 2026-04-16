@@ -26,7 +26,7 @@ class PanelEmpresaControlador extends Controlador
         $soporteChatModel = new SoporteChat();
         $planEmpresa = (new Plan())->obtenerPlanActivoEmpresa($empresaId);
         $resumenComercial = $gestionComercialModel->estadisticasInicio($empresaId);
-        $productosInventario = $inventarioModel->listarProductos($empresaId);
+        $productosListado = $productoModel->listar($empresaId);
         $ordenesCompra = $inventarioModel->listarOrdenesCompra($empresaId);
         $ventasPos = $puntoVentaModel->listarVentas($empresaId);
         $seguimientos = $gestionComercialModel->listarSeguimientoCotizaciones($empresaId, '', '', 200);
@@ -39,7 +39,7 @@ class PanelEmpresaControlador extends Controlador
         $stockBajo = 0;
         $stockCritico = 0;
         $stockNormal = 0;
-        foreach ($productosInventario as $producto) {
+        foreach ($productosListado as $producto) {
             $stockActual = (float) ($producto['stock_actual'] ?? 0);
             $stockMinimo = (float) ($producto['stock_minimo'] ?? 0);
             $stockCriticoRef = (float) ($producto['stock_critico'] ?? $producto['stock_aviso'] ?? 0);
