@@ -43,11 +43,11 @@ class PanelEmpresaControlador extends Controlador
             $stockActual = (float) ($producto['stock_actual'] ?? 0);
             $stockMinimo = (float) ($producto['stock_minimo'] ?? 0);
             $stockCriticoRef = (float) ($producto['stock_critico'] ?? $producto['stock_aviso'] ?? 0);
-            if ($stockActual <= $stockCriticoRef) {
+            $estadoStock = $stockActual <= $stockCriticoRef ? 'crítico' : ($stockActual <= $stockMinimo ? 'bajo' : 'normal');
+
+            if ($estadoStock === 'crítico') {
                 $stockCritico++;
-                continue;
-            }
-            if ($stockActual <= $stockMinimo) {
+            } elseif ($estadoStock === 'bajo') {
                 $stockBajo++;
             }
         }
