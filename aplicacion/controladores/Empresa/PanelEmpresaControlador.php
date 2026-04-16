@@ -103,6 +103,7 @@ class PanelEmpresaControlador extends Controlador
             'dias_restantes_plan' => isset($planEmpresa['fecha_vencimiento']) ? (int) floor((strtotime((string) $planEmpresa['fecha_vencimiento']) - strtotime(date('Y-m-d'))) / 86400) : null,
             'stock_bajo' => $stockBajo,
             'stock_critico' => $stockCritico,
+            'stock_normal' => $stockNormal,
             'ordenes_compra_pendientes' => $ordenesPendientes,
             'ventas_hoy' => $ventasHoy,
             'monto_ventas_hoy' => $montoVentasHoy,
