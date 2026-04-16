@@ -134,12 +134,12 @@ $renderIconoRed = static function (string $id): string {
   .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
   .home-carousel__header h3{margin:0;color:var(--primary);font-size:32px;font-weight:800}
   .home-carousel__track{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
-  .home-carousel__item{min-width:280px;max-width:280px;background:linear-gradient(180deg,#fff 0%,#f8fafc 100%);border:1px solid var(--border);border-radius:20px;padding:12px;box-shadow:var(--shadow);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
-  .home-carousel__item img{width:100%;height:170px;object-fit:cover;border-radius:14px;background:#f8fafc}
+  .home-carousel__item{min-width:270px;max-width:270px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
+  .home-carousel__item img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#eef2ff}
   .home-carousel__item h4{font-size:17px;margin:0;color:var(--primary);font-weight:700;line-height:1.25}
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
   .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px}
+  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
   .badge-mini.proximo{left:auto;right:14px;background:#fff7ed;color:#b45309}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
@@ -160,7 +160,7 @@ $renderIconoRed = static function (string $id): string {
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
   .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
-  .product-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+  .product-card{background:#fff;border:1px solid #d7deea;border-radius:12px;overflow:hidden;box-shadow:0 10px 20px rgba(15,23,42,.08);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
@@ -432,7 +432,7 @@ $renderIconoRed = static function (string $id): string {
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
                   <?php if ($proximo): ?>
-                    <button class="btn btn-warning" type="button" data-view-product data-id="<?= (int) $producto['id'] ?>">Reservar</button>
+                    <button class="btn btn-warning" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
                   <?php else: ?>
                     <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Comprar</button>
                   <?php endif; ?>
