@@ -39,6 +39,7 @@ class PanelEmpresaControlador extends Controlador
 
         $stockBajo = 0;
         $stockCritico = 0;
+        $stockNormal = 0;
         foreach ($productosInventario as $producto) {
             $stockActual = (float) ($producto['stock_actual'] ?? 0);
             $stockMinimo = (float) ($producto['stock_minimo'] ?? 0);
@@ -49,6 +50,8 @@ class PanelEmpresaControlador extends Controlador
                 $stockCritico++;
             } elseif ($estadoStock === 'bajo') {
                 $stockBajo++;
+            } else {
+                $stockNormal++;
             }
         }
 
