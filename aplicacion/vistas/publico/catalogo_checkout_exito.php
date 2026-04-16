@@ -17,8 +17,19 @@
           <h2 class="h6 mt-4">Resumen</h2>
           <ul class="list-group mb-3">
             <?php foreach ($orden['items'] as $item): ?>
+              <?php
+                $metadata = is_string($item['metadata'] ?? null) ? json_decode((string) $item['metadata'], true) : [];
+                if (!is_array($metadata)) {
+                    $metadata = [];
+                }
+                $proximo = (int) ($item['proximo_catalogo'] ?? $metadata['proximo_catalogo'] ?? 0) === 1;
+                $diasLlegada = max(0, (int) ($item['proximo_dias_catalogo'] ?? $metadata['proximo_dias_catalogo'] ?? 0));
+              ?>
               <li class="list-group-item d-flex justify-content-between">
-                <span><?= e((string) ($item['nombre'] ?? 'Producto')) ?> x<?= (int) ($item['cantidad'] ?? 1) ?></span>
+                <span>
+                  <?= e((string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto')) ?> x<?= (int) ($item['cantidad'] ?? 1) ?>
+                  <?php if ($proximo): ?><br><small class="text-warning-emphasis">Reserva · llegada estimada en <?= $diasLlegada ?> día(s).</small><?php endif; ?>
+                </span>
                 <strong>$<?= number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') ?></strong>
               </li>
             <?php endforeach; ?>
