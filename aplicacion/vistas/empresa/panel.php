@@ -96,26 +96,26 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
     <div class="card-body">
       <div class="row g-2">
         <div class="col-md-4">
-          <a class="text-decoration-none" href="<?= e(url('/app/productos')) ?>">
-            <div class="border rounded p-3 h-100 bg-danger-subtle">
-              <div class="small text-danger-emphasis">Crítico</div>
-              <div class="h4 mb-0 text-danger-emphasis"><?= $stockCritico ?></div>
+          <a class="text-decoration-none d-block" href="<?= e(url('/app/productos')) ?>">
+            <div class="border rounded px-3 py-2 bg-danger-subtle d-flex align-items-center justify-content-between">
+              <div class="small text-danger-emphasis fw-semibold">Crítico</div>
+              <div class="h5 mb-0 text-danger-emphasis"><?= $stockCritico ?></div>
             </div>
           </a>
         </div>
         <div class="col-md-4">
-          <a class="text-decoration-none" href="<?= e(url('/app/productos')) ?>">
-            <div class="border rounded p-3 h-100 bg-warning-subtle">
-              <div class="small text-warning-emphasis">Bajo</div>
-              <div class="h4 mb-0 text-warning-emphasis"><?= $stockBajo ?></div>
+          <a class="text-decoration-none d-block" href="<?= e(url('/app/productos')) ?>">
+            <div class="border rounded px-3 py-2 bg-warning-subtle d-flex align-items-center justify-content-between">
+              <div class="small text-warning-emphasis fw-semibold">Bajo</div>
+              <div class="h5 mb-0 text-warning-emphasis"><?= $stockBajo ?></div>
             </div>
           </a>
         </div>
         <div class="col-md-4">
-          <a class="text-decoration-none" href="<?= e(url('/app/productos')) ?>">
-            <div class="border rounded p-3 h-100 bg-success-subtle">
-              <div class="small text-success-emphasis">Normal</div>
-              <div class="h4 mb-0 text-success-emphasis"><?= $stockNormal ?></div>
+          <a class="text-decoration-none d-block" href="<?= e(url('/app/productos')) ?>">
+            <div class="border rounded px-3 py-2 bg-success-subtle d-flex align-items-center justify-content-between">
+              <div class="small text-success-emphasis fw-semibold">Normal</div>
+              <div class="h5 mb-0 text-success-emphasis"><?= $stockNormal ?></div>
             </div>
           </a>
         </div>

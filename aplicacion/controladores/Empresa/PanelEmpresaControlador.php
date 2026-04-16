@@ -42,9 +42,9 @@ class PanelEmpresaControlador extends Controlador
         foreach ($productosInventario as $producto) {
             $stockActual = (float) ($producto['stock_actual'] ?? 0);
             $stockMinimo = (float) ($producto['stock_minimo'] ?? 0);
-            $stockCriticoRef = (float) ($producto['stock_critico'] ?? 0);
-            $enStockCritico = $stockCriticoRef > 0 && $stockActual <= $stockCriticoRef;
-            $enStockBajo = !$enStockCritico && $stockMinimo > 0 && $stockActual <= $stockMinimo;
+            $stockCriticoRef = (float) ($producto['stock_critico'] ?? $producto['stock_aviso'] ?? 0);
+            $enStockCritico = $stockActual <= $stockCriticoRef;
+            $enStockBajo = !$enStockCritico && $stockActual <= $stockMinimo;
 
             if ($enStockCritico) {
                 $stockCritico++;
