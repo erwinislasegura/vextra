@@ -132,12 +132,14 @@ $renderIconoRed = static function (string $id): string {
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
   .home-carousel{padding:0 0 26px}
   .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-  .home-carousel__header h3{margin:0;color:var(--primary);font-size:20px}
-  .home-carousel__track{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:thin;scroll-snap-type:x mandatory}
-  .home-carousel__item{min-width:240px;max-width:240px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:10px;box-shadow:var(--shadow);scroll-snap-align:start}
-  .home-carousel__item img{width:100%;height:130px;object-fit:cover;border-radius:12px;background:#f8fafc}
-  .home-carousel__item h4{font-size:14px;margin:8px 0 4px;color:var(--primary)}
-  .home-carousel__item p{font-size:12px;margin:0;color:var(--muted)}
+  .home-carousel__header h3{margin:0;color:var(--primary);font-size:32px;font-weight:800}
+  .home-carousel__track{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
+  .home-carousel__item{min-width:280px;max-width:280px;background:linear-gradient(180deg,#fff 0%,#f8fafc 100%);border:1px solid var(--border);border-radius:20px;padding:12px;box-shadow:var(--shadow);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
+  .home-carousel__item img{width:100%;height:170px;object-fit:cover;border-radius:14px;background:#f8fafc}
+  .home-carousel__item h4{font-size:17px;margin:0;color:var(--primary);font-weight:700;line-height:1.25}
+  .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
+  .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px}
   .badge-mini.proximo{left:auto;right:14px;background:#fff7ed;color:#b45309}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
@@ -227,6 +229,8 @@ $renderIconoRed = static function (string $id): string {
     .category-list,.feature-list{display:flex;gap:8px;overflow:auto;max-height:none;padding:4px 2px 2px;margin-top:8px}
     .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff;font-size:13px;font-weight:500}
     .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .home-carousel__header h3{font-size:24px}
+    .home-carousel__item{min-width:250px;max-width:250px}
     .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
   @media (max-width:720px){
@@ -317,16 +321,32 @@ $renderIconoRed = static function (string $id): string {
               $categoriaProducto = (string) ($producto['categoria'] ?? 'Sin categoría');
               $esProximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
               $diasProximo = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
+              $precioProducto = (float) ($producto['precio'] ?? 0);
+              $precioOfertaProducto = (float) ($producto['precio_oferta'] ?? 0);
+              $precioMostrar = ($precioOfertaProducto > 0 && $precioOfertaProducto < $precioProducto) ? $precioOfertaProducto : $precioProducto;
             ?>
             <article class="home-carousel__item">
-              <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy">
+              <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy" onerror="this.onerror=null;this.src='<?= e(url('/img/placeholder-producto.svg')) ?>';">
               <h4><?= e($nombreProducto) ?></h4>
-              <p><?= e($categoriaProducto) ?></p>
-              <?php if ($esProximo): ?>
-                <p class="mt-1"><span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span></p>
-              <?php else: ?>
-                <p class="mt-1"><span class="badge text-bg-primary">Destacado</span></p>
-              <?php endif; ?>
+              <p class="home-carousel__meta"><?= e($categoriaProducto) ?></p>
+              <div class="home-carousel__actions">
+                <div>
+                  <?php if ($esProximo): ?>
+                    <span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span>
+                  <?php else: ?>
+                    <span class="badge text-bg-primary">Destacado</span>
+                  <?php endif; ?>
+                  <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
+                </div>
+                <button
+                  type="button"
+                  class="btn <?= $esProximo ? 'btn-warning' : 'btn-primary-custom' ?>"
+                  data-carousel-open
+                  data-id="<?= (int) $producto['id'] ?>"
+                >
+                  <?= $esProximo ? 'Reservar' : 'Lo quiero' ?>
+                </button>
+              </div>
             </article>
           <?php endforeach; ?>
         </div>
@@ -632,7 +652,10 @@ $renderIconoRed = static function (string $id): string {
         <div>
           <h4>${item.name}</h4>
           <p>${money(item.price)} c/u ${Number(item.oldPrice || 0) > Number(item.price || 0) ? `<span class="text-decoration-line-through text-muted">${money(item.oldPrice)}</span>` : ''}</p>
-          <div class="cart-item__desc">${resumenTexto(item.description || 'Producto seleccionado')}</div>
+          <div class="cart-item__desc">
+            ${resumenTexto(item.description || 'Producto seleccionado')}
+            ${Number(item.proximo ? 1 : 0) === 1 ? `<div class="text-warning-emphasis mt-1">Llegada estimada: ${Math.max(0, Number(item.proximoDias || 0))} día(s).</div>` : ''}
+          </div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
             <span>${item.quantity}</span>
@@ -656,7 +679,7 @@ $renderIconoRed = static function (string $id): string {
     if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
-    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1 });
+    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1, proximo: product.proximo, proximoDias: product.proximoDias });
     renderCart();
     openCart();
   };
@@ -682,34 +705,38 @@ $renderIconoRed = static function (string $id): string {
     }, 3200);
   };
 
+  const openDetailById = (productId) => {
+    productoSeleccionado = products.find((p) => p.id === Number(productId || 0)) || null;
+    const modalProductoDetalle = getModalProductoDetalle();
+    if (!productoSeleccionado || !modalProductoDetalle) return;
+    detalleNombre.textContent = productoSeleccionado.name;
+    detalleDescripcion.textContent = productoSeleccionado.description;
+    detalleCategoria.textContent = productoSeleccionado.category;
+    detallePrecio.textContent = money(productoSeleccionado.price);
+    detalleImagen.src = productoSeleccionado.image;
+    detalleImagen.alt = productoSeleccionado.name;
+    if (productoSeleccionado.proximo) {
+      if (detalleProximoAviso) {
+        const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
+        detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
+        detalleProximoAviso.classList.remove('d-none');
+      }
+      if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Reservar';
+    } else {
+      if (detalleProximoAviso) detalleProximoAviso.classList.add('d-none');
+      if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Comprar';
+    }
+    modalProductoDetalle.show();
+  };
+
   $$('.product-card').forEach((card) => {
     const addBtn = $('[data-add-cart]', card);
     const viewBtn = $('[data-view-product]', card);
     addBtn && addBtn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(Number(card.dataset.id || 0)); });
-    const openDetail = () => {
-      productoSeleccionado = products.find((p) => p.id === Number(card.dataset.id || 0)) || null;
-      const modalProductoDetalle = getModalProductoDetalle();
-      if (!productoSeleccionado || !modalProductoDetalle) return;
-      detalleNombre.textContent = productoSeleccionado.name;
-      detalleDescripcion.textContent = productoSeleccionado.description;
-      detalleCategoria.textContent = productoSeleccionado.category;
-      detallePrecio.textContent = money(productoSeleccionado.price);
-      detalleImagen.src = productoSeleccionado.image;
-      detalleImagen.alt = productoSeleccionado.name;
-      if (productoSeleccionado.proximo) {
-        if (detalleProximoAviso) {
-          const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
-          detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
-          detalleProximoAviso.classList.remove('d-none');
-        }
-        if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Reservar';
-      } else {
-        if (detalleProximoAviso) detalleProximoAviso.classList.add('d-none');
-        if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Comprar';
-      }
-      modalProductoDetalle.show();
-    };
-    viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetail(); });
+    viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetailById(card.dataset.id); });
+  });
+  $$('[data-carousel-open]').forEach((btn) => {
+    btn.addEventListener('click', () => openDetailById(btn.dataset.id));
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
