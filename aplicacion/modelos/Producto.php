@@ -29,6 +29,39 @@ class Producto extends Modelo
         return (int) $stmt->fetch()['total'];
     }
 
+    public function contarPorEstadoStock(int $empresaId): array
+    {
+        $umbralCritico = $this->tieneColumna('productos', 'stock_critico')
+            ? 'COALESCE(stock_critico, stock_aviso, 0)'
+            : 'COALESCE(stock_aviso, 0)';
+
+        $sql = 'SELECT
+                    SUM(CASE WHEN estado_stock = "critico" THEN 1 ELSE 0 END) AS critico,
+                    SUM(CASE WHEN estado_stock = "bajo" THEN 1 ELSE 0 END) AS bajo,
+                    SUM(CASE WHEN estado_stock = "normal" THEN 1 ELSE 0 END) AS normal
+                FROM (
+                    SELECT
+                        CASE
+                            WHEN COALESCE(stock_actual, 0) <= ' . $umbralCritico . ' THEN "critico"
+                            WHEN COALESCE(stock_actual, 0) <= COALESCE(stock_minimo, 0) THEN "bajo"
+                            ELSE "normal"
+                        END AS estado_stock
+                    FROM productos
+                    WHERE empresa_id = :empresa_id
+                      AND fecha_eliminacion IS NULL
+                ) estados';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['empresa_id' => $empresaId]);
+        $fila = $stmt->fetch() ?: [];
+
+        return [
+            'critico' => (int) ($fila['critico'] ?? 0),
+            'bajo' => (int) ($fila['bajo'] ?? 0),
+            'normal' => (int) ($fila['normal'] ?? 0),
+        ];
+    }
+
     public function crear(array $data): int
     {
         $columnas = ['empresa_id','categoria_id','tipo','codigo','sku','codigo_barras','nombre','descripcion','unidad','precio','costo','impuesto','descuento_maximo','stock_minimo','stock_aviso','estado','fecha_creacion'];
