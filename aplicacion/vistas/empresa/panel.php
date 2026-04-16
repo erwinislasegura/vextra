@@ -4,8 +4,6 @@ $porcentajeAprobadas = (int) round(((int) ($resumen['aprobadas'] ?? 0) / $totalC
 $porcentajePendientes = (int) round(((int) ($resumen['pendientes'] ?? 0) / $totalCotizaciones) * 100);
 $porcentajeRechazadas = (int) round(((int) ($resumen['rechazadas'] ?? 0) / $totalCotizaciones) * 100);
 $stockCritico = (int) ($resumen['stock_critico'] ?? 0);
-$stockBajo = (int) ($resumen['stock_bajo'] ?? 0);
-$stockNormal = (int) ($resumen['stock_normal'] ?? 0);
 $aprobacionesPendientes = (int) ($resumen['aprobaciones_pendientes'] ?? 0);
 $seguimientosAbiertos = (int) ($resumen['seguimientos_abiertos'] ?? 0);
 $notificacionesPendientes = (int) ($resumen['notificaciones_pendientes'] ?? 0);
@@ -23,6 +21,16 @@ foreach (($resumen['cotizaciones_ultimos_meses'] ?? []) as $fila) {
 
 $diasRestantesPlan = isset($resumen['dias_restantes_plan']) && $resumen['dias_restantes_plan'] !== null ? (int) $resumen['dias_restantes_plan'] : null;
 $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $diasRestantesPlan !== null && $diasRestantesPlan >= 0;
+$sinDatosTendencia = empty($meses) || array_sum($conteosMes) === 0;
+
+$formatearFecha = static function (?string $valor): string {
+    if (!$valor) {
+        return '—';
+    }
+
+    $timestamp = strtotime($valor);
+    return $timestamp ? date('d/m/Y H:i', $timestamp) : e($valor);
+};
 ?>
 
 <section class="panel-cliente panel-cliente--pro panel-analytics">
@@ -148,8 +156,8 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
   </div>
 
   <div class="row g-3 mb-3">
-    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Clientes recientes</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Cliente</th><th>Correo</th><th>Alta</th></tr></thead><tbody><?php if (!empty($resumen['clientes_recientes'])): ?><?php foreach ($resumen['clientes_recientes'] as $c): ?><tr><td class="fw-semibold"><?= e($c['nombre']) ?></td><td><?= e($c['correo']) ?></td><td><?= e($c['fecha_creacion']) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="3" class="text-center text-muted py-3">Sin clientes recientes.</td></tr><?php endif; ?></tbody></table></div></div></div>
-    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Productos/Servicios más cotizados</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Producto/Servicio</th><th class="text-end">Cantidad</th></tr></thead><tbody><?php if (!empty($resumen['productos_top'])): ?><?php foreach ($resumen['productos_top'] as $item): ?><tr><td><?= e($item['nombre']) ?></td><td class="text-end fw-semibold"><?= (int) $item['total'] ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="2" class="text-center text-muted py-3">Sin productos cotizados.</td></tr><?php endif; ?></tbody></table></div></div></div>
+    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Clientes recientes</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Cliente</th><th>Correo</th><th>Alta</th></tr></thead><tbody><?php if (!empty($resumen['clientes_recientes'])): ?><?php foreach ($resumen['clientes_recientes'] as $c): ?><tr><td class="fw-semibold"><?= e((string) ($c['nombre'] ?? 'Sin nombre')) ?></td><td><?= e((string) (($c['correo'] ?? '') !== '' ? $c['correo'] : 'Sin correo')) ?></td><td><?= $formatearFecha((string) ($c['fecha_creacion'] ?? '')) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="3" class="text-center text-muted py-3">Sin clientes recientes.</td></tr><?php endif; ?></tbody></table></div></div></div>
+    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Productos/Servicios más cotizados</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Producto/Servicio</th><th class="text-end">Cantidad</th></tr></thead><tbody><?php if (!empty($resumen['productos_top'])): ?><?php foreach ($resumen['productos_top'] as $item): ?><tr><td><?= e((string) ($item['nombre'] ?? 'Sin nombre')) ?></td><td class="text-end fw-semibold"><?= (int) ($item['total'] ?? 0) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="2" class="text-center text-muted py-3">Sin productos cotizados.</td></tr><?php endif; ?></tbody></table></div></div></div>
   </div>
 
   <div class="row g-3">
