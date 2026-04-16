@@ -87,27 +87,6 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
   </div>
 
   <div class="row g-3 mb-3">
-    <div class="col-xl-8">
-      <div class="card card-dashboard h-100">
-        <div class="card-header d-flex justify-content-between align-items-center"><span>Tendencia comercial (últimos 6 meses)</span><span class="badge text-bg-light border">Actualizado</span></div>
-        <div class="card-body chart-area"><canvas id="graficoCotizacionesMes"></canvas></div>
-      </div>
-    </div>
-    <div class="col-xl-4">
-      <div class="card card-dashboard h-100">
-        <div class="card-header">Objetivos por estado</div>
-        <div class="card-body">
-          <div class="kpi-progress mb-3"><div class="d-flex justify-content-between small mb-1"><span>Aprobadas</span><strong><?= $porcentajeAprobadas ?>%</strong></div><div class="progress" role="progressbar"><div class="progress-bar bg-success" style="width: <?= $porcentajeAprobadas ?>%"></div></div></div>
-          <div class="kpi-progress mb-3"><div class="d-flex justify-content-between small mb-1"><span>Pendientes</span><strong><?= $porcentajePendientes ?>%</strong></div><div class="progress" role="progressbar"><div class="progress-bar bg-warning" style="width: <?= $porcentajePendientes ?>%"></div></div></div>
-          <div class="kpi-progress mb-3"><div class="d-flex justify-content-between small mb-1"><span>Rechazadas</span><strong><?= $porcentajeRechazadas ?>%</strong></div><div class="progress" role="progressbar"><div class="progress-bar bg-danger" style="width: <?= $porcentajeRechazadas ?>%"></div></div></div>
-          <hr>
-          <div class="small text-muted">Distribución sobre <?= $totalCotizaciones ?> cotizaciones registradas.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-3 mb-3">
     <div class="col-12">
       <div class="card card-dashboard">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -123,6 +102,7 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
           <div class="row g-3">
             <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-amber"><div class="metric-card__icon"><i class="bi bi-box-seam"></i></div><div class="metric-card__meta">Stock bajo</div><div class="metric-card__value"><?= (int) ($resumen['stock_bajo'] ?? 0) ?></div></article></div>
             <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-red"><div class="metric-card__icon"><i class="bi bi-exclamation-octagon"></i></div><div class="metric-card__meta">Stock crítico</div><div class="metric-card__value"><?= (int) ($resumen['stock_critico'] ?? 0) ?></div></article></div>
+            <div class="col-sm-6 col-xl-3" data-kpi-module="inventario"><article class="metric-card metric-card-green"><div class="metric-card__icon"><i class="bi bi-check-circle"></i></div><div class="metric-card__meta">Stock normal</div><div class="metric-card__value"><?= (int) ($resumen['stock_normal'] ?? 0) ?></div></article></div>
             <div class="col-sm-6 col-xl-3" data-kpi-module="pos"><article class="metric-card metric-card-sky"><div class="metric-card__icon"><i class="bi bi-receipt"></i></div><div class="metric-card__meta">Ventas POS hoy</div><div class="metric-card__value"><?= (int) ($resumen['ventas_hoy'] ?? 0) ?></div></article></div>
             <div class="col-sm-6 col-xl-3" data-kpi-module="pos"><article class="metric-card metric-card-green"><div class="metric-card__icon"><i class="bi bi-cash-coin"></i></div><div class="metric-card__meta">Ingresos POS hoy</div><div class="metric-card__value">$<?= number_format((float) ($resumen['monto_ventas_hoy'] ?? 0), 2) ?></div></article></div>
           </div>
@@ -132,6 +112,27 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
             <div class="col-md-3" data-kpi-module="comercial"><div class="border rounded p-3 h-100"><div class="text-muted small">Aprobaciones pendientes</div><div class="h4 mb-0"><?= (int) ($resumen['aprobaciones_pendientes'] ?? 0) ?></div></div></div>
             <div class="col-md-3" data-kpi-module="comercial"><div class="border rounded p-3 h-100"><div class="text-muted small">Notificaciones por revisar</div><div class="h4 mb-0"><?= (int) ($resumen['notificaciones_pendientes'] ?? 0) ?></div></div></div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-xl-8">
+      <div class="card card-dashboard h-100">
+        <div class="card-header d-flex justify-content-between align-items-center"><span>Tendencia comercial (últimos 6 meses)</span><span class="badge text-bg-light border">Actualizado</span></div>
+        <div class="card-body chart-area"><canvas id="graficoCotizacionesMes"></canvas></div>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div class="card card-dashboard h-100">
+        <div class="card-header">Objetivos por estado</div>
+        <div class="card-body">
+          <div class="kpi-progress mb-3"><div class="d-flex justify-content-between small mb-1"><span>Aprobadas</span><strong><?= $porcentajeAprobadas ?>%</strong></div><div class="progress" role="progressbar"><div class="progress-bar bg-success" style="width: <?= $porcentajeAprobadas ?>%"></div></div></div>
+          <div class="kpi-progress mb-3"><div class="d-flex justify-content-between small mb-1"><span>Pendientes</span><strong><?= $porcentajePendientes ?>%</strong></div><div class="progress" role="progressbar"><div class="progress-bar bg-warning" style="width: <?= $porcentajePendientes ?>%"></div></div></div>
+          <div class="kpi-progress mb-3"><div class="d-flex justify-content-between small mb-1"><span>Rechazadas</span><strong><?= $porcentajeRechazadas ?>%</strong></div><div class="progress" role="progressbar"><div class="progress-bar bg-danger" style="width: <?= $porcentajeRechazadas ?>%"></div></div></div>
+          <hr>
+          <div class="small text-muted">Distribución sobre <?= $totalCotizaciones ?> cotizaciones registradas.</div>
         </div>
       </div>
     </div>

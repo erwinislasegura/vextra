@@ -55,7 +55,7 @@
               <td>$<?= number_format((float)$p['precio'],2) ?></td>
               <td><?php if ((float) ($p['precio_oferta'] ?? 0) > 0): ?>$<?= number_format((float) $p['precio_oferta'], 2) ?><?php else: ?>-<?php endif; ?></td>
               <td><?php if ((int) ($p['destacado_catalogo'] ?? 0) === 1): ?><span class="badge text-bg-primary">Sí</span><?php else: ?><span class="text-muted">No</span><?php endif; ?></td>
-              <?php $stockActual = (float)($p['stock_actual'] ?? 0); $stockMin = (float)($p['stock_minimo'] ?? 0); $stockCrit = (float)($p['stock_critico'] ?? $p['stock_aviso'] ?? 0); $estadoStock = $stockActual <= $stockCrit ? 'crítico' : ($stockActual <= $stockMin ? 'bajo' : 'normal'); $badgeStock = $estadoStock === 'crítico' ? 'text-bg-danger' : ($estadoStock === 'bajo' ? 'text-bg-warning' : 'text-bg-success'); ?>
+              <?php $stockActual = (float)($p['stock_actual'] ?? 0); $stockMin = (float)($p['stock_minimo'] ?? 0); $stockCrit = (float)($p['stock_critico'] ?? 0); if ($stockCrit <= 0) { $stockCrit = (float)($p['stock_aviso'] ?? 0); } $estadoStock = $stockActual <= $stockCrit ? 'crítico' : ($stockActual <= $stockMin ? 'bajo' : 'normal'); $badgeStock = $estadoStock === 'crítico' ? 'text-bg-danger' : ($estadoStock === 'bajo' ? 'text-bg-warning' : 'text-bg-success'); ?>
               <td><strong><?= number_format($stockActual, 2) ?></strong></td>
               <td><?= number_format($stockMin, 2) ?></td>
               <td><?= number_format($stockCrit, 2) ?></td>
