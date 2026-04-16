@@ -41,7 +41,7 @@ class GestionComercialControlador extends Controlador
         $planEmpresa = (new Plan())->obtenerPlanActivoEmpresa($empresaId);
         $planId = (int) ($planEmpresa['plan_id'] ?? 0);
         $planActual = $planId > 0 ? (new Plan())->buscar($planId) : null;
-        $productosInventario = $inventarioModel->listarProductos($empresaId);
+        $productosInventario = $productoModel->listar($empresaId);
         $ordenesCompra = $inventarioModel->listarOrdenesCompra($empresaId);
         $ventasPos = $puntoVentaModel->listarVentas($empresaId);
         $seguimientos = $this->modelo->listarSeguimientoCotizaciones($empresaId, '', '', 200);
@@ -51,15 +51,22 @@ class GestionComercialControlador extends Controlador
 
         $stockBajo = 0;
         $stockCritico = 0;
+        $stockNormal = 0;
         foreach ($productosInventario as $producto) {
             $stockActual = (float) ($producto['stock_actual'] ?? 0);
             $stockMinimo = (float) ($producto['stock_minimo'] ?? 0);
             $stockCriticoRef = (float) ($producto['stock_critico'] ?? 0);
-            if ($stockMinimo > 0 && $stockActual <= $stockMinimo) {
-                $stockBajo++;
+            if ($stockCriticoRef <= 0) {
+                $stockCriticoRef = (float) ($producto['stock_aviso'] ?? 0);
             }
-            if ($stockCriticoRef > 0 && $stockActual <= $stockCriticoRef) {
+            $estadoStock = $stockActual <= $stockCriticoRef ? 'crítico' : ($stockActual <= $stockMinimo ? 'bajo' : 'normal');
+
+            if ($estadoStock === 'crítico') {
                 $stockCritico++;
+            } elseif ($estadoStock === 'bajo') {
+                $stockBajo++;
+            } else {
+                $stockNormal++;
             }
         }
 
@@ -110,6 +117,7 @@ class GestionComercialControlador extends Controlador
             'total_cotizaciones' => $cotizacionModel->contar($empresaId),
             'stock_bajo' => $stockBajo,
             'stock_critico' => $stockCritico,
+            'stock_normal' => $stockNormal,
             'ordenes_compra_pendientes' => $ordenesPendientes,
             'ventas_hoy' => $ventasHoy,
             'monto_ventas_hoy' => $montoVentasHoy,
