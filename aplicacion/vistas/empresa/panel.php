@@ -4,8 +4,6 @@ $porcentajeAprobadas = (int) round(((int) ($resumen['aprobadas'] ?? 0) / $totalC
 $porcentajePendientes = (int) round(((int) ($resumen['pendientes'] ?? 0) / $totalCotizaciones) * 100);
 $porcentajeRechazadas = (int) round(((int) ($resumen['rechazadas'] ?? 0) / $totalCotizaciones) * 100);
 $stockCritico = (int) ($resumen['stock_critico'] ?? 0);
-$stockBajo = (int) ($resumen['stock_bajo'] ?? 0);
-$stockNormal = (int) ($resumen['stock_normal'] ?? 0);
 $aprobacionesPendientes = (int) ($resumen['aprobaciones_pendientes'] ?? 0);
 $seguimientosAbiertos = (int) ($resumen['seguimientos_abiertos'] ?? 0);
 $notificacionesPendientes = (int) ($resumen['notificaciones_pendientes'] ?? 0);
@@ -23,6 +21,16 @@ foreach (($resumen['cotizaciones_ultimos_meses'] ?? []) as $fila) {
 
 $diasRestantesPlan = isset($resumen['dias_restantes_plan']) && $resumen['dias_restantes_plan'] !== null ? (int) $resumen['dias_restantes_plan'] : null;
 $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $diasRestantesPlan !== null && $diasRestantesPlan >= 0;
+$sinDatosTendencia = empty($meses) || array_sum($conteosMes) === 0;
+
+$formatearFecha = static function (?string $valor): string {
+    if (!$valor) {
+        return '—';
+    }
+
+    $timestamp = strtotime($valor);
+    return $timestamp ? date('d/m/Y H:i', $timestamp) : e($valor);
+};
 ?>
 
 <section class="panel-cliente panel-cliente--pro panel-analytics">
