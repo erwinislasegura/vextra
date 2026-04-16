@@ -210,6 +210,10 @@ body.preview-open{overflow:hidden}
 .metric-card-green{border-top:3px solid #16b364}.metric-card-green .metric-card__icon{background:#16b364}
 .metric-card-amber{border-top:3px solid #f59f00}.metric-card-amber .metric-card__icon{background:#f59f00}
 .panel-cliente .panel-inline-stat{border:1px solid #dde6f0;border-radius:.7rem;padding:.72rem .78rem;background:#fff;height:100%;min-height:82px;display:flex;flex-direction:column;justify-content:center}
+.panel-cliente .panel-inline-stat--sky{border-top:3px solid #4632a8}
+.panel-cliente .panel-inline-stat--green{border-top:3px solid #16b364}
+.panel-cliente .panel-inline-stat--amber{border-top:3px solid #f59f00}
+.panel-cliente .panel-inline-stat--red{border-top:3px solid #ea4d4d}
 .panel-cliente .panel-kpi-grid > [data-kpi-module]{display:flex}
 .panel-cliente .panel-kpi-grid > [data-kpi-module] > *{width:100%}
 .panel-cliente .kpi-progress .progress{height:.5rem;background:#edf2f7}
