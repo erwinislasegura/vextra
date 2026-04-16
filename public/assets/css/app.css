@@ -197,6 +197,8 @@ body.preview-open{overflow:hidden}
 .panel-cliente--pro .panel-flow-card__title{font-size:.92rem;color:#1f3348;font-weight:700}
 .panel-cliente--pro .panel-flow-card p{font-size:.79rem;color:#677d94;margin:.18rem 0 0}
 .panel-cliente--pro .panel-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem}
+.panel-cliente .panel-metric-strip{display:flex;gap:.55rem;flex-wrap:nowrap;overflow-x:auto;padding-bottom:.1rem}
+.panel-cliente .panel-metric-strip__item{flex:1 1 0;min-width:205px}
 .panel-cliente .panel-quick-grid--single{grid-template-columns:1fr}
 .panel-cliente .dashboard-stack{display:grid;grid-template-rows:1fr 1fr;gap:.75rem}
 .panel-cliente .panel-semaforo-item{display:flex;justify-content:space-between;align-items:center;padding:.34rem 0;border-bottom:1px dashed #e2eaf4;font-size:.86rem;color:#344b63}
