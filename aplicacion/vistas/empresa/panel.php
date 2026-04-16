@@ -21,6 +21,16 @@ foreach (($resumen['cotizaciones_ultimos_meses'] ?? []) as $fila) {
 
 $diasRestantesPlan = isset($resumen['dias_restantes_plan']) && $resumen['dias_restantes_plan'] !== null ? (int) $resumen['dias_restantes_plan'] : null;
 $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $diasRestantesPlan !== null && $diasRestantesPlan >= 0;
+$sinDatosTendencia = empty($meses) || array_sum($conteosMes) === 0;
+
+$formatearFecha = static function (?string $valor): string {
+    if (!$valor) {
+        return '—';
+    }
+
+    $timestamp = strtotime($valor);
+    return $timestamp ? date('d/m/Y H:i', $timestamp) : e($valor);
+};
 ?>
 
 <section class="panel-cliente panel-cliente--pro">
@@ -97,7 +107,12 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
     <div class="col-xl-8">
       <div class="card card-dashboard h-100">
         <div class="card-header d-flex justify-content-between align-items-center"><span>Tendencia comercial (últimos 6 meses)</span><span class="badge text-bg-light border">Actualizado</span></div>
-        <div class="card-body chart-area"><canvas id="graficoCotizacionesMes"></canvas></div>
+        <div class="card-body chart-area position-relative">
+          <canvas id="graficoCotizacionesMes"></canvas>
+          <?php if ($sinDatosTendencia): ?>
+            <div class="panel-chart-empty">Aún no hay datos suficientes para la tendencia.</div>
+          <?php endif; ?>
+        </div>
       </div>
     </div>
     <div class="col-xl-4">
@@ -154,13 +169,13 @@ $esPeriodoPrueba = ($resumen['estado_suscripcion'] ?? '') === 'pendiente' && $di
   </div>
 
   <div class="row g-3 mb-3">
-    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Clientes recientes</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Cliente</th><th>Correo</th><th>Alta</th></tr></thead><tbody><?php if (!empty($resumen['clientes_recientes'])): ?><?php foreach ($resumen['clientes_recientes'] as $c): ?><tr><td class="fw-semibold"><?= e($c['nombre']) ?></td><td><?= e($c['correo']) ?></td><td><?= e($c['fecha_creacion']) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="3" class="text-center text-muted py-3">Sin clientes recientes.</td></tr><?php endif; ?></tbody></table></div></div></div>
-    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Productos/Servicios más cotizados</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Producto/Servicio</th><th class="text-end">Cantidad</th></tr></thead><tbody><?php if (!empty($resumen['productos_top'])): ?><?php foreach ($resumen['productos_top'] as $item): ?><tr><td><?= e($item['nombre']) ?></td><td class="text-end fw-semibold"><?= (int) $item['total'] ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="2" class="text-center text-muted py-3">Sin productos cotizados.</td></tr><?php endif; ?></tbody></table></div></div></div>
+    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Clientes recientes</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Cliente</th><th>Correo</th><th>Alta</th></tr></thead><tbody><?php if (!empty($resumen['clientes_recientes'])): ?><?php foreach ($resumen['clientes_recientes'] as $c): ?><tr><td class="fw-semibold"><?= e((string) ($c['nombre'] ?? 'Sin nombre')) ?></td><td><?= e((string) (($c['correo'] ?? '') !== '' ? $c['correo'] : 'Sin correo')) ?></td><td><?= $formatearFecha((string) ($c['fecha_creacion'] ?? '')) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="3" class="text-center text-muted py-3">Sin clientes recientes.</td></tr><?php endif; ?></tbody></table></div></div></div>
+    <div class="col-lg-6"><div class="card card-dashboard h-100"><div class="card-header">Productos/Servicios más cotizados</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Producto/Servicio</th><th class="text-end">Cantidad</th></tr></thead><tbody><?php if (!empty($resumen['productos_top'])): ?><?php foreach ($resumen['productos_top'] as $item): ?><tr><td><?= e((string) ($item['nombre'] ?? 'Sin nombre')) ?></td><td class="text-end fw-semibold"><?= (int) ($item['total'] ?? 0) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="2" class="text-center text-muted py-3">Sin productos cotizados.</td></tr><?php endif; ?></tbody></table></div></div></div>
   </div>
 
-  <div class="card card-dashboard mb-3"><div class="card-header">Actividad reciente del negocio</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Fecha</th></tr></thead><tbody><?php if (!empty($resumen['historial_reciente'])): ?><?php foreach ($resumen['historial_reciente'] as $h): ?><tr><td><?= e($h['usuario_nombre']) ?></td><td><?= e($h['modulo']) ?></td><td><?= e($h['accion']) ?></td><td><?= e($h['fecha_creacion']) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="4" class="text-center text-muted py-3">Sin actividad reciente.</td></tr><?php endif; ?></tbody></table></div></div>
+  <div class="card card-dashboard mb-3"><div class="card-header">Actividad reciente del negocio</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Fecha</th></tr></thead><tbody><?php if (!empty($resumen['historial_reciente'])): ?><?php foreach ($resumen['historial_reciente'] as $h): ?><tr><td><?= e((string) (($h['usuario_nombre'] ?? '') !== '' ? $h['usuario_nombre'] : 'Sistema')) ?></td><td><?= e((string) ($h['modulo'] ?? '—')) ?></td><td><?= e((string) ($h['accion'] ?? '—')) ?></td><td><?= $formatearFecha((string) ($h['fecha_creacion'] ?? '')) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="4" class="text-center text-muted py-3">Sin actividad reciente.</td></tr><?php endif; ?></tbody></table></div></div>
 
-  <div class="card card-dashboard"><div class="card-header">Vendedores destacados</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Vendedor</th><th class="text-end">Cotizaciones</th></tr></thead><tbody><?php if (!empty($resumen['vendedores_top'])): ?><?php foreach ($resumen['vendedores_top'] as $v): ?><tr><td><?= e($v['nombre']) ?></td><td class="text-end fw-semibold"><?= (int) $v['total'] ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="2" class="text-center text-muted py-3">Sin vendedores registrados.</td></tr><?php endif; ?></tbody></table></div></div>
+  <div class="card card-dashboard"><div class="card-header">Vendedores destacados</div><div class="table-responsive"><table class="table table-sm table-hover mb-0"><thead><tr><th>Vendedor</th><th class="text-end">Cotizaciones</th></tr></thead><tbody><?php if (!empty($resumen['vendedores_top'])): ?><?php foreach ($resumen['vendedores_top'] as $v): ?><tr><td><?= e((string) ($v['nombre'] ?? 'Sin nombre')) ?></td><td class="text-end fw-semibold"><?= (int) ($v['total'] ?? 0) ?></td></tr><?php endforeach; ?><?php else: ?><tr><td colspan="2" class="text-center text-muted py-3">Sin vendedores registrados.</td></tr><?php endif; ?></tbody></table></div></div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
