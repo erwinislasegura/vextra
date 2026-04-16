@@ -65,6 +65,9 @@ $socialesTopbar = [
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
+$productosDestacados = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['destacado_catalogo'] ?? 0) === 1));
+$productosProximos = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['proximo_catalogo'] ?? 0) === 1));
+$productosCarrusel = array_slice(array_merge($productosDestacados, $productosProximos), 0, 24);
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -127,6 +130,15 @@ $renderIconoRed = static function (string $id): string {
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px;font-size:18px;font-weight:500;line-height:1.5}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
+  .home-carousel{padding:0 0 26px}
+  .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .home-carousel__header h3{margin:0;color:var(--primary);font-size:20px}
+  .home-carousel__track{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:thin;scroll-snap-type:x mandatory}
+  .home-carousel__item{min-width:240px;max-width:240px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:10px;box-shadow:var(--shadow);scroll-snap-align:start}
+  .home-carousel__item img{width:100%;height:130px;object-fit:cover;border-radius:12px;background:#f8fafc}
+  .home-carousel__item h4{font-size:14px;margin:8px 0 4px;color:var(--primary)}
+  .home-carousel__item p{font-size:12px;margin:0;color:var(--muted)}
+  .badge-mini.proximo{left:auto;right:14px;background:#fff7ed;color:#b45309}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -160,6 +172,7 @@ $renderIconoRed = static function (string $id): string {
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
+  .card-actions .btn-warning{font-size:13px;font-weight:600;padding:8px 12px}
   .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
   .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
   .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;border:none}
@@ -289,6 +302,38 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </section>
 
+  <?php if (!empty($productosCarrusel)): ?>
+    <section class="home-carousel">
+      <div class="catalogo-container">
+        <div class="home-carousel__header">
+          <h3>Destacados y próximos en llegar</h3>
+          <small class="text-muted">Se desplaza automáticamente</small>
+        </div>
+        <div class="home-carousel__track" id="homeProductosCarrusel">
+          <?php foreach ($productosCarrusel as $producto): ?>
+            <?php
+              $imagenProductoUrl = url('/catalogo/' . (int) $empresa['id'] . '/producto/' . (int) $producto['id'] . '/imagen');
+              $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
+              $categoriaProducto = (string) ($producto['categoria'] ?? 'Sin categoría');
+              $esProximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
+              $diasProximo = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
+            ?>
+            <article class="home-carousel__item">
+              <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy">
+              <h4><?= e($nombreProducto) ?></h4>
+              <p><?= e($categoriaProducto) ?></p>
+              <?php if ($esProximo): ?>
+                <p class="mt-1"><span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span></p>
+              <?php else: ?>
+                <p class="mt-1"><span class="badge text-bg-primary">Destacado</span></p>
+              <?php endif; ?>
+            </article>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+
   <section class="filters-section" id="catalogoProductos">
     <div class="catalogo-container filters-wrap">
       <div class="field"><label for="searchInput">Buscar producto</label><input type="text" id="searchInput" placeholder="Ej: audífonos, reloj, mochila..."></div>
@@ -333,12 +378,14 @@ $renderIconoRed = static function (string $id): string {
               $descripcionProducto = (string) ($producto['descripcion'] ?? 'Sin descripción');
               $stock = (int) ($producto['stock_actual'] ?? rand(3, 40));
               $destacado = (int) ($producto['destacado_catalogo'] ?? 0) === 1;
+              $proximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
+              $proximoDias = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
               $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
               $onSale = $precioOferta > 0 && $precioOferta < $precio;
               $precioMostrar = $onSale ? $precioOferta : $precio;
               $oldPrice = $onSale ? $precio : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>" data-proximo="<?= $proximo ? '1' : '0' ?>" data-proximo-dias="<?= $proximoDias ?>">
               <div class="product-image">
                 <img
                   src="<?= e($imagenProductoUrl) ?>"
@@ -353,6 +400,9 @@ $renderIconoRed = static function (string $id): string {
                 <?php if ($destacado): ?>
                   <span class="badge-mini destacado">Destacado</span>
                 <?php endif; ?>
+                <?php if ($proximo): ?>
+                  <span class="badge-mini proximo">Próximamente</span>
+                <?php endif; ?>
               </div>
               <div class="product-body">
                 <span class="category-tag"><?= e($categoria) ?></span>
@@ -361,7 +411,11 @@ $renderIconoRed = static function (string $id): string {
                 <div class="stock-line">Stock: <?= $stock ?></div>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
-                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">¡Lo quiero!</button>
+                  <?php if ($proximo): ?>
+                    <button class="btn btn-warning" type="button" data-view-product data-id="<?= (int) $producto['id'] ?>">Reservar</button>
+                  <?php else: ?>
+                    <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Comprar</button>
+                  <?php endif; ?>
                   <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>
@@ -407,7 +461,26 @@ $renderIconoRed = static function (string $id): string {
 <div class="modal fade" id="modalProductoDetalle" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 shadow">
     <div class="modal-header border-0 pb-0"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
-    <div class="modal-body pt-1"><div class="row g-3 g-lg-4 align-items-start"><div class="col-lg-6"><img id="detalleProductoImagen" src="" alt="Producto" class="w-100 rounded-3" style="max-height:360px;object-fit:cover;background:#f8fafc"></div><div class="col-lg-6"><div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div><h3 class="h4 mb-2" id="detalleProductoNombre"></h3><p class="text-muted mb-3" id="detalleProductoDescripcion"></p><div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light"><div><div class="small text-muted">Precio</div><div class="h4 mb-0" id="detalleProductoPrecio"></div></div><button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Comprar</button></div></div></div></div>
+    <div class="modal-body pt-1">
+      <div class="row g-3 g-lg-4 align-items-start">
+        <div class="col-lg-6">
+          <img id="detalleProductoImagen" src="" alt="Producto" class="w-100 rounded-3" style="max-height:360px;object-fit:cover;background:#f8fafc">
+        </div>
+        <div class="col-lg-6">
+          <div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div>
+          <h3 class="h4 mb-2" id="detalleProductoNombre"></h3>
+          <p class="text-muted mb-2" id="detalleProductoDescripcion"></p>
+          <div class="alert alert-warning py-2 px-3 mb-3 d-none" id="detalleProductoProximoAviso"></div>
+          <div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light">
+            <div>
+              <div class="small text-muted">Precio</div>
+              <div class="h4 mb-0" id="detalleProductoPrecio"></div>
+            </div>
+            <button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div></div>
 </div>
 
@@ -435,6 +508,8 @@ $renderIconoRed = static function (string $id): string {
     onSale: String(card.dataset.onsale || '0') === '1',
     featured: String(card.dataset.onsale || '0') !== '1',
     oldPrice: Number(card.dataset.oldprice || 0),
+    proximo: String(card.dataset.proximo || '0') === '1',
+    proximoDias: Number(card.dataset.proximoDias || 0),
     el: card,
   }));
 
@@ -473,6 +548,8 @@ $renderIconoRed = static function (string $id): string {
   const detalleCategoria = $('#detalleProductoCategoria');
   const detallePrecio = $('#detalleProductoPrecio');
   const detalleImagen = $('#detalleProductoImagen');
+  const detalleProximoAviso = $('#detalleProductoProximoAviso');
+  const detalleAgregarCarrito = $('#detalleAgregarCarrito');
   let productoSeleccionado = null;
 
   const categories = ['all', ...new Set(products.map((p) => p.category))];
@@ -576,6 +653,7 @@ $renderIconoRed = static function (string $id): string {
   const addToCart = (id) => {
     const product = products.find((p) => p.id === id);
     if (!product) return;
+    if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
     else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1 });
@@ -593,6 +671,16 @@ $renderIconoRed = static function (string $id): string {
       slides[idx].classList.add('active');
     }, 9000);
   };
+  const initHomeCarrusel = () => {
+    const carrusel = $('#homeProductosCarrusel');
+    if (!carrusel) return;
+    window.setInterval(() => {
+      const max = carrusel.scrollWidth - carrusel.clientWidth;
+      if (max <= 0) return;
+      const siguiente = carrusel.scrollLeft + 260 >= max ? 0 : carrusel.scrollLeft + 260;
+      carrusel.scrollTo({ left: siguiente, behavior: 'smooth' });
+    }, 3200);
+  };
 
   $$('.product-card').forEach((card) => {
     const addBtn = $('[data-add-cart]', card);
@@ -608,6 +696,17 @@ $renderIconoRed = static function (string $id): string {
       detallePrecio.textContent = money(productoSeleccionado.price);
       detalleImagen.src = productoSeleccionado.image;
       detalleImagen.alt = productoSeleccionado.name;
+      if (productoSeleccionado.proximo) {
+        if (detalleProximoAviso) {
+          const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
+          detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
+          detalleProximoAviso.classList.remove('d-none');
+        }
+        if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Reservar';
+      } else {
+        if (detalleProximoAviso) detalleProximoAviso.classList.add('d-none');
+        if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Comprar';
+      }
       modalProductoDetalle.show();
     };
     viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetail(); });
@@ -615,7 +714,9 @@ $renderIconoRed = static function (string $id): string {
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
-    addToCart(Number(productoSeleccionado.id));
+    if (!productoSeleccionado.proximo) {
+      addToCart(Number(productoSeleccionado.id));
+    }
     const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
@@ -684,5 +785,6 @@ $renderIconoRed = static function (string $id): string {
   applyFilters();
   renderCart();
   initSlider();
+  initHomeCarrusel();
 })();
 </script>
