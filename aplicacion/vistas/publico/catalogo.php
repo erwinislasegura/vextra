@@ -145,7 +145,7 @@ $renderIconoRed = static function (string $id): string {
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
   .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
-  .home-carousel__badge-proximo{display:inline-flex;align-items:center;background:#16a34a;color:#fff;border:1px solid #15803d;font-size:12px;font-weight:700;padding:4px 8px;border-radius:6px}
+  .home-carousel__proximo-text{font-size:12px;font-weight:700;color:#15803d}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -347,7 +347,7 @@ $renderIconoRed = static function (string $id): string {
                 <div class="home-carousel__actions">
                   <div>
                     <?php if ($esProximo): ?>
-                      <span class="home-carousel__badge-proximo">Llega en <?= $diasProximo ?> día(s)</span>
+                      <span class="home-carousel__proximo-text">Reserva · llega en <?= $diasProximo ?> día(s)</span>
                     <?php else: ?>
                       <span class="badge text-bg-primary">Destacado</span>
                     <?php endif; ?>
