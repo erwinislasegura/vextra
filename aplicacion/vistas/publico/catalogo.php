@@ -560,6 +560,7 @@ $renderIconoRed = static function (string $id): string {
     proximoDias: Number(card.dataset.proximoDias || 0),
     el: card,
   }));
+  const productsById = new Map(products.map((product) => [product.id, product]));
 
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (e) { cart = []; }
@@ -701,21 +702,8 @@ $renderIconoRed = static function (string $id): string {
   const openCart = () => { cartPanel.classList.add('open'); overlay.classList.add('show'); };
   const closeCart = () => { cartPanel.classList.remove('open'); overlay.classList.remove('show'); };
 
-  const addToCart = (id, fallback = null) => {
-    const product = products.find((p) => p.id === id) || (fallback && Number(fallback.id || 0) > 0 ? {
-      id: Number(fallback.id || 0),
-      name: String(fallback.name || 'Producto'),
-      price: Number(fallback.price || 0),
-      description: String(fallback.description || ''),
-      image: String(fallback.image || '<?= e(url('/img/placeholder-producto.svg')) ?>'),
-      stock: 0,
-      onSale: false,
-      featured: false,
-      oldPrice: 0,
-      proximo: String(fallback.proximo || '0') === '1',
-      proximoDias: Number(fallback.proximoDias || 0),
-      el: null,
-    } : null);
+  const addToCart = (id) => {
+    const product = productsById.get(id) || null;
     if (!product) return;
     if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
@@ -752,7 +740,7 @@ $renderIconoRed = static function (string $id): string {
   };
 
   const openDetailById = (productId) => {
-    productoSeleccionado = products.find((p) => p.id === Number(productId || 0)) || null;
+    productoSeleccionado = productsById.get(Number(productId || 0)) || null;
     const modalProductoDetalle = getModalProductoDetalle();
     if (!productoSeleccionado || !modalProductoDetalle) return;
     detalleNombre.textContent = productoSeleccionado.name;
@@ -761,12 +749,12 @@ $renderIconoRed = static function (string $id): string {
     detallePrecio.textContent = money(productoSeleccionado.price);
     detalleImagen.src = productoSeleccionado.image;
     detalleImagen.alt = productoSeleccionado.name;
-      if (productoSeleccionado.proximo) {
-        if (detalleProximoAviso) {
-          const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
-          detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
-          detalleProximoAviso.classList.remove('d-none');
-        }
+    if (productoSeleccionado.proximo) {
+      if (detalleProximoAviso) {
+        const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
+        detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
+        detalleProximoAviso.classList.remove('d-none');
+      }
       if (detalleAgregarCarrito) {
         detalleAgregarCarrito.textContent = 'Reservar';
         detalleAgregarCarrito.classList.remove('btn-primary');
@@ -790,12 +778,31 @@ $renderIconoRed = static function (string $id): string {
   $$('[data-carousel-open]').forEach((btn) => {
     btn.addEventListener('click', () => openDetailById(btn.dataset.id));
   });
+  $$('[data-add-cart]').forEach((btn) => {
+    const id = Number(btn.dataset.id || 0);
+    if (id <= 0 || productsById.has(id)) return;
+    productsById.set(id, {
+      id,
+      name: String(btn.dataset.name || 'Producto'),
+      price: Number(btn.dataset.price || 0),
+      category: '',
+      description: String(btn.dataset.description || ''),
+      image: String(btn.dataset.image || '<?= e(url('/img/placeholder-producto.svg')) ?>'),
+      stock: 0,
+      onSale: false,
+      featured: false,
+      oldPrice: 0,
+      proximo: String(btn.dataset.proximo || '0') === '1',
+      proximoDias: Number(btn.dataset.proximoDias || 0),
+      el: null,
+    });
+  });
   document.addEventListener('click', (e) => {
     const addBtn = e.target.closest('[data-add-cart]');
     if (!addBtn) return;
     e.preventDefault();
     e.stopPropagation();
-    addToCart(Number(addBtn.dataset.id || 0), addBtn.dataset);
+    addToCart(Number(addBtn.dataset.id || 0));
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
