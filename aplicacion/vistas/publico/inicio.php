@@ -126,7 +126,7 @@ $faqSchema = [
                     <span class="badge text-bg-primary fs-6 px-3 py-2">30 días de prueba gratis</span>
                     <span class="small fw-semibold text-primary">Empieza hoy y el primer cobro se realiza al terminar tu prueba.</span>
                 </div>
-                <h1 class="display-6 fw-bold mb-3">Todo en un lugar para vender más y crecer con control real</h1>
+                <h1 class="display-6 fw-bold mb-3">Cotiza, vende y controla con catálogo en línea y pago en línea en un solo flujo</h1>
                 <p class="lead text-secondary">Vextra integra cotizaciones, punto de venta e inventario, además de catálogo en línea y pago online, para que tu empresa acelere cierres y mantenga una operación ordenada.</p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
@@ -153,6 +153,61 @@ $faqSchema = [
 
 <section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Todo en un lugar para que tu empresa crezca</span>
+            <h2 class="h3 mb-2">Gestiona cotizaciones, POS, inventario, catálogo en línea y pago en línea en una sola plataforma</h2>
+            <p class="text-secondary mb-0">Vextra integra las funciones más importantes para vender más: cotización online, punto de venta, control de inventario, catálogo en línea y cobro digital en un solo flujo comercial.</p>
+        </div>
+        <div class="row g-3">
+            <article class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 bg-white shadow-sm">
+                    <div class="card-body d-flex gap-3 align-items-start">
+                        <span class="landing-icon text-primary" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.5 14.8 8l5.9.8-4.3 4.1 1 5.8L12 16l-5.4 2.7 1-5.8-4.3-4.1L9.2 8 12 2.5ZM4 3.5l.8 1.7L6.5 6l-1.7.8L4 8.5l-.8-1.7L1.5 6l1.7-.8L4 3.5Zm16 11 .8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8.8-1.7Z"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="h5 mb-1">Funciones clave para vender más y gestionar mejor</h3>
+                            <p class="small mb-0">Unifica cotizaciones profesionales, ventas en caja, inventario en tiempo real y seguimiento comercial para aumentar cierres y reducir errores operativos.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 bg-white shadow-sm">
+                    <div class="card-body d-flex gap-3 align-items-start">
+                        <span class="landing-icon text-primary" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M7 4h14v2H8.3l-1.1 5h11.7l-1.2 6H8.1L6.3 8H3V6h1.7L5 4.5C5.2 3.6 6 3 7 3v1Zm2.2 15a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6Zm7.6 0a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6Z"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="h5 mb-1">Catálogo en línea conectado a tu inventario</h3>
+                            <p class="small mb-0">Publica productos con precio y stock actualizado automáticamente para atraer más pedidos y mejorar la experiencia de compra de tus clientes.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 bg-white shadow-sm">
+                    <div class="card-body d-flex gap-3 align-items-start">
+                        <span class="landing-icon text-primary" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v2h18V7H3Zm0 5v5h18v-5H3Zm3 2h5v2H6v-2Z"/></svg>
+                        </span>
+                        <div>
+                            <h3 class="h5 mb-1">Pago en línea integrado para cerrar más rápido</h3>
+                            <p class="small mb-0">Reduce fricción al cobrar con pago online desde el mismo proceso comercial y convierte más cotizaciones en ventas confirmadas.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="text-center mt-4 d-flex flex-wrap gap-2 justify-content-center">
+            <a href="<?= e(url('/caracteristicas')) ?>" class="btn btn-outline-primary btn-sm">Ver todas las funciones</a>
+            <a href="#planes" class="btn btn-primary btn-sm">Elegir plan y comenzar</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom bg-light-subtle">
+    <div class="container">
         <div class="row g-4 align-items-center">
             <div class="col-12 col-lg-6">
                 <h2 class="h3 mb-3">Solución completa: sistema de cotización, POS y gestión de inventario</h2>
@@ -171,32 +226,6 @@ $faqSchema = [
     </div>
 </section>
 
-<section class="py-5 border-bottom">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="h3">Flujo real de software de cotización online para equipos comerciales</h2>
-            <p class="text-secondary mb-0">Desde crear presupuesto hasta cerrar venta con seguimiento: todo en un solo entorno de trabajo.</p>
-        </div>
-        <div class="landing-slider" data-slider data-slider-interval="3200">
-            <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
-                <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
-                    <img src="<?= e($capturaLandingUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy" decoding="async" width="1280" height="800">
-                    <div class="landing-carousel-caption">
-                        <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
-                        <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
-                    </div>
-                </article>
-            <?php endforeach; ?>
-            <button class="landing-slider-control prev" type="button" data-slide-nav="prev" aria-label="Imagen anterior">‹</button>
-            <button class="landing-slider-control next" type="button" data-slide-nav="next" aria-label="Imagen siguiente">›</button>
-            <div class="landing-slider-dots" role="tablist" aria-label="Navegación de capturas">
-                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
-                    <button type="button" class="<?= $index === 0 ? 'is-active' : '' ?>" data-slide-dot="<?= $index ?>" aria-label="Ver captura <?= $index + 1 ?>"></button>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-</section>
 
 <section class="py-5 border-bottom">
     <div class="container">
@@ -209,7 +238,7 @@ $faqSchema = [
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
                                 <span class="landing-icon text-primary" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M13.2 2 4.5 13h5.8L9.8 22 19.5 10.6h-6.1L13.2 2Z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M13.2 2 4.5 13h5.8L9.8 22 19.5 10.6h-6.1L13.2 2Z"/></svg>
                                 </span>
                                 <div>
                                     <h3 class="h5 mb-1">Ahorro de tiempo en cotizar y vender</h3>
@@ -222,7 +251,7 @@ $faqSchema = [
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
                                 <span class="landing-icon text-primary" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 18.5h16v2H2v-18h2v16Zm2.2-3.8 3.9-3.9 2.8 2.8 5.4-5.4 1.4 1.4-6.8 6.8-2.8-2.8-2.5 2.5-1.4-1.4Z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 18.5h16v2H2v-18h2v16Zm2.2-3.8 3.9-3.9 2.8 2.8 5.4-5.4 1.4 1.4-6.8 6.8-2.8-2.8-2.5 2.5-1.4-1.4Z"/></svg>
                                 </span>
                                 <div>
                                     <h3 class="h5 mb-1">Aumento de ventas con seguimiento ordenado</h3>
@@ -235,7 +264,7 @@ $faqSchema = [
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
                                 <span class="landing-icon text-primary" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m12 2 9 4.5v11L12 22l-9-4.5v-11L12 2Zm0 2.2L5.5 7.4 12 10.8l6.5-3.4L12 4.2Zm7 4.7-6 3.2v7.3l6-3V8.9Zm-14 0v7.5l6 3v-7.3L5 8.9Z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m12 2 9 4.5v11L12 22l-9-4.5v-11L12 2Zm0 2.2L5.5 7.4 12 10.8l6.5-3.4L12 4.2Zm7 4.7-6 3.2v7.3l6-3V8.9Zm-14 0v7.5l6 3v-7.3L5 8.9Z"/></svg>
                                 </span>
                                 <div>
                                     <h3 class="h5 mb-1">Control de stock para proteger márgenes</h3>
@@ -265,60 +294,6 @@ $faqSchema = [
     </div>
 </section>
 
-<section class="py-5 border-bottom bg-light-subtle">
-    <div class="container">
-        <div class="text-center mb-4">
-            <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Todo en un lugar para que tu empresa crezca</span>
-            <h2 class="h3 mb-2">Software de cotizaciones, POS, inventario, catálogo en línea y pago online</h2>
-            <p class="text-secondary mb-0">Vextra integra las funciones más importantes para vender más: cotización online, punto de venta, control de inventario, catálogo en línea y cobro digital en un solo flujo comercial.</p>
-        </div>
-        <div class="row g-3">
-            <article class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 border-0 bg-white shadow-sm">
-                    <div class="card-body d-flex gap-3 align-items-start">
-                        <span class="landing-icon text-primary" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.5 14.8 8l5.9.8-4.3 4.1 1 5.8L12 16l-5.4 2.7 1-5.8-4.3-4.1L9.2 8 12 2.5ZM4 3.5l.8 1.7L6.5 6l-1.7.8L4 8.5l-.8-1.7L1.5 6l1.7-.8L4 3.5Zm16 11 .8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8.8-1.7Z"/></svg>
-                        </span>
-                        <div>
-                            <h3 class="h5 mb-1">Funciones clave para vender más y gestionar mejor</h3>
-                            <p class="small mb-0">Unifica cotizaciones profesionales, ventas en caja, inventario en tiempo real y seguimiento comercial para aumentar cierres y reducir errores operativos.</p>
-                        </div>
-                    </div>
-                </div>
-            </article>
-            <article class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 border-0 bg-white shadow-sm">
-                    <div class="card-body d-flex gap-3 align-items-start">
-                        <span class="landing-icon text-primary" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M7 4h14v2H8.3l-1.1 5h11.7l-1.2 6H8.1L6.3 8H3V6h1.7L5 4.5C5.2 3.6 6 3 7 3v1Zm2.2 15a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6Zm7.6 0a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6Z"/></svg>
-                        </span>
-                        <div>
-                            <h3 class="h5 mb-1">Catálogo en línea conectado a tu inventario</h3>
-                            <p class="small mb-0">Publica productos con precio y stock actualizado automáticamente para atraer más pedidos y mejorar la experiencia de compra de tus clientes.</p>
-                        </div>
-                    </div>
-                </div>
-            </article>
-            <article class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 border-0 bg-white shadow-sm">
-                    <div class="card-body d-flex gap-3 align-items-start">
-                        <span class="landing-icon text-primary" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v2h18V7H3Zm0 5v5h18v-5H3Zm3 2h5v2H6v-2Z"/></svg>
-                        </span>
-                        <div>
-                            <h3 class="h5 mb-1">Pago en línea integrado para cerrar más rápido</h3>
-                            <p class="small mb-0">Reduce fricción al cobrar con pago online desde el mismo proceso comercial y convierte más cotizaciones en ventas confirmadas.</p>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        </div>
-        <div class="text-center mt-4 d-flex flex-wrap gap-2 justify-content-center">
-            <a href="<?= e(url('/caracteristicas')) ?>" class="btn btn-outline-primary btn-sm">Ver todas las funciones</a>
-            <a href="#planes" class="btn btn-primary btn-sm">Elegir plan y comenzar</a>
-        </div>
-    </div>
-</section>
 
 <section class="py-5 border-bottom bg-white" id="planes">
     <div class="container">
@@ -373,7 +348,7 @@ $faqSchema = [
         <div class="landing-timeline landing-timeline--5" aria-label="Flujo de implementación de Vextra">
             <article class="landing-timeline__item">
                 <span class="landing-timeline__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 3.3a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Zm-1.2 5v8h2.4v-8h-2.4Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 3.3a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Zm-1.2 5v8h2.4v-8h-2.4Z"/></svg>
                 </span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Etapa 1</span>
@@ -383,7 +358,7 @@ $faqSchema = [
             </article>
             <article class="landing-timeline__item">
                 <span class="landing-timeline__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 4h16v3H4V4Zm0 5h16v11H4V9Zm3 2v7h2v-7H7Zm4 0v7h2v-7h-2Zm4 0v7h2v-7h-2Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 4h16v3H4V4Zm0 5h16v11H4V9Zm3 2v7h2v-7H7Zm4 0v7h2v-7h-2Zm4 0v7h2v-7h-2Z"/></svg>
                 </span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Etapa 2</span>
@@ -393,7 +368,7 @@ $faqSchema = [
             </article>
             <article class="landing-timeline__item">
                 <span class="landing-timeline__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m2 7 4 4 3-3-4-4-3 3Zm7.9 1.2 8.9 8.9-2.1 2.1-8.9-8.9 2.1-2.1ZM14 4h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m2 7 4 4 3-3-4-4-3 3Zm7.9 1.2 8.9 8.9-2.1 2.1-8.9-8.9 2.1-2.1ZM14 4h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4Z"/></svg>
                 </span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Etapa 3</span>
@@ -403,7 +378,7 @@ $faqSchema = [
             </article>
             <article class="landing-timeline__item">
                 <span class="landing-timeline__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 19h16v2H2V3h2v16Zm2.4-4.7 4.2-4.2 2.8 2.8 4.7-4.7 1.4 1.4-6.1 6.1-2.8-2.8-2.8 2.8-1.4-1.4Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 19h16v2H2V3h2v16Zm2.4-4.7 4.2-4.2 2.8 2.8 4.7-4.7 1.4 1.4-6.1 6.1-2.8-2.8-2.8 2.8-1.4-1.4Z"/></svg>
                 </span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Etapa 4</span>
@@ -413,7 +388,7 @@ $faqSchema = [
             </article>
             <article class="landing-timeline__item">
                 <span class="landing-timeline__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2 1 7l11 5 9-4.1V15h2V7L12 2Zm-7.5 9 7.5 3.4 7.5-3.4V16L12 19.4 4.5 16V11Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2 1 7l11 5 9-4.1V15h2V7L12 2Zm-7.5 9 7.5 3.4 7.5-3.4V16L12 19.4 4.5 16V11Z"/></svg>
                 </span>
                 <div class="landing-timeline__card">
                     <span class="landing-timeline__step">Etapa 5</span>
@@ -466,6 +441,33 @@ $faqSchema = [
                 <p class="small text-secondary mt-3 mb-0">
                     Revisa más detalle en <a href="<?= e(url('/caracteristicas')) ?>">Características</a>, compara alternativas en <a href="<?= e(url('/planes')) ?>">Planes</a>, resuelve dudas en <a href="<?= e(url('/preguntas-frecuentes')) ?>">Preguntas frecuentes</a> o contacta al equipo en <a href="<?= e(url('/contacto')) ?>">Contacto</a>.
                 </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="h3">Flujo real de software de cotización online para equipos comerciales</h2>
+            <p class="text-secondary mb-0">Desde crear presupuesto hasta cerrar venta con seguimiento: todo en un solo entorno de trabajo.</p>
+        </div>
+        <div class="landing-slider" data-slider data-slider-interval="3200">
+            <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                <article class="landing-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide>
+                    <img src="<?= e($capturaLandingUrl($captura['archivo'])) ?>" alt="<?= e($captura['titulo']) ?>" loading="lazy" decoding="async" width="1280" height="800">
+                    <div class="landing-carousel-caption">
+                        <h3 class="h6 mb-1"><?= e($captura['titulo']) ?></h3>
+                        <p class="small mb-0"><?= e($captura['descripcion']) ?></p>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            <button class="landing-slider-control prev" type="button" data-slide-nav="prev" aria-label="Imagen anterior">‹</button>
+            <button class="landing-slider-control next" type="button" data-slide-nav="next" aria-label="Imagen siguiente">›</button>
+            <div class="landing-slider-dots" role="tablist" aria-label="Navegación de capturas">
+                <?php foreach ($cotizacionesCapturas as $index => $captura): ?>
+                    <button type="button" class="<?= $index === 0 ? 'is-active' : '' ?>" data-slide-dot="<?= $index ?>" aria-label="Ver captura <?= $index + 1 ?>"></button>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
