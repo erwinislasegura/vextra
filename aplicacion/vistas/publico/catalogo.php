@@ -67,7 +67,7 @@ $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/arch
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
 $productosDestacados = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['destacado_catalogo'] ?? 0) === 1));
 $productosProximos = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['proximo_catalogo'] ?? 0) === 1));
-$productosCarrusel = array_slice(array_merge($productosDestacados, $productosProximos), 0, 24);
+$productosCarrusel = array_slice(array_merge($productosDestacados, $productosProximos), 0, 5);
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -103,7 +103,8 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
-  .btn-reservar{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#d97706 !important;color:#fff !important}
+  .btn-reservar{background:#16a34a !important;border-color:#15803d !important;color:#fff !important}
+  .btn-reservar:hover,.btn-reservar:focus{background:#15803d !important;border-color:#166534 !important;color:#fff !important}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
   .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff}
   .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
@@ -134,16 +135,17 @@ $renderIconoRed = static function (string $id): string {
   .home-carousel{padding:0 0 26px}
   .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:14px 14px 8px;box-shadow:0 14px 30px rgba(37,45,89,.10)}
   .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-  .home-carousel__header h3{margin:0;color:var(--primary);font-size:32px;font-weight:800}
+  .home-carousel__header h3{margin:0;color:var(--primary);font-size:16px;font-weight:400}
   .home-carousel__controls{display:flex;gap:8px}
   .home-carousel__nav{width:36px;height:36px;border-radius:10px;border:1px solid #cbcffa;background:#fff;color:#312e81;font-weight:700}
-  .home-carousel__track{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
-  .home-carousel__item{min-width:270px;max-width:270px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
+  .home-carousel__track{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
+  .home-carousel__item{flex:0 0 calc((100% - 48px) / 5);min-width:210px;max-width:240px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
   .home-carousel__item img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#eef2ff}
   .home-carousel__item h4{font-size:17px;margin:0;color:var(--primary);font-weight:700;line-height:1.25}
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
   .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
+  .home-carousel__badge-proximo{display:inline-flex;align-items:center;background:#16a34a;color:#fff;border:1px solid #15803d;font-size:12px;font-weight:700;padding:4px 8px;border-radius:6px}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -233,7 +235,7 @@ $renderIconoRed = static function (string $id): string {
     .category-list,.feature-list{display:flex;gap:8px;overflow:auto;max-height:none;padding:4px 2px 2px;margin-top:8px}
     .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff;font-size:13px;font-weight:500}
     .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .home-carousel__header h3{font-size:24px}
+    .home-carousel__header h3{font-size:14px}
     .home-carousel__item{min-width:250px;max-width:250px}
     .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
@@ -261,6 +263,7 @@ $renderIconoRed = static function (string $id): string {
     .slide h2{font-size:27px;font-weight:600}
     .slide p{font-size:14px;font-weight:400;line-height:1.45}
     .slide-actions .btn-primary-custom{width:100%;min-width:0}
+    .home-carousel__item{flex:0 0 88%;min-width:88%;max-width:88%}
     .footer-content{grid-template-columns:1fr}
     .footer-bottom__content{flex-direction:column;align-items:flex-start}
     .cart-panel{width:100%}
@@ -343,7 +346,7 @@ $renderIconoRed = static function (string $id): string {
                 <div class="home-carousel__actions">
                   <div>
                     <?php if ($esProximo): ?>
-                      <span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span>
+                      <span class="home-carousel__badge-proximo">Llega en <?= $diasProximo ?> día(s)</span>
                     <?php else: ?>
                       <span class="badge text-bg-primary">Destacado</span>
                     <?php endif; ?>
