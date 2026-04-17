@@ -80,7 +80,7 @@ $faqSchema = [
                 <p class="mb-3">Ahora además puedes activar <strong>catálogo en línea con carrito de compras</strong> y <strong>pagos en línea integrados</strong> para vender 24/7 con una experiencia de compra más profesional para tus clientes.</p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
-                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Ver demo</a>
+                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Contáctanos</a>
                 </div>
                 <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
             </div>
@@ -103,6 +103,44 @@ $faqSchema = [
 </section>
 
 <section class="py-5 border-bottom bg-light">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge text-bg-primary mb-2">NUEVO</span>
+            <h2 class="h3 mb-2">Nuevas funcionalidades para vender más</h2>
+            <p class="text-secondary mb-0">Más alcance comercial y cobro simple para pymes chilenas.</p>
+        </div>
+        <div class="row g-3">
+            <article class="col-lg-6">
+                <div class="card h-100 border-primary border-2">
+                    <div class="card-body">
+                        <h3 class="h5"><i class="bi bi-cart3 text-primary me-2"></i>Catálogo en línea</h3>
+                        <p class="mb-2">Publica tus productos con carrito y convierte más visitas en ventas.</p>
+                        <ul class="small mb-0 ps-3 d-grid gap-1">
+                            <li>Comparte tu catálogo por WhatsApp, redes y web.</li>
+                            <li>Muestra productos y precios de forma profesional.</li>
+                            <li>Conecta ventas online con tu inventario real.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+            <article class="col-lg-6">
+                <div class="card h-100 border-success border-2">
+                    <div class="card-body">
+                        <h3 class="h5"><i class="bi bi-credit-card text-success me-2"></i>Pagos en línea</h3>
+                        <p class="mb-2">Recibe pagos en línea integrados para cerrar más rápido y sin fricción.</p>
+                        <ul class="small mb-0 ps-3 d-grid gap-1">
+                            <li>Reduce abandono al momento de pagar.</li>
+                            <li>Automatiza la confirmación de compra.</li>
+                            <li>Mejora la experiencia de tu cliente final.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="text-center mb-4">
             <span class="badge text-bg-primary mb-2">NUEVO</span>
