@@ -177,6 +177,7 @@ $renderIconoRed = static function (string $id): string {
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
   .product-desc{color:var(--muted);font-size:13px;line-height:1.45;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .stock-line{font-size:13px;color:var(--muted);font-weight:600}
+  .stock-line-proximo{color:#15803d;font-weight:600}
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
@@ -454,7 +455,7 @@ $renderIconoRed = static function (string $id): string {
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
                 <div class="stock-line">Stock: <?= $stock ?></div>
                 <?php if ($proximo): ?>
-                  <div class="stock-line text-warning-emphasis">Reserva · llega en <?= $proximoDias ?> día(s)</div>
+                  <div class="stock-line stock-line-proximo">Reserva · llega en <?= $proximoDias ?> día(s)</div>
                 <?php endif; ?>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
