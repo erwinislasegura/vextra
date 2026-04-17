@@ -262,9 +262,9 @@ $faqSchema = [
 <section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="text-center mb-4">
-            <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Novedades destacadas</span>
-            <h2 class="h3 mb-2">Nuevas funciones para impulsar tus ventas online</h2>
-            <p class="text-secondary mb-0">Mantén la misma experiencia de Vextra con más alcance digital: catálogo en línea e integración con pago en línea.</p>
+            <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Todo en un lugar para que tu empresa crezca</span>
+            <h2 class="h3 mb-2">Software de cotizaciones, POS, inventario, catálogo en línea y pago online</h2>
+            <p class="text-secondary mb-0">Vextra integra las funciones más importantes para vender más: cotización online, punto de venta, control de inventario, catálogo en línea y cobro digital en un solo flujo comercial.</p>
         </div>
         <div class="row g-3">
             <article class="col-12 col-md-6 col-lg-4">
@@ -272,8 +272,8 @@ $faqSchema = [
                     <div class="card-body d-flex gap-3 align-items-start">
                         <span class="fs-4 text-primary" aria-hidden="true">✨</span>
                         <div>
-                            <h3 class="h5 mb-1">Nuevas funciones listas para usar</h3>
-                            <p class="small mb-0">Activa mejoras comerciales sin complejidad técnica y conserva el flujo de trabajo que tu equipo ya conoce.</p>
+                            <h3 class="h5 mb-1">Funciones clave para vender más y gestionar mejor</h3>
+                            <p class="small mb-0">Unifica cotizaciones profesionales, ventas en caja, inventario en tiempo real y seguimiento comercial para aumentar cierres y reducir errores operativos.</p>
                         </div>
                     </div>
                 </div>
@@ -283,8 +283,8 @@ $faqSchema = [
                     <div class="card-body d-flex gap-3 align-items-start">
                         <span class="fs-4 text-success" aria-hidden="true">🛒</span>
                         <div>
-                            <h3 class="h5 mb-1">Catálogo en línea conectado</h3>
-                            <p class="small mb-0">Publica tus productos en un catálogo online alineado con inventario y precios para vender con información siempre actualizada.</p>
+                            <h3 class="h5 mb-1">Catálogo en línea conectado a tu inventario</h3>
+                            <p class="small mb-0">Publica productos con precio y stock actualizado automáticamente para atraer más pedidos y mejorar la experiencia de compra de tus clientes.</p>
                         </div>
                     </div>
                 </div>
@@ -294,12 +294,16 @@ $faqSchema = [
                     <div class="card-body d-flex gap-3 align-items-start">
                         <span class="fs-4 text-warning" aria-hidden="true">💳</span>
                         <div>
-                            <h3 class="h5 mb-1">Integración con pago en línea</h3>
-                            <p class="small mb-0">Ofrece cobro digital desde el mismo flujo comercial para acelerar cierres y simplificar la experiencia de compra del cliente.</p>
+                            <h3 class="h5 mb-1">Pago en línea integrado para cerrar más rápido</h3>
+                            <p class="small mb-0">Reduce fricción al cobrar con pago online desde el mismo proceso comercial y convierte más cotizaciones en ventas confirmadas.</p>
                         </div>
                     </div>
                 </div>
             </article>
+        </div>
+        <div class="text-center mt-4 d-flex flex-wrap gap-2 justify-content-center">
+            <a href="<?= e(url('/caracteristicas')) ?>" class="btn btn-outline-primary btn-sm">Ver todas las funciones</a>
+            <a href="#planes" class="btn btn-primary btn-sm">Elegir plan y comenzar</a>
         </div>
     </div>
 </section>
