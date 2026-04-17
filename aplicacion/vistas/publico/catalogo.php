@@ -103,6 +103,7 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn-reservar{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#d97706 !important;color:#fff !important}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
   .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff}
   .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
@@ -349,7 +350,7 @@ $renderIconoRed = static function (string $id): string {
                     <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
                   </div>
                   <?php if ($esProximo): ?>
-                    <button type="button" class="btn btn-primary-custom" data-add-cart data-id="<?= (int) $producto['id'] ?>">Reservar</button>
+                    <button type="button" class="btn btn-primary-custom btn-reservar" data-add-cart data-id="<?= (int) $producto['id'] ?>">Reservar</button>
                   <?php else: ?>
                     <button type="button" class="btn btn-primary-custom" data-carousel-open data-id="<?= (int) $producto['id'] ?>">Lo quiero</button>
                   <?php endif; ?>
@@ -443,7 +444,7 @@ $renderIconoRed = static function (string $id): string {
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
                   <?php if ($proximo): ?>
-                    <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
+                    <button class="btn-primary-custom btn-reservar" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
                   <?php else: ?>
                     <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Comprar</button>
                   <?php endif; ?>
@@ -731,16 +732,24 @@ $renderIconoRed = static function (string $id): string {
     detallePrecio.textContent = money(productoSeleccionado.price);
     detalleImagen.src = productoSeleccionado.image;
     detalleImagen.alt = productoSeleccionado.name;
-    if (productoSeleccionado.proximo) {
-      if (detalleProximoAviso) {
-        const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
-        detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
-        detalleProximoAviso.classList.remove('d-none');
+      if (productoSeleccionado.proximo) {
+        if (detalleProximoAviso) {
+          const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
+          detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
+          detalleProximoAviso.classList.remove('d-none');
+        }
+      if (detalleAgregarCarrito) {
+        detalleAgregarCarrito.textContent = 'Reservar';
+        detalleAgregarCarrito.classList.remove('btn-primary');
+        detalleAgregarCarrito.classList.add('btn-reservar');
       }
-      if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Reservar';
     } else {
       if (detalleProximoAviso) detalleProximoAviso.classList.add('d-none');
-      if (detalleAgregarCarrito) detalleAgregarCarrito.textContent = 'Comprar';
+      if (detalleAgregarCarrito) {
+        detalleAgregarCarrito.textContent = 'Comprar';
+        detalleAgregarCarrito.classList.remove('btn-reservar');
+        detalleAgregarCarrito.classList.add('btn-primary');
+      }
     }
     modalProductoDetalle.show();
   };
