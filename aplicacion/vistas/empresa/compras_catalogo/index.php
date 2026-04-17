@@ -27,16 +27,55 @@ if (preg_match('/^#[0-9A-Fa-f]{6}$/', $colorPrimarioEtiqueta) !== 1) {
 if (preg_match('/^#[0-9A-Fa-f]{6}$/', $colorAcentoEtiqueta) !== 1) {
     $colorAcentoEtiqueta = '#2563eb';
 }
-$frasesTenisMesa = [
-    'En tenis de mesa, la precisión transforma cada punto en una victoria.',
-    'La constancia en cada saque te acerca al siguiente triunfo.',
-    'Cada rally es una oportunidad para demostrar control y carácter.',
-    'La velocidad impresiona, pero la estrategia gana partidos.',
-    'Mantén la mirada en la pelota y la mente en el objetivo.',
-    'Disciplina, reflejos y actitud: la fórmula del campeón de mesa.',
-    'El mejor punto siempre empieza con una buena preparación.',
-    'Juega cada bola con convicción, como si fuera la del partido.',
+$rubroEtiqueta = (string) ($empresa['etiqueta_rubro'] ?? 'general');
+$frasesPorRubro = [
+    'tenis_mesa' => [
+        'En tenis de mesa, la precisión transforma cada punto en una victoria.',
+        'La constancia en cada saque te acerca al siguiente triunfo.',
+        'Cada rally es una oportunidad para demostrar control y carácter.',
+        'La velocidad impresiona, pero la estrategia gana partidos.',
+        'Mantén la mirada en la pelota y la mente en el objetivo.',
+        'Disciplina, reflejos y actitud: la fórmula del campeón de mesa.',
+        'El mejor punto siempre empieza con una buena preparación.',
+        'Juega cada bola con convicción, como si fuera la del partido.',
+    ],
+    'fitness' => [
+        'La constancia diaria construye resultados extraordinarios.',
+        'Entrena con propósito, compite contigo mismo cada día.',
+        'El progreso nace de la disciplina, no de la prisa.',
+        'Tu esfuerzo de hoy es tu ventaja de mañana.',
+    ],
+    'tecnologia' => [
+        'Innovar es convertir ideas en soluciones reales.',
+        'La tecnología avanza, tu negocio también.',
+        'Precisión en cada proceso, excelencia en cada entrega.',
+        'Optimizar hoy es crecer mañana.',
+    ],
+    'moda' => [
+        'El estilo se expresa en cada detalle.',
+        'Diseño, identidad y actitud en cada elección.',
+        'La elegancia comienza con autenticidad.',
+        'Cada prenda cuenta una historia única.',
+    ],
+    'hogar' => [
+        'Cada espacio bien pensado mejora la vida diaria.',
+        'Comodidad y diseño para disfrutar cada momento.',
+        'Un gran hogar se construye con pequeños detalles.',
+        'Bienestar para tu casa, todos los días.',
+    ],
+    'general' => [
+        'Excelencia en cada entrega, confianza en cada compra.',
+        'Compromiso y calidad de principio a fin.',
+        'Gracias por confiar en nosotros.',
+        'Tu satisfacción es nuestra mejor referencia.',
+    ],
 ];
+$frasesPersonalizadasRaw = (string) ($empresa['etiqueta_frases'] ?? '');
+$frasesPersonalizadas = array_values(array_filter(array_map(
+    static fn(string $linea): string => trim($linea),
+    preg_split('/\r\n|\r|\n/', $frasesPersonalizadasRaw) ?: []
+), static fn(string $linea): bool => $linea !== ''));
+$frasesEtiqueta = $frasesPersonalizadas !== [] ? $frasesPersonalizadas : ($frasesPorRubro[$rubroEtiqueta] ?? $frasesPorRubro['general']);
 ?>
 <style>
   .shipping-label-template { display: none; }
@@ -105,7 +144,7 @@ $frasesTenisMesa = [
 <?php foreach ($compras as $compra): ?>
   <?php $compraId = (int) ($compra['id'] ?? 0); $modalId = 'compraDetalleModal' . $compraId; ?>
   <?php
-    $fraseEtiqueta = $frasesTenisMesa[$compraId % count($frasesTenisMesa)];
+    $fraseEtiqueta = $frasesEtiqueta[$compraId % count($frasesEtiqueta)];
     $codigoEtiqueta = 'CP-' . str_pad((string) $compraId, 6, '0', STR_PAD_LEFT);
     $fechaEtiqueta = (string) ($compra['fecha_creacion'] ?? '');
     try {
