@@ -684,6 +684,7 @@ $renderIconoRed = static function (string $id): string {
   const addToCart = (id) => {
     const product = products.find((p) => p.id === id);
     if (!product) return;
+    if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
     else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1, proximo: product.proximo, proximoDias: product.proximoDias });
@@ -758,7 +759,9 @@ $renderIconoRed = static function (string $id): string {
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
-    addToCart(Number(productoSeleccionado.id));
+    if (!productoSeleccionado.proximo) {
+      addToCart(Number(productoSeleccionado.id));
+    }
     const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
