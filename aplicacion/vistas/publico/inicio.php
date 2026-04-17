@@ -128,16 +128,10 @@ $faqSchema = [
                 </div>
                 <h1 class="display-6 fw-bold mb-3">Sistema de cotizaciones y ventas con inventario para crecer con control real</h1>
                 <p class="lead text-secondary">Vextra es un software de cotización online que conecta tu gestión comercial, sistema punto de venta y sistema de inventario para que tu empresa venda más, responda rápido y opere con orden administrativo.</p>
-<<<<<<< HEAD
                 <p class="mb-3">Ahora además puedes activar <strong>catálogo en línea con carrito de compras</strong> y <strong>pagos en línea integrados</strong> para vender 24/7 con una experiencia de compra más profesional para tus clientes.</p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
                     <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Contáctanos</a>
-=======
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
-                    <a href="#planes" class="btn btn-outline-primary">Contratar plan</a>
->>>>>>> parent of 956a80e (Rediseña landing pública destacando catálogo y pagos online)
                 </div>
                 <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
             </div>
@@ -153,7 +147,6 @@ $faqSchema = [
                         </ul>
                     </div>
                 </div>
-<<<<<<< HEAD
             </div>
         </div>
     </div>
@@ -199,38 +192,28 @@ $faqSchema = [
 
 <section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
-        <div class="text-center mb-4">
-            <span class="badge text-bg-primary mb-2">NUEVO</span>
-            <h2 class="h3 mb-2">Nuevas funcionalidades para vender más</h2>
-            <p class="text-secondary mb-0">Más alcance comercial y cobro simple para pymes chilenas.</p>
-        </div>
-        <div class="row g-3">
-            <article class="col-lg-6">
-                <div class="card h-100 border-primary border-2">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-cart3 text-primary me-2"></i>Catálogo en línea</h3>
-                        <p class="mb-2">Publica tus productos con carrito y convierte más visitas en ventas.</p>
-                        <ul class="small mb-0 ps-3 d-grid gap-1">
-                            <li>Comparte tu catálogo por WhatsApp, redes y web.</li>
-                            <li>Muestra productos y precios de forma profesional.</li>
-                            <li>Conecta ventas online con tu inventario real.</li>
-                        </ul>
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-body p-4 p-lg-5">
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-8">
+                        <span class="badge text-bg-dark mb-2">CTA DESTACADO</span>
+                        <h2 class="h3 mb-2">Catálogo en línea + pago en línea: tu herramienta poderosa para vender 24/7</h2>
+                        <p class="text-secondary mb-3">Activa una vitrina digital profesional, recibe pedidos en cualquier horario y cobra en el momento con una experiencia de compra simple para tus clientes.</p>
+                        <div class="d-flex flex-wrap gap-2 small">
+                            <span class="badge rounded-pill text-bg-primary px-3 py-2">🛒 Catálogo online con carrito</span>
+                            <span class="badge rounded-pill text-bg-success px-3 py-2">💳 Pago en línea integrado</span>
+                            <span class="badge rounded-pill text-bg-secondary px-3 py-2">⚡ Operación comercial conectada</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-grid gap-2">
+                            <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Quiero vender 24/7</a>
+                            <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Hablar con un asesor</a>
+                            <a href="#planes" class="btn btn-link text-decoration-none">Ver planes disponibles</a>
+                        </div>
                     </div>
                 </div>
-            </article>
-            <article class="col-lg-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-credit-card text-success me-2"></i>Pagos en línea</h3>
-                        <p class="mb-2">Recibe pagos en línea integrados para cerrar más rápido y sin fricción.</p>
-                        <ul class="small mb-0 ps-3 d-grid gap-1">
-                            <li>Reduce abandono al momento de pagar.</li>
-                            <li>Automatiza la confirmación de compra.</li>
-                            <li>Mejora la experiencia de tu cliente final.</li>
-                        </ul>
-                    </div>
-                </div>
-            </article>
+            </div>
         </div>
     </div>
 </section>
@@ -347,16 +330,12 @@ $faqSchema = [
                     </div>
                 </article>
             </div>
-=======
-            </aside>
->>>>>>> parent of 956a80e (Rediseña landing pública destacando catálogo y pagos online)
         </div>
     </div>
 </section>
 
 <section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
-<<<<<<< HEAD
         <div class="text-center mb-4">
             <h2 class="h3 mb-2">Todo tu negocio en un solo sistema</h2>
             <p class="text-secondary mb-0">Deja atrás Excel y sistemas separados: en Vextra todo está conectado sin integraciones complejas.</p>
@@ -391,20 +370,6 @@ $faqSchema = [
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     <a href="<?= e(url('/caracteristicas')) ?>" class="btn btn-outline-primary btn-sm">Ver características</a>
                     <a href="<?= e(url('/preguntas-frecuentes')) ?>" class="btn btn-outline-secondary btn-sm">Revisar preguntas frecuentes</a>
-=======
-        <div class="row g-4 align-items-center">
-            <div class="col-12 col-lg-6">
-                <h2 class="h3 mb-3">Solución completa: sistema de cotización, POS y gestión de inventario</h2>
-                <p>Cuando una empresa usa herramientas separadas para cotizar, facturar y mover stock, aparecen errores de precio, ventas sin disponibilidad y retrasos de respuesta. Vextra resuelve ese problema con una plataforma unificada de gestión comercial. El vendedor cotiza con datos actuales, el área administrativa valida márgenes y el equipo operativo ejecuta con trazabilidad.</p>
-                <p class="mb-0">Este enfoque permite pasar de una operación reactiva a una gestión profesional: cada presupuesto tiene contexto, cada venta impacta inventario y cada decisión se toma con información real del negocio.</p>
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="row g-3">
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" decoding="async" fetchpriority="high" width="1000" height="630"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>POS conectado</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
-                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaLandingUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Gestión de clientes</figcaption></figure></div>
->>>>>>> parent of 956a80e (Rediseña landing pública destacando catálogo y pagos online)
                 </div>
             </div>
         </div>
@@ -518,11 +483,7 @@ $faqSchema = [
                     <article class="card h-100 border-2 <?= $esRecomendado ? 'border-primary border-3 shadow' : '' ?>" style="border-color: <?= e($plan['color_visual'] ?: '#dce3eb') ?> !important;">
                         <div class="card-body d-flex flex-column">
                             <div class="d-flex flex-wrap gap-2 mb-2">
-<<<<<<< HEAD
                                 <?php if ($esRecomendado): ?><span class="badge text-bg-primary"><?= $index === 1 ? 'MÁS VENDIDO' : 'MÁS CONVENIENTE' ?></span><?php endif; ?>
-=======
-                                <?php if ($esRecomendado): ?><span class="badge text-bg-primary">MÁS CONVENIENTE</span><?php endif; ?>
->>>>>>> parent of 956a80e (Rediseña landing pública destacando catálogo y pagos online)
                                 <?php if (!empty($plan['destacado'])): ?><span class="badge text-bg-success">DESTACADO</span><?php endif; ?>
                             </div>
                             <h3 class="h5"><?= e($plan['nombre']) ?></h3>
@@ -533,13 +494,10 @@ $faqSchema = [
                                 <?php foreach ($plan['funcionalidades'] as $funcionalidad): ?>
                                     <li><?= e($funcionalidad['descripcion'] ?: $funcionalidad['nombre']) ?></li>
                                 <?php endforeach; ?>
-<<<<<<< HEAD
                                 <?php if ($index === 1): ?>
                                     <li><strong>Catálogo online con carrito</strong></li>
                                     <li><strong>Pagos online integrados</strong></li>
                                 <?php endif; ?>
-=======
->>>>>>> parent of 956a80e (Rediseña landing pública destacando catálogo y pagos online)
                             </ul>
                             <div class="d-grid gap-2 mt-auto">
                                 <a href="<?= e(url('/registro?plan=' . (int) $plan['id'] . '&frecuencia=mensual')) ?>" class="btn btn-outline-primary btn-sm" data-home-link>Comenzar ahora</a>
