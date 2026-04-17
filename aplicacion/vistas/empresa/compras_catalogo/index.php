@@ -254,6 +254,7 @@ $frasesTenisMesa = [
 
       <div class="shipping-label-footer">
         <span class="shipping-label-motto">“<?= e($fraseEtiqueta) ?>”</span>
+        <div class="shipping-label-signature">Creado con tecnología Vextra.cl</div>
       </div>
     </div>
   </template>
@@ -381,6 +382,13 @@ $frasesTenisMesa = [
             color: #0f172a;
             font-style: italic;
             font-weight: 500;
+            display: block;
+            margin-bottom: 6px;
+          }
+          .shipping-label-signature {
+            font-size: 11px;
+            color: #64748b;
+            letter-spacing: .2px;
           }
           @media print {
             body { background: #fff; padding: 0; }
