@@ -67,7 +67,17 @@ $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/arch
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
 $productosDestacados = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['destacado_catalogo'] ?? 0) === 1));
 $productosProximos = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['proximo_catalogo'] ?? 0) === 1));
-$productosCarrusel = array_slice(array_merge($productosDestacados, $productosProximos), 0, 24);
+$productosCarruselIndexados = [];
+foreach (array_merge($productosDestacados, $productosProximos) as $productoCarruselTmp) {
+    $idCarruselTmp = (int) ($productoCarruselTmp['id'] ?? 0);
+    if ($idCarruselTmp > 0) {
+        $productosCarruselIndexados[$idCarruselTmp] = $productoCarruselTmp;
+    }
+}
+$productosCarrusel = array_values($productosCarruselIndexados);
+if ($productosCarrusel !== []) {
+    shuffle($productosCarrusel);
+}
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -103,7 +113,8 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
-  .btn-reservar{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#d97706 !important;color:#fff !important}
+  .btn-reservar{background:#16a34a !important;border-color:#15803d !important;color:#fff !important}
+  .btn-reservar:hover,.btn-reservar:focus{background:#15803d !important;border-color:#166534 !important;color:#fff !important}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
   .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff}
   .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
@@ -132,18 +143,20 @@ $renderIconoRed = static function (string $id): string {
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
   .home-carousel{padding:0 0 26px}
-  .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:14px 14px 8px;box-shadow:0 14px 30px rgba(37,45,89,.10)}
+  .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:10px 12px 6px;box-shadow:0 10px 20px rgba(37,45,89,.08)}
   .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-  .home-carousel__header h3{margin:0;color:var(--primary);font-size:32px;font-weight:800}
+  .home-carousel__header h3{margin:0;color:var(--primary);font-size:16px;font-weight:400}
   .home-carousel__controls{display:flex;gap:8px}
   .home-carousel__nav{width:36px;height:36px;border-radius:10px;border:1px solid #cbcffa;background:#fff;color:#312e81;font-weight:700}
-  .home-carousel__track{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
-  .home-carousel__item{min-width:270px;max-width:270px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
-  .home-carousel__item img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#eef2ff}
-  .home-carousel__item h4{font-size:17px;margin:0;color:var(--primary);font-weight:700;line-height:1.25}
+  .home-carousel__track{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain}
+  .home-carousel__item{flex:0 0 calc((100% - 48px) / 5);min-width:210px;max-width:240px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:10px;box-shadow:0 6px 14px rgba(30,41,59,.10);scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+  .home-carousel__item img{width:100%;height:150px;object-fit:contain;border-radius:10px;background:#fff}
+  .home-carousel__item h4{font-size:15px;margin:0;color:var(--primary);font-weight:700;line-height:1.2}
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
-  .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
+  .home-carousel__actions{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;min-width:0}
+  .home-carousel__actions > div{flex:1;min-width:0}
+  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 12px;border-radius:8px;flex-shrink:0;white-space:nowrap;max-width:104px}
+  .home-carousel__proximo-text{display:block;font-size:11px;font-weight:700;color:#15803d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;max-width:100%}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -165,16 +178,19 @@ $renderIconoRed = static function (string $id): string {
   .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
   .product-card{background:#fff;border:1px solid #d7deea;border-radius:12px;overflow:hidden;box-shadow:0 10px 20px rgba(15,23,42,.08);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
-  .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
-  .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
-  .badge-mini.sale{background:linear-gradient(135deg,#ffedd5,#fed7aa);color:#9a3412;border:1px solid #fdba74}
-  .badge-mini.destacado{left:auto;right:14px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#312e81;border:1px solid #a5b4fc}
-  .badge-mini.proximo{left:auto;right:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d}
+  .product-image{position:relative;height:220px;background:#fff;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:contain;background:#fff}
+  .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:6px;box-shadow:var(--shadow)}
+  .badge-mini.sale{background:#dc2626;color:#fff;border:1px solid #b91c1c}
+  .badge-mini.destacado{left:auto;right:14px;background:#f97316;color:#fff;border:1px solid #ea580c}
+  .badge-mini.proximo{left:auto;right:14px;background:#16a34a;color:#fff;border:1px solid #15803d}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
   .product-desc{color:var(--muted);font-size:13px;line-height:1.45;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .stock-line{font-size:13px;color:var(--muted);font-weight:600}
+  .stock-line-proximo{color:#15803d;font-weight:600}
+  .reserva-llegada-text{color:#15803d;font-weight:600}
+  .alert-reserva{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
@@ -233,7 +249,7 @@ $renderIconoRed = static function (string $id): string {
     .category-list,.feature-list{display:flex;gap:8px;overflow:auto;max-height:none;padding:4px 2px 2px;margin-top:8px}
     .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff;font-size:13px;font-weight:500}
     .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .home-carousel__header h3{font-size:24px}
+    .home-carousel__header h3{font-size:14px}
     .home-carousel__item{min-width:250px;max-width:250px}
     .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
@@ -261,6 +277,10 @@ $renderIconoRed = static function (string $id): string {
     .slide h2{font-size:27px;font-weight:600}
     .slide p{font-size:14px;font-weight:400;line-height:1.45}
     .slide-actions .btn-primary-custom{width:100%;min-width:0}
+    .home-carousel__item{flex:0 0 calc((100% - 10px) / 2);min-width:calc((100% - 10px) / 2);max-width:calc((100% - 10px) / 2)}
+    .home-carousel__item img{height:130px}
+    .home-carousel__actions{gap:6px}
+    .home-carousel__actions .btn{font-size:12px;padding:7px 10px;max-width:96px}
     .footer-content{grid-template-columns:1fr}
     .footer-bottom__content{flex-direction:column;align-items:flex-start}
     .cart-panel{width:100%}
@@ -343,7 +363,7 @@ $renderIconoRed = static function (string $id): string {
                 <div class="home-carousel__actions">
                   <div>
                     <?php if ($esProximo): ?>
-                      <span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span>
+                      <span class="home-carousel__proximo-text">Reserva · llega en <?= $diasProximo ?> día(s)</span>
                     <?php else: ?>
                       <span class="badge text-bg-primary">Destacado</span>
                     <?php endif; ?>
@@ -393,6 +413,7 @@ $renderIconoRed = static function (string $id): string {
         <div class="feature-list">
           <button type="button" id="showAllBtn">Ver todos los productos</button>
           <button type="button" id="showOffersBtn">Ver ofertas</button>
+          <button type="button" id="showIncomingBtn">Productos que pronto llegarán</button>
           <button type="button" id="showStockBtn">Solo con stock</button>
           <button type="button" id="showCheapestBtn">Más baratos primero</button>
           <button type="button" id="showExpensiveBtn">Más caros primero</button>
@@ -450,7 +471,7 @@ $renderIconoRed = static function (string $id): string {
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
                 <div class="stock-line">Stock: <?= $stock ?></div>
                 <?php if ($proximo): ?>
-                  <div class="stock-line text-warning-emphasis">Reserva · llega en <?= $proximoDias ?> día(s)</div>
+                  <div class="stock-line stock-line-proximo">Reserva · llega en <?= $proximoDias ?> día(s)</div>
                 <?php endif; ?>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
@@ -518,7 +539,7 @@ $renderIconoRed = static function (string $id): string {
           <div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div>
           <h3 class="h4 mb-2" id="detalleProductoNombre"></h3>
           <p class="text-muted mb-2" id="detalleProductoDescripcion"></p>
-          <div class="alert alert-warning py-2 px-3 mb-3 d-none" id="detalleProductoProximoAviso"></div>
+          <div class="alert alert-reserva py-2 px-3 mb-3 d-none" id="detalleProductoProximoAviso"></div>
           <div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light">
             <div>
               <div class="small text-muted">Precio</div>
@@ -569,6 +590,7 @@ $renderIconoRed = static function (string $id): string {
   let selectedCategory = 'all';
   let onlyOffers = false;
   let onlyStock = false;
+  let onlyIncoming = false;
 
   const categoryFilter = $('#categoryFilter');
   const categoryButtons = $('#categoryButtons');
@@ -632,7 +654,8 @@ $renderIconoRed = static function (string $id): string {
       }
       const matchOffers = !onlyOffers || p.onSale;
       const matchStock = !onlyStock || p.stock > 0;
-      return matchTerm && matchCategory && matchPrice && matchOffers && matchStock;
+      const matchIncoming = !onlyIncoming || p.proximo;
+      return matchTerm && matchCategory && matchPrice && matchOffers && matchStock && matchIncoming;
     });
 
     const sort = sortFilter.value;
@@ -683,7 +706,7 @@ $renderIconoRed = static function (string $id): string {
           <p>${money(item.price)} c/u ${Number(item.oldPrice || 0) > Number(item.price || 0) ? `<span class="text-decoration-line-through text-muted">${money(item.oldPrice)}</span>` : ''}</p>
           <div class="cart-item__desc">
             ${resumenTexto(item.description || 'Producto seleccionado')}
-            ${Number(item.proximo ? 1 : 0) === 1 ? `<div class="text-warning-emphasis mt-1">Llegada estimada: ${Math.max(0, Number(item.proximoDias || 0))} día(s).</div>` : ''}
+            ${Number(item.proximo ? 1 : 0) === 1 ? `<div class="reserva-llegada-text mt-1">Llegada estimada: ${Math.max(0, Number(item.proximoDias || 0))} día(s).</div>` : ''}
           </div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
@@ -705,7 +728,6 @@ $renderIconoRed = static function (string $id): string {
   const addToCart = (id) => {
     const product = productsById.get(id) || null;
     if (!product) return;
-    if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
     else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1, proximo: product.proximo, proximoDias: product.proximoDias });
@@ -728,13 +750,21 @@ $renderIconoRed = static function (string $id): string {
     if (!carrusel) return;
     const prevBtn = $('#homeCarouselPrev');
     const nextBtn = $('#homeCarouselNext');
-    const mover = (delta) => carrusel.scrollBy({ left: delta, behavior: 'smooth' });
-    prevBtn && prevBtn.addEventListener('click', () => mover(-280));
-    nextBtn && nextBtn.addEventListener('click', () => mover(280));
+    const calcularPaso = () => {
+      const primerItem = carrusel.querySelector('.home-carousel__item');
+      if (!primerItem) return 280;
+      const estilosCarrusel = window.getComputedStyle(carrusel);
+      const gap = Number.parseFloat(estilosCarrusel.columnGap || estilosCarrusel.gap || '0') || 0;
+      return Math.max(220, ((primerItem.getBoundingClientRect().width + gap) * 2));
+    };
+    const mover = (direccion = 1) => carrusel.scrollBy({ left: calcularPaso() * direccion, behavior: 'smooth' });
+    prevBtn && prevBtn.addEventListener('click', () => mover(-1));
+    nextBtn && nextBtn.addEventListener('click', () => mover(1));
     window.setInterval(() => {
       const max = carrusel.scrollWidth - carrusel.clientWidth;
       if (max <= 0) return;
-      const siguiente = carrusel.scrollLeft + 260 >= max ? 0 : carrusel.scrollLeft + 260;
+      const paso = calcularPaso();
+      const siguiente = carrusel.scrollLeft + paso >= max ? 0 : carrusel.scrollLeft + paso;
       carrusel.scrollTo({ left: siguiente, behavior: 'smooth' });
     }, 3200);
   };
@@ -807,9 +837,7 @@ $renderIconoRed = static function (string $id): string {
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
-    if (!productoSeleccionado.proximo) {
-      addToCart(Number(productoSeleccionado.id));
-    }
+    addToCart(Number(productoSeleccionado.id));
     const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
@@ -835,14 +863,15 @@ $renderIconoRed = static function (string $id): string {
     }
   });
 
-  $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; applyFilters(); });
-  $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; applyFilters(); });
-  $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; applyFilters(); });
-  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; applyFilters(); });
-  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; applyFilters(); });
-  const featuredTop = $('#showFeaturedBtnTop'); if (featuredTop) featuredTop.addEventListener('click', (e) => { e.preventDefault(); sortFilter.value = 'featured'; onlyOffers = false; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
-  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', (e) => { e.preventDefault(); onlyOffers = true; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
-  const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; applyFilters(); });
+  $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  $('#showIncomingBtn').addEventListener('click', () => { onlyIncoming = true; onlyOffers = false; onlyStock = false; applyFilters(); });
+  $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; onlyIncoming = false; applyFilters(); });
+  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  const featuredTop = $('#showFeaturedBtnTop'); if (featuredTop) featuredTop.addEventListener('click', (e) => { e.preventDefault(); sortFilter.value = 'featured'; onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
+  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', (e) => { e.preventDefault(); onlyOffers = true; onlyStock = false; onlyIncoming = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
+  const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; onlyOffers = false; onlyIncoming = false; applyFilters(); });
 
   searchInput.addEventListener('input', applyFilters);
   globalSearch.addEventListener('input', applyFilters);
@@ -850,7 +879,7 @@ $renderIconoRed = static function (string $id): string {
   priceFilter.addEventListener('change', applyFilters);
   sortFilter.addEventListener('change', applyFilters);
   $('#clearFilters').addEventListener('click', () => {
-    searchInput.value = ''; globalSearch.value = ''; selectedCategory = 'all'; onlyOffers = false; onlyStock = false;
+    searchInput.value = ''; globalSearch.value = ''; selectedCategory = 'all'; onlyOffers = false; onlyStock = false; onlyIncoming = false;
     categoryFilter.value = 'all'; priceFilter.value = 'all'; sortFilter.value = 'featured'; renderCategories(); applyFilters();
   });
 
