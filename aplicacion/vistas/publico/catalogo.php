@@ -65,6 +65,9 @@ $socialesTopbar = [
 $socialesTopbar = array_values(array_filter($socialesTopbar, static fn(array $red): bool => $red['url'] !== ''));
 $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/archivo?ruta=' . rawurlencode('/img/placeholder-producto.svg')));
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
+$productosDestacados = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['destacado_catalogo'] ?? 0) === 1));
+$productosProximos = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['proximo_catalogo'] ?? 0) === 1));
+$productosCarrusel = array_slice(array_merge($productosDestacados, $productosProximos), 0, 24);
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -100,6 +103,7 @@ $renderIconoRed = static function (string $id): string {
   .menu-link:hover{color:var(--accent)}
   .btn-outline,.btn-primary-custom,.btn-soft,.btn-danger-soft{padding:9px 13px;border-radius:10px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--text)}
   .btn-primary-custom{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn-reservar{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#d97706 !important;color:#fff !important}
   .catalogo-navbar .btn-primary-custom,.catalogo-navbar .btn-primary-custom span,.catalogo-navbar .btn-primary-custom svg{color:#fff !important;fill:#fff !important;stroke:#fff !important;text-decoration:none !important}
   .catalogo-mobile-toggle{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:42px;border-radius:12px;border:1px solid var(--primary);background:var(--primary);color:#fff}
   .catalogo-mobile-toggle span{display:block;width:18px;height:2px;background:currentColor;border-radius:999px;transition:all .2s ease}
@@ -127,6 +131,19 @@ $renderIconoRed = static function (string $id): string {
   .slide p{color:rgba(255,255,255,.92);margin-bottom:20px;max-width:520px;font-size:18px;font-weight:500;line-height:1.5}
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
+  .home-carousel{padding:0 0 26px}
+  .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:14px 14px 8px;box-shadow:0 14px 30px rgba(37,45,89,.10)}
+  .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .home-carousel__header h3{margin:0;color:var(--primary);font-size:32px;font-weight:800}
+  .home-carousel__controls{display:flex;gap:8px}
+  .home-carousel__nav{width:36px;height:36px;border-radius:10px;border:1px solid #cbcffa;background:#fff;color:#312e81;font-weight:700}
+  .home-carousel__track{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
+  .home-carousel__item{min-width:270px;max-width:270px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
+  .home-carousel__item img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#eef2ff}
+  .home-carousel__item h4{font-size:17px;margin:0;color:var(--primary);font-weight:700;line-height:1.25}
+  .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
+  .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -146,12 +163,13 @@ $renderIconoRed = static function (string $id): string {
   .section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
   .section-head p{color:var(--muted)}
   .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
-  .product-card{background:#fff;border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
+  .product-card{background:#fff;border:1px solid #d7deea;border-radius:12px;overflow:hidden;box-shadow:0 10px 20px rgba(15,23,42,.08);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
-  .badge-mini.sale{background:#fff7ed;color:#ea580c}
-  .badge-mini.destacado{left:auto;right:14px;background:#eef2ff;color:#3730a3}
+  .badge-mini.sale{background:linear-gradient(135deg,#ffedd5,#fed7aa);color:#9a3412;border:1px solid #fdba74}
+  .badge-mini.destacado{left:auto;right:14px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#312e81;border:1px solid #a5b4fc}
+  .badge-mini.proximo{left:auto;right:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
@@ -160,6 +178,7 @@ $renderIconoRed = static function (string $id): string {
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
+  .card-actions .btn-warning{font-size:13px;font-weight:700;padding:8px 12px;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;color:#fff}
   .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
   .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
   .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;border:none}
@@ -214,6 +233,8 @@ $renderIconoRed = static function (string $id): string {
     .category-list,.feature-list{display:flex;gap:8px;overflow:auto;max-height:none;padding:4px 2px 2px;margin-top:8px}
     .category-list button,.feature-list button{border:1px solid var(--border);border-radius:999px;padding:8px 12px;white-space:nowrap;min-width:max-content;background:#fff;font-size:13px;font-weight:500}
     .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .home-carousel__header h3{font-size:24px}
+    .home-carousel__item{min-width:250px;max-width:250px}
     .footer-content{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
   @media (max-width:720px){
@@ -289,6 +310,70 @@ $renderIconoRed = static function (string $id): string {
     </div>
   </section>
 
+  <?php if (!empty($productosCarrusel)): ?>
+    <section class="home-carousel">
+      <div class="catalogo-container">
+        <div class="home-carousel__shell">
+          <div class="home-carousel__header">
+            <h3>Destacados y próximos en llegar</h3>
+            <div class="d-flex align-items-center gap-2">
+              <small class="text-muted">Se desplaza automáticamente</small>
+              <div class="home-carousel__controls">
+                <button type="button" class="home-carousel__nav" id="homeCarouselPrev" aria-label="Anterior">‹</button>
+                <button type="button" class="home-carousel__nav" id="homeCarouselNext" aria-label="Siguiente">›</button>
+              </div>
+            </div>
+          </div>
+          <div class="home-carousel__track" id="homeProductosCarrusel">
+            <?php foreach ($productosCarrusel as $producto): ?>
+              <?php
+                $imagenProductoUrl = url('/catalogo/' . (int) $empresa['id'] . '/producto/' . (int) $producto['id'] . '/imagen');
+                $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
+                $categoriaProducto = (string) ($producto['categoria'] ?? 'Sin categoría');
+                $esProximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
+                $diasProximo = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
+                $precioProducto = (float) ($producto['precio'] ?? 0);
+                $precioOfertaProducto = (float) ($producto['precio_oferta'] ?? 0);
+                $precioMostrar = ($precioOfertaProducto > 0 && $precioOfertaProducto < $precioProducto) ? $precioOfertaProducto : $precioProducto;
+              ?>
+              <article class="home-carousel__item">
+                <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy" onerror="this.onerror=null;this.src='<?= e(url('/img/placeholder-producto.svg')) ?>';">
+                <h4><?= e($nombreProducto) ?></h4>
+                <p class="home-carousel__meta"><?= e($categoriaProducto) ?></p>
+                <div class="home-carousel__actions">
+                  <div>
+                    <?php if ($esProximo): ?>
+                      <span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span>
+                    <?php else: ?>
+                      <span class="badge text-bg-primary">Destacado</span>
+                    <?php endif; ?>
+                    <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
+                  </div>
+                  <?php if ($esProximo): ?>
+                    <button
+                      type="button"
+                      class="btn btn-primary-custom btn-reservar"
+                      data-add-cart
+                      data-id="<?= (int) $producto['id'] ?>"
+                      data-name="<?= e($nombreProducto) ?>"
+                      data-price="<?= $precioMostrar ?>"
+                      data-description="<?= e((string) ($producto['descripcion'] ?? '')) ?>"
+                      data-image="<?= e($imagenProductoUrl) ?>"
+                      data-proximo="1"
+                      data-proximo-dias="<?= $diasProximo ?>"
+                    >Reservar</button>
+                  <?php else: ?>
+                    <button type="button" class="btn btn-primary-custom" data-carousel-open data-id="<?= (int) $producto['id'] ?>">Lo quiero</button>
+                  <?php endif; ?>
+                </div>
+              </article>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+
   <section class="filters-section" id="catalogoProductos">
     <div class="catalogo-container filters-wrap">
       <div class="field"><label for="searchInput">Buscar producto</label><input type="text" id="searchInput" placeholder="Ej: audífonos, reloj, mochila..."></div>
@@ -333,12 +418,14 @@ $renderIconoRed = static function (string $id): string {
               $descripcionProducto = (string) ($producto['descripcion'] ?? 'Sin descripción');
               $stock = (int) ($producto['stock_actual'] ?? rand(3, 40));
               $destacado = (int) ($producto['destacado_catalogo'] ?? 0) === 1;
+              $proximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
+              $proximoDias = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
               $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
               $onSale = $precioOferta > 0 && $precioOferta < $precio;
               $precioMostrar = $onSale ? $precioOferta : $precio;
               $oldPrice = $onSale ? $precio : 0;
             ?>
-            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>">
+            <article class="product-card" data-producto-card data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>" data-category="<?= e($categoria) ?>" data-description="<?= e($descripcionProducto) ?>" data-image="<?= e($imagenProductoUrl) ?>" data-stock="<?= $stock ?>" data-onsale="<?= $onSale ? '1' : '0' ?>" data-oldprice="<?= $oldPrice ?>" data-image-fallback="<?= e($imagenProductoFallback !== '' ? $imagenProductoFallback : $placeholderProductoUrl) ?>" data-proximo="<?= $proximo ? '1' : '0' ?>" data-proximo-dias="<?= $proximoDias ?>">
               <div class="product-image">
                 <img
                   src="<?= e($imagenProductoUrl) ?>"
@@ -353,15 +440,25 @@ $renderIconoRed = static function (string $id): string {
                 <?php if ($destacado): ?>
                   <span class="badge-mini destacado">Destacado</span>
                 <?php endif; ?>
+                <?php if ($proximo): ?>
+                  <span class="badge-mini proximo">Próximamente</span>
+                <?php endif; ?>
               </div>
               <div class="product-body">
                 <span class="category-tag"><?= e($categoria) ?></span>
                 <h3 class="product-title"><?= e($nombreProducto) ?></h3>
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
                 <div class="stock-line">Stock: <?= $stock ?></div>
+                <?php if ($proximo): ?>
+                  <div class="stock-line text-warning-emphasis">Reserva · llega en <?= $proximoDias ?> día(s)</div>
+                <?php endif; ?>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
-                  <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">¡Lo quiero!</button>
+                  <?php if ($proximo): ?>
+                    <button class="btn-primary-custom btn-reservar" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
+                  <?php else: ?>
+                    <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Comprar</button>
+                  <?php endif; ?>
                   <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>
@@ -407,7 +504,26 @@ $renderIconoRed = static function (string $id): string {
 <div class="modal fade" id="modalProductoDetalle" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 shadow">
     <div class="modal-header border-0 pb-0"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
-    <div class="modal-body pt-1"><div class="row g-3 g-lg-4 align-items-start"><div class="col-lg-6"><img id="detalleProductoImagen" src="" alt="Producto" class="w-100 rounded-3" style="max-height:360px;object-fit:cover;background:#f8fafc"></div><div class="col-lg-6"><div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div><h3 class="h4 mb-2" id="detalleProductoNombre"></h3><p class="text-muted mb-3" id="detalleProductoDescripcion"></p><div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light"><div><div class="small text-muted">Precio</div><div class="h4 mb-0" id="detalleProductoPrecio"></div></div><button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Comprar</button></div></div></div></div>
+    <div class="modal-body pt-1">
+      <div class="row g-3 g-lg-4 align-items-start">
+        <div class="col-lg-6">
+          <img id="detalleProductoImagen" src="" alt="Producto" class="w-100 rounded-3" style="max-height:360px;object-fit:cover;background:#f8fafc">
+        </div>
+        <div class="col-lg-6">
+          <div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div>
+          <h3 class="h4 mb-2" id="detalleProductoNombre"></h3>
+          <p class="text-muted mb-2" id="detalleProductoDescripcion"></p>
+          <div class="alert alert-warning py-2 px-3 mb-3 d-none" id="detalleProductoProximoAviso"></div>
+          <div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light">
+            <div>
+              <div class="small text-muted">Precio</div>
+              <div class="h4 mb-0" id="detalleProductoPrecio"></div>
+            </div>
+            <button type="button" class="btn btn-primary px-4" id="detalleAgregarCarrito">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div></div>
 </div>
 
@@ -435,6 +551,8 @@ $renderIconoRed = static function (string $id): string {
     onSale: String(card.dataset.onsale || '0') === '1',
     featured: String(card.dataset.onsale || '0') !== '1',
     oldPrice: Number(card.dataset.oldprice || 0),
+    proximo: String(card.dataset.proximo || '0') === '1',
+    proximoDias: Number(card.dataset.proximoDias || 0),
     el: card,
   }));
 
@@ -473,6 +591,8 @@ $renderIconoRed = static function (string $id): string {
   const detalleCategoria = $('#detalleProductoCategoria');
   const detallePrecio = $('#detalleProductoPrecio');
   const detalleImagen = $('#detalleProductoImagen');
+  const detalleProximoAviso = $('#detalleProductoProximoAviso');
+  const detalleAgregarCarrito = $('#detalleAgregarCarrito');
   let productoSeleccionado = null;
 
   const categories = ['all', ...new Set(products.map((p) => p.category))];
@@ -555,7 +675,10 @@ $renderIconoRed = static function (string $id): string {
         <div>
           <h4>${item.name}</h4>
           <p>${money(item.price)} c/u ${Number(item.oldPrice || 0) > Number(item.price || 0) ? `<span class="text-decoration-line-through text-muted">${money(item.oldPrice)}</span>` : ''}</p>
-          <div class="cart-item__desc">${resumenTexto(item.description || 'Producto seleccionado')}</div>
+          <div class="cart-item__desc">
+            ${resumenTexto(item.description || 'Producto seleccionado')}
+            ${Number(item.proximo ? 1 : 0) === 1 ? `<div class="text-warning-emphasis mt-1">Llegada estimada: ${Math.max(0, Number(item.proximoDias || 0))} día(s).</div>` : ''}
+          </div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
             <span>${item.quantity}</span>
@@ -573,12 +696,25 @@ $renderIconoRed = static function (string $id): string {
   const openCart = () => { cartPanel.classList.add('open'); overlay.classList.add('show'); };
   const closeCart = () => { cartPanel.classList.remove('open'); overlay.classList.remove('show'); };
 
-  const addToCart = (id) => {
-    const product = products.find((p) => p.id === id);
+  const addToCart = (id, fallback = null) => {
+    const product = products.find((p) => p.id === id) || (fallback && Number(fallback.id || 0) > 0 ? {
+      id: Number(fallback.id || 0),
+      name: String(fallback.name || 'Producto'),
+      price: Number(fallback.price || 0),
+      description: String(fallback.description || ''),
+      image: String(fallback.image || '<?= e(url('/img/placeholder-producto.svg')) ?>'),
+      stock: 0,
+      onSale: false,
+      featured: false,
+      oldPrice: 0,
+      proximo: String(fallback.proximo || '0') === '1',
+      proximoDias: Number(fallback.proximoDias || 0),
+      el: null,
+    } : null);
     if (!product) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
-    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1 });
+    else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1, proximo: product.proximo, proximoDias: product.proximoDias });
     renderCart();
     openCart();
   };
@@ -593,24 +729,67 @@ $renderIconoRed = static function (string $id): string {
       slides[idx].classList.add('active');
     }, 9000);
   };
+  const initHomeCarrusel = () => {
+    const carrusel = $('#homeProductosCarrusel');
+    if (!carrusel) return;
+    const prevBtn = $('#homeCarouselPrev');
+    const nextBtn = $('#homeCarouselNext');
+    const mover = (delta) => carrusel.scrollBy({ left: delta, behavior: 'smooth' });
+    prevBtn && prevBtn.addEventListener('click', () => mover(-280));
+    nextBtn && nextBtn.addEventListener('click', () => mover(280));
+    window.setInterval(() => {
+      const max = carrusel.scrollWidth - carrusel.clientWidth;
+      if (max <= 0) return;
+      const siguiente = carrusel.scrollLeft + 260 >= max ? 0 : carrusel.scrollLeft + 260;
+      carrusel.scrollTo({ left: siguiente, behavior: 'smooth' });
+    }, 3200);
+  };
+
+  const openDetailById = (productId) => {
+    productoSeleccionado = products.find((p) => p.id === Number(productId || 0)) || null;
+    const modalProductoDetalle = getModalProductoDetalle();
+    if (!productoSeleccionado || !modalProductoDetalle) return;
+    detalleNombre.textContent = productoSeleccionado.name;
+    detalleDescripcion.textContent = productoSeleccionado.description;
+    detalleCategoria.textContent = productoSeleccionado.category;
+    detallePrecio.textContent = money(productoSeleccionado.price);
+    detalleImagen.src = productoSeleccionado.image;
+    detalleImagen.alt = productoSeleccionado.name;
+      if (productoSeleccionado.proximo) {
+        if (detalleProximoAviso) {
+          const dias = Math.max(0, Number(productoSeleccionado.proximoDias || 0));
+          detalleProximoAviso.textContent = `Este producto llegará en ${dias} día(s). Puedes reservarlo ahora.`;
+          detalleProximoAviso.classList.remove('d-none');
+        }
+      if (detalleAgregarCarrito) {
+        detalleAgregarCarrito.textContent = 'Reservar';
+        detalleAgregarCarrito.classList.remove('btn-primary');
+        detalleAgregarCarrito.classList.add('btn-reservar');
+      }
+    } else {
+      if (detalleProximoAviso) detalleProximoAviso.classList.add('d-none');
+      if (detalleAgregarCarrito) {
+        detalleAgregarCarrito.textContent = 'Comprar';
+        detalleAgregarCarrito.classList.remove('btn-reservar');
+        detalleAgregarCarrito.classList.add('btn-primary');
+      }
+    }
+    modalProductoDetalle.show();
+  };
 
   $$('.product-card').forEach((card) => {
-    const addBtn = $('[data-add-cart]', card);
     const viewBtn = $('[data-view-product]', card);
-    addBtn && addBtn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(Number(card.dataset.id || 0)); });
-    const openDetail = () => {
-      productoSeleccionado = products.find((p) => p.id === Number(card.dataset.id || 0)) || null;
-      const modalProductoDetalle = getModalProductoDetalle();
-      if (!productoSeleccionado || !modalProductoDetalle) return;
-      detalleNombre.textContent = productoSeleccionado.name;
-      detalleDescripcion.textContent = productoSeleccionado.description;
-      detalleCategoria.textContent = productoSeleccionado.category;
-      detallePrecio.textContent = money(productoSeleccionado.price);
-      detalleImagen.src = productoSeleccionado.image;
-      detalleImagen.alt = productoSeleccionado.name;
-      modalProductoDetalle.show();
-    };
-    viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetail(); });
+    viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetailById(card.dataset.id); });
+  });
+  $$('[data-carousel-open]').forEach((btn) => {
+    btn.addEventListener('click', () => openDetailById(btn.dataset.id));
+  });
+  document.addEventListener('click', (e) => {
+    const addBtn = e.target.closest('[data-add-cart]');
+    if (!addBtn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(Number(addBtn.dataset.id || 0), addBtn.dataset);
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
@@ -684,5 +863,6 @@ $renderIconoRed = static function (string $id): string {
   applyFilters();
   renderCart();
   initSlider();
+  initHomeCarrusel();
 })();
 </script>
