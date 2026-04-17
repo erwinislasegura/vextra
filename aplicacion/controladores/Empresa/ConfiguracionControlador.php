@@ -128,15 +128,33 @@ class ConfiguracionControlador extends Controlador
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             validar_csrf();
-
-            if (!$incluyeDominioCatalogo) {
-                flash('warning', 'Tu plan actual no incluye dominio personalizado para catálogo.');
-                $this->redirigir('/app/configuracion/dominio-catalogo');
-            }
+            $accion = trim((string) ($_POST['accion'] ?? 'guardar'));
 
             $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
             if ($catalogoDominioNormalizado === false) {
                 flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
+                $this->redirigir('/app/configuracion/dominio-catalogo');
+            }
+
+            if ($accion === 'verificar_dns') {
+                if ($catalogoDominioNormalizado === '') {
+                    flash('danger', 'Ingresa un dominio para verificar DNS.');
+                    $this->redirigir('/app/configuracion/dominio-catalogo');
+                }
+
+                $diagnostico = $this->diagnosticarDominioCatalogo($catalogoDominioNormalizado);
+                if ((bool) ($diagnostico['coincide'] ?? false)) {
+                    flash('success', 'DNS verificado correctamente: el dominio apunta al servidor de Vextra.');
+                } else {
+                    $ipsDominioTxt = implode(', ', $diagnostico['ips_dominio'] ?? []) ?: 'sin A';
+                    $ipsEsperadasTxt = implode(', ', $diagnostico['ips_esperadas'] ?? []) ?: 'sin IP esperada';
+                    flash('warning', 'DNS aún no coincide. Dominio: ' . $ipsDominioTxt . ' | Esperado: ' . $ipsEsperadasTxt . '.');
+                }
+                $this->redirigir('/app/configuracion/dominio-catalogo');
+            }
+
+            if (!$incluyeDominioCatalogo) {
+                flash('warning', 'Tu plan actual no incluye dominio personalizado para catálogo.');
                 $this->redirigir('/app/configuracion/dominio-catalogo');
             }
 
@@ -156,7 +174,73 @@ class ConfiguracionControlador extends Controlador
 
         $catalogoDominio = trim((string) ($empresa['catalogo_dominio'] ?? ''));
         $documentRootActual = trim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
-        $this->vista('empresa/configuracion/dominio_catalogo', compact('empresa', 'catalogoDominio', 'incluyeDominioCatalogo', 'documentRootActual'), 'empresa');
+        $diagnosticoDns = $catalogoDominio !== '' ? $this->diagnosticarDominioCatalogo($catalogoDominio) : null;
+        $this->vista('empresa/configuracion/dominio_catalogo', compact('empresa', 'catalogoDominio', 'incluyeDominioCatalogo', 'documentRootActual', 'diagnosticoDns'), 'empresa');
+    }
+
+    private function diagnosticarDominioCatalogo(string $dominio): array
+    {
+        $ipsDominio = $this->resolverIpsDominio($dominio);
+        $ipsEsperadas = $this->resolverIpsEsperadasServidor();
+
+        return [
+            'dominio' => $dominio,
+            'ips_dominio' => $ipsDominio,
+            'ips_esperadas' => $ipsEsperadas,
+            'coincide' => $ipsDominio !== [] && $ipsEsperadas !== [] && array_intersect($ipsDominio, $ipsEsperadas) !== [],
+        ];
+    }
+
+    private function resolverIpsDominio(string $dominio): array
+    {
+        $registros = @dns_get_record($dominio, DNS_A);
+        if (!is_array($registros)) {
+            return [];
+        }
+
+        $ips = [];
+        foreach ($registros as $registro) {
+            $ip = trim((string) ($registro['ip'] ?? ''));
+            if ($ip !== '') {
+                $ips[] = $ip;
+            }
+        }
+
+        $ips = array_values(array_unique($ips));
+        sort($ips);
+        return $ips;
+    }
+
+    private function resolverIpsEsperadasServidor(): array
+    {
+        $hosts = [];
+
+        $appUrl = trim((string) ($_ENV['APP_URL'] ?? ''));
+        $hostApp = parse_url($appUrl, PHP_URL_HOST);
+        if (is_string($hostApp) && $hostApp !== '') {
+            $hosts[] = $hostApp;
+        }
+
+        $hostActual = trim((string) ($_SERVER['HTTP_HOST'] ?? ''));
+        if ($hostActual !== '') {
+            $hosts[] = explode(':', $hostActual, 2)[0];
+        }
+
+        $ips = [];
+        foreach (array_unique($hosts) as $host) {
+            foreach ($this->resolverIpsDominio($host) as $ip) {
+                $ips[] = $ip;
+            }
+        }
+
+        $serverAddr = trim((string) ($_SERVER['SERVER_ADDR'] ?? ''));
+        if ($serverAddr !== '') {
+            $ips[] = $serverAddr;
+        }
+
+        $ips = array_values(array_unique($ips));
+        sort($ips);
+        return $ips;
     }
 
     private function normalizarDominioCatalogo(string $valor): string|false

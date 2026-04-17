@@ -33,7 +33,16 @@
   </div>
 </div>
 
-<form method="POST" action="<?= e(url('/app/configuracion/dominio-catalogo')) ?>" class="card">
+<?php if (is_array($diagnosticoDns ?? null)): ?>
+  <div class="alert <?= !empty($diagnosticoDns['coincide']) ? 'alert-success' : 'alert-warning' ?> mb-3">
+    <div class="fw-semibold mb-1">Estado automático DNS</div>
+    <div class="small">Dominio: <code><?= e((string) ($diagnosticoDns['dominio'] ?? '')) ?></code></div>
+    <div class="small">IPs del dominio: <code><?= e(implode(', ', $diagnosticoDns['ips_dominio'] ?? []) ?: 'sin A') ?></code></div>
+    <div class="small">IPs esperadas servidor: <code><?= e(implode(', ', $diagnosticoDns['ips_esperadas'] ?? []) ?: 'sin IP esperada') ?></code></div>
+  </div>
+<?php endif; ?>
+
+<form method="POST" action="<?= e(url('/app/configuracion/dominio-catalogo')) ?>" class="card" id="formDominioCatalogo">
   <div class="card-header">Configuración de dominio</div>
   <div class="card-body row g-3">
     <?= csrf_campo() ?>
@@ -70,6 +79,7 @@
   </div>
 
   <div class="card-footer">
-    <button class="btn btn-primary btn-sm" <?= $incluyeDominioCatalogo ? '' : 'disabled' ?>>Guardar dominio</button>
+    <button class="btn btn-outline-secondary btn-sm" type="submit" name="accion" value="verificar_dns">Verificar DNS</button>
+    <button class="btn btn-primary btn-sm" type="submit" name="accion" value="guardar" <?= $incluyeDominioCatalogo ? '' : 'disabled' ?>>Guardar dominio</button>
   </div>
 </form>

@@ -15,6 +15,7 @@ SOURCE base_datos/actualizaciones/actualizacion_catalogo_dominio_personalizado.s
 - Validación de unicidad de dominio entre empresas.
 - Nueva funcionalidad de plan: `catalogo_dominio_personalizado`.
 - Nuevo flujo en configuración de empresa para guardar dominio.
+- Verificación DNS automática desde la vista de dominio (compara IPs del dominio contra servidor esperado).
 - Nuevas rutas de catálogo por dominio:
   - `GET /catalogo`
   - `GET /catalogo/nosotros`
