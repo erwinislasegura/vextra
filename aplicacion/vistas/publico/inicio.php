@@ -259,6 +259,51 @@ $faqSchema = [
     </div>
 </section>
 
+<section class="py-5 border-bottom bg-light-subtle">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Novedades destacadas</span>
+            <h2 class="h3 mb-2">Nuevas funciones para impulsar tus ventas online</h2>
+            <p class="text-secondary mb-0">Mantén la misma experiencia de Vextra con más alcance digital: catálogo en línea e integración con pago en línea.</p>
+        </div>
+        <div class="row g-3">
+            <article class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 bg-white shadow-sm">
+                    <div class="card-body d-flex gap-3 align-items-start">
+                        <span class="fs-4 text-primary" aria-hidden="true">✨</span>
+                        <div>
+                            <h3 class="h5 mb-1">Nuevas funciones listas para usar</h3>
+                            <p class="small mb-0">Activa mejoras comerciales sin complejidad técnica y conserva el flujo de trabajo que tu equipo ya conoce.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 bg-white shadow-sm">
+                    <div class="card-body d-flex gap-3 align-items-start">
+                        <span class="fs-4 text-success" aria-hidden="true">🛒</span>
+                        <div>
+                            <h3 class="h5 mb-1">Catálogo en línea conectado</h3>
+                            <p class="small mb-0">Publica tus productos en un catálogo online alineado con inventario y precios para vender con información siempre actualizada.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 bg-white shadow-sm">
+                    <div class="card-body d-flex gap-3 align-items-start">
+                        <span class="fs-4 text-warning" aria-hidden="true">💳</span>
+                        <div>
+                            <h3 class="h5 mb-1">Integración con pago en línea</h3>
+                            <p class="small mb-0">Ofrece cobro digital desde el mismo flujo comercial para acelerar cierres y simplificar la experiencia de compra del cliente.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
 <section class="py-5 border-bottom bg-white" id="planes">
     <div class="container">
         <div class="text-center mb-4">
