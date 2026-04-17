@@ -123,8 +123,8 @@ $faqSchema = [
             <div class="col-lg-7">
                 <span class="badge bg-primary-subtle text-primary-emphasis mb-2">Software para empresas Chile: cotización + POS + inventario</span>
                 <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
-                    <span class="badge text-bg-success fs-6 px-3 py-2">🎁 30 días de prueba gratis!!</span>
-                    <span class="small fw-semibold text-success">Empieza hoy y el primer cobro se realiza al terminar tu prueba.</span>
+                    <span class="badge text-bg-primary fs-6 px-3 py-2">30 días de prueba gratis</span>
+                    <span class="small fw-semibold text-primary">Empieza hoy y el primer cobro se realiza al terminar tu prueba.</span>
                 </div>
                 <h1 class="display-6 fw-bold mb-3">Todo en un lugar para vender más y crecer con control real</h1>
                 <p class="lead text-secondary">Vextra integra cotizaciones, punto de venta e inventario, además de catálogo en línea y pago online, para que tu empresa acelere cierres y mantenga una operación ordenada.</p>
@@ -208,7 +208,9 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-primary" aria-hidden="true">⚡</span>
+                                <span class="landing-icon text-primary" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M13.2 2 4.5 13h5.8L9.8 22 19.5 10.6h-6.1L13.2 2Z"/></svg>
+                                </span>
                                 <div>
                                     <h3 class="h5 mb-1">Ahorro de tiempo en cotizar y vender</h3>
                                     <p class="mb-0 small">Evita rehacer propuestas y reduce búsquedas manuales. Tu equipo responde con precios y stock actualizados en minutos.</p>
@@ -219,7 +221,9 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-success" aria-hidden="true">📈</span>
+                                <span class="landing-icon text-primary" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 18.5h16v2H2v-18h2v16Zm2.2-3.8 3.9-3.9 2.8 2.8 5.4-5.4 1.4 1.4-6.8 6.8-2.8-2.8-2.5 2.5-1.4-1.4Z"/></svg>
+                                </span>
                                 <div>
                                     <h3 class="h5 mb-1">Aumento de ventas con seguimiento ordenado</h3>
                                     <p class="mb-0 small">Con pipeline y trazabilidad por cliente, se priorizan oportunidades con mejor cierre y se evita perder negocios por falta de seguimiento.</p>
@@ -230,7 +234,9 @@ $faqSchema = [
                     <div class="col-12">
                         <div class="card h-100 border-0 bg-light-subtle">
                             <div class="card-body d-flex gap-3 align-items-start">
-                                <span class="fs-4 text-warning" aria-hidden="true">📦</span>
+                                <span class="landing-icon text-primary" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m12 2 9 4.5v11L12 22l-9-4.5v-11L12 2Zm0 2.2L5.5 7.4 12 10.8l6.5-3.4L12 4.2Zm7 4.7-6 3.2v7.3l6-3V8.9Zm-14 0v7.5l6 3v-7.3L5 8.9Z"/></svg>
+                                </span>
                                 <div>
                                     <h3 class="h5 mb-1">Control de stock para proteger márgenes</h3>
                                     <p class="mb-0 small">Cada venta impacta inventario en tiempo real, reduciendo sobreventa, compras urgentes y pérdidas por descoordinación operativa.</p>
@@ -270,7 +276,9 @@ $faqSchema = [
             <article class="col-12 col-md-6 col-lg-4">
                 <div class="card h-100 border-0 bg-white shadow-sm">
                     <div class="card-body d-flex gap-3 align-items-start">
-                        <span class="fs-4 text-primary" aria-hidden="true">✨</span>
+                        <span class="landing-icon text-primary" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.5 14.8 8l5.9.8-4.3 4.1 1 5.8L12 16l-5.4 2.7 1-5.8-4.3-4.1L9.2 8 12 2.5ZM4 3.5l.8 1.7L6.5 6l-1.7.8L4 8.5l-.8-1.7L1.5 6l1.7-.8L4 3.5Zm16 11 .8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8.8-1.7Z"/></svg>
+                        </span>
                         <div>
                             <h3 class="h5 mb-1">Funciones clave para vender más y gestionar mejor</h3>
                             <p class="small mb-0">Unifica cotizaciones profesionales, ventas en caja, inventario en tiempo real y seguimiento comercial para aumentar cierres y reducir errores operativos.</p>
@@ -281,7 +289,9 @@ $faqSchema = [
             <article class="col-12 col-md-6 col-lg-4">
                 <div class="card h-100 border-0 bg-white shadow-sm">
                     <div class="card-body d-flex gap-3 align-items-start">
-                        <span class="fs-4 text-success" aria-hidden="true">🛒</span>
+                        <span class="landing-icon text-primary" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M7 4h14v2H8.3l-1.1 5h11.7l-1.2 6H8.1L6.3 8H3V6h1.7L5 4.5C5.2 3.6 6 3 7 3v1Zm2.2 15a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6Zm7.6 0a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6Z"/></svg>
+                        </span>
                         <div>
                             <h3 class="h5 mb-1">Catálogo en línea conectado a tu inventario</h3>
                             <p class="small mb-0">Publica productos con precio y stock actualizado automáticamente para atraer más pedidos y mejorar la experiencia de compra de tus clientes.</p>
@@ -292,7 +302,9 @@ $faqSchema = [
             <article class="col-12 col-md-6 col-lg-4">
                 <div class="card h-100 border-0 bg-white shadow-sm">
                     <div class="card-body d-flex gap-3 align-items-start">
-                        <span class="fs-4 text-warning" aria-hidden="true">💳</span>
+                        <span class="landing-icon text-primary" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v2h18V7H3Zm0 5v5h18v-5H3Zm3 2h5v2H6v-2Z"/></svg>
+                        </span>
                         <div>
                             <h3 class="h5 mb-1">Pago en línea integrado para cerrar más rápido</h3>
                             <p class="small mb-0">Reduce fricción al cobrar con pago online desde el mismo proceso comercial y convierte más cotizaciones en ventas confirmadas.</p>
@@ -354,41 +366,59 @@ $faqSchema = [
 <section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="text-center mb-4">
-            <h2 class="h3 mb-2">Casos de uso por tipo de empresa</h2>
-            <p class="text-secondary mb-1">Cada negocio tiene desafíos distintos. Esta línea de tiempo muestra cómo Vextra acompaña tu crecimiento con foco en resultados reales.</p>
-            <p class="small text-secondary mb-0">Elige el plan que mejor calce con tu etapa y transforma tu operación comercial en una experiencia profesional para tus clientes.</p>
+            <h2 class="h3 mb-2">Flujo de implementación corporativo por etapas</h2>
+            <p class="text-secondary mb-1">Diseñamos un proceso claro para que tu equipo adopte Vextra sin frenar la operación diaria.</p>
+            <p class="small text-secondary mb-0">Cada etapa agrega control comercial, orden operativo y visibilidad ejecutiva para tomar decisiones con datos reales.</p>
         </div>
-        <div class="landing-timeline" aria-label="Línea de tiempo de casos de uso empresariales">
+        <div class="landing-timeline landing-timeline--5" aria-label="Flujo de implementación de Vextra">
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true">🚚</span>
+                <span class="landing-timeline__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 3.3a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Zm-1.2 5v8h2.4v-8h-2.4Z"/></svg>
+                </span>
                 <div class="landing-timeline__card">
-                    <span class="landing-timeline__step">Paso 1</span>
-                    <h3 class="h6 mb-1">Distribuidoras</h3>
-                    <p class="small mb-0">Cotizan por volumen, controlan stock por rotación y despachan con mejor promesa comercial.</p>
+                    <span class="landing-timeline__step">Etapa 1</span>
+                    <h3 class="h6 mb-1">Diagnóstico comercial</h3>
+                    <p class="small mb-0">Levantamos flujo de cotización, venta e inventario para detectar brechas de control y oportunidades de mejora.</p>
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true">🏬</span>
+                <span class="landing-timeline__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 4h16v3H4V4Zm0 5h16v11H4V9Zm3 2v7h2v-7H7Zm4 0v7h2v-7h-2Zm4 0v7h2v-7h-2Z"/></svg>
+                </span>
                 <div class="landing-timeline__card">
-                    <span class="landing-timeline__step">Paso 2</span>
-                    <h3 class="h6 mb-1">Retail especializado</h3>
-                    <p class="small mb-0">Unifican POS, catálogo y reposición para vender más sin romper experiencia de cliente.</p>
+                    <span class="landing-timeline__step">Etapa 2</span>
+                    <h3 class="h6 mb-1">Configuración funcional</h3>
+                    <p class="small mb-0">Ajustamos módulos, perfiles y reglas de operación para que cada área trabaje con un estándar común.</p>
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true">🛠️</span>
+                <span class="landing-timeline__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="m2 7 4 4 3-3-4-4-3 3Zm7.9 1.2 8.9 8.9-2.1 2.1-8.9-8.9 2.1-2.1ZM14 4h6v6h-2V7.4l-4.3 4.3-1.4-1.4L16.6 6H14V4Z"/></svg>
+                </span>
                 <div class="landing-timeline__card">
-                    <span class="landing-timeline__step">Paso 3</span>
-                    <h3 class="h6 mb-1">Servicios técnicos</h3>
-                    <p class="small mb-0">Generan presupuestos con trazabilidad y convierten propuestas en órdenes de trabajo y venta.</p>
+                    <span class="landing-timeline__step">Etapa 3</span>
+                    <h3 class="h6 mb-1">Habilitación del equipo</h3>
+                    <p class="small mb-0">Capacitamos a ventas, administración y operaciones para asegurar adopción y calidad en la ejecución diaria.</p>
                 </div>
             </article>
             <article class="landing-timeline__item">
-                <span class="landing-timeline__icon" aria-hidden="true">📈</span>
+                <span class="landing-timeline__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M4 19h16v2H2V3h2v16Zm2.4-4.7 4.2-4.2 2.8 2.8 4.7-4.7 1.4 1.4-6.1 6.1-2.8-2.8-2.8 2.8-1.4-1.4Z"/></svg>
+                </span>
                 <div class="landing-timeline__card">
-                    <span class="landing-timeline__step">Paso 4</span>
-                    <h3 class="h6 mb-1">Pymes en expansión</h3>
-                    <p class="small mb-0">Ordenan su administración comercial con datos en tiempo real y menos dependencia de Excel.</p>
+                    <span class="landing-timeline__step">Etapa 4</span>
+                    <h3 class="h6 mb-1">Salida en vivo</h3>
+                    <p class="small mb-0">Activamos el flujo completo para cotizar, vender y controlar stock con trazabilidad en tiempo real.</p>
+                </div>
+            </article>
+            <article class="landing-timeline__item">
+                <span class="landing-timeline__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2 1 7l11 5 9-4.1V15h2V7L12 2Zm-7.5 9 7.5 3.4 7.5-3.4V16L12 19.4 4.5 16V11Z"/></svg>
+                </span>
+                <div class="landing-timeline__card">
+                    <span class="landing-timeline__step">Etapa 5</span>
+                    <h3 class="h6 mb-1">Optimización continua</h3>
+                    <p class="small mb-0">Medimos indicadores comerciales y operativos para escalar resultados con una gestión más profesional.</p>
                 </div>
             </article>
         </div>
