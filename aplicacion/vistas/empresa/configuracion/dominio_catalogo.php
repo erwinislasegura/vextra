@@ -9,6 +9,12 @@
   </ul>
 </div>
 
+<div class="alert alert-secondary mb-3">
+  <div class="fw-semibold mb-1">DocumentRoot recomendado para cPanel / hosting</div>
+  <div class="small mb-1">El dominio del cliente debe apuntar al mismo directorio público de Vextra.</div>
+  <code><?= e($documentRootActual !== '' ? $documentRootActual : '(no disponible en este entorno)') ?></code>
+</div>
+
 <div class="card mb-3">
   <div class="card-header d-flex align-items-center justify-content-between">
     <span>Estado de funcionalidad en tu plan</span>

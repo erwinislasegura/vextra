@@ -27,6 +27,12 @@ class PublicoControlador extends Controlador
 
     public function inicio(): void
     {
+        $empresaIdDominio = $this->resolverEmpresaIdPorDominioCatalogo();
+        if ($empresaIdDominio !== null) {
+            $this->catalogoEnLinea($empresaIdDominio);
+            return;
+        }
+
         $planes = (new Plan())->listar(true);
         $planes = $this->agregarFuncionalidadesPlanes($planes);
         $this->vistaPublica('publico/inicio', ['planes' => $planes], 'inicio');

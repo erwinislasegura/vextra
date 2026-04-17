@@ -155,7 +155,8 @@ class ConfiguracionControlador extends Controlador
         }
 
         $catalogoDominio = trim((string) ($empresa['catalogo_dominio'] ?? ''));
-        $this->vista('empresa/configuracion/dominio_catalogo', compact('empresa', 'catalogoDominio', 'incluyeDominioCatalogo'), 'empresa');
+        $documentRootActual = trim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
+        $this->vista('empresa/configuracion/dominio_catalogo', compact('empresa', 'catalogoDominio', 'incluyeDominioCatalogo', 'documentRootActual'), 'empresa');
     }
 
     private function normalizarDominioCatalogo(string $valor): string|false
