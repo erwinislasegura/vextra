@@ -152,6 +152,29 @@ $faqSchema = [
     </div>
 </section>
 
+<section class="py-5 border-bottom bg-primary text-white">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-8">
+                <span class="badge text-bg-light text-primary mb-2">NUEVAS FUNCIONES 2026</span>
+                <h2 class="h2 mb-2">Catálogo en línea + pago en línea para vender 24/7</h2>
+                <p class="mb-3 text-white-50">Esta es la nueva sección destacada solicitada: publica productos con carrito, comparte tu catálogo por WhatsApp/redes y cobra online en el momento para cerrar más ventas sin fricción.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge rounded-pill text-bg-light text-primary px-3 py-2">🛒 Catálogo en línea con carrito</span>
+                    <span class="badge rounded-pill text-bg-light text-success px-3 py-2">💳 Pago en línea integrado</span>
+                    <span class="badge rounded-pill text-bg-light text-dark px-3 py-2">🚀 Herramienta poderosa para vender 24/7</span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-grid gap-2">
+                    <a href="<?= e(url('/registro')) ?>" class="btn btn-light btn-lg text-primary fw-semibold">Activar prueba gratis</a>
+                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-light">Hablar con ventas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="py-5 border-bottom bg-light">
     <div class="container">
         <div class="text-center mb-4">
