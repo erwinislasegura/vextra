@@ -454,11 +454,16 @@ $renderIconoRed = static function (string $id): string {
                 <?php endif; ?>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
-                  <?php if ($proximo): ?>
-                    <button class="btn-primary-custom btn-reservar" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
-                  <?php else: ?>
-                    <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Comprar</button>
-                  <?php endif; ?>
+                  <button
+                    class="btn-primary-custom <?= $proximo ? 'btn-reservar' : '' ?>"
+                    type="button"
+                    data-add-cart
+                    data-id="<?= (int) $producto['id'] ?>"
+                    data-name="<?= e($nombreProducto) ?>"
+                    data-price="<?= $precioMostrar ?>"
+                  >
+                    <?= $proximo ? 'Reservar' : 'Comprar' ?>
+                  </button>
                   <button class="icon-btn" type="button" data-view-product aria-label="Ver detalle del producto">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M3 11.5C4.8 8.3 8.1 6 12 6c3.9 0 7.2 2.3 9 5.5-1.8 3.2-5.1 5.5-9 5.5-3.9 0-7.2-2.3-9-5.5z"/>
