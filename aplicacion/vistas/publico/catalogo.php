@@ -189,6 +189,8 @@ $renderIconoRed = static function (string $id): string {
   .product-desc{color:var(--muted);font-size:13px;line-height:1.45;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .stock-line{font-size:13px;color:var(--muted);font-weight:600}
   .stock-line-proximo{color:#15803d;font-weight:600}
+  .reserva-llegada-text{color:#15803d;font-weight:600}
+  .alert-reserva{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
@@ -537,7 +539,7 @@ $renderIconoRed = static function (string $id): string {
           <div class="small text-uppercase text-muted mb-2" id="detalleProductoCategoria"></div>
           <h3 class="h4 mb-2" id="detalleProductoNombre"></h3>
           <p class="text-muted mb-2" id="detalleProductoDescripcion"></p>
-          <div class="alert alert-warning py-2 px-3 mb-3 d-none" id="detalleProductoProximoAviso"></div>
+          <div class="alert alert-reserva py-2 px-3 mb-3 d-none" id="detalleProductoProximoAviso"></div>
           <div class="d-flex justify-content-between align-items-center border rounded-3 p-3 bg-light">
             <div>
               <div class="small text-muted">Precio</div>
@@ -704,7 +706,7 @@ $renderIconoRed = static function (string $id): string {
           <p>${money(item.price)} c/u ${Number(item.oldPrice || 0) > Number(item.price || 0) ? `<span class="text-decoration-line-through text-muted">${money(item.oldPrice)}</span>` : ''}</p>
           <div class="cart-item__desc">
             ${resumenTexto(item.description || 'Producto seleccionado')}
-            ${Number(item.proximo ? 1 : 0) === 1 ? `<div class="text-warning-emphasis mt-1">Llegada estimada: ${Math.max(0, Number(item.proximoDias || 0))} día(s).</div>` : ''}
+            ${Number(item.proximo ? 1 : 0) === 1 ? `<div class="reserva-llegada-text mt-1">Llegada estimada: ${Math.max(0, Number(item.proximoDias || 0))} día(s).</div>` : ''}
           </div>
           <div class="qty-controls">
             <button type="button" data-cart-minus="${item.id}">-</button>
