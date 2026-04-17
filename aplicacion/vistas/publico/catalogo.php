@@ -138,14 +138,15 @@ $renderIconoRed = static function (string $id): string {
   .home-carousel__header h3{margin:0;color:var(--primary);font-size:16px;font-weight:400}
   .home-carousel__controls{display:flex;gap:8px}
   .home-carousel__nav{width:36px;height:36px;border-radius:10px;border:1px solid #cbcffa;background:#fff;color:#312e81;font-weight:700}
-  .home-carousel__track{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
-  .home-carousel__item{flex:0 0 calc((100% - 48px) / 5);min-width:210px;max-width:240px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:10px;box-shadow:0 6px 14px rgba(30,41,59,.10);scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
+  .home-carousel__track{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain}
+  .home-carousel__item{flex:0 0 calc((100% - 48px) / 5);min-width:210px;max-width:240px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:10px;box-shadow:0 6px 14px rgba(30,41,59,.10);scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;overflow:hidden}
   .home-carousel__item img{width:100%;height:150px;object-fit:contain;border-radius:10px;background:#fff}
   .home-carousel__item h4{font-size:15px;margin:0;color:var(--primary);font-weight:700;line-height:1.2}
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
-  .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
-  .home-carousel__proximo-text{display:block;font-size:12px;font-weight:700;color:#15803d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+  .home-carousel__actions{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;min-width:0}
+  .home-carousel__actions > div{flex:1;min-width:0}
+  .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 12px;border-radius:8px;flex-shrink:0;white-space:nowrap;max-width:104px}
+  .home-carousel__proximo-text{display:block;font-size:11px;font-weight:700;color:#15803d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;max-width:100%}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -266,6 +267,8 @@ $renderIconoRed = static function (string $id): string {
     .slide-actions .btn-primary-custom{width:100%;min-width:0}
     .home-carousel__item{flex:0 0 calc((100% - 10px) / 2);min-width:calc((100% - 10px) / 2);max-width:calc((100% - 10px) / 2)}
     .home-carousel__item img{height:130px}
+    .home-carousel__actions{gap:6px}
+    .home-carousel__actions .btn{font-size:12px;padding:7px 10px;max-width:96px}
     .footer-content{grid-template-columns:1fr}
     .footer-bottom__content{flex-direction:column;align-items:flex-start}
     .cart-panel{width:100%}
