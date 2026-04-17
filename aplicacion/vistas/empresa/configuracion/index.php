@@ -1,6 +1,4 @@
 <h1 class="h4 mb-3">Configuración de empresa</h1>
-<?php $incluyeDominioCatalogo = plan_tiene_funcionalidad_empresa_actual('catalogo_dominio_personalizado'); ?>
-
 <div class="alert alert-info info-modulo mb-3">
   <div class="fw-semibold mb-1">Recomendaciones de configuración</div>
   <ul class="mb-0 small ps-3">
@@ -54,46 +52,10 @@
           <label class="form-label">País</label>
           <input name="pais" class="form-control" value="<?= e($empresa['pais'] ?? '') ?>">
         </div>
-        <div class="col-md-6" id="catalogo-dominio">
-          <label class="form-label d-flex align-items-center gap-2">
-            Dominio personalizado para catálogo
-            <?php if ($incluyeDominioCatalogo): ?>
-              <span class="badge bg-success-subtle text-success-emphasis">Incluido en tu plan</span>
-            <?php else: ?>
-              <span class="badge bg-warning-subtle text-warning-emphasis">No incluido en tu plan</span>
-            <?php endif; ?>
-          </label>
-          <input
-            name="catalogo_dominio"
-            class="form-control"
-            value="<?= e((string) ($empresa['catalogo_dominio'] ?? '')) ?>"
-            placeholder="catalogo.tuempresa.com"
-            autocomplete="off"
-            <?= $incluyeDominioCatalogo ? '' : 'readonly' ?>
-          >
-          <div class="form-text">
-            <?php if ($incluyeDominioCatalogo): ?>
-              Configura solo el host (sin <code>https://</code> ni rutas). Ejemplo: <code>catalogo.tuempresa.com</code>.
-            <?php else: ?>
-              Este campo es informativo. Para activarlo debes cambiar a un plan que incluya dominio personalizado.
-            <?php endif; ?>
-          </div>
-        </div>
         <div class="col-md-6">
           <label class="form-label">URL actual de catálogo</label>
           <input class="form-control" value="<?= e(url('/catalogo/' . (int) ($empresa['id'] ?? 0))) ?>" readonly>
           <div class="form-text">Esta URL siempre seguirá disponible como respaldo.</div>
-        </div>
-        <div class="col-12">
-          <div class="alert alert-light border mb-0">
-            <div class="fw-semibold mb-1">Cómo activar tu dominio personalizado</div>
-            <ol class="mb-0 small ps-3">
-              <li>Crea un DNS tipo <strong>A</strong> (o <strong>CNAME</strong>) del dominio/subdominio hacia este servidor.</li>
-              <li>Configura certificado <strong>SSL</strong> para ese dominio.</li>
-              <li>Guarda el host en el campo anterior (ej: <code>catalogo.tuempresa.com</code>).</li>
-              <li>Abre <code>https://tu-dominio.com/catalogo</code> para validar carga.</li>
-            </ol>
-          </div>
         </div>
         <div class="col-12">
           <hr class="my-1">

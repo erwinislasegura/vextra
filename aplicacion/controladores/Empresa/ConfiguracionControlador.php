@@ -50,26 +50,6 @@ class ConfiguracionControlador extends Controlador
             flash('danger', 'Ingresa un correo principal válido para la empresa.');
             $this->redirigir('/app/configuracion');
         }
-
-        $puedeConfigurarDominioCatalogo = plan_tiene_funcionalidad_empresa_actual('catalogo_dominio_personalizado');
-        $catalogoDominioNormalizado = trim((string) ($empresa['catalogo_dominio'] ?? ''));
-
-        if ($puedeConfigurarDominioCatalogo) {
-            $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
-            if ($catalogoDominioNormalizado === false) {
-                flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
-                $this->redirigir('/app/configuracion');
-            }
-
-            if ($catalogoDominioNormalizado !== '') {
-                $empresaConDominio = $modelo->buscarPorCatalogoDominio($catalogoDominioNormalizado);
-                if ($empresaConDominio && (int) ($empresaConDominio['id'] ?? 0) !== $empresaId) {
-                    flash('danger', 'Ese dominio ya está siendo usado por otra empresa.');
-                    $this->redirigir('/app/configuracion');
-                }
-            }
-        }
-
         $modelo->actualizarConfiguracion($empresaId, [
             'razon_social' => trim((string) ($_POST['razon_social'] ?? '')),
             'nombre_comercial' => trim((string) ($_POST['nombre_comercial'] ?? '')),
@@ -80,7 +60,6 @@ class ConfiguracionControlador extends Controlador
             'ciudad' => trim((string) ($_POST['ciudad'] ?? '')),
             'pais' => trim((string) ($_POST['pais'] ?? '')),
             'descripcion' => mb_substr(trim((string) ($_POST['descripcion'] ?? '')), 0, 280),
-            'catalogo_dominio' => $catalogoDominioNormalizado !== '' ? $catalogoDominioNormalizado : null,
             'logo' => $logoNuevo,
             'imap_host' => trim((string) ($_POST['imap_host'] ?? '')),
             'imap_port' => (int) ($_POST['imap_port'] ?? 0) ?: null,
@@ -105,164 +84,13 @@ class ConfiguracionControlador extends Controlador
             }
         }
 
-        if ($puedeConfigurarDominioCatalogo) {
-            flash('success', 'Configuración actualizada correctamente.');
-        } else {
-            flash('warning', 'Configuración actualizada. Tu plan actual no incluye dominio personalizado para catálogo.');
-        }
+        flash('success', 'Configuración actualizada correctamente.');
         $this->redirigir('/app/configuracion');
     }
-
     public function dominioCatalogo(): void
     {
-        $empresaId = empresa_actual_id();
-        $modelo = new Empresa();
-        $empresa = $modelo->obtenerConfiguracion($empresaId);
-
-        if (!$empresa) {
-            flash('danger', 'No se encontró la empresa para actualizar.');
-            $this->redirigir('/app/panel');
-        }
-
-        $incluyeDominioCatalogo = plan_tiene_funcionalidad_empresa_actual('catalogo_dominio_personalizado');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            validar_csrf();
-            $accion = trim((string) ($_POST['accion'] ?? 'guardar'));
-
-            $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
-            if ($catalogoDominioNormalizado === false) {
-                flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
-                $this->redirigir('/app/configuracion/dominio-catalogo');
-            }
-
-            if ($accion === 'verificar_dns') {
-                if ($catalogoDominioNormalizado === '') {
-                    flash('danger', 'Ingresa un dominio para verificar DNS.');
-                    $this->redirigir('/app/configuracion/dominio-catalogo');
-                }
-
-                $diagnostico = $this->diagnosticarDominioCatalogo($catalogoDominioNormalizado);
-                if ((bool) ($diagnostico['coincide'] ?? false)) {
-                    flash('success', 'DNS verificado correctamente: el dominio apunta al servidor de Vextra.');
-                } else {
-                    $ipsDominioTxt = implode(', ', $diagnostico['ips_dominio'] ?? []) ?: 'sin A';
-                    $ipsEsperadasTxt = implode(', ', $diagnostico['ips_esperadas'] ?? []) ?: 'sin IP esperada';
-                    flash('warning', 'DNS aún no coincide. Dominio: ' . $ipsDominioTxt . ' | Esperado: ' . $ipsEsperadasTxt . '.');
-                }
-                $this->redirigir('/app/configuracion/dominio-catalogo');
-            }
-
-            if (!$incluyeDominioCatalogo) {
-                flash('warning', 'Tu plan actual no incluye dominio personalizado para catálogo.');
-                $this->redirigir('/app/configuracion/dominio-catalogo');
-            }
-
-            if ($catalogoDominioNormalizado !== '') {
-                $empresaConDominio = $modelo->buscarPorCatalogoDominio($catalogoDominioNormalizado);
-                if ($empresaConDominio && (int) ($empresaConDominio['id'] ?? 0) !== $empresaId) {
-                    flash('danger', 'Ese dominio ya está siendo usado por otra empresa.');
-                    $this->redirigir('/app/configuracion/dominio-catalogo');
-                }
-            }
-
-            $modelo->actualizarCatalogoDominio($empresaId, $catalogoDominioNormalizado !== '' ? $catalogoDominioNormalizado : null);
-
-            flash('success', 'Dominio de catálogo actualizado correctamente.');
-            $this->redirigir('/app/configuracion/dominio-catalogo');
-        }
-
-        $catalogoDominio = trim((string) ($empresa['catalogo_dominio'] ?? ''));
-        $documentRootActual = trim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
-        $diagnosticoDns = $catalogoDominio !== '' ? $this->diagnosticarDominioCatalogo($catalogoDominio) : null;
-        $this->vista('empresa/configuracion/dominio_catalogo', compact('empresa', 'catalogoDominio', 'incluyeDominioCatalogo', 'documentRootActual', 'diagnosticoDns'), 'empresa');
-    }
-
-    private function diagnosticarDominioCatalogo(string $dominio): array
-    {
-        $ipsDominio = $this->resolverIpsDominio($dominio);
-        $ipsEsperadas = $this->resolverIpsEsperadasServidor();
-
-        return [
-            'dominio' => $dominio,
-            'ips_dominio' => $ipsDominio,
-            'ips_esperadas' => $ipsEsperadas,
-            'coincide' => $ipsDominio !== [] && $ipsEsperadas !== [] && array_intersect($ipsDominio, $ipsEsperadas) !== [],
-        ];
-    }
-
-    private function resolverIpsDominio(string $dominio): array
-    {
-        $registros = @dns_get_record($dominio, DNS_A);
-        if (!is_array($registros)) {
-            return [];
-        }
-
-        $ips = [];
-        foreach ($registros as $registro) {
-            $ip = trim((string) ($registro['ip'] ?? ''));
-            if ($ip !== '') {
-                $ips[] = $ip;
-            }
-        }
-
-        $ips = array_values(array_unique($ips));
-        sort($ips);
-        return $ips;
-    }
-
-    private function resolverIpsEsperadasServidor(): array
-    {
-        $hosts = [];
-
-        $appUrl = trim((string) ($_ENV['APP_URL'] ?? ''));
-        $hostApp = parse_url($appUrl, PHP_URL_HOST);
-        if (is_string($hostApp) && $hostApp !== '') {
-            $hosts[] = $hostApp;
-        }
-
-        $hostActual = trim((string) ($_SERVER['HTTP_HOST'] ?? ''));
-        if ($hostActual !== '') {
-            $hosts[] = explode(':', $hostActual, 2)[0];
-        }
-
-        $ips = [];
-        foreach (array_unique($hosts) as $host) {
-            foreach ($this->resolverIpsDominio($host) as $ip) {
-                $ips[] = $ip;
-            }
-        }
-
-        $serverAddr = trim((string) ($_SERVER['SERVER_ADDR'] ?? ''));
-        if ($serverAddr !== '') {
-            $ips[] = $serverAddr;
-        }
-
-        $ips = array_values(array_unique($ips));
-        sort($ips);
-        return $ips;
-    }
-
-    private function normalizarDominioCatalogo(string $valor): string|false
-    {
-        $dominio = trim(mb_strtolower($valor));
-        if ($dominio === '') {
-            return '';
-        }
-
-        $dominio = preg_replace('#^https?://#i', '', $dominio) ?? $dominio;
-        $dominio = strtok($dominio, '/?#') ?: $dominio;
-        $dominio = trim($dominio, '.');
-
-        if ($dominio === '' || str_contains($dominio, ' ')) {
-            return false;
-        }
-
-        if ((bool) preg_match('/^([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(\.([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?))+$/i', $dominio) !== true) {
-            return false;
-        }
-
-        return $dominio;
+        flash('warning', 'La configuración de dominio personalizado del catálogo ya no está disponible.');
+        $this->redirigir('/app/configuracion');
     }
 
     public function logoEmpresa(): void
