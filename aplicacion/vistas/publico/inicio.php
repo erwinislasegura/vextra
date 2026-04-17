@@ -126,8 +126,8 @@ $faqSchema = [
                     <span class="badge text-bg-success fs-6 px-3 py-2">🎁 30 días de prueba gratis!!</span>
                     <span class="small fw-semibold text-success">Empieza hoy y el primer cobro se realiza al terminar tu prueba.</span>
                 </div>
-                <h1 class="display-6 fw-bold mb-3">Sistema de cotizaciones y ventas con inventario para crecer con control real</h1>
-                <p class="lead text-secondary">Vextra es un software de cotización online que conecta tu gestión comercial, sistema punto de venta y sistema de inventario para que tu empresa venda más, responda rápido y opere con orden administrativo.</p>
+                <h1 class="display-6 fw-bold mb-3">Todo en un lugar para vender más y crecer con control real</h1>
+                <p class="lead text-secondary">Vextra integra cotizaciones, punto de venta e inventario, además de catálogo en línea y pago online, para que tu empresa acelere cierres y mantenga una operación ordenada.</p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
                     <a href="#planes" class="btn btn-outline-primary">Contratar plan</a>
