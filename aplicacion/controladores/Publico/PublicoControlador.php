@@ -27,6 +27,12 @@ class PublicoControlador extends Controlador
 
     public function inicio(): void
     {
+        $empresaIdDominio = $this->resolverEmpresaIdPorDominioCatalogo();
+        if ($empresaIdDominio !== null) {
+            $this->catalogoEnLinea($empresaIdDominio);
+            return;
+        }
+
         $planes = (new Plan())->listar(true);
         $planes = $this->agregarFuncionalidadesPlanes($planes);
         $this->vistaPublica('publico/inicio', ['planes' => $planes], 'inicio');
@@ -364,6 +370,54 @@ class PublicoControlador extends Controlador
         $empresa = (new Empresa())->buscar((int) ($orden['empresa_id'] ?? 0));
         $esVistaPublica = true;
         $this->vista('empresa/inventario/orden_compra_imprimir', compact('orden', 'empresa', 'esVistaPublica', 'token'), 'impresion');
+    }
+
+    public function catalogoEnLineaPorDominio(): void
+    {
+        $empresaId = $this->resolverEmpresaIdPorDominioCatalogo();
+        if ($empresaId === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $this->catalogoEnLinea($empresaId);
+    }
+
+    public function catalogoNosotrosPorDominio(): void
+    {
+        $empresaId = $this->resolverEmpresaIdPorDominioCatalogo();
+        if ($empresaId === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $this->catalogoNosotros($empresaId);
+    }
+
+    public function catalogoContactoPorDominio(): void
+    {
+        $empresaId = $this->resolverEmpresaIdPorDominioCatalogo();
+        if ($empresaId === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $this->catalogoContacto($empresaId);
+    }
+
+    public function enviarContactoCatalogoPorDominio(): void
+    {
+        $empresaId = $this->resolverEmpresaIdPorDominioCatalogo();
+        if ($empresaId === null) {
+            http_response_code(404);
+            require __DIR__ . '/../../vistas/errores/404.php';
+            return;
+        }
+
+        $this->enviarContactoCatalogo($empresaId);
     }
 
     public function catalogoEnLinea(int $empresaId): void
@@ -1541,6 +1595,21 @@ class PublicoControlador extends Controlador
         $timestamp = file_exists($rutaVista) ? (int) filemtime($rutaVista) : time();
 
         return gmdate('Y-m-d', $timestamp > 0 ? $timestamp : time());
+    }
+
+    private function resolverEmpresaIdPorDominioCatalogo(): ?int
+    {
+        $host = trim((string) ($_SERVER['HTTP_HOST'] ?? ''));
+        if ($host === '') {
+            return null;
+        }
+
+        $empresa = (new Empresa())->buscarPorCatalogoDominio($host);
+        if (!$empresa) {
+            return null;
+        }
+
+        return (int) ($empresa['id'] ?? 0) ?: null;
     }
 
     private function obtenerUrlBaseSitio(): string
