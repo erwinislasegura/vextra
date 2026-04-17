@@ -128,10 +128,9 @@ $faqSchema = [
                 </div>
                 <h1 class="display-6 fw-bold mb-3">Sistema de cotizaciones y ventas con inventario para crecer con control real</h1>
                 <p class="lead text-secondary">Vextra es un software de cotización online que conecta tu gestión comercial, sistema punto de venta y sistema de inventario para que tu empresa venda más, responda rápido y opere con orden administrativo.</p>
-                <p class="mb-3">Ahora además puedes activar <strong>catálogo en línea con carrito de compras</strong> y <strong>pagos en línea integrados</strong> para vender 24/7 con una experiencia de compra más profesional para tus clientes.</p>
                 <div class="d-flex flex-wrap gap-2">
                     <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
-                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Contáctanos</a>
+                    <a href="#planes" class="btn btn-outline-primary">Contratar plan</a>
                 </div>
                 <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
             </div>
@@ -147,252 +146,25 @@ $faqSchema = [
                         </ul>
                     </div>
                 </div>
-            </div>
+            </aside>
         </div>
     </div>
 </section>
 
-<section class="py-5 border-bottom bg-primary text-white">
+<section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="row g-4 align-items-center">
-            <div class="col-lg-8">
-                <span class="badge text-bg-light text-primary mb-2">NUEVAS FUNCIONES 2026</span>
-                <h2 class="h2 mb-2">Catálogo en línea + pago en línea para vender 24/7</h2>
-                <p class="mb-3 text-white-50">Esta es la nueva sección destacada solicitada: publica productos con carrito, comparte tu catálogo por WhatsApp/redes y cobra online en el momento para cerrar más ventas sin fricción.</p>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge rounded-pill text-bg-light text-primary px-3 py-2">🛒 Catálogo en línea con carrito</span>
-                    <span class="badge rounded-pill text-bg-light text-success px-3 py-2">💳 Pago en línea integrado</span>
-                    <span class="badge rounded-pill text-bg-light text-dark px-3 py-2">🚀 Herramienta poderosa para vender 24/7</span>
-                </div>
+            <div class="col-12 col-lg-6">
+                <h2 class="h3 mb-3">Solución completa: sistema de cotización, POS y gestión de inventario</h2>
+                <p>Cuando una empresa usa herramientas separadas para cotizar, facturar y mover stock, aparecen errores de precio, ventas sin disponibilidad y retrasos de respuesta. Vextra resuelve ese problema con una plataforma unificada de gestión comercial. El vendedor cotiza con datos actuales, el área administrativa valida márgenes y el equipo operativo ejecuta con trazabilidad.</p>
+                <p class="mb-0">Este enfoque permite pasar de una operación reactiva a una gestión profesional: cada presupuesto tiene contexto, cada venta impacta inventario y cada decisión se toma con información real del negocio.</p>
             </div>
-            <div class="col-lg-4">
-                <div class="d-grid gap-2">
-                    <a href="<?= e(url('/registro')) ?>" class="btn btn-light btn-lg text-primary fw-semibold">Activar prueba gratis</a>
-                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-light">Hablar con ventas</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom bg-light">
-    <div class="container">
-        <div class="text-center mb-4">
-            <span class="badge text-bg-primary mb-2">NUEVO</span>
-            <h2 class="h3 mb-2">Nuevas funcionalidades para vender más</h2>
-            <p class="text-secondary mb-0">Más alcance comercial y cobro simple para pymes chilenas.</p>
-        </div>
-        <div class="row g-3">
-            <article class="col-lg-6">
-                <div class="card h-100 border-primary border-2">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-cart3 text-primary me-2"></i>Catálogo en línea</h3>
-                        <p class="mb-2">Publica tus productos con carrito y convierte más visitas en ventas.</p>
-                        <ul class="small mb-0 ps-3 d-grid gap-1">
-                            <li>Comparte tu catálogo por WhatsApp, redes y web.</li>
-                            <li>Muestra productos y precios de forma profesional.</li>
-                            <li>Conecta ventas online con tu inventario real.</li>
-                        </ul>
-                    </div>
-                </div>
-            </article>
-            <article class="col-lg-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-credit-card text-success me-2"></i>Pagos en línea</h3>
-                        <p class="mb-2">Recibe pagos en línea integrados para cerrar más rápido y sin fricción.</p>
-                        <ul class="small mb-0 ps-3 d-grid gap-1">
-                            <li>Reduce abandono al momento de pagar.</li>
-                            <li>Automatiza la confirmación de compra.</li>
-                            <li>Mejora la experiencia de tu cliente final.</li>
-                        </ul>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom bg-light-subtle">
-    <div class="container">
-        <div class="card border-0 shadow-sm overflow-hidden">
-            <div class="card-body p-4 p-lg-5">
-                <div class="row g-4 align-items-center">
-                    <div class="col-lg-8">
-                        <span class="badge text-bg-dark mb-2">CTA DESTACADO</span>
-                        <h2 class="h3 mb-2">Catálogo en línea + pago en línea: tu herramienta poderosa para vender 24/7</h2>
-                        <p class="text-secondary mb-3">Activa una vitrina digital profesional, recibe pedidos en cualquier horario y cobra en el momento con una experiencia de compra simple para tus clientes.</p>
-                        <div class="d-flex flex-wrap gap-2 small">
-                            <span class="badge rounded-pill text-bg-primary px-3 py-2">🛒 Catálogo online con carrito</span>
-                            <span class="badge rounded-pill text-bg-success px-3 py-2">💳 Pago en línea integrado</span>
-                            <span class="badge rounded-pill text-bg-secondary px-3 py-2">⚡ Operación comercial conectada</span>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="d-grid gap-2">
-                            <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Quiero vender 24/7</a>
-                            <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Hablar con un asesor</a>
-                            <a href="#planes" class="btn btn-link text-decoration-none">Ver planes disponibles</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom bg-light-subtle">
-    <div class="container">
-        <div class="text-center mb-4">
-            <span class="badge text-bg-dark mb-2">NUEVO</span>
-            <h2 class="h3 mb-2">Nuevas funcionalidades para vender más</h2>
-            <p class="text-secondary mb-0">El principal gancho comercial de Vextra para empresas que quieren crecer sin complejidad técnica.</p>
-        </div>
-        <div class="row g-3">
-            <div class="col-lg-6">
-                <article class="card h-100 border-2 border-primary shadow-sm">
-                    <div class="card-body">
-                        <h3 class="h4 d-flex align-items-center gap-2"><i class="bi bi-cart3 text-primary"></i>Catálogo en línea con carrito</h3>
-                        <p class="mb-2">Muestra tus productos de forma profesional y transforma visitas en pedidos reales.</p>
-                        <ul class="small ps-3 mb-0 d-grid gap-1">
-                            <li>Tu vitrina digital lista para compartir por WhatsApp y redes.</li>
-                            <li>Carrito de compras para subir ticket promedio.</li>
-                            <li>Productos, precios y stock conectados a tu operación.</li>
-                        </ul>
-                    </div>
-                </article>
-            </div>
-            <div class="col-lg-6">
-                <article class="card h-100 border-2 border-success shadow-sm">
-                    <div class="card-body">
-                        <h3 class="h4 d-flex align-items-center gap-2"><i class="bi bi-credit-card text-success"></i>Pagos en línea integrados</h3>
-                        <p class="mb-2">Recibe pagos rápido y mejora la experiencia de compra sin procesos manuales.</p>
-                        <ul class="small ps-3 mb-0 d-grid gap-1">
-                            <li>Cobro online simple para vender sin horarios.</li>
-                            <li>Confirmación de pago conectada a ventas e inventario.</li>
-                            <li>Menos fricción de cobro, más conversiones para tu pyme.</li>
-                        </ul>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom bg-white">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="h3 mb-2">Módulos principales de Vextra</h2>
-            <p class="text-secondary mb-0">Todo lo que necesitas para ordenar tu negocio y acelerar ventas en Chile.</p>
-        </div>
-        <div class="row g-3">
-            <div class="col-lg-6">
-                <article class="card h-100 border-3 border-primary-subtle">
-                    <div class="card-body">
-                        <h3 class="h4"><i class="bi bi-shop me-2 text-primary"></i>Catálogo Online (Destacado)</h3>
-                        <ul class="small ps-3 d-grid gap-1">
-                            <li>Vitrina profesional para vender sin depender de marketplaces.</li>
-                            <li>Carrito integrado para cerrar compras más rápido.</li>
-                            <li>Actualización automática de productos y stock.</li>
-                            <li>Más alcance digital para tu pyme chilena.</li>
-                        </ul>
-                        <p class="fw-semibold mb-0">Tu negocio abierto 24/7 para vender más todos los días.</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-lg-6">
-                <article class="card h-100 border-3 border-success-subtle">
-                    <div class="card-body">
-                        <h3 class="h4"><i class="bi bi-cash-coin me-2 text-success"></i>Pagos Online (Destacado)</h3>
-                        <ul class="small ps-3 d-grid gap-1">
-                            <li>Cobro online directo desde catálogo y cotizaciones.</li>
-                            <li>Menor abandono por fricción al momento de pagar.</li>
-                            <li>Registro ordenado de pagos para control financiero.</li>
-                            <li>Experiencia de compra confiable para tus clientes.</li>
-                        </ul>
-                        <p class="fw-semibold mb-0">Cobras mejor, más rápido y con control total del flujo comercial.</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-lg-4">
-                <article class="card h-100 bg-light-subtle border-0">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-receipt me-2"></i>Punto de Venta</h3>
-                        <ul class="small ps-3 d-grid gap-1">
-                            <li>Ventas ágiles en caja.</li>
-                            <li>Registro por vendedor y sucursal.</li>
-                            <li>Descuento automático de stock.</li>
-                        </ul>
-                        <p class="small fw-semibold mb-0">Vende rápido y con respaldo de información real.</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-lg-4">
-                <article class="card h-100 bg-light-subtle border-0">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-file-earmark-text me-2"></i>Cotizaciones</h3>
-                        <ul class="small ps-3 d-grid gap-1">
-                            <li>Propuestas claras y profesionales.</li>
-                            <li>Seguimiento por estado comercial.</li>
-                            <li>Mayor velocidad de respuesta.</li>
-                        </ul>
-                        <p class="small fw-semibold mb-0">Cierra más negocios con un sistema de cotización ordenado.</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-lg-4">
-                <article class="card h-100 bg-light-subtle border-0">
-                    <div class="card-body">
-                        <h3 class="h5"><i class="bi bi-box-seam me-2"></i>Inventario</h3>
-                        <ul class="small ps-3 d-grid gap-1">
-                            <li>Control por movimiento y producto.</li>
-                            <li>Alertas para evitar quiebres.</li>
-                            <li>Decisiones con datos actualizados.</li>
-                        </ul>
-                        <p class="small fw-semibold mb-0">Protege tus márgenes con control de inventario en tiempo real.</p>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 border-bottom bg-light-subtle">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="h3 mb-2">Todo tu negocio en un solo sistema</h2>
-            <p class="text-secondary mb-0">Deja atrás Excel y sistemas separados: en Vextra todo está conectado sin integraciones complejas.</p>
-        </div>
-        <div class="row g-3 align-items-stretch">
-            <div class="col-lg-6">
-                <div class="card h-100 border-danger-subtle">
-                    <div class="card-body">
-                        <h3 class="h5 text-danger">Sin Vextra: Excel + herramientas sueltas</h3>
-                        <ul class="small ps-3 mb-0 d-grid gap-1">
-                            <li>Datos duplicados y errores manuales.</li>
-                            <li>Ventas sin stock real.</li>
-                            <li>Pérdida de tiempo entre plataformas.</li>
-                        </ul>
-                    </div>
-                </div>
-            </article>
-            <article class="col-lg-6">
-                <h2 class="h3">Características clave para gestión comercial moderna</h2>
-                <h3 class="h5 mt-3">Cotizaciones y presupuestos profesionales</h3>
-                <p>Plantillas claras, control de versiones, descuentos y condiciones comerciales para mantener coherencia entre vendedor, cliente y administración.</p>
-                <h3 class="h5">Sistema punto de venta conectado</h3>
-                <p>Ventas rápidas en caja, registro por vendedor y trazabilidad de transacciones con impacto automático en inventario.</p>
-                <h3 class="h5">Inventario con movimientos y alertas</h3>
-                <p>Recepciones, ajustes, control de quiebres y consulta por producto para evitar decisiones a ciegas.</p>
-                <h3 class="h5 text-primary">Catálogo online con carrito (nuevo)</h3>
-                <p>Publica tus productos en minutos y permite compras directas con una vitrina digital lista para vender en Chile.</p>
-                <h3 class="h5 text-success">Pagos online integrados (nuevo)</h3>
-                <p>Recibe pagos sin procesos manuales y conecta cada cobro con tu operación comercial e inventario.</p>
-                <h3 class="h5">Gestión integral de clientes y oportunidades</h3>
-                <p>Historial comercial por cliente, seguimiento de estado de cotización y foco en las oportunidades con mayor probabilidad de cierre.</p>
-                <div class="d-flex flex-wrap gap-2 mt-3">
-                    <a href="<?= e(url('/caracteristicas')) ?>" class="btn btn-outline-primary btn-sm">Ver características</a>
-                    <a href="<?= e(url('/preguntas-frecuentes')) ?>" class="btn btn-outline-secondary btn-sm">Revisar preguntas frecuentes</a>
+            <div class="col-12 col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Dashboard ejecutivo"><img src="<?= e($capturaLandingUrl('Dashboard - Inicio.png')) ?>" alt="Dashboard del software para empresas" decoding="async" fetchpriority="high" width="1000" height="630"></a><figcaption>Dashboard ejecutivo</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema punto de venta"><img src="<?= e($capturaLandingUrl('Punto de venta.png')) ?>" alt="Sistema punto de venta conectado" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>POS conectado</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Sistema de inventario"><img src="<?= e($capturaLandingUrl('Movimientos de inventario.png')) ?>" alt="Sistema de inventario en tiempo real" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Inventario en tiempo real</figcaption></figure></div>
+                    <div class="col-6"><figure class="landing-shot-card mb-0"><a href="<?= e($capturaLandingUrl('Clientes.png')) ?>" class="landing-shot-link js-captura-ampliable" data-captura-title="Gestión de clientes"><img src="<?= e($capturaLandingUrl('Clientes.png')) ?>" alt="Gestión comercial por cliente" loading="lazy" decoding="async" width="1000" height="630"></a><figcaption>Gestión de clientes</figcaption></figure></div>
                 </div>
             </div>
         </div>
@@ -506,7 +278,7 @@ $faqSchema = [
                     <article class="card h-100 border-2 <?= $esRecomendado ? 'border-primary border-3 shadow' : '' ?>" style="border-color: <?= e($plan['color_visual'] ?: '#dce3eb') ?> !important;">
                         <div class="card-body d-flex flex-column">
                             <div class="d-flex flex-wrap gap-2 mb-2">
-                                <?php if ($esRecomendado): ?><span class="badge text-bg-primary"><?= $index === 1 ? 'MÁS VENDIDO' : 'MÁS CONVENIENTE' ?></span><?php endif; ?>
+                                <?php if ($esRecomendado): ?><span class="badge text-bg-primary">MÁS CONVENIENTE</span><?php endif; ?>
                                 <?php if (!empty($plan['destacado'])): ?><span class="badge text-bg-success">DESTACADO</span><?php endif; ?>
                             </div>
                             <h3 class="h5"><?= e($plan['nombre']) ?></h3>
@@ -517,10 +289,6 @@ $faqSchema = [
                                 <?php foreach ($plan['funcionalidades'] as $funcionalidad): ?>
                                     <li><?= e($funcionalidad['descripcion'] ?: $funcionalidad['nombre']) ?></li>
                                 <?php endforeach; ?>
-                                <?php if ($index === 1): ?>
-                                    <li><strong>Catálogo online con carrito</strong></li>
-                                    <li><strong>Pagos online integrados</strong></li>
-                                <?php endif; ?>
                             </ul>
                             <div class="d-grid gap-2 mt-auto">
                                 <a href="<?= e(url('/registro?plan=' . (int) $plan['id'] . '&frecuencia=mensual')) ?>" class="btn btn-outline-primary btn-sm" data-home-link>Comenzar ahora</a>
