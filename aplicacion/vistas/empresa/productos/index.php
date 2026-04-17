@@ -23,10 +23,10 @@
       <strong>Listado de productos</strong>
       <div class="small text-muted">Registros encontrados: <?= count($productos) ?></div>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2 justify-content-lg-end w-100 w-lg-auto">
       <a href="<?= e(url('/app/productos/exportar/excel?q=' . urlencode($buscar))) ?>" class="<?= e(\Aplicacion\Servicios\ExcelExpoFormato::BOTON_CLASES) ?>" style="<?= e(\Aplicacion\Servicios\ExcelExpoFormato::BOTON_ESTILO) ?>"><?= e(\Aplicacion\Servicios\ExcelExpoFormato::BOTON_TEXTO) ?></a>
-      <form class="d-flex gap-2" method="GET">
-        <input class="form-control form-control-sm" name="q" value="<?= e($buscar) ?>" placeholder="Buscar por nombre/código/SKU">
+      <form class="d-flex flex-wrap gap-2 align-items-center" method="GET">
+        <input class="form-control form-control-sm flex-grow-1" style="min-width: min(260px, 100%);" name="q" value="<?= e($buscar) ?>" placeholder="Buscar por nombre/código/SKU">
         <button class="btn btn-outline-secondary btn-sm">Buscar</button>
         <?php if ($buscar !== ''): ?>
           <a class="btn btn-outline-dark btn-sm" href="<?= e(url('/app/productos')) ?>">Limpiar</a>
@@ -34,8 +34,8 @@
       </form>
     </div>
   </div>
-  <div class="table-responsive" style="overflow: visible;">
-    <table class="table table-hover table-sm mb-0 tabla-admin">
+  <div class="table-responsive">
+    <table class="table table-hover table-sm mb-0 tabla-admin tabla-admin--stack tabla-admin--stack-xl">
       <thead class="table-light">
         <tr>
           <th>Código</th><th>SKU</th><th>Nombre</th><th>Tipo</th><th>Categoría</th><th>Precio</th><th>Oferta</th><th>Destacado</th><th>Próximamente</th><th>Días llegada</th><th>Stock actual</th><th>Stock mín.</th><th>Stock crítico</th><th>Estado stock</th><th>Estado</th><th class="text-end">Acciones</th>
@@ -47,21 +47,21 @@
         <?php else: ?>
           <?php foreach($productos as $p): ?>
             <tr>
-              <td><?= e($p['codigo']) ?></td>
-              <td><?= e($p['sku'] ?: '-') ?></td>
-              <td><?= e($p['nombre']) ?></td>
-              <td><?= e($p['tipo'] ?? 'producto') ?></td>
-              <td><?= e($p['categoria'] ?? '-') ?></td>
-              <td>$<?= number_format((float)$p['precio'],2) ?></td>
-              <td><?php if ((float) ($p['precio_oferta'] ?? 0) > 0): ?>$<?= number_format((float) $p['precio_oferta'], 2) ?><?php else: ?>-<?php endif; ?></td>
-              <td><?php if ((int) ($p['destacado_catalogo'] ?? 0) === 1): ?><span class="badge text-bg-primary">Sí</span><?php else: ?><span class="text-muted">No</span><?php endif; ?></td>
-              <td><?php if ((int) ($p['proximo_catalogo'] ?? 0) === 1): ?><span class="badge text-bg-warning">Sí</span><?php else: ?><span class="text-muted">No</span><?php endif; ?></td>
-              <td><?= (int) ($p['proximo_dias_catalogo'] ?? 0) ?></td>
+              <td data-label="Código"><?= e($p['codigo']) ?></td>
+              <td data-label="SKU"><?= e($p['sku'] ?: '-') ?></td>
+              <td data-label="Nombre"><?= e($p['nombre']) ?></td>
+              <td data-label="Tipo"><?= e($p['tipo'] ?? 'producto') ?></td>
+              <td data-label="Categoría"><?= e($p['categoria'] ?? '-') ?></td>
+              <td data-label="Precio">$<?= number_format((float)$p['precio'],2) ?></td>
+              <td data-label="Oferta"><?php if ((float) ($p['precio_oferta'] ?? 0) > 0): ?>$<?= number_format((float) $p['precio_oferta'], 2) ?><?php else: ?>-<?php endif; ?></td>
+              <td data-label="Destacado"><?php if ((int) ($p['destacado_catalogo'] ?? 0) === 1): ?><span class="badge text-bg-primary">Sí</span><?php else: ?><span class="text-muted">No</span><?php endif; ?></td>
+              <td data-label="Próximamente"><?php if ((int) ($p['proximo_catalogo'] ?? 0) === 1): ?><span class="badge text-bg-warning">Sí</span><?php else: ?><span class="text-muted">No</span><?php endif; ?></td>
+              <td data-label="Días llegada"><?= (int) ($p['proximo_dias_catalogo'] ?? 0) ?></td>
               <?php $stockActual = (float)($p['stock_actual'] ?? 0); $stockMin = (float)($p['stock_minimo'] ?? 0); $stockCrit = (float)($p['stock_critico'] ?? 0); if ($stockCrit <= 0) { $stockCrit = (float)($p['stock_aviso'] ?? 0); } $estadoStock = $stockActual <= $stockCrit ? 'crítico' : ($stockActual <= $stockMin ? 'bajo' : 'normal'); $badgeStock = $estadoStock === 'crítico' ? 'text-bg-danger' : ($estadoStock === 'bajo' ? 'text-bg-warning' : 'text-bg-success'); ?>
-              <td><strong><?= number_format($stockActual, 2) ?></strong></td>
-              <td><?= number_format($stockMin, 2) ?></td>
-              <td><?= number_format($stockCrit, 2) ?></td>
-              <td>
+              <td data-label="Stock actual"><strong><?= number_format($stockActual, 2) ?></strong></td>
+              <td data-label="Stock mín."><?= number_format($stockMin, 2) ?></td>
+              <td data-label="Stock crítico"><?= number_format($stockCrit, 2) ?></td>
+              <td data-label="Estado stock">
                 <button
                   type="button"
                   class="badge border-0 js-ver-trazabilidad <?= e($badgeStock) ?>"
@@ -74,8 +74,8 @@
                   <?= e($estadoStock) ?>
                 </button>
               </td>
-              <td><span class="badge <?= ($p['estado'] === 'activo') ? 'badge-estado-activo' : 'badge-estado-inactivo' ?>"><?= e($p['estado']) ?></span></td>
-              <td class="text-end"><div class="dropdown dropup"><button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="<?= e(url('/app/productos/ver/' . $p['id'])) ?>">Ver</a></li><li><a class="dropdown-item" href="<?= e(url('/app/productos/editar/' . $p['id'])) ?>">Editar</a></li><li><form method="POST" action="<?= e(url('/app/productos/eliminar/' . $p['id'])) ?>" onsubmit="return confirm('¿Confirmas eliminar este producto?')"><?= csrf_campo() ?><button class="dropdown-item text-danger" type="submit">Eliminar</button></form></li></ul></div></td>
+              <td data-label="Estado"><span class="badge <?= ($p['estado'] === 'activo') ? 'badge-estado-activo' : 'badge-estado-inactivo' ?>"><?= e($p['estado']) ?></span></td>
+              <td data-label="Acciones" class="text-end"><div class="dropdown dropup"><button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">Acciones</button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="<?= e(url('/app/productos/ver/' . $p['id'])) ?>">Ver</a></li><li><a class="dropdown-item" href="<?= e(url('/app/productos/editar/' . $p['id'])) ?>">Editar</a></li><li><form method="POST" action="<?= e(url('/app/productos/eliminar/' . $p['id'])) ?>" onsubmit="return confirm('¿Confirmas eliminar este producto?')"><?= csrf_campo() ?><button class="dropdown-item text-danger" type="submit">Eliminar</button></form></li></ul></div></td>
             </tr>
           <?php endforeach; ?>
         <?php endif; ?>

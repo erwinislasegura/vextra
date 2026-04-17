@@ -367,3 +367,36 @@ body.preview-open{overflow:hidden}
   .public-page .landing-timeline__icon{animation:none}
   .public-page .landing-timeline__item:hover .landing-timeline__card{transform:none;box-shadow:0 8px 22px rgba(24,40,66,.08)}
 }
+
+
+@media (max-width: 1399.98px){
+  .tabla-admin.tabla-admin--stack-xl thead{display:none}
+  .tabla-admin.tabla-admin--stack-xl,
+  .tabla-admin.tabla-admin--stack-xl tbody,
+  .tabla-admin.tabla-admin--stack-xl tr,
+  .tabla-admin.tabla-admin--stack-xl td{display:block;width:100%}
+  .tabla-admin.tabla-admin--stack-xl tr{
+    border:1px solid #dce5ef;
+    border-radius:.65rem;
+    background:#fff;
+    box-shadow:0 2px 10px rgba(15,23,42,.05);
+    margin:.5rem;
+    padding:.2rem .35rem;
+  }
+  .tabla-admin.tabla-admin--stack-xl td{
+    border:0;
+    border-bottom:1px dashed #e2e8f0;
+    padding:.48rem .25rem;
+  }
+  .tabla-admin.tabla-admin--stack-xl td:last-child{border-bottom:0}
+  .tabla-admin.tabla-admin--stack-xl td::before{
+    content:attr(data-label);
+    display:block;
+    font-size:.69rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-weight:700;
+    color:#5e7388;
+    margin-bottom:.16rem;
+  }
+}
