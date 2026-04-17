@@ -981,12 +981,19 @@ class PublicoControlador extends Controlador
         };
 
         $filas = '';
+        $itemsReserva = [];
         foreach ((array) ($orden['items'] ?? []) as $item) {
             $nombreItem = (string) ($item['nombre'] ?? $item['producto_nombre'] ?? 'Producto');
             $descripcionItem = trim((string) ($item['descripcion'] ?? $item['detalle'] ?? ''));
+            $meta = [];
+            if (isset($item['metadata'])) {
+                $metaDecode = json_decode((string) $item['metadata'], true);
+                if (is_array($metaDecode)) {
+                    $meta = $metaDecode;
+                }
+            }
             if ($descripcionItem === '' && isset($item['metadata'])) {
-                $meta = json_decode((string) $item['metadata'], true);
-                if (is_array($meta)) {
+                if ($meta !== []) {
                     $descripcionItem = trim((string) ($meta['descripcion'] ?? ''));
                 }
             }
@@ -995,8 +1002,7 @@ class PublicoControlador extends Controlador
             }
             $imagenItem = trim((string) ($item['imagen'] ?? ''));
             if ($imagenItem === '' && isset($item['metadata'])) {
-                $meta = json_decode((string) $item['metadata'], true);
-                if (is_array($meta)) {
+                if ($meta !== []) {
                     $imagenItem = trim((string) ($meta['imagen'] ?? ''));
                 }
             }
@@ -1005,15 +1011,41 @@ class PublicoControlador extends Controlador
             } elseif (preg_match('/^https?:\/\//i', $imagenItem) !== 1) {
                 $imagenItem = FlowApiService::construirUrlPublica('/' . ltrim($imagenItem, '/'));
             }
+            $esProximo = (int) ($item['proximo_catalogo'] ?? $meta['proximo_catalogo'] ?? 0) === 1;
+            $diasLlegada = max(0, (int) ($item['proximo_dias_catalogo'] ?? $meta['proximo_dias_catalogo'] ?? 0));
+            if ($esProximo) {
+                $itemsReserva[] = [
+                    'nombre' => $nombreItem,
+                    'cantidad' => max(1, (int) ($item['cantidad'] ?? 1)),
+                    'dias' => $diasLlegada,
+                ];
+            }
 
             $filas .= '<tr>'
                 . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;width:64px;"><img src="' . htmlspecialchars($imagenItem) . '" alt="' . htmlspecialchars($nombreItem) . '" style="width:52px;height:52px;border-radius:8px;object-fit:cover;background:#f3f4f6"></td>'
                 . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;vertical-align:top;">'
                 . '<div style="font-weight:600;color:#111827;">' . htmlspecialchars($nombreItem) . ' x' . (int) ($item['cantidad'] ?? 1) . '</div>'
                 . ($descripcionItem !== '' ? '<div style="font-size:12px;color:#6b7280;margin-top:2px;">' . htmlspecialchars($descripcionItem) . '</div>' : '')
+                . ($esProximo ? '<div style="font-size:12px;color:#166534;margin-top:3px;font-weight:600;">Reserva confirmada · llega en ' . $diasLlegada . ' día(s).</div>' : '')
                 . '</td>'
                 . '<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:600;">$' . number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . '</td>'
                 . '</tr>';
+        }
+        $bloqueReservas = '';
+        if ($itemsReserva !== []) {
+            $listaReservas = '';
+            foreach ($itemsReserva as $itemReserva) {
+                $listaReservas .= '<li style="margin:4px 0;">'
+                    . '<strong>' . htmlspecialchars((string) $itemReserva['nombre']) . '</strong>'
+                    . ' · Cantidad: ' . (int) $itemReserva['cantidad']
+                    . ' · Llegada estimada: ' . (int) $itemReserva['dias'] . ' día(s)'
+                    . '</li>';
+            }
+            $bloqueReservas = '<div style="margin:14px 0 2px;padding:12px 14px;border:1px solid #bbf7d0;background:#f0fdf4;border-radius:10px;">'
+                . '<div style="font-size:14px;font-weight:700;color:#166534;margin-bottom:6px;">Productos reservados en este pedido</div>'
+                . '<ul style="margin:0 0 8px 18px;padding:0;color:#14532d;font-size:13px;">' . $listaReservas . '</ul>'
+                . '<div style="font-size:12px;color:#166534;">Para darte mayor seguridad, los productos reservados se enviarán por separado según su fecha de llegada, sin afectar los productos con entrega inmediata.</div>'
+                . '</div>';
         }
 
         $envioCondicion = 'Envío por pagar con plazo máximo de 48 horas hábiles desde la confirmación del pago.';
@@ -1042,6 +1074,7 @@ class PublicoControlador extends Controlador
             . '<tr><td style="padding:5px 0;"><strong>Referencia:</strong> ' . htmlspecialchars((string) ($comprador['referencia'] ?? '-')) . '</td></tr>'
             . '</table>'
             . '<p style="margin:10px 0 0;font-size:12px;color:#6b7280;"><em>' . htmlspecialchars($envioCondicion) . '</em></p>'
+            . $bloqueReservas
             . '<h3 style="margin:18px 0 8px;font-size:16px;">Detalle de compra</h3>'
             . '<table style="width:100%;border-collapse:collapse;">' . $filas . '</table>'
             . '<p style="text-align:right;margin:10px 0 0;"><strong>Total: $' . number_format((float) ($orden['total'] ?? 0), 0, ',', '.') . '</strong></p>'
