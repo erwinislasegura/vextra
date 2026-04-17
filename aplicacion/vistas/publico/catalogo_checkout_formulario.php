@@ -11,6 +11,13 @@ $fragmento = static function (string $texto, int $max = 95): string {
     }
     return rtrim(mb_substr($limpio, 0, $max - 1)) . '…';
 };
+$hayProximos = false;
+foreach ($resumen as $itemResumenTmp) {
+    if ((int) ($itemResumenTmp['proximo_catalogo'] ?? 0) === 1) {
+        $hayProximos = true;
+        break;
+    }
+}
 ?>
 <style>
   .checkout-grid{align-items:flex-start}
@@ -39,14 +46,23 @@ $fragmento = static function (string $texto, int $max = 95): string {
       <div class="card"><div class="card-body">
         <h2 class="h6 mb-2">Resumen del pedido</h2>
         <div class="small text-muted mb-2">Puedes ajustar cantidades o eliminar productos.</div>
+        <?php if ($hayProximos): ?>
+          <div class="alert alert-warning small">
+            Este pedido incluye productos <strong>en reserva</strong>. Verás la llegada estimada en días en cada ítem.
+          </div>
+        <?php endif; ?>
         <ul class="list-group list-group-flush mb-3 checkout-resumen-list" id="checkoutResumenLista">
           <?php foreach ($resumen as $item): ?>
+            <?php $proximo = (int) ($item['proximo_catalogo'] ?? 0) === 1; $diasLlegada = max(0, (int) ($item['proximo_dias_catalogo'] ?? 0)); ?>
             <li class="list-group-item px-0 checkout-item" data-id="<?= (int) ($item['id'] ?? 0) ?>" data-cantidad="<?= (int) ($item['cantidad'] ?? 1) ?>" data-precio="<?= (float) ($item['precio'] ?? 0) ?>" data-nombre="<?= e((string) ($item['nombre'] ?? 'Producto')) ?>" data-descripcion="<?= e((string) ($item['descripcion'] ?? '')) ?>" data-imagen="<?= e((string) ($item['imagen'] ?? url('/img/placeholder-producto.svg'))) ?>">
               <div class="d-flex gap-2 align-items-start">
                 <img src="<?= e((string) ($item['imagen'] ?? url('/img/placeholder-producto.svg'))) ?>" alt="<?= e((string) ($item['nombre'] ?? 'Producto')) ?>" style="width:56px;height:56px;object-fit:cover;border-radius:8px;background:#f8fafc;">
                 <div class="flex-grow-1">
                   <div class="fw-semibold small"><?= e((string) $item['nombre']) ?></div>
                   <div class="text-muted" style="font-size:.78rem;"><?= e($fragmento((string) ($item['descripcion'] ?? ''))) ?></div>
+                  <?php if ($proximo): ?>
+                    <div class="small text-warning-emphasis mt-1">Reserva: llega en <?= $diasLlegada ?> día(s).</div>
+                  <?php endif; ?>
                   <div class="d-flex justify-content-between align-items-center mt-1">
                     <div class="btn-group btn-group-sm" role="group">
                       <button type="button" class="btn btn-outline-secondary" data-minus="<?= (int) ($item['id'] ?? 0) ?>">−</button>

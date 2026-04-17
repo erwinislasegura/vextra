@@ -97,6 +97,16 @@ class Producto extends Modelo
             $valores[] = ':precio_oferta';
             $data['precio_oferta'] = (float) ($data['precio_oferta'] ?? 0);
         }
+        if ($this->tieneColumna('productos', 'proximo_catalogo')) {
+            $columnas[] = 'proximo_catalogo';
+            $valores[] = ':proximo_catalogo';
+            $data['proximo_catalogo'] = isset($data['proximo_catalogo']) ? (int) $data['proximo_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'proximo_dias_catalogo')) {
+            $columnas[] = 'proximo_dias_catalogo';
+            $valores[] = ':proximo_dias_catalogo';
+            $data['proximo_dias_catalogo'] = max(0, (int) ($data['proximo_dias_catalogo'] ?? 0));
+        }
 
         $sql = 'INSERT INTO productos (' . implode(',', $columnas) . ') VALUES (' . implode(',', $valores) . ')';
         $this->db->prepare($sql)->execute($data);
@@ -154,6 +164,14 @@ class Producto extends Modelo
         if ($this->tieneColumna('productos', 'precio_oferta')) {
             $sets[] = 'precio_oferta=:precio_oferta';
             $data['precio_oferta'] = (float) ($data['precio_oferta'] ?? 0);
+        }
+        if ($this->tieneColumna('productos', 'proximo_catalogo')) {
+            $sets[] = 'proximo_catalogo=:proximo_catalogo';
+            $data['proximo_catalogo'] = isset($data['proximo_catalogo']) ? (int) $data['proximo_catalogo'] : 0;
+        }
+        if ($this->tieneColumna('productos', 'proximo_dias_catalogo')) {
+            $sets[] = 'proximo_dias_catalogo=:proximo_dias_catalogo';
+            $data['proximo_dias_catalogo'] = max(0, (int) ($data['proximo_dias_catalogo'] ?? 0));
         }
 
         $sql = 'UPDATE productos SET ' . implode(', ', $sets) . ' WHERE empresa_id=:empresa_id AND id=:id AND fecha_eliminacion IS NULL';

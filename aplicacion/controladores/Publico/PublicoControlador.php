@@ -659,6 +659,8 @@ class PublicoControlador extends Controlador
                 'cantidad' => $cantidad,
                 'precio' => $precio,
                 'subtotal' => $subtotal,
+                'proximo_catalogo' => (int) ($producto['proximo_catalogo'] ?? 0),
+                'proximo_dias_catalogo' => max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0)),
             ];
         }
 
@@ -751,6 +753,8 @@ class PublicoControlador extends Controlador
                 'cantidad' => $cantidad,
                 'precio' => $precio,
                 'subtotal' => $subtotal,
+                'proximo_catalogo' => (int) ($producto['proximo_catalogo'] ?? 0),
+                'proximo_dias_catalogo' => max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0)),
             ];
         }
 
