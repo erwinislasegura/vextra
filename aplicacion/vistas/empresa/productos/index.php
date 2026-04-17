@@ -23,10 +23,10 @@
       <strong>Listado de productos</strong>
       <div class="small text-muted">Registros encontrados: <?= count($productos) ?></div>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2 justify-content-lg-end w-100 w-lg-auto">
       <a href="<?= e(url('/app/productos/exportar/excel?q=' . urlencode($buscar))) ?>" class="<?= e(\Aplicacion\Servicios\ExcelExpoFormato::BOTON_CLASES) ?>" style="<?= e(\Aplicacion\Servicios\ExcelExpoFormato::BOTON_ESTILO) ?>"><?= e(\Aplicacion\Servicios\ExcelExpoFormato::BOTON_TEXTO) ?></a>
-      <form class="d-flex gap-2" method="GET">
-        <input class="form-control form-control-sm" name="q" value="<?= e($buscar) ?>" placeholder="Buscar por nombre/código/SKU">
+      <form class="d-flex flex-wrap gap-2 align-items-center" method="GET">
+        <input class="form-control form-control-sm flex-grow-1" style="min-width: min(260px, 100%);" name="q" value="<?= e($buscar) ?>" placeholder="Buscar por nombre/código/SKU">
         <button class="btn btn-outline-secondary btn-sm">Buscar</button>
         <?php if ($buscar !== ''): ?>
           <a class="btn btn-outline-dark btn-sm" href="<?= e(url('/app/productos')) ?>">Limpiar</a>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="table-responsive">
-    <table class="table table-hover table-sm mb-0 tabla-admin tabla-admin--stack">
+    <table class="table table-hover table-sm mb-0 tabla-admin tabla-admin--stack tabla-admin--stack-xl">
       <thead class="table-light">
         <tr>
           <th>Código</th><th>SKU</th><th>Nombre</th><th>Tipo</th><th>Categoría</th><th>Precio</th><th>Oferta</th><th>Destacado</th><th>Próximamente</th><th>Días llegada</th><th>Stock actual</th><th>Stock mín.</th><th>Stock crítico</th><th>Estado stock</th><th>Estado</th><th class="text-end">Acciones</th>

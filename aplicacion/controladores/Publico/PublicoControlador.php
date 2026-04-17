@@ -702,7 +702,9 @@ class PublicoControlador extends Controlador
                 continue;
             }
             $producto = $itemsCatalogo[$productoId];
-            $precio = (float) ($producto['precio'] ?? 0);
+            $precioNormal = (float) ($producto['precio'] ?? 0);
+            $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
+            $precio = ($precioOferta > 0 && $precioOferta < $precioNormal) ? $precioOferta : $precioNormal;
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
             $resumen[] = [
@@ -796,7 +798,9 @@ class PublicoControlador extends Controlador
                 continue;
             }
             $producto = $itemsCatalogo[$productoId];
-            $precio = (float) ($producto['precio'] ?? 0);
+            $precioNormal = (float) ($producto['precio'] ?? 0);
+            $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
+            $precio = ($precioOferta > 0 && $precioOferta < $precioNormal) ? $precioOferta : $precioNormal;
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
             $resumen[] = [
