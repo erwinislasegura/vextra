@@ -178,7 +178,7 @@ $renderIconoRed = static function (string $id): string {
   .products-grid{display:grid;grid-template-columns:repeat(<?= (int) $columnasProductos ?>,minmax(0,1fr));gap:18px}
   .product-card{background:#fff;border:1px solid #d7deea;border-radius:12px;overflow:hidden;box-shadow:0 10px 20px rgba(15,23,42,.08);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
-  .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
+  .product-image{position:relative;height:220px;background:#fff;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:contain;background:#fff}
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:6px;box-shadow:var(--shadow)}
   .badge-mini.sale{background:#dc2626;color:#fff;border:1px solid #b91c1c}
   .badge-mini.destacado{left:auto;right:14px;background:#f97316;color:#fff;border:1px solid #ea580c}
