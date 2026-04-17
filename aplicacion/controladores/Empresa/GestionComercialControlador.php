@@ -431,7 +431,11 @@ class GestionComercialControlador extends Controlador
         }
         unset($compra);
 
-        $this->vista('empresa/compras_catalogo/index', compact('compras', 'estado'), 'empresa');
+        $empresaModelo = new Empresa();
+        $empresa = $empresaModelo->buscar($empresaId);
+        $sliderCatalogo = $empresaModelo->obtenerConfiguracionCatalogoEnLinea($empresaId);
+
+        $this->vista('empresa/compras_catalogo/index', compact('compras', 'estado', 'empresa', 'sliderCatalogo'), 'empresa');
     }
 
     public function catalogoEnLinea(): void
