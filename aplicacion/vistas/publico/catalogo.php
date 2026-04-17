@@ -131,8 +131,11 @@ $renderIconoRed = static function (string $id): string {
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
   .home-carousel{padding:0 0 26px}
+  .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:14px 14px 8px;box-shadow:0 14px 30px rgba(37,45,89,.10)}
   .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
   .home-carousel__header h3{margin:0;color:var(--primary);font-size:32px;font-weight:800}
+  .home-carousel__controls{display:flex;gap:8px}
+  .home-carousel__nav{width:36px;height:36px;border-radius:10px;border:1px solid #cbcffa;background:#fff;color:#312e81;font-weight:700}
   .home-carousel__track{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
   .home-carousel__item{min-width:270px;max-width:270px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
   .home-carousel__item img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#eef2ff}
@@ -140,7 +143,6 @@ $renderIconoRed = static function (string $id): string {
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
   .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
-  .badge-mini.proximo{left:auto;right:14px;background:#fff7ed;color:#b45309}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -164,8 +166,9 @@ $renderIconoRed = static function (string $id): string {
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
   .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
-  .badge-mini.sale{background:#fff7ed;color:#ea580c}
-  .badge-mini.destacado{left:auto;right:14px;background:#eef2ff;color:#3730a3}
+  .badge-mini.sale{background:linear-gradient(135deg,#ffedd5,#fed7aa);color:#9a3412;border:1px solid #fdba74}
+  .badge-mini.destacado{left:auto;right:14px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#312e81;border:1px solid #a5b4fc}
+  .badge-mini.proximo{left:auto;right:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
@@ -174,7 +177,7 @@ $renderIconoRed = static function (string $id): string {
   .price-wrap{display:flex;align-items:baseline;gap:8px}.price{font-size:22px;font-weight:600;color:var(--primary)}.old-price{color:#94a3b8;text-decoration:line-through;font-weight:500}
   .card-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:auto}
   .card-actions .btn-primary-custom{font-size:13px;font-weight:600;padding:8px 12px}
-  .card-actions .btn-warning{font-size:13px;font-weight:600;padding:8px 12px}
+  .card-actions .btn-warning{font-size:13px;font-weight:700;padding:8px 12px;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;color:#fff}
   .icon-btn{width:48px;border-radius:14px;background:#f8fafc;border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center}
   .icon-btn svg{width:18px;height:18px;stroke:var(--primary);fill:none;stroke-width:2}
   .cart-toggle{position:fixed;right:20px;bottom:20px;z-index:70;background:var(--primary);color:#fff;border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;border:none}
@@ -309,46 +312,51 @@ $renderIconoRed = static function (string $id): string {
   <?php if (!empty($productosCarrusel)): ?>
     <section class="home-carousel">
       <div class="catalogo-container">
-        <div class="home-carousel__header">
-          <h3>Destacados y próximos en llegar</h3>
-          <small class="text-muted">Se desplaza automáticamente</small>
-        </div>
-        <div class="home-carousel__track" id="homeProductosCarrusel">
-          <?php foreach ($productosCarrusel as $producto): ?>
-            <?php
-              $imagenProductoUrl = url('/catalogo/' . (int) $empresa['id'] . '/producto/' . (int) $producto['id'] . '/imagen');
-              $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
-              $categoriaProducto = (string) ($producto['categoria'] ?? 'Sin categoría');
-              $esProximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
-              $diasProximo = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
-              $precioProducto = (float) ($producto['precio'] ?? 0);
-              $precioOfertaProducto = (float) ($producto['precio_oferta'] ?? 0);
-              $precioMostrar = ($precioOfertaProducto > 0 && $precioOfertaProducto < $precioProducto) ? $precioOfertaProducto : $precioProducto;
-            ?>
-            <article class="home-carousel__item">
-              <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy" onerror="this.onerror=null;this.src='<?= e(url('/img/placeholder-producto.svg')) ?>';">
-              <h4><?= e($nombreProducto) ?></h4>
-              <p class="home-carousel__meta"><?= e($categoriaProducto) ?></p>
-              <div class="home-carousel__actions">
-                <div>
-                  <?php if ($esProximo): ?>
-                    <span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span>
-                  <?php else: ?>
-                    <span class="badge text-bg-primary">Destacado</span>
-                  <?php endif; ?>
-                  <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
-                </div>
-                <button
-                  type="button"
-                  class="btn <?= $esProximo ? 'btn-warning' : 'btn-primary-custom' ?>"
-                  data-carousel-open
-                  data-id="<?= (int) $producto['id'] ?>"
-                >
-                  <?= $esProximo ? 'Reservar' : 'Lo quiero' ?>
-                </button>
+        <div class="home-carousel__shell">
+          <div class="home-carousel__header">
+            <h3>Destacados y próximos en llegar</h3>
+            <div class="d-flex align-items-center gap-2">
+              <small class="text-muted">Se desplaza automáticamente</small>
+              <div class="home-carousel__controls">
+                <button type="button" class="home-carousel__nav" id="homeCarouselPrev" aria-label="Anterior">‹</button>
+                <button type="button" class="home-carousel__nav" id="homeCarouselNext" aria-label="Siguiente">›</button>
               </div>
-            </article>
-          <?php endforeach; ?>
+            </div>
+          </div>
+          <div class="home-carousel__track" id="homeProductosCarrusel">
+            <?php foreach ($productosCarrusel as $producto): ?>
+              <?php
+                $imagenProductoUrl = url('/catalogo/' . (int) $empresa['id'] . '/producto/' . (int) $producto['id'] . '/imagen');
+                $nombreProducto = (string) ($producto['nombre'] ?? 'Producto');
+                $categoriaProducto = (string) ($producto['categoria'] ?? 'Sin categoría');
+                $esProximo = (int) ($producto['proximo_catalogo'] ?? 0) === 1;
+                $diasProximo = max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0));
+                $precioProducto = (float) ($producto['precio'] ?? 0);
+                $precioOfertaProducto = (float) ($producto['precio_oferta'] ?? 0);
+                $precioMostrar = ($precioOfertaProducto > 0 && $precioOfertaProducto < $precioProducto) ? $precioOfertaProducto : $precioProducto;
+              ?>
+              <article class="home-carousel__item">
+                <img src="<?= e($imagenProductoUrl) ?>" alt="<?= e($nombreProducto) ?>" loading="lazy" onerror="this.onerror=null;this.src='<?= e(url('/img/placeholder-producto.svg')) ?>';">
+                <h4><?= e($nombreProducto) ?></h4>
+                <p class="home-carousel__meta"><?= e($categoriaProducto) ?></p>
+                <div class="home-carousel__actions">
+                  <div>
+                    <?php if ($esProximo): ?>
+                      <span class="badge text-bg-warning">Llega en <?= $diasProximo ?> día(s)</span>
+                    <?php else: ?>
+                      <span class="badge text-bg-primary">Destacado</span>
+                    <?php endif; ?>
+                    <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
+                  </div>
+                  <?php if ($esProximo): ?>
+                    <button type="button" class="btn btn-warning" data-add-cart data-id="<?= (int) $producto['id'] ?>">Reservar</button>
+                  <?php else: ?>
+                    <button type="button" class="btn btn-primary-custom" data-carousel-open data-id="<?= (int) $producto['id'] ?>">Lo quiero</button>
+                  <?php endif; ?>
+                </div>
+              </article>
+            <?php endforeach; ?>
+          </div>
         </div>
       </div>
     </section>
@@ -697,6 +705,11 @@ $renderIconoRed = static function (string $id): string {
   const initHomeCarrusel = () => {
     const carrusel = $('#homeProductosCarrusel');
     if (!carrusel) return;
+    const prevBtn = $('#homeCarouselPrev');
+    const nextBtn = $('#homeCarouselNext');
+    const mover = (delta) => carrusel.scrollBy({ left: delta, behavior: 'smooth' });
+    prevBtn && prevBtn.addEventListener('click', () => mover(-280));
+    nextBtn && nextBtn.addEventListener('click', () => mover(280));
     window.setInterval(() => {
       const max = carrusel.scrollWidth - carrusel.clientWidth;
       if (max <= 0) return;
@@ -730,13 +743,18 @@ $renderIconoRed = static function (string $id): string {
   };
 
   $$('.product-card').forEach((card) => {
-    const addBtn = $('[data-add-cart]', card);
     const viewBtn = $('[data-view-product]', card);
-    addBtn && addBtn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(Number(card.dataset.id || 0)); });
     viewBtn && viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openDetailById(card.dataset.id); });
   });
   $$('[data-carousel-open]').forEach((btn) => {
     btn.addEventListener('click', () => openDetailById(btn.dataset.id));
+  });
+  document.addEventListener('click', (e) => {
+    const addBtn = e.target.closest('[data-add-cart]');
+    if (!addBtn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(Number(addBtn.dataset.id || 0));
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
