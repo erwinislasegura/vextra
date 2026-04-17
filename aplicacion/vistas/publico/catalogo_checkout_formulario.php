@@ -18,6 +18,15 @@ foreach ($resumen as $itemResumenTmp) {
         break;
     }
 }
+$descuentoTotal = 0.0;
+foreach ($resumen as $itemDescuentoTmp) {
+    $precioBaseTmp = (float) ($itemDescuentoTmp['precio_base'] ?? $itemDescuentoTmp['precio'] ?? 0);
+    $precioActualTmp = (float) ($itemDescuentoTmp['precio'] ?? 0);
+    $cantidadTmp = max(1, (int) ($itemDescuentoTmp['cantidad'] ?? 1));
+    if ($precioBaseTmp > $precioActualTmp) {
+        $descuentoTotal += ($precioBaseTmp - $precioActualTmp) * $cantidadTmp;
+    }
+}
 ?>
 <style>
   .checkout-grid{align-items:flex-start}
@@ -54,7 +63,7 @@ foreach ($resumen as $itemResumenTmp) {
         <ul class="list-group list-group-flush mb-3 checkout-resumen-list" id="checkoutResumenLista">
           <?php foreach ($resumen as $item): ?>
             <?php $proximo = (int) ($item['proximo_catalogo'] ?? 0) === 1; $diasLlegada = max(0, (int) ($item['proximo_dias_catalogo'] ?? 0)); ?>
-            <li class="list-group-item px-0 checkout-item" data-id="<?= (int) ($item['id'] ?? 0) ?>" data-cantidad="<?= (int) ($item['cantidad'] ?? 1) ?>" data-precio="<?= (float) ($item['precio'] ?? 0) ?>" data-nombre="<?= e((string) ($item['nombre'] ?? 'Producto')) ?>" data-descripcion="<?= e((string) ($item['descripcion'] ?? '')) ?>" data-imagen="<?= e((string) ($item['imagen'] ?? url('/img/placeholder-producto.svg'))) ?>">
+            <li class="list-group-item px-0 checkout-item" data-id="<?= (int) ($item['id'] ?? 0) ?>" data-cantidad="<?= (int) ($item['cantidad'] ?? 1) ?>" data-precio="<?= (float) ($item['precio'] ?? 0) ?>" data-precio-base="<?= (float) ($item['precio_base'] ?? $item['precio'] ?? 0) ?>" data-nombre="<?= e((string) ($item['nombre'] ?? 'Producto')) ?>" data-descripcion="<?= e((string) ($item['descripcion'] ?? '')) ?>" data-imagen="<?= e((string) ($item['imagen'] ?? url('/img/placeholder-producto.svg'))) ?>">
               <div class="d-flex gap-2 align-items-start">
                 <img src="<?= e((string) ($item['imagen'] ?? url('/img/placeholder-producto.svg'))) ?>" alt="<?= e((string) ($item['nombre'] ?? 'Producto')) ?>" style="width:56px;height:56px;object-fit:cover;border-radius:8px;background:#f8fafc;">
                 <div class="flex-grow-1">
@@ -116,7 +125,9 @@ foreach ($resumen as $itemResumenTmp) {
         </div></div>
 
         <div class="card"><div class="card-body">
-          <div class="d-flex justify-content-between"><span class="small">Total</span><strong id="checkoutTotal"><?= e($fmon((float) $total)) ?></strong></div>
+          <div class="d-flex justify-content-between"><span class="small">Subtotal</span><span id="checkoutSubtotal"><?= e($fmon((float) ($total + $descuentoTotal))) ?></span></div>
+          <div class="d-flex justify-content-between"><span class="small">Descuento</span><span id="checkoutDescuento">-<?= e($fmon((float) $descuentoTotal)) ?></span></div>
+          <div class="d-flex justify-content-between border-top pt-2 mt-2"><span class="small fw-semibold">Total</span><strong id="checkoutTotal"><?= e($fmon((float) $total)) ?></strong></div>
           <div class="form-check my-2"><input class="form-check-input" type="checkbox" name="acepta_terminos" id="acepta_terminos" value="1" required><label class="form-check-label small" for="acepta_terminos">Acepto los términos y confirmo mis datos.</label></div>
           <button class="btn btn-primary btn-sm w-100" type="submit" id="checkoutSubmitBtn">Proceder a pagar</button>
         </div></div>
@@ -131,6 +142,8 @@ foreach ($resumen as $itemResumenTmp) {
   const form = document.getElementById('checkoutFormCatalogo');
   const lista = document.getElementById('checkoutResumenLista');
   const totalEl = document.getElementById('checkoutTotal');
+  const subtotalEl = document.getElementById('checkoutSubtotal');
+  const descuentoEl = document.getElementById('checkoutDescuento');
   const vacioEl = document.getElementById('checkoutResumenVacio');
   const carritoJsonInput = document.getElementById('carritoJsonInput');
   const submitBtn = document.getElementById('checkoutSubmitBtn');
@@ -139,12 +152,17 @@ foreach ($resumen as $itemResumenTmp) {
   const items = Array.from(lista.querySelectorAll('.checkout-item')).map((el) => ({
     id: Number(el.dataset.id || 0),
     precio: Number(el.dataset.precio || 0),
+    precioBase: Number(el.dataset.precioBase || el.dataset.precio || 0),
     cantidad: Math.max(1, Number(el.dataset.cantidad || 1)),
   }));
 
   const render = () => {
     const total = items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
+    const subtotalBruto = items.reduce((sum, i) => sum + (Math.max(i.precioBase, i.precio) * i.cantidad), 0);
+    const descuentoTotal = Math.max(0, subtotalBruto - total);
     totalEl.textContent = money(total);
+    if (subtotalEl) subtotalEl.textContent = money(subtotalBruto);
+    if (descuentoEl) descuentoEl.textContent = `-${money(descuentoTotal)}`;
     carritoJsonInput.value = JSON.stringify(items.map((i) => ({ producto_id: i.id, cantidad: i.cantidad })));
 
     items.forEach((item) => {

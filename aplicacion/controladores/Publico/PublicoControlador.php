@@ -702,7 +702,9 @@ class PublicoControlador extends Controlador
                 continue;
             }
             $producto = $itemsCatalogo[$productoId];
-            $precio = (float) ($producto['precio'] ?? 0);
+            $precioNormal = (float) ($producto['precio'] ?? 0);
+            $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
+            $precio = ($precioOferta > 0 && $precioOferta < $precioNormal) ? $precioOferta : $precioNormal;
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
             $resumen[] = [
@@ -712,6 +714,7 @@ class PublicoControlador extends Controlador
                 'imagen' => FlowApiService::construirUrlPublica('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
                 'cantidad' => $cantidad,
                 'precio' => $precio,
+                'precio_base' => $precioNormal,
                 'subtotal' => $subtotal,
                 'proximo_catalogo' => (int) ($producto['proximo_catalogo'] ?? 0),
                 'proximo_dias_catalogo' => max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0)),
@@ -796,7 +799,9 @@ class PublicoControlador extends Controlador
                 continue;
             }
             $producto = $itemsCatalogo[$productoId];
-            $precio = (float) ($producto['precio'] ?? 0);
+            $precioNormal = (float) ($producto['precio'] ?? 0);
+            $precioOferta = (float) ($producto['precio_oferta'] ?? 0);
+            $precio = ($precioOferta > 0 && $precioOferta < $precioNormal) ? $precioOferta : $precioNormal;
             $subtotal = $precio * $cantidad;
             $total += $subtotal;
             $resumen[] = [
@@ -806,6 +811,7 @@ class PublicoControlador extends Controlador
                 'imagen' => FlowApiService::construirUrlPublica('/catalogo/' . $empresaId . '/producto/' . $productoId . '/imagen'),
                 'cantidad' => $cantidad,
                 'precio' => $precio,
+                'precio_base' => $precioNormal,
                 'subtotal' => $subtotal,
                 'proximo_catalogo' => (int) ($producto['proximo_catalogo'] ?? 0),
                 'proximo_dias_catalogo' => max(0, (int) ($producto['proximo_dias_catalogo'] ?? 0)),
