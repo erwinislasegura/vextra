@@ -67,7 +67,17 @@ $sliderImagenPrincipal = (string) ($sliderCatalogo['imagen'] ?: url('/media/arch
 $sliderImagenSecundaria = (string) ($sliderCatalogo['imagen_secundaria'] ?: $sliderImagenPrincipal);
 $productosDestacados = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['destacado_catalogo'] ?? 0) === 1));
 $productosProximos = array_values(array_filter($productos, static fn(array $producto): bool => (int) ($producto['proximo_catalogo'] ?? 0) === 1));
-$productosCarrusel = array_slice(array_merge($productosDestacados, $productosProximos), 0, 5);
+$productosCarruselIndexados = [];
+foreach (array_merge($productosDestacados, $productosProximos) as $productoCarruselTmp) {
+    $idCarruselTmp = (int) ($productoCarruselTmp['id'] ?? 0);
+    if ($idCarruselTmp > 0) {
+        $productosCarruselIndexados[$idCarruselTmp] = $productoCarruselTmp;
+    }
+}
+$productosCarrusel = array_values($productosCarruselIndexados);
+if ($productosCarrusel !== []) {
+    shuffle($productosCarrusel);
+}
 $renderIconoRed = static function (string $id): string {
     return match ($id) {
         'facebook' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.5-3.2h-3.3V7.5c0-.9.3-1.6 1.6-1.6h1.8V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H8v3.2h2.4V21h3.1z"/></svg>',
@@ -738,13 +748,21 @@ $renderIconoRed = static function (string $id): string {
     if (!carrusel) return;
     const prevBtn = $('#homeCarouselPrev');
     const nextBtn = $('#homeCarouselNext');
-    const mover = (delta) => carrusel.scrollBy({ left: delta, behavior: 'smooth' });
-    prevBtn && prevBtn.addEventListener('click', () => mover(-280));
-    nextBtn && nextBtn.addEventListener('click', () => mover(280));
+    const calcularPaso = () => {
+      const primerItem = carrusel.querySelector('.home-carousel__item');
+      if (!primerItem) return 280;
+      const estilosCarrusel = window.getComputedStyle(carrusel);
+      const gap = Number.parseFloat(estilosCarrusel.columnGap || estilosCarrusel.gap || '0') || 0;
+      return Math.max(220, ((primerItem.getBoundingClientRect().width + gap) * 2));
+    };
+    const mover = (direccion = 1) => carrusel.scrollBy({ left: calcularPaso() * direccion, behavior: 'smooth' });
+    prevBtn && prevBtn.addEventListener('click', () => mover(-1));
+    nextBtn && nextBtn.addEventListener('click', () => mover(1));
     window.setInterval(() => {
       const max = carrusel.scrollWidth - carrusel.clientWidth;
       if (max <= 0) return;
-      const siguiente = carrusel.scrollLeft + 260 >= max ? 0 : carrusel.scrollLeft + 260;
+      const paso = calcularPaso();
+      const siguiente = carrusel.scrollLeft + paso >= max ? 0 : carrusel.scrollLeft + paso;
       carrusel.scrollTo({ left: siguiente, behavior: 'smooth' });
     }, 3200);
   };
