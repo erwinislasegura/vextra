@@ -350,7 +350,18 @@ $renderIconoRed = static function (string $id): string {
                     <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
                   </div>
                   <?php if ($esProximo): ?>
-                    <button type="button" class="btn btn-primary-custom btn-reservar" data-add-cart data-id="<?= (int) $producto['id'] ?>">Reservar</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary-custom btn-reservar"
+                      data-add-cart
+                      data-id="<?= (int) $producto['id'] ?>"
+                      data-name="<?= e($nombreProducto) ?>"
+                      data-price="<?= $precioMostrar ?>"
+                      data-description="<?= e((string) ($producto['descripcion'] ?? '')) ?>"
+                      data-image="<?= e($imagenProductoUrl) ?>"
+                      data-proximo="1"
+                      data-proximo-dias="<?= $diasProximo ?>"
+                    >Reservar</button>
                   <?php else: ?>
                     <button type="button" class="btn btn-primary-custom" data-carousel-open data-id="<?= (int) $producto['id'] ?>">Lo quiero</button>
                   <?php endif; ?>
@@ -685,8 +696,21 @@ $renderIconoRed = static function (string $id): string {
   const openCart = () => { cartPanel.classList.add('open'); overlay.classList.add('show'); };
   const closeCart = () => { cartPanel.classList.remove('open'); overlay.classList.remove('show'); };
 
-  const addToCart = (id) => {
-    const product = products.find((p) => p.id === id);
+  const addToCart = (id, fallback = null) => {
+    const product = products.find((p) => p.id === id) || (fallback && Number(fallback.id || 0) > 0 ? {
+      id: Number(fallback.id || 0),
+      name: String(fallback.name || 'Producto'),
+      price: Number(fallback.price || 0),
+      description: String(fallback.description || ''),
+      image: String(fallback.image || '<?= e(url('/img/placeholder-producto.svg')) ?>'),
+      stock: 0,
+      onSale: false,
+      featured: false,
+      oldPrice: 0,
+      proximo: String(fallback.proximo || '0') === '1',
+      proximoDias: Number(fallback.proximoDias || 0),
+      el: null,
+    } : null);
     if (!product) return;
     if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
@@ -766,7 +790,7 @@ $renderIconoRed = static function (string $id): string {
     if (!addBtn) return;
     e.preventDefault();
     e.stopPropagation();
-    addToCart(Number(addBtn.dataset.id || 0));
+    addToCart(Number(addBtn.dataset.id || 0), addBtn.dataset);
   });
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
