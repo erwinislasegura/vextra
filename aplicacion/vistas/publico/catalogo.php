@@ -133,19 +133,19 @@ $renderIconoRed = static function (string $id): string {
   .slide-actions{display:flex;gap:12px;flex-wrap:wrap}
   .slide-actions .btn-primary-custom{color:#fff !important;font-weight:600;padding:12px 30px;min-width:220px;text-align:center;text-decoration:none !important}
   .home-carousel{padding:0 0 26px}
-  .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:14px 14px 8px;box-shadow:0 14px 30px rgba(37,45,89,.10)}
+  .home-carousel__shell{background:linear-gradient(140deg,#ffffff 0%,#f1f4ff 100%);border:1px solid #d7dcf7;border-radius:18px;padding:10px 12px 6px;box-shadow:0 10px 20px rgba(37,45,89,.08)}
   .home-carousel__header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
   .home-carousel__header h3{margin:0;color:var(--primary);font-size:16px;font-weight:400}
   .home-carousel__controls{display:flex;gap:8px}
   .home-carousel__nav{width:36px;height:36px;border-radius:10px;border:1px solid #cbcffa;background:#fff;color:#312e81;font-weight:700}
   .home-carousel__track{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin;scroll-snap-type:x mandatory}
-  .home-carousel__item{flex:0 0 calc((100% - 48px) / 5);min-width:210px;max-width:240px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:12px;box-shadow:0 8px 18px rgba(30,41,59,.12);scroll-snap-align:start;display:flex;flex-direction:column;gap:10px}
-  .home-carousel__item img{width:100%;height:190px;object-fit:cover;border-radius:10px;background:#eef2ff}
-  .home-carousel__item h4{font-size:17px;margin:0;color:var(--primary);font-weight:700;line-height:1.25}
+  .home-carousel__item{flex:0 0 calc((100% - 48px) / 5);min-width:210px;max-width:240px;background:linear-gradient(180deg,#ffffff 0%,#f3f4ff 100%);border:1px solid #d4d8f0;border-radius:12px;padding:10px;box-shadow:0 6px 14px rgba(30,41,59,.10);scroll-snap-align:start;display:flex;flex-direction:column;gap:8px}
+  .home-carousel__item img{width:100%;height:150px;object-fit:contain;border-radius:10px;background:#fff}
+  .home-carousel__item h4{font-size:15px;margin:0;color:var(--primary);font-weight:700;line-height:1.2}
   .home-carousel__meta{font-size:13px;margin:0;color:var(--muted)}
   .home-carousel__actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-carousel__actions .btn{font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px}
-  .home-carousel__proximo-text{font-size:12px;font-weight:700;color:#15803d}
+  .home-carousel__proximo-text{display:block;font-size:12px;font-weight:700;color:#15803d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
   .section-head h2,.sidebar h3{font-size:18px;color:var(--primary);font-weight:700}
   .promo-box{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--border)}
   .promo-box p{color:var(--muted);margin:6px 0 0}
@@ -264,7 +264,8 @@ $renderIconoRed = static function (string $id): string {
     .slide h2{font-size:27px;font-weight:600}
     .slide p{font-size:14px;font-weight:400;line-height:1.45}
     .slide-actions .btn-primary-custom{width:100%;min-width:0}
-    .home-carousel__item{flex:0 0 88%;min-width:88%;max-width:88%}
+    .home-carousel__item{flex:0 0 calc((100% - 10px) / 2);min-width:calc((100% - 10px) / 2);max-width:calc((100% - 10px) / 2)}
+    .home-carousel__item img{height:130px}
     .footer-content{grid-template-columns:1fr}
     .footer-bottom__content{flex-direction:column;align-items:flex-start}
     .cart-panel{width:100%}
