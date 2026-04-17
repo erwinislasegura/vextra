@@ -1,0 +1,69 @@
+<h1 class="h4 mb-3">Dominio personalizado del catálogo</h1>
+
+<div class="alert alert-info info-modulo mb-3">
+  <div class="fw-semibold mb-1">Configura tu dominio para mostrar el catálogo con tu marca</div>
+  <ul class="mb-0 small ps-3">
+    <li>Ingresa solo el host, sin <code>https://</code> ni rutas (ej: <code>catalogo.tuempresa.com</code>).</li>
+    <li>Debes apuntar DNS (A o CNAME) al servidor de Vextra.</li>
+    <li>El certificado SSL del dominio debe estar activo para usar HTTPS.</li>
+  </ul>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <span>Estado de funcionalidad en tu plan</span>
+    <?php if ($incluyeDominioCatalogo): ?>
+      <span class="badge bg-success-subtle text-success-emphasis">Incluido</span>
+    <?php else: ?>
+      <span class="badge bg-warning-subtle text-warning-emphasis">No incluido</span>
+    <?php endif; ?>
+  </div>
+  <div class="card-body">
+    <?php if (!$incluyeDominioCatalogo): ?>
+      <div class="alert alert-warning mb-0">
+        Tu plan actual no incluye dominio personalizado para catálogo. Puedes dejar este valor como referencia, pero no podrás editarlo hasta cambiar de plan.
+      </div>
+    <?php endif; ?>
+  </div>
+</div>
+
+<form method="POST" action="<?= e(url('/app/configuracion/dominio-catalogo')) ?>" class="card">
+  <div class="card-header">Configuración de dominio</div>
+  <div class="card-body row g-3">
+    <?= csrf_campo() ?>
+
+    <div class="col-md-8">
+      <label class="form-label">Dominio personalizado</label>
+      <input
+        name="catalogo_dominio"
+        class="form-control"
+        value="<?= e($catalogoDominio) ?>"
+        placeholder="catalogo.tuempresa.com"
+        autocomplete="off"
+        <?= $incluyeDominioCatalogo ? '' : 'readonly' ?>
+      >
+      <div class="form-text">Si lo dejas vacío, el catálogo seguirá funcionando con la URL por ID.</div>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">URL actual de respaldo</label>
+      <input class="form-control" value="<?= e(url('/catalogo/' . (int) ($empresa['id'] ?? 0))) ?>" readonly>
+      <div class="form-text">Esta URL no se desactiva.</div>
+    </div>
+
+    <div class="col-12">
+      <div class="alert alert-light border mb-0">
+        <div class="fw-semibold mb-1">Pasos recomendados en hosting</div>
+        <ol class="mb-0 small ps-3">
+          <li>Crea DNS A/CNAME para tu dominio hacia este servidor.</li>
+          <li>Activa SSL del dominio.</li>
+          <li>Si quieres ocultar <code>/catalogo/{id}</code>, configura rewrite/proxy interno en tu hosting.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button class="btn btn-primary btn-sm" <?= $incluyeDominioCatalogo ? '' : 'disabled' ?>>Guardar dominio</button>
+  </div>
+</form>

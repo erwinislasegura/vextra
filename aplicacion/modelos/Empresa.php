@@ -415,6 +415,24 @@ class Empresa extends Modelo
         return $stmt->fetch() ?: null;
     }
 
+    public function actualizarCatalogoDominio(int $empresaId, ?string $dominio): void
+    {
+        if (!$this->columnaExisteEnEmpresas('catalogo_dominio')) {
+            return;
+        }
+
+        $sql = 'UPDATE empresas SET catalogo_dominio = :catalogo_dominio';
+        if ($this->columnaExisteEnEmpresas('fecha_actualizacion')) {
+            $sql .= ', fecha_actualizacion = NOW()';
+        }
+        $sql .= ' WHERE id = :empresa_id AND fecha_eliminacion IS NULL';
+
+        $this->db->prepare($sql)->execute([
+            'catalogo_dominio' => $dominio,
+            'empresa_id' => $empresaId,
+        ]);
+    }
+
     public function obtenerConfiguracionCatalogoEnLinea(int $empresaId): array
     {
         $config = [

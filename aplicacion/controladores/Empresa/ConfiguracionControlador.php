@@ -113,6 +113,51 @@ class ConfiguracionControlador extends Controlador
         $this->redirigir('/app/configuracion');
     }
 
+    public function dominioCatalogo(): void
+    {
+        $empresaId = empresa_actual_id();
+        $modelo = new Empresa();
+        $empresa = $modelo->obtenerConfiguracion($empresaId);
+
+        if (!$empresa) {
+            flash('danger', 'No se encontró la empresa para actualizar.');
+            $this->redirigir('/app/panel');
+        }
+
+        $incluyeDominioCatalogo = plan_tiene_funcionalidad_empresa_actual('catalogo_dominio_personalizado');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            validar_csrf();
+
+            if (!$incluyeDominioCatalogo) {
+                flash('warning', 'Tu plan actual no incluye dominio personalizado para catálogo.');
+                $this->redirigir('/app/configuracion/dominio-catalogo');
+            }
+
+            $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
+            if ($catalogoDominioNormalizado === false) {
+                flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
+                $this->redirigir('/app/configuracion/dominio-catalogo');
+            }
+
+            if ($catalogoDominioNormalizado !== '') {
+                $empresaConDominio = $modelo->buscarPorCatalogoDominio($catalogoDominioNormalizado);
+                if ($empresaConDominio && (int) ($empresaConDominio['id'] ?? 0) !== $empresaId) {
+                    flash('danger', 'Ese dominio ya está siendo usado por otra empresa.');
+                    $this->redirigir('/app/configuracion/dominio-catalogo');
+                }
+            }
+
+            $modelo->actualizarCatalogoDominio($empresaId, $catalogoDominioNormalizado !== '' ? $catalogoDominioNormalizado : null);
+
+            flash('success', 'Dominio de catálogo actualizado correctamente.');
+            $this->redirigir('/app/configuracion/dominio-catalogo');
+        }
+
+        $catalogoDominio = trim((string) ($empresa['catalogo_dominio'] ?? ''));
+        $this->vista('empresa/configuracion/dominio_catalogo', compact('empresa', 'catalogoDominio', 'incluyeDominioCatalogo'), 'empresa');
+    }
+
     private function normalizarDominioCatalogo(string $valor): string|false
     {
         $dominio = trim(mb_strtolower($valor));
