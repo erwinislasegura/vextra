@@ -75,7 +75,14 @@ $faqSchema = [
                     <a href="<?= e(url('/registro')) ?>" class="btn btn-primary btn-lg">Prueba gratis 30 días</a>
                     <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary btn-lg">Ver demo</a>
                 </div>
-                <p class="small text-secondary mb-0">Simple de usar, pensado para pymes chilenas que quieren control total del negocio, más ventas y una operación profesional.</p>
+                <h1 class="display-6 fw-bold mb-3">Sistema de cotizaciones y ventas con inventario para crecer con control real</h1>
+                <p class="lead text-secondary">Vextra es un software de cotización online que conecta tu gestión comercial, sistema punto de venta y sistema de inventario para que tu empresa venda más, responda rápido y opere con orden administrativo.</p>
+                <p class="mb-3">Ahora además puedes activar <strong>catálogo en línea con carrito de compras</strong> y <strong>pagos en línea integrados</strong> para vender 24/7 con una experiencia de compra más profesional para tus clientes.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="<?= e(url('/registro')) ?>" class="btn btn-primary">Comenzar prueba gratis de 30 días</a>
+                    <a href="<?= e(url('/contacto')) ?>" class="btn btn-outline-primary">Ver demo</a>
+                </div>
+                <p class="small text-secondary mt-3 mb-0">Ideal para empresas chilenas que necesitan cotizar, vender y controlar stock sin depender de planillas sueltas.</p>
             </div>
             <div class="col-lg-5">
                 <div class="card card-soft h-100">
@@ -95,7 +102,45 @@ $faqSchema = [
     </div>
 </section>
 
-<section class="py-5 border-bottom bg-warning-subtle">
+<section class="py-5 border-bottom bg-light">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="badge text-bg-primary mb-2">NUEVO</span>
+            <h2 class="h3 mb-2">Nuevas funcionalidades para vender más</h2>
+            <p class="text-secondary mb-0">Más alcance comercial y cobro simple para pymes chilenas.</p>
+        </div>
+        <div class="row g-3">
+            <article class="col-lg-6">
+                <div class="card h-100 border-primary border-2">
+                    <div class="card-body">
+                        <h3 class="h5"><i class="bi bi-cart3 text-primary me-2"></i>Catálogo en línea</h3>
+                        <p class="mb-2">Publica tus productos con carrito y convierte más visitas en ventas.</p>
+                        <ul class="small mb-0 ps-3 d-grid gap-1">
+                            <li>Comparte tu catálogo por WhatsApp, redes y web.</li>
+                            <li>Muestra productos y precios de forma profesional.</li>
+                            <li>Conecta ventas online con tu inventario real.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+            <article class="col-lg-6">
+                <div class="card h-100 border-success border-2">
+                    <div class="card-body">
+                        <h3 class="h5"><i class="bi bi-credit-card text-success me-2"></i>Pagos en línea</h3>
+                        <p class="mb-2">Recibe pagos en línea integrados para cerrar más rápido y sin fricción.</p>
+                        <ul class="small mb-0 ps-3 d-grid gap-1">
+                            <li>Reduce abandono al momento de pagar.</li>
+                            <li>Automatiza la confirmación de compra.</li>
+                            <li>Mejora la experiencia de tu cliente final.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="text-center mb-4">
             <span class="badge text-bg-dark mb-2">NUEVO</span>
@@ -229,17 +274,24 @@ $faqSchema = [
                         </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card h-100 border-success-subtle">
-                    <div class="card-body">
-                        <h3 class="h5 text-success">Con Vextra: operación conectada</h3>
-                        <ul class="small ps-3 mb-0 d-grid gap-1">
-                            <li>Cotización, POS, inventario, catálogo y pagos en una sola vista.</li>
-                            <li>Control total del negocio en tiempo real.</li>
-                            <li>Implementación simple para profesionalizar tu pyme.</li>
-                        </ul>
-                    </div>
+            </article>
+            <article class="col-lg-6">
+                <h2 class="h3">Características clave para gestión comercial moderna</h2>
+                <h3 class="h5 mt-3">Cotizaciones y presupuestos profesionales</h3>
+                <p>Plantillas claras, control de versiones, descuentos y condiciones comerciales para mantener coherencia entre vendedor, cliente y administración.</p>
+                <h3 class="h5">Sistema punto de venta conectado</h3>
+                <p>Ventas rápidas en caja, registro por vendedor y trazabilidad de transacciones con impacto automático en inventario.</p>
+                <h3 class="h5">Inventario con movimientos y alertas</h3>
+                <p>Recepciones, ajustes, control de quiebres y consulta por producto para evitar decisiones a ciegas.</p>
+                <h3 class="h5 text-primary">Catálogo online con carrito (nuevo)</h3>
+                <p>Publica tus productos en minutos y permite compras directas con una vitrina digital lista para vender en Chile.</p>
+                <h3 class="h5 text-success">Pagos online integrados (nuevo)</h3>
+                <p>Recibe pagos sin procesos manuales y conecta cada cobro con tu operación comercial e inventario.</p>
+                <h3 class="h5">Gestión integral de clientes y oportunidades</h3>
+                <p>Historial comercial por cliente, seguimiento de estado de cotización y foco en las oportunidades con mayor probabilidad de cierre.</p>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <a href="<?= e(url('/caracteristicas')) ?>" class="btn btn-outline-primary btn-sm">Ver características</a>
+                    <a href="<?= e(url('/preguntas-frecuentes')) ?>" class="btn btn-outline-secondary btn-sm">Revisar preguntas frecuentes</a>
                 </div>
             </div>
         </div>
@@ -285,8 +337,8 @@ $faqSchema = [
                     <article class="card h-100 border-2 <?= $esProfesional ? 'border-primary border-3 shadow' : '' ?>" style="border-color: <?= e($plan['color_visual'] ?: '#dce3eb') ?> !important;">
                         <div class="card-body d-flex flex-column">
                             <div class="d-flex flex-wrap gap-2 mb-2">
-                                <?php if ($esProfesional): ?><span class="badge text-bg-primary">Más vendido</span><?php endif; ?>
-                                <?php if (!empty($plan['destacado']) && !$esProfesional): ?><span class="badge text-bg-success">Destacado</span><?php endif; ?>
+                                <?php if ($esRecomendado): ?><span class="badge text-bg-primary"><?= $index === 1 ? 'MÁS VENDIDO' : 'MÁS CONVENIENTE' ?></span><?php endif; ?>
+                                <?php if (!empty($plan['destacado'])): ?><span class="badge text-bg-success">DESTACADO</span><?php endif; ?>
                             </div>
                             <h3 class="h5"><?= e($nombreVisual) ?></h3>
                             <p class="text-secondary small mb-2"><?= e($plan['resumen_comercial'] ?: $plan['descripcion_comercial']) ?></p>
@@ -296,9 +348,9 @@ $faqSchema = [
                                 <?php foreach ($plan['funcionalidades'] as $funcionalidad): ?>
                                     <li><?= e($funcionalidad['descripcion'] ?: $funcionalidad['nombre']) ?></li>
                                 <?php endforeach; ?>
-                                <?php if ($esProfesional): ?>
-                                    <li><strong>Incluye catálogo online con carrito</strong></li>
-                                    <li><strong>Incluye pagos online integrados</strong></li>
+                                <?php if ($index === 1): ?>
+                                    <li><strong>Catálogo online con carrito</strong></li>
+                                    <li><strong>Pagos online integrados</strong></li>
                                 <?php endif; ?>
                             </ul>
                             <div class="d-grid gap-2 mt-auto">
