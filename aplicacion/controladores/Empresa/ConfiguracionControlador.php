@@ -51,17 +51,22 @@ class ConfiguracionControlador extends Controlador
             $this->redirigir('/app/configuracion');
         }
 
-        $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
-        if ($catalogoDominioNormalizado === false) {
-            flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
-            $this->redirigir('/app/configuracion');
-        }
+        $puedeConfigurarDominioCatalogo = plan_tiene_funcionalidad_empresa_actual('catalogo_dominio_personalizado');
+        $catalogoDominioNormalizado = trim((string) ($empresa['catalogo_dominio'] ?? ''));
 
-        if ($catalogoDominioNormalizado !== '') {
-            $empresaConDominio = $modelo->buscarPorCatalogoDominio($catalogoDominioNormalizado);
-            if ($empresaConDominio && (int) ($empresaConDominio['id'] ?? 0) !== $empresaId) {
-                flash('danger', 'Ese dominio ya está siendo usado por otra empresa.');
+        if ($puedeConfigurarDominioCatalogo) {
+            $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
+            if ($catalogoDominioNormalizado === false) {
+                flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
                 $this->redirigir('/app/configuracion');
+            }
+
+            if ($catalogoDominioNormalizado !== '') {
+                $empresaConDominio = $modelo->buscarPorCatalogoDominio($catalogoDominioNormalizado);
+                if ($empresaConDominio && (int) ($empresaConDominio['id'] ?? 0) !== $empresaId) {
+                    flash('danger', 'Ese dominio ya está siendo usado por otra empresa.');
+                    $this->redirigir('/app/configuracion');
+                }
             }
         }
 
@@ -100,7 +105,11 @@ class ConfiguracionControlador extends Controlador
             }
         }
 
-        flash('success', 'Configuración actualizada correctamente.');
+        if ($puedeConfigurarDominioCatalogo) {
+            flash('success', 'Configuración actualizada correctamente.');
+        } else {
+            flash('warning', 'Configuración actualizada. Tu plan actual no incluye dominio personalizado para catálogo.');
+        }
         $this->redirigir('/app/configuracion');
     }
 

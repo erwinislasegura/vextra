@@ -391,6 +391,10 @@ class Empresa extends Modelo
 
     public function buscarPorCatalogoDominio(string $host): ?array
     {
+        if (!$this->columnaExisteEnEmpresas('catalogo_dominio')) {
+            return null;
+        }
+
         $dominio = trim(mb_strtolower($host));
         if ($dominio === '') {
             return null;

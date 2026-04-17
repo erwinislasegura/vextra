@@ -13,6 +13,7 @@ SOURCE base_datos/actualizaciones/actualizacion_catalogo_dominio_personalizado.s
 ## Qué habilita
 - Campo `catalogo_dominio` en `empresas`.
 - Validación de unicidad de dominio entre empresas.
+- Nueva funcionalidad de plan: `catalogo_dominio_personalizado`.
 - Nuevo flujo en configuración de empresa para guardar dominio.
 - Nuevas rutas de catálogo por dominio:
   - `GET /catalogo`
@@ -21,6 +22,13 @@ SOURCE base_datos/actualizaciones/actualizacion_catalogo_dominio_personalizado.s
   - `POST /catalogo/contacto`
 
 Estas rutas resuelven la empresa por `HTTP_HOST` usando `catalogo_dominio`.
+
+## Asignación inicial por plan
+- **Básico**: no incluido.
+- **Profesional**: incluido.
+- **Empresa**: incluido.
+
+La asignación se puede modificar desde `/admin/plan-funcionalidades/{planId}`.
 
 ## Recomendación de despliegue
 1. Crear registro DNS (A o CNAME) del dominio del cliente hacia el servidor.
