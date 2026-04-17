@@ -18,6 +18,7 @@ $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
 $logoEmpresa = logo_empresa_actual();
 $logoEmpresaSrc = $logoEmpresa ? (url('/app/logo-empresa') . '?v=' . urlencode($logoEmpresa)) : null;
 $soporteNoLeidosCliente = (new SoporteChat())->contarNoLeidosEmpresa((int) (empresa_actual_id() ?? 0));
+$incluyeDominioCatalogo = plan_tiene_funcionalidad_empresa_actual('catalogo_dominio_personalizado');
 ?>
 <aside class="sidebar sidebar-app p-3 border-end bg-white">
   <div class="mb-3">
@@ -87,6 +88,7 @@ $soporteNoLeidosCliente = (new SoporteChat())->contarNoLeidosEmpresa((int) (empr
     <?php if ($tieneModulo('modulo_documentos')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/documentos', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/documentos')) ?>"><i class="bi bi-code-square mt-1"></i><span>Plantilla correo cotización</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_documentos')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/configuracion/envio-oc-html', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/configuracion/envio-oc-html')) ?>"><i class="bi bi-envelope mt-1"></i><span>Envío OC HTML</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_configuracion')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/configuracion', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/configuracion')) ?>"><i class="bi bi-gear mt-1"></i><span>Configuración empresa</span></a><?php endif; ?>
+    <?php if ($tieneModulo('modulo_configuracion')): ?><a class="nav-link d-flex gap-2 align-items-center <?= $coincideRuta('/app/configuracion', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/configuracion#catalogo-dominio')) ?>"><i class="bi bi-globe2 mt-1"></i><span>Dominio catálogo</span><small class="ms-auto badge <?= $incluyeDominioCatalogo ? 'text-bg-success' : 'text-bg-secondary' ?>"><?= $incluyeDominioCatalogo ? 'Incluido' : 'No incluido' ?></small></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_checkout_flow')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/pagos/checkout-flow', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/pagos/checkout-flow')) ?>"><i class="bi bi-credit-card-2-front mt-1"></i><span>Checkout Flow</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_correos_stock')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/configuracion/correos-stock', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/configuracion/correos-stock')) ?>"><i class="bi bi-envelope-paper mt-1"></i><span>Correos de stock</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_usuarios')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/usuarios', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/usuarios')) ?>"><i class="bi bi-people mt-1"></i><span>Usuarios y permisos</span></a><?php endif; ?>
