@@ -33,6 +33,24 @@
           <div class="form-text">Este texto reemplaza la frase fija del footer del catálogo público.</div>
         </div>
         <div class="col-md-4">
+          <label class="form-label">Rubro para etiquetas de envío</label>
+          <?php $etiquetaRubro = (string) ($empresa['etiqueta_rubro'] ?? 'general'); ?>
+          <select name="etiqueta_rubro" class="form-select">
+            <option value="general" <?= $etiquetaRubro === 'general' ? 'selected' : '' ?>>General</option>
+            <option value="tenis_mesa" <?= $etiquetaRubro === 'tenis_mesa' ? 'selected' : '' ?>>Tenis de mesa</option>
+            <option value="fitness" <?= $etiquetaRubro === 'fitness' ? 'selected' : '' ?>>Fitness</option>
+            <option value="tecnologia" <?= $etiquetaRubro === 'tecnologia' ? 'selected' : '' ?>>Tecnología</option>
+            <option value="moda" <?= $etiquetaRubro === 'moda' ? 'selected' : '' ?>>Moda</option>
+            <option value="hogar" <?= $etiquetaRubro === 'hogar' ? 'selected' : '' ?>>Hogar</option>
+          </select>
+          <div class="form-text">Define el rubro para frases automáticas en etiquetas impresas.</div>
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Frases personalizadas para etiquetas (opcional)</label>
+          <textarea name="etiqueta_frases" class="form-control" rows="3" maxlength="2500" placeholder="Escribe una frase por línea para usar en tus etiquetas."><?= e((string) ($empresa['etiqueta_frases'] ?? '')) ?></textarea>
+          <div class="form-text">Si completas frases aquí, tendrán prioridad sobre las frases por rubro.</div>
+        </div>
+        <div class="col-md-4">
           <label class="form-label">Correo principal</label>
           <input type="email" name="correo" class="form-control" value="<?= e($empresa['correo'] ?? '') ?>" required>
         </div>

@@ -366,6 +366,8 @@ class Empresa extends Modelo
             'imap_password' => $data['imap_password'] ?? '',
             'imap_remitente_correo' => $data['imap_remitente_correo'] ?? '',
             'imap_remitente_nombre' => $data['imap_remitente_nombre'] ?? '',
+            'etiqueta_rubro' => $data['etiqueta_rubro'] ?? 'general',
+            'etiqueta_frases' => $data['etiqueta_frases'] ?? '',
         ];
 
         $sets = [];

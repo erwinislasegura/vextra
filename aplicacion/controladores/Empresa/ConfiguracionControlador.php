@@ -68,6 +68,8 @@ class ConfiguracionControlador extends Controlador
             'imap_password' => $imapPassword,
             'imap_remitente_correo' => trim((string) ($_POST['imap_remitente_correo'] ?? '')),
             'imap_remitente_nombre' => trim((string) ($_POST['imap_remitente_nombre'] ?? '')),
+            'etiqueta_rubro' => mb_substr(trim((string) ($_POST['etiqueta_rubro'] ?? 'general')), 0, 80),
+            'etiqueta_frases' => mb_substr(trim((string) ($_POST['etiqueta_frases'] ?? '')), 0, 2500),
         ]);
 
         $adminEmpresa = (new Usuario())->obtenerAdministradorPrincipalPorEmpresa($empresaId);
