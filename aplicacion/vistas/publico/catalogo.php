@@ -166,10 +166,10 @@ $renderIconoRed = static function (string $id): string {
   .product-card{background:#fff;border:1px solid #d7deea;border-radius:12px;overflow:hidden;box-shadow:0 10px 20px rgba(15,23,42,.08);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
-  .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
-  .badge-mini.sale{background:linear-gradient(135deg,#ffedd5,#fed7aa);color:#9a3412;border:1px solid #fdba74}
-  .badge-mini.destacado{left:auto;right:14px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#312e81;border:1px solid #a5b4fc}
-  .badge-mini.proximo{left:auto;right:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d}
+  .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:6px;box-shadow:var(--shadow)}
+  .badge-mini.sale{background:#dc2626;color:#fff;border:1px solid #b91c1c}
+  .badge-mini.destacado{left:auto;right:14px;background:#f97316;color:#fff;border:1px solid #ea580c}
+  .badge-mini.proximo{left:auto;right:14px;background:#16a34a;color:#fff;border:1px solid #15803d}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
@@ -393,6 +393,7 @@ $renderIconoRed = static function (string $id): string {
         <div class="feature-list">
           <button type="button" id="showAllBtn">Ver todos los productos</button>
           <button type="button" id="showOffersBtn">Ver ofertas</button>
+          <button type="button" id="showIncomingBtn">Productos que pronto llegarán</button>
           <button type="button" id="showStockBtn">Solo con stock</button>
           <button type="button" id="showCheapestBtn">Más baratos primero</button>
           <button type="button" id="showExpensiveBtn">Más caros primero</button>
@@ -569,6 +570,7 @@ $renderIconoRed = static function (string $id): string {
   let selectedCategory = 'all';
   let onlyOffers = false;
   let onlyStock = false;
+  let onlyIncoming = false;
 
   const categoryFilter = $('#categoryFilter');
   const categoryButtons = $('#categoryButtons');
@@ -632,7 +634,8 @@ $renderIconoRed = static function (string $id): string {
       }
       const matchOffers = !onlyOffers || p.onSale;
       const matchStock = !onlyStock || p.stock > 0;
-      return matchTerm && matchCategory && matchPrice && matchOffers && matchStock;
+      const matchIncoming = !onlyIncoming || p.proximo;
+      return matchTerm && matchCategory && matchPrice && matchOffers && matchStock && matchIncoming;
     });
 
     const sort = sortFilter.value;
@@ -705,7 +708,6 @@ $renderIconoRed = static function (string $id): string {
   const addToCart = (id) => {
     const product = productsById.get(id) || null;
     if (!product) return;
-    if (product.proximo) return;
     const ex = cart.find((i) => i.id === id);
     if (ex) ex.quantity += 1;
     else cart.push({ id: product.id, name: product.name, description: product.description, image: product.image, price: product.price, oldPrice: product.oldPrice, quantity: 1, proximo: product.proximo, proximoDias: product.proximoDias });
@@ -807,9 +809,7 @@ $renderIconoRed = static function (string $id): string {
 
   $('#detalleAgregarCarrito').addEventListener('click', () => {
     if (!productoSeleccionado) return;
-    if (!productoSeleccionado.proximo) {
-      addToCart(Number(productoSeleccionado.id));
-    }
+    addToCart(Number(productoSeleccionado.id));
     const modalProductoDetalle = getModalProductoDetalle();
     modalProductoDetalle && modalProductoDetalle.hide();
   });
@@ -835,14 +835,15 @@ $renderIconoRed = static function (string $id): string {
     }
   });
 
-  $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; applyFilters(); });
-  $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; applyFilters(); });
-  $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; applyFilters(); });
-  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; applyFilters(); });
-  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; applyFilters(); });
-  const featuredTop = $('#showFeaturedBtnTop'); if (featuredTop) featuredTop.addEventListener('click', (e) => { e.preventDefault(); sortFilter.value = 'featured'; onlyOffers = false; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
-  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', (e) => { e.preventDefault(); onlyOffers = true; onlyStock = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
-  const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; applyFilters(); });
+  $('#showAllBtn').addEventListener('click', () => { onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  $('#showOffersBtn').addEventListener('click', () => { onlyOffers = true; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  $('#showIncomingBtn').addEventListener('click', () => { onlyIncoming = true; onlyOffers = false; onlyStock = false; applyFilters(); });
+  $('#showStockBtn').addEventListener('click', () => { onlyStock = true; onlyOffers = false; onlyIncoming = false; applyFilters(); });
+  $('#showCheapestBtn').addEventListener('click', () => { sortFilter.value = 'price-asc'; onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  $('#showExpensiveBtn').addEventListener('click', () => { sortFilter.value = 'price-desc'; onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); });
+  const featuredTop = $('#showFeaturedBtnTop'); if (featuredTop) featuredTop.addEventListener('click', (e) => { e.preventDefault(); sortFilter.value = 'featured'; onlyOffers = false; onlyStock = false; onlyIncoming = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
+  const offersTop = $('#showOffersBtnTop'); if (offersTop) offersTop.addEventListener('click', (e) => { e.preventDefault(); onlyOffers = true; onlyStock = false; onlyIncoming = false; applyFilters(); document.getElementById('catalogoProductos')?.scrollIntoView({ behavior: 'smooth' }); });
+  const stockTop = $('#showStockBtnTop'); if (stockTop) stockTop.addEventListener('click', () => { onlyStock = true; onlyOffers = false; onlyIncoming = false; applyFilters(); });
 
   searchInput.addEventListener('input', applyFilters);
   globalSearch.addEventListener('input', applyFilters);
@@ -850,7 +851,7 @@ $renderIconoRed = static function (string $id): string {
   priceFilter.addEventListener('change', applyFilters);
   sortFilter.addEventListener('change', applyFilters);
   $('#clearFilters').addEventListener('click', () => {
-    searchInput.value = ''; globalSearch.value = ''; selectedCategory = 'all'; onlyOffers = false; onlyStock = false;
+    searchInput.value = ''; globalSearch.value = ''; selectedCategory = 'all'; onlyOffers = false; onlyStock = false; onlyIncoming = false;
     categoryFilter.value = 'all'; priceFilter.value = 'all'; sortFilter.value = 'featured'; renderCategories(); applyFilters();
   });
 
