@@ -165,6 +165,7 @@ class PlanFuncionalidadesControlador extends Controlador
             'clientes_exportar_excel' => ['modulo_clientes'],
             'clientes_gestion_listas_precios' => ['modulo_clientes', 'modulo_listas_precios'],
             'clientes_asignar_vendedor' => ['modulo_clientes', 'modulo_vendedores'],
+            'catalogo_dominio_personalizado' => ['modulo_catalogo_en_linea', 'modulo_configuracion'],
         ];
     }
 
