@@ -53,6 +53,24 @@
           <label class="form-label">País</label>
           <input name="pais" class="form-control" value="<?= e($empresa['pais'] ?? '') ?>">
         </div>
+        <div class="col-md-6">
+          <label class="form-label">Dominio personalizado para catálogo</label>
+          <input
+            name="catalogo_dominio"
+            class="form-control"
+            value="<?= e((string) ($empresa['catalogo_dominio'] ?? '')) ?>"
+            placeholder="catalogo.tuempresa.com"
+            autocomplete="off"
+          >
+          <div class="form-text">
+            Opcional. Debe apuntar por DNS (CNAME/A) a este servidor. Al activarlo, podrás usar <code>https://<?= e((string) ($empresa['catalogo_dominio'] ?? 'tu-dominio.com')) ?>/catalogo</code>.
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">URL actual de catálogo</label>
+          <input class="form-control" value="<?= e(url('/catalogo/' . (int) ($empresa['id'] ?? 0))) ?>" readonly>
+          <div class="form-text">Esta URL siempre seguirá disponible como respaldo.</div>
+        </div>
         <div class="col-12">
           <hr class="my-1">
           <div class="fw-semibold small text-uppercase text-muted">Administrador de la cuenta</div>

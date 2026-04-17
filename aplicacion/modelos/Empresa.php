@@ -357,6 +357,7 @@ class Empresa extends Modelo
             'ciudad' => $data['ciudad'] ?? '',
             'pais' => $data['pais'] ?? '',
             'descripcion' => $data['descripcion'] ?? '',
+            'catalogo_dominio' => $data['catalogo_dominio'] ?? null,
             'logo' => $data['logo'] ?? '',
             'imap_host' => $data['imap_host'] ?? '',
             'imap_port' => $data['imap_port'] ?? null,
@@ -386,6 +387,28 @@ class Empresa extends Modelo
 
         $sql = 'UPDATE empresas SET ' . implode(', ', $sets) . ' WHERE id = :empresa_id AND fecha_eliminacion IS NULL';
         $this->db->prepare($sql)->execute($params);
+    }
+
+    public function buscarPorCatalogoDominio(string $host): ?array
+    {
+        $dominio = trim(mb_strtolower($host));
+        if ($dominio === '') {
+            return null;
+        }
+
+        if (str_contains($dominio, ':')) {
+            $dominio = explode(':', $dominio, 2)[0];
+        }
+
+        $stmt = $this->db->prepare(
+            'SELECT * FROM empresas
+             WHERE LOWER(TRIM(catalogo_dominio)) = :dominio
+               AND estado = "activa"
+               AND fecha_eliminacion IS NULL
+             LIMIT 1'
+        );
+        $stmt->execute(['dominio' => $dominio]);
+        return $stmt->fetch() ?: null;
     }
 
     public function obtenerConfiguracionCatalogoEnLinea(int $empresaId): array

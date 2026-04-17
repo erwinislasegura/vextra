@@ -51,6 +51,20 @@ class ConfiguracionControlador extends Controlador
             $this->redirigir('/app/configuracion');
         }
 
+        $catalogoDominioNormalizado = $this->normalizarDominioCatalogo((string) ($_POST['catalogo_dominio'] ?? ''));
+        if ($catalogoDominioNormalizado === false) {
+            flash('danger', 'Ingresa un dominio válido para el catálogo (ej: tienda.tudominio.com).');
+            $this->redirigir('/app/configuracion');
+        }
+
+        if ($catalogoDominioNormalizado !== '') {
+            $empresaConDominio = $modelo->buscarPorCatalogoDominio($catalogoDominioNormalizado);
+            if ($empresaConDominio && (int) ($empresaConDominio['id'] ?? 0) !== $empresaId) {
+                flash('danger', 'Ese dominio ya está siendo usado por otra empresa.');
+                $this->redirigir('/app/configuracion');
+            }
+        }
+
         $modelo->actualizarConfiguracion($empresaId, [
             'razon_social' => trim((string) ($_POST['razon_social'] ?? '')),
             'nombre_comercial' => trim((string) ($_POST['nombre_comercial'] ?? '')),
@@ -61,6 +75,7 @@ class ConfiguracionControlador extends Controlador
             'ciudad' => trim((string) ($_POST['ciudad'] ?? '')),
             'pais' => trim((string) ($_POST['pais'] ?? '')),
             'descripcion' => mb_substr(trim((string) ($_POST['descripcion'] ?? '')), 0, 280),
+            'catalogo_dominio' => $catalogoDominioNormalizado !== '' ? $catalogoDominioNormalizado : null,
             'logo' => $logoNuevo,
             'imap_host' => trim((string) ($_POST['imap_host'] ?? '')),
             'imap_port' => (int) ($_POST['imap_port'] ?? 0) ?: null,
@@ -87,6 +102,28 @@ class ConfiguracionControlador extends Controlador
 
         flash('success', 'Configuración actualizada correctamente.');
         $this->redirigir('/app/configuracion');
+    }
+
+    private function normalizarDominioCatalogo(string $valor): string|false
+    {
+        $dominio = trim(mb_strtolower($valor));
+        if ($dominio === '') {
+            return '';
+        }
+
+        $dominio = preg_replace('#^https?://#i', '', $dominio) ?? $dominio;
+        $dominio = strtok($dominio, '/?#') ?: $dominio;
+        $dominio = trim($dominio, '.');
+
+        if ($dominio === '' || str_contains($dominio, ' ')) {
+            return false;
+        }
+
+        if ((bool) preg_match('/^([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(\.([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?))+$/i', $dominio) !== true) {
+            return false;
+        }
+
+        return $dominio;
     }
 
     public function logoEmpresa(): void
