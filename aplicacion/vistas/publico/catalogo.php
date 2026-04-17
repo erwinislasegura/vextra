@@ -166,10 +166,10 @@ $renderIconoRed = static function (string $id): string {
   .product-card{background:#fff;border:1px solid #d7deea;border-radius:12px;overflow:hidden;box-shadow:0 10px 20px rgba(15,23,42,.08);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease}
   .product-card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(15,23,42,.12)}
   .product-image{position:relative;height:220px;background:#dce3ee;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover}
-  .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;box-shadow:var(--shadow)}
-  .badge-mini.sale{background:linear-gradient(135deg,#ffedd5,#fed7aa);color:#9a3412;border:1px solid #fdba74}
-  .badge-mini.destacado{left:auto;right:14px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#312e81;border:1px solid #a5b4fc}
-  .badge-mini.proximo{left:auto;right:14px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d}
+  .badge-mini{position:absolute;top:14px;left:14px;background:#fff;color:var(--primary);font-size:12px;font-weight:700;padding:7px 10px;border-radius:6px;box-shadow:var(--shadow)}
+  .badge-mini.sale{background:#dc2626;color:#fff;border:1px solid #b91c1c}
+  .badge-mini.destacado{left:auto;right:14px;background:#f97316;color:#fff;border:1px solid #ea580c}
+  .badge-mini.proximo{left:auto;right:14px;background:#16a34a;color:#fff;border:1px solid #15803d}
   .product-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
   .category-tag{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.2px;text-transform:uppercase}
   .product-title{font-size:16px;font-weight:600;color:var(--primary);line-height:1.3;margin:0}
