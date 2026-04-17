@@ -349,7 +349,7 @@ $renderIconoRed = static function (string $id): string {
                     <div class="small fw-semibold mt-1"><?= e($fmon($precioMostrar)) ?></div>
                   </div>
                   <?php if ($esProximo): ?>
-                    <button type="button" class="btn btn-warning" data-add-cart data-id="<?= (int) $producto['id'] ?>">Reservar</button>
+                    <button type="button" class="btn btn-primary-custom" data-add-cart data-id="<?= (int) $producto['id'] ?>">Reservar</button>
                   <?php else: ?>
                     <button type="button" class="btn btn-primary-custom" data-carousel-open data-id="<?= (int) $producto['id'] ?>">Lo quiero</button>
                   <?php endif; ?>
@@ -437,10 +437,13 @@ $renderIconoRed = static function (string $id): string {
                 <h3 class="product-title"><?= e($nombreProducto) ?></h3>
                 <p class="product-desc"><?= e($descripcionProducto) ?></p>
                 <div class="stock-line">Stock: <?= $stock ?></div>
+                <?php if ($proximo): ?>
+                  <div class="stock-line text-warning-emphasis">Reserva · llega en <?= $proximoDias ?> día(s)</div>
+                <?php endif; ?>
                 <div class="price-wrap"><div class="price"><?= e($fmon($precioMostrar)) ?></div><?php if ($oldPrice > 0): ?><div class="old-price"><?= e($fmon($oldPrice)) ?></div><?php endif; ?></div>
                 <div class="card-actions">
                   <?php if ($proximo): ?>
-                    <button class="btn btn-warning" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
+                    <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Reservar</button>
                   <?php else: ?>
                     <button class="btn-primary-custom" type="button" data-add-cart data-id="<?= (int) $producto['id'] ?>" data-name="<?= e($nombreProducto) ?>" data-price="<?= $precioMostrar ?>">Comprar</button>
                   <?php endif; ?>
