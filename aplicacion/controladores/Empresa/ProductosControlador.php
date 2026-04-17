@@ -71,6 +71,8 @@ class ProductosControlador extends Controlador
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
             'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
             'destacado_catalogo' => isset($_POST['destacado_catalogo']) ? 1 : 0,
+            'proximo_catalogo' => isset($_POST['proximo_catalogo']) ? 1 : 0,
+            'proximo_dias_catalogo' => (int) ($_POST['proximo_dias_catalogo'] ?? 0),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
         $this->procesarImagenesCatalogo($empresaId, $productoId);
@@ -570,6 +572,8 @@ class ProductosControlador extends Controlador
             'stock_critico' => (float) ($_POST['stock_critico'] ?? 0),
             'mostrar_catalogo' => isset($_POST['mostrar_catalogo']) ? 1 : 0,
             'destacado_catalogo' => isset($_POST['destacado_catalogo']) ? 1 : 0,
+            'proximo_catalogo' => isset($_POST['proximo_catalogo']) ? 1 : 0,
+            'proximo_dias_catalogo' => (int) ($_POST['proximo_dias_catalogo'] ?? 0),
             'estado' => $_POST['estado'] ?? 'activo',
         ]);
         $this->procesarImagenesCatalogo($empresaId, $id);

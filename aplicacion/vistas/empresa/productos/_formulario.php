@@ -136,8 +136,19 @@ $imagenesCatalogo = $imagenesCatalogo ?? [];
           Marcar como destacado
         </label>
       </div>
+      <div class="form-check mt-1">
+        <input class="form-check-input" type="checkbox" id="proximo_catalogo" name="proximo_catalogo" value="1" <?= (int) ($producto['proximo_catalogo'] ?? 0) === 1 ? 'checked' : '' ?>>
+        <label class="form-check-label" for="proximo_catalogo">
+          Marcar como “Próximamente”
+        </label>
+      </div>
       <div class="form-text">Si activas destacado se mostrará la etiqueta “Destacado” en el catálogo.</div>
     </div>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Días de llegada</label>
+    <input type="number" min="0" step="1" name="proximo_dias_catalogo" class="form-control" value="<?= e((string) ($producto['proximo_dias_catalogo'] ?? 0)) ?>">
+    <div class="form-text">Usado para aviso en catálogo cuando está “Próximamente”.</div>
   </div>
   <?php if (!empty($imagenesCatalogo)): ?>
     <div class="col-12">
